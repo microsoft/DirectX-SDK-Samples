@@ -3,69 +3,54 @@
 //
 // The effect file for the XAudio Sound 3D sample.  
 // 
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 
 
 //--------------------------------------------------------------------------------------
 // Global variables
 //--------------------------------------------------------------------------------------
-float4x4 g_mTransform;              // Transform
+cbuffer cbPerObject : register( b0 )
+{
+    float4x4 g_mTransform;
+}
 
 //--------------------------------------------------------------------------------------
 // Vertex shader output structure
 //--------------------------------------------------------------------------------------
+struct VS_INPUT
+{
+	float4 vPosition	: SV_Position;
+    float4 color        : COLOR;
+};
+
 struct VS_OUTPUT
 {
-    float4 Position : POSITION;     // vertex position
-    float4 Color    : COLOR;        // color
+    float4 Position : SV_Position;
+    float4 Color    : COLOR;
 };
 
 //--------------------------------------------------------------------------------------
 // This shader computes standard transform and lighting
 //--------------------------------------------------------------------------------------
-VS_OUTPUT RenderSceneVS( float3 vPos : POSITION, float4 color : COLOR )
+VS_OUTPUT RenderSceneVS( VS_INPUT vIn )
 {
     VS_OUTPUT output;
     
-    output.Position = mul( float4(vPos,1), g_mTransform);
+    output.Position = mul( vIn.vPosition, g_mTransform );
     
-    output.Color = color;
+    output.Color = vIn.color;
     
     return output;
 }
-
-
-//--------------------------------------------------------------------------------------
-// Pixel shader output structure
-//--------------------------------------------------------------------------------------
-struct PS_OUTPUT
-{
-    float4 RGBColor : COLOR0;  // Pixel color    
-};
 
 
 //--------------------------------------------------------------------------------------
 // This shader outputs the pixel's color by modulating the texture's
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
-PS_OUTPUT RenderScenePS( VS_OUTPUT input ) 
+float4 RenderScenePS( VS_OUTPUT input ) : SV_TARGET
 { 
-    PS_OUTPUT output;
-    output.RGBColor = input.Color;
-    return output;
-}
-
-
-//--------------------------------------------------------------------------------------
-// Renders scene 
-//--------------------------------------------------------------------------------------
-technique RenderScene
-{
-    pass P0
-    {      
-        ZENABLE = FALSE;
-        VertexShader = compile vs_2_0 RenderSceneVS();
-        PixelShader  = compile ps_2_0 RenderScenePS(); 
-    }
+    return input.Color;
 }

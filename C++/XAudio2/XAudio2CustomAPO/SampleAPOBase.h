@@ -1,12 +1,24 @@
 //--------------------------------------------------------------------------------------
 // SampleAPOBase.h
 //
-// XNA Developer Connection
-// Copyright (C) Microsoft Corporation. All rights reserved.
+// Example custom xAPO template for XAudio2
+//
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #pragma once
 #include <crtdbg.h>
+#include "XAudio2Versions.h"
+
+#ifndef USING_XAUDIO2_7_DIRECTX
 #include <xapobase.h>
+#else
+#include <C:\Program Files (x86)\Microsoft DirectX SDK (June 2010)\Include\xapobase.h>
+#endif
+
+#pragma warning(push)
+#pragma warning(disable : 4481)
+// VS 2010 considers 'override' to be a extension, but it's part of C++11 as of VS 2012
 
 //--------------------------------------------------------------------------------------
 // CSampleXAPOBase
@@ -26,16 +38,16 @@ public:
     //
     STDMETHOD(LockForProcess) (
         UINT32 InputLockedParameterCount,
-        const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS *pInputLockedParameters,
+        _In_reads_opt_(InputLockedParameterCount) const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS *pInputLockedParameters,
         UINT32 OutputLockedParameterCount,
-        const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS *pOutputLockedParameters );
+        _In_reads_opt_(OutputLockedParameterCount) const XAPO_LOCKFORPROCESS_BUFFER_PARAMETERS *pOutputLockedParameters ) override;
 
     STDMETHOD_(void, Process) (
         UINT32 InputProcessParameterCount,
-        const XAPO_PROCESS_BUFFER_PARAMETERS *pInputProcessParameters,
+        _In_reads_opt_(InputProcessParameterCount) const XAPO_PROCESS_BUFFER_PARAMETERS *pInputProcessParameters,
         UINT32 OutputProcessParameterCount,
-        XAPO_PROCESS_BUFFER_PARAMETERS *pOutputProcessParameters,
-        BOOL IsEnabled);
+        _Inout_updates_opt_(OutputProcessParameterCount) XAPO_PROCESS_BUFFER_PARAMETERS *pOutputProcessParameters,
+        BOOL IsEnabled) override;
 
 protected:
     CSampleXAPOBase();
@@ -44,12 +56,12 @@ protected:
     //
     // Accessors
     //
-    const WAVEFORMATEX& WaveFormat(){ return m_wfx; }
+    const WAVEFORMATEX& WaveFormat() const { return m_wfx; }
 
     //
     // Overrides
     //
-    void OnSetParameters (const void* pParams, UINT32 cbParams)
+    void OnSetParameters (_In_reads_bytes_(cbParams) const void* pParams, UINT32 cbParams) override
     {
         _ASSERT( cbParams == sizeof( ParameterClass ) );
         cbParams;
@@ -64,7 +76,7 @@ protected:
     // this function there's not much point in having an xAPO.
     virtual void DoProcess(
         const ParameterClass& params,
-        FLOAT32* __restrict pData,
+        _Inout_updates_all_(cFrames * cChannels) FLOAT32* __restrict pData,
         UINT32 cFrames,
         UINT32 cChannels ) = 0;
 
@@ -82,9 +94,8 @@ private:
 
     // Registration properties defining this xAPO class.
     static XAPO_REGISTRATION_PROPERTIES m_regProps;
-
-
 };
+
 
 //--------------------------------------------------------------------------------------
 // CSampleAPOBase::m_regProps
@@ -105,6 +116,7 @@ __declspec(selectany) XAPO_REGISTRATION_PROPERTIES CSampleXAPOBase<APOClass, Par
             | XAPO_FLAG_BUFFERCOUNT_MUST_MATCH
             | XAPO_FLAG_INPLACE_SUPPORTED,
             1, 1, 1, 1 };
+
 
 //--------------------------------------------------------------------------------------
 // Name: CSampleXAPOBase::CreateInstance
@@ -136,12 +148,9 @@ template<typename APOClass, typename ParameterClass>
 CSampleXAPOBase<APOClass, ParameterClass>::CSampleXAPOBase( )
 : CXAPOParametersBase( &m_regProps, (BYTE*)m_parameters, sizeof( ParameterClass ), FALSE )
 {
-#ifdef _XBOX_VER
-    XMemSet( (BYTE*)m_parameters, 0, sizeof( m_parameters ) );
-#else
-    ZeroMemory( m_parameters, sizeof( m_parameters ) );
-#endif
+	ZeroMemory( m_parameters, sizeof( m_parameters ) );
 }
+
 
 //--------------------------------------------------------------------------------------
 // Name: CSampleXAPOBase::~CSampleXAPOBase
@@ -173,12 +182,16 @@ HRESULT CSampleXAPOBase<APOClass, ParameterClass>::LockForProcess(
 
     if( SUCCEEDED( hr ) )
     {
+        if ( !pInputLockedParameters )
+            return E_POINTER;
+
         // Copy the wave format. Note that we're using memcpy rather than XMemCpy
         // because XMemCpy is really only beneficial for larger blocks of memory.
         memcpy( &m_wfx, pInputLockedParameters[0].pFormat, sizeof( WAVEFORMATEX ) );
     }
     return hr;
 }
+
 
 //--------------------------------------------------------------------------------------
 // Name: CSampleXAPOBase::Process
@@ -195,6 +208,8 @@ void CSampleXAPOBase<APOClass, ParameterClass>::Process(
     _ASSERT( IsLocked() );
     _ASSERT( InputProcessParameterCount == 1 );
     _ASSERT( OutputProcessParameterCount == 1 );
+    _ASSERT( pInputProcessParameters != nullptr && pOutputProcessParameters != nullptr);
+    _Analysis_assume_( pInputProcessParameters != nullptr && pOutputProcessParameters != nullptr);
     _ASSERT( pInputProcessParameters[0].pBuffer == pOutputProcessParameters[0].pBuffer );
 
     UNREFERENCED_PARAMETER( OutputProcessParameterCount );
@@ -226,3 +241,4 @@ void CSampleXAPOBase<APOClass, ParameterClass>::Process(
     EndProcess();
 }
 
+#pragma warning(pop)

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // MonitorAPO.cpp
 //
-// XNA Developer Connection
-// Copyright (C) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "MonitorAPO.h"
@@ -30,6 +30,7 @@ CMonitorAPO::~CMonitorAPO()
 // Name: CMonitorAPO::DoProcess
 // Desc: Process by copying off a portion of the samples to another thread via a LF pipe
 //--------------------------------------------------------------------------------------
+_Use_decl_annotations_
 void CMonitorAPO::DoProcess( const MonitorAPOParams& params, FLOAT32* __restrict pData, UINT32 cFrames, UINT32 cChannels )
 {
     if( cFrames )

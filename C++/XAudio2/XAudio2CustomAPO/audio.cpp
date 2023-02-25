@@ -1,13 +1,15 @@
 //--------------------------------------------------------------------------------------
 // File: audio.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "SDKmisc.h"
-#include "SDKwavefile.h"
+#include "WAVFileReader.h"
 #include "audio.h"
 
+using namespace DirectX;
 
 //--------------------------------------------------------------------------------------
 // Global variables
@@ -20,30 +22,53 @@ AUDIO_STATE g_audioState;
 HRESULT InitAudio()
 {
     // Clear struct
-    ZeroMemory( &g_audioState, sizeof( AUDIO_STATE ) );
+    memset( &g_audioState, 0, sizeof( AUDIO_STATE ) );
 
     //
     // Initialize XAudio2
     //
-    CoInitializeEx( NULL, COINIT_MULTITHREADED );
+    HRESULT hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED);
+    if( FAILED( hr ) )
+        return hr;
 
-    UINT32 flags = 0;
+#ifdef USING_XAUDIO2_7_DIRECTX
+    // Workaround for XAudio 2.7 known issue
 #ifdef _DEBUG
-    flags |= XAUDIO2_DEBUG_ENGINE;
+    g_audioState.mXAudioDLL = LoadLibraryExW(L"XAudioD2_7.DLL", nullptr, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */);
+#else
+    g_audioState.mXAudioDLL = LoadLibraryExW(L"XAudio2_7.DLL", nullptr, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */);
+#endif
+    if (!g_audioState.mXAudioDLL)
+        return HRESULT_FROM_WIN32( ERROR_NOT_FOUND );
 #endif
 
-    HRESULT hr;
-
-    if( FAILED( hr = XAudio2Create( &g_audioState.pXAudio2, flags ) ) )
+    UINT32 flags = 0;
+ #if defined(USING_XAUDIO2_7_DIRECTX) && defined(_DEBUG)
+    flags |= XAUDIO2_DEBUG_ENGINE;
+ #endif
+    hr = XAudio2Create( &g_audioState.pXAudio2, flags );
+    if( FAILED( hr ) )
         return hr;
+
+#if !defined(USING_XAUDIO2_7_DIRECTX) && defined(_DEBUG)
+    // To see the trace output, you need to view ETW logs for this application:
+    //    Go to Control Panel, Administrative Tools, Event Viewer.
+    //    View->Show Analytic and Debug Logs.
+    //    Applications and Services Logs / Microsoft / Windows / XAudio2. 
+    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK 
+    XAUDIO2_DEBUG_CONFIGURATION debug = {};
+    debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
+    debug.BreakMask = XAUDIO2_LOG_ERRORS;
+    g_audioState.pXAudio2->SetDebugConfiguration( &debug, 0 );
+#endif
 
     //
     // Create a mastering voice
     //
-    assert( g_audioState.pXAudio2 != NULL );
+    assert( g_audioState.pXAudio2 != nullptr );
     if( FAILED( hr = g_audioState.pXAudio2->CreateMasteringVoice( &g_audioState.pMasteringVoice ) ) )
     {
-        SAFE_RELEASE( g_audioState.pXAudio2 );
+        g_audioState.pXAudio2.Reset();
         return hr;
     }
 
@@ -59,7 +84,7 @@ HRESULT InitAudio()
 //-----------------------------------------------------------------------------
 // Prepare a looping wave
 //-----------------------------------------------------------------------------
-HRESULT PrepareAudio( const LPWSTR wavname )
+HRESULT PrepareAudio( const LPCWSTR wavname )
 {
     if( !g_audioState.bInitialized )
         return E_FAIL;
@@ -91,43 +116,32 @@ HRESULT PrepareAudio( const LPWSTR wavname )
     //
     // Read in the wave file
     //
-    CWaveFile wav;
-    V_RETURN( wav.Open( strFilePath, NULL, WAVEFILE_READ ) );
-
-    // Get format of wave file
-    WAVEFORMATEX* pwfx = wav.GetFormat();
-
-    // Calculate how many bytes and samples are in the wave
-    DWORD cbWaveSize = wav.GetSize();
-
-    // Read the sample data into memory
-    SAFE_DELETE_ARRAY( g_audioState.pbSampleData );
-
-    g_audioState.pbSampleData = new BYTE[ cbWaveSize ];
-
-    V_RETURN( wav.Read( g_audioState.pbSampleData, cbWaveSize, &cbWaveSize ) );
+    const WAVEFORMATEX* pwfx;
+    const uint8_t* sampleData;
+    uint32_t waveSize;
+    V_RETURN( LoadWAVAudioFromFile( strFilePath, g_audioState.waveData, &pwfx, &sampleData, &waveSize ) );
 
     //
     // Play the wave using a XAudio2SourceVoice
     //
 
     // Create the source voice
-    assert( g_audioState.pXAudio2 != NULL );
+    assert( g_audioState.pXAudio2 != nullptr );
     V_RETURN( g_audioState.pXAudio2->CreateSourceVoice( &g_audioState.pSourceVoice, pwfx, 0,
-                                                        XAUDIO2_DEFAULT_FREQ_RATIO, NULL, NULL ) );
+                                                        XAUDIO2_DEFAULT_FREQ_RATIO, nullptr, nullptr ) );
 
     // Create the custom APO instances
-    CSimpleAPO* pSimpleAPO = NULL;
-    CSimpleAPO::CreateInstance( NULL, 0, &pSimpleAPO );
+    CSimpleAPO* pSimpleAPO = nullptr;
+    CSimpleAPO::CreateInstance( nullptr, 0, &pSimpleAPO );
 
-    CMonitorAPO* pMonitorPre = NULL;
-    CMonitorAPO::CreateInstance( NULL, 0, &pMonitorPre );
+    CMonitorAPO* pMonitorPre = nullptr;
+    CMonitorAPO::CreateInstance( nullptr, 0, &pMonitorPre );
 
-    CMonitorAPO* pMonitorPost = NULL;
-    CMonitorAPO::CreateInstance( NULL, 0, &pMonitorPost );
+    CMonitorAPO* pMonitorPost = nullptr;
+    CMonitorAPO::CreateInstance( nullptr, 0, &pMonitorPost );
 
     // Create the effect chain
-    XAUDIO2_EFFECT_DESCRIPTOR apoDesc[3] = {0};
+    XAUDIO2_EFFECT_DESCRIPTOR apoDesc[3] = {};
     apoDesc[0].InitialState = true;
     apoDesc[0].OutputChannels = 1;
     apoDesc[0].pEffect = static_cast<IXAPO*>(pMonitorPre);
@@ -138,11 +152,11 @@ HRESULT PrepareAudio( const LPWSTR wavname )
     apoDesc[2].OutputChannels = 1;
     apoDesc[2].pEffect = static_cast<IXAPO*>(pMonitorPost);
 
-    XAUDIO2_EFFECT_CHAIN chain = {0};
+    XAUDIO2_EFFECT_CHAIN chain = {};
     chain.EffectCount = sizeof(apoDesc) / sizeof(apoDesc[0]);
     chain.pEffectDescriptors = apoDesc;
 
-    assert( g_audioState.pSourceVoice != NULL );
+    assert( g_audioState.pSourceVoice != nullptr );
     V_RETURN( g_audioState.pSourceVoice->SetEffectChain( &chain ) );
 
     // Don't need to keep them now that XAudio2 has ownership
@@ -151,10 +165,10 @@ HRESULT PrepareAudio( const LPWSTR wavname )
     pMonitorPost->Release();
 
     // Submit the wave sample data using an XAUDIO2_BUFFER structure
-    XAUDIO2_BUFFER buffer = {0};
-    buffer.pAudioData = g_audioState.pbSampleData;
+    XAUDIO2_BUFFER buffer = {};
+    buffer.pAudioData = sampleData;
     buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.AudioBytes = cbWaveSize;
+    buffer.AudioBytes = waveSize;
     buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
     V_RETURN( g_audioState.pSourceVoice->SubmitSourceBuffer( &buffer ) );
@@ -200,7 +214,7 @@ VOID PauseAudio( bool resume )
     if( !g_audioState.bInitialized )
         return;
 
-    assert( g_audioState.pXAudio2 != NULL );
+    assert( g_audioState.pXAudio2 != nullptr );
 
     if( resume )
         g_audioState.pXAudio2->StartEngine();
@@ -221,24 +235,32 @@ VOID CleanupAudio()
     if( g_audioState.pSourceVoice )
     {
         g_audioState.pSourceVoice->DestroyVoice();
-        g_audioState.pSourceVoice = NULL;
+        g_audioState.pSourceVoice = nullptr;
     }
 
     if( g_audioState.pMasteringVoice )
     {
         g_audioState.pMasteringVoice->DestroyVoice();
-        g_audioState.pMasteringVoice = NULL;
+        g_audioState.pMasteringVoice = nullptr;
     }
 
     if ( g_audioState.pXAudio2 )
         g_audioState.pXAudio2->StopEngine();
 
-    SAFE_RELEASE( g_audioState.pXAudio2 );
+    g_audioState.pXAudio2.Reset();
 
-    SAFE_DELETE_ARRAY( g_audioState.pbSampleData );
+    g_audioState.waveData.reset();
 
     SAFE_DELETE( g_audioState.pPipePre );
-    SAFE_DELETE( g_audioState.pPipePost )
+    SAFE_DELETE( g_audioState.pPipePost );
+
+#ifdef USING_XAUDIO2_7_DIRECTX
+    if (g_audioState.mXAudioDLL)
+    {
+        FreeLibrary(g_audioState.mXAudioDLL);
+        g_audioState.mXAudioDLL = nullptr;
+    }
+#endif
 
     CoUninitialize();
 

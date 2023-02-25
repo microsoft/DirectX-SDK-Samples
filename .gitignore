@@ -21,6 +21,7 @@
 Bin
 ipch
 Debug
+Win32
 Profile
 Release
 x64

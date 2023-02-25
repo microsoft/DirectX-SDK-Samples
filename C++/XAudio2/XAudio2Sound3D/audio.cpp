@@ -1,15 +1,20 @@
 //--------------------------------------------------------------------------------------
 // File: audio.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTcamera.h"
 #include "DXUTsettingsdlg.h"
 #include "SDKmisc.h"
-#include "SDKwavefile.h"
+#include "WAVFileReader.h"
 #include "audio.h"
 
+// Uncomment to enable the volume limiter on the master voice.
+//#define MASTERING_LIMITER
+
+using namespace DirectX;
 
 //--------------------------------------------------------------------------------------
 // Global variables
@@ -70,66 +75,145 @@ XAUDIO2FX_REVERB_I3DL2_PARAMETERS g_PRESET_PARAMS[ NUM_PRESETS ] =
     XAUDIO2FX_I3DL2_PRESET_PLATE,
 };
 
+
 //-----------------------------------------------------------------------------------------
 // Initialize the audio by creating the XAudio2 device, mastering voice, etc.
 //-----------------------------------------------------------------------------------------
 HRESULT InitAudio()
 {
     // Clear struct
-    ZeroMemory( &g_audioState, sizeof( AUDIO_STATE ) );
+    g_audioState = {};
 
     //
     // Initialize XAudio2
     //
-    CoInitializeEx( NULL, COINIT_MULTITHREADED );
+    HRESULT hr = CoInitializeEx( nullptr, COINIT_MULTITHREADED );
+    if (FAILED(hr))
+        return hr;
 
-    UINT32 flags = 0;
+#ifdef USING_XAUDIO2_7_DIRECTX
+    // Workaround for XAudio 2.7 known issue
 #ifdef _DEBUG
-    flags |= XAUDIO2_DEBUG_ENGINE;
+    g_audioState.mXAudioDLL = LoadLibraryExW(L"XAudioD2_7.DLL", nullptr, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */);
+#else
+    g_audioState.mXAudioDLL = LoadLibraryExW(L"XAudio2_7.DLL", nullptr, 0x00000800 /* LOAD_LIBRARY_SEARCH_SYSTEM32 */);
+#endif
+    if (!g_audioState.mXAudioDLL)
+        return HRESULT_FROM_WIN32(ERROR_NOT_FOUND);
 #endif
 
-    HRESULT hr;
-
-    if( FAILED( hr = XAudio2Create( &g_audioState.pXAudio2, flags ) ) )
+    UINT32 flags = 0;
+ #if defined(USING_XAUDIO2_7_DIRECTX) && defined(_DEBUG)
+    flags |= XAUDIO2_DEBUG_ENGINE;
+ #endif
+    hr = XAudio2Create( &g_audioState.pXAudio2, flags );
+    if( FAILED( hr ) )
         return hr;
+
+#if !defined(USING_XAUDIO2_7_DIRECTX) && defined(_DEBUG)
+    // To see the trace output, you need to view ETW logs for this application:
+    //    Go to Control Panel, Administrative Tools, Event Viewer.
+    //    View->Show Analytic and Debug Logs.
+    //    Applications and Services Logs / Microsoft / Windows / XAudio2. 
+    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK 
+    XAUDIO2_DEBUG_CONFIGURATION debug = {};
+    debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
+    debug.BreakMask = XAUDIO2_LOG_ERRORS;
+    g_audioState.pXAudio2->SetDebugConfiguration( &debug, 0 );
+#endif
 
     //
     // Create a mastering voice
     //
     if( FAILED( hr = g_audioState.pXAudio2->CreateMasteringVoice( &g_audioState.pMasteringVoice ) ) )
     {
-        SAFE_RELEASE( g_audioState.pXAudio2 );
+        g_audioState.pXAudio2.Reset();
         return hr;
     }
 
     // Check device details to make sure it's within our sample supported parameters
+    DWORD dwChannelMask = 0;
+    UINT32 nSampleRate = 0;
+
+#ifndef USING_XAUDIO2_7_DIRECTX
+
+    XAUDIO2_VOICE_DETAILS details;
+    g_audioState.pMasteringVoice->GetVoiceDetails( &details );
+
+    if( details.InputChannels > OUTPUTCHANNELS )
+    {
+        g_audioState.pXAudio2.Reset();
+        return E_FAIL;
+    }
+
+    if ( FAILED( hr = g_audioState.pMasteringVoice->GetChannelMask( &dwChannelMask ) ) )
+    {
+        g_audioState.pXAudio2.Reset();
+        return E_FAIL;
+    }
+
+    nSampleRate = details.InputSampleRate;
+    g_audioState.nChannels = details.InputChannels;
+    g_audioState.dwChannelMask  = dwChannelMask;
+
+#else
+
     XAUDIO2_DEVICE_DETAILS details;
     if( FAILED( hr = g_audioState.pXAudio2->GetDeviceDetails( 0, &details ) ) )
     {
-        SAFE_RELEASE( g_audioState.pXAudio2 );
+        g_audioState.pXAudio2.Reset();
         return hr;
     }
 
     if( details.OutputFormat.Format.nChannels > OUTPUTCHANNELS )
     {
-        SAFE_RELEASE( g_audioState.pXAudio2 );
+        g_audioState.pXAudio2.Reset();
         return E_FAIL;
     }
 
-    g_audioState.dwChannelMask = details.OutputFormat.dwChannelMask;
+    nSampleRate = details.OutputFormat.Format.nSamplesPerSec;
+    dwChannelMask = g_audioState.dwChannelMask = details.OutputFormat.dwChannelMask;
     g_audioState.nChannels = details.OutputFormat.Format.nChannels;
+
+#endif
+
+#ifdef MASTERING_LIMITER
+    FXMASTERINGLIMITER_PARAMETERS params = {};
+    params.Release = FXMASTERINGLIMITER_DEFAULT_RELEASE;
+    params.Loudness = FXMASTERINGLIMITER_DEFAULT_LOUDNESS;
+
+    hr = CreateFX(__uuidof(FXMasteringLimiter), &g_audioState.pVolumeLimiter, &params, sizeof(params));
+    if (FAILED(hr))
+    {
+        g_audioState.pXAudio2.Reset();
+        return hr;
+    }
+
+    XAUDIO2_EFFECT_DESCRIPTOR desc = {};
+    desc.InitialState = TRUE;
+    desc.OutputChannels = g_audioState.nChannels;
+    desc.pEffect = g_audioState.pVolumeLimiter.Get();
+
+    XAUDIO2_EFFECT_CHAIN chain = { 1, &desc };
+    hr = g_audioState.pMasteringVoice->SetEffectChain(&chain);
+    if (FAILED(hr))
+    {
+        g_audioState.pXAudio2.Reset();
+        g_audioState.pVolumeLimiter.Reset();
+        return hr;
+    }
+#endif // MASTERING_LIMITER
 
     //
     // Create reverb effect
     //
-    flags = 0;
-#ifdef _DEBUG
-    flags |= XAUDIO2FX_DEBUG;
-#endif
-
-    if( FAILED( hr = XAudio2CreateReverb( &g_audioState.pReverbEffect, flags ) ) )
+    UINT32 rflags = 0;
+ #if defined(USING_XAUDIO2_7_DIRECTX) && defined(_DEBUG)
+    rflags |= XAUDIO2FX_DEBUG;
+ #endif
+    if( FAILED( hr = XAudio2CreateReverb( &g_audioState.pReverbEffect, rflags ) ) )
     {
-        SAFE_RELEASE( g_audioState.pXAudio2 );
+        g_audioState.pXAudio2.Reset();
         return hr;
     }
 
@@ -140,15 +224,15 @@ HRESULT InitAudio()
     // Performance tip: you need not run global FX with the sample number
     // of channels as the final mix.  For example, this sample runs
     // the reverb in mono mode, thus reducing CPU overhead.
-    XAUDIO2_EFFECT_DESCRIPTOR effects[] = { { g_audioState.pReverbEffect, TRUE, 1 } };
+    XAUDIO2_EFFECT_DESCRIPTOR effects[] = { { g_audioState.pReverbEffect.Get(), TRUE, 1 } };
     XAUDIO2_EFFECT_CHAIN effectChain = { 1, effects };
 
     if( FAILED( hr = g_audioState.pXAudio2->CreateSubmixVoice( &g_audioState.pSubmixVoice, 1,
-                                                               details.OutputFormat.Format.nSamplesPerSec, 0, 0,
-                                                               NULL, &effectChain ) ) )
+                                                               nSampleRate, 0, 0,
+                                                               nullptr, &effectChain ) ) )
     {
-        SAFE_RELEASE( g_audioState.pXAudio2 );
-        SAFE_RELEASE( g_audioState.pReverbEffect );
+        g_audioState.pXAudio2.Reset();
+        g_audioState.pReverbEffect.Reset();
         return hr;
     }
 
@@ -165,24 +249,38 @@ HRESULT InitAudio()
     //  SpeedOfSound - speed of sound in user-defined world units/second, used
     //  only for doppler calculations, it must be >= FLT_MIN
     //
-    const float SPEEDOFSOUND = X3DAUDIO_SPEED_OF_SOUND;
+    constexpr float SPEEDOFSOUND = X3DAUDIO_SPEED_OF_SOUND;
 
-    X3DAudioInitialize( details.OutputFormat.dwChannelMask, SPEEDOFSOUND, g_audioState.x3DInstance );
+    X3DAudioInitialize( dwChannelMask, SPEEDOFSOUND, g_audioState.x3DInstance );
 
-    g_audioState.vListenerPos = D3DXVECTOR3( 0, 0, 0 );
-    g_audioState.vEmitterPos = D3DXVECTOR3( 0, 0, float( ZMAX ) );
+    g_audioState.vListenerPos.x =
+    g_audioState.vListenerPos.y = 
+    g_audioState.vListenerPos.z =
+    g_audioState.vEmitterPos.x = 
+    g_audioState.vEmitterPos.y = 0.f;
+
+    g_audioState.vEmitterPos.z = float( ZMAX );
 
     g_audioState.fListenerAngle = 0;
     g_audioState.fUseListenerCone = TRUE;
     g_audioState.fUseInnerRadius = TRUE;
-    g_audioState.fUseRedirectToLFE = ((details.OutputFormat.dwChannelMask & SPEAKER_LOW_FREQUENCY) != 0);
+    g_audioState.fUseRedirectToLFE = ((dwChannelMask & SPEAKER_LOW_FREQUENCY) != 0);
 
     //
     // Setup 3D audio structs
     //
-    g_audioState.listener.Position = g_audioState.vListenerPos;
-    g_audioState.listener.OrientFront = D3DXVECTOR3( 0, 0, 1 );
-    g_audioState.listener.OrientTop = D3DXVECTOR3( 0, 1, 0 );
+    g_audioState.listener.Position.x = g_audioState.vListenerPos.x;
+    g_audioState.listener.Position.y = g_audioState.vListenerPos.y;
+    g_audioState.listener.Position.z = g_audioState.vListenerPos.z;
+
+    g_audioState.listener.OrientFront.x =
+    g_audioState.listener.OrientFront.y = 
+    g_audioState.listener.OrientTop.x = 
+    g_audioState.listener.OrientTop.z = 0.f;
+
+    g_audioState.listener.OrientFront.z = 
+    g_audioState.listener.OrientTop.y = 1.f;
+
     g_audioState.listener.pCone = (X3DAUDIO_CONE*)&Listener_DirectionalCone;
 
     g_audioState.emitter.pCone = &g_audioState.emitterCone;
@@ -202,12 +300,25 @@ HRESULT InitAudio()
     g_audioState.emitter.pCone->InnerReverb = 0.0f;
     g_audioState.emitter.pCone->OuterReverb = 1.0f;
 
-    g_audioState.emitter.Position = g_audioState.vEmitterPos;
-    g_audioState.emitter.OrientFront = D3DXVECTOR3( 0, 0, 1 );
-    g_audioState.emitter.OrientTop = D3DXVECTOR3( 0, 1, 0 );
+    g_audioState.emitter.Position.x = g_audioState.vEmitterPos.x;
+    g_audioState.emitter.Position.y = g_audioState.vEmitterPos.y;
+    g_audioState.emitter.Position.z = g_audioState.vEmitterPos.z;
+
+    g_audioState.emitter.OrientFront.x =
+    g_audioState.emitter.OrientFront.y = 
+    g_audioState.emitter.OrientTop.x = 
+    g_audioState.emitter.OrientTop.z = 0.f;
+
+    g_audioState.emitter.OrientFront.z = 
+    g_audioState.emitter.OrientTop.y = 1.f;
+
     g_audioState.emitter.ChannelCount = INPUTCHANNELS;
     g_audioState.emitter.ChannelRadius = 1.0f;
-    g_audioState.emitter.pChannelAzimuths = g_audioState.emitterAzimuths;
+
+    static_assert(INPUTCHANNELS == 1 || g_audioState.emitter.pChannelAzimuths != nullptr, "Multi-channel sources require emitter azimuths");
+    // For examples of how to configure emitter azimuths for multi-channel sources, see DirectX Tool Kit for Audio
+    // helper method AudioEmitter::EnableDefaultMultiChannel
+    // http://go.microsoft.com/fwlink/?LinkId=248929
 
     // Use of Inner radius allows for smoother transitions as
     // a sound travels directly through, above, or below the listener.
@@ -217,8 +328,8 @@ HRESULT InitAudio()
 
     g_audioState.emitter.pVolumeCurve = (X3DAUDIO_DISTANCE_CURVE*)&X3DAudioDefault_LinearCurve;
     g_audioState.emitter.pLFECurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_LFE_Curve;
-    g_audioState.emitter.pLPFDirectCurve = NULL; // use default curve
-    g_audioState.emitter.pLPFReverbCurve = NULL; // use default curve
+    g_audioState.emitter.pLPFDirectCurve = nullptr; // use default curve
+    g_audioState.emitter.pLPFReverbCurve = nullptr; // use default curve
     g_audioState.emitter.pReverbCurve    = (X3DAUDIO_DISTANCE_CURVE*)&Emitter_Reverb_Curve;
     g_audioState.emitter.CurveDistanceScaler = 14.0f;
     g_audioState.emitter.DopplerScaler = 1.0f;
@@ -239,7 +350,7 @@ HRESULT InitAudio()
 //-----------------------------------------------------------------------------
 // Prepare a looping wave
 //-----------------------------------------------------------------------------
-HRESULT PrepareAudio( const LPWSTR wavname )
+HRESULT PrepareAudio( _In_z_ const LPCWSTR wavname )
 {
     if( !g_audioState.bInitialized )
         return E_FAIL;
@@ -268,21 +379,12 @@ HRESULT PrepareAudio( const LPWSTR wavname )
     //
     // Read in the wave file
     //
-    CWaveFile wav;
-    V_RETURN( wav.Open( strFilePath, NULL, WAVEFILE_READ ) );
+    const WAVEFORMATEX* pwfx;
+    const uint8_t* sampleData;
+    uint32_t waveSize;
+    V_RETURN( LoadWAVAudioFromFile( strFilePath, g_audioState.waveData, &pwfx, &sampleData, &waveSize ) );
 
-    // Get format of wave file
-    WAVEFORMATEX* pwfx = wav.GetFormat();
-
-    // Calculate how many bytes and samples are in the wave
-    DWORD cbWaveSize = wav.GetSize();
-
-    // Read the sample data into memory
-    SAFE_DELETE_ARRAY( g_audioState.pbSampleData );
-
-    g_audioState.pbSampleData = new BYTE[ cbWaveSize ];
-
-    V_RETURN( wav.Read( g_audioState.pbSampleData, cbWaveSize, &cbWaveSize ) );
+    assert(pwfx->nChannels == INPUTCHANNELS);
 
     //
     // Play the wave using a source voice that sends to both the submix and mastering voices
@@ -296,13 +398,13 @@ HRESULT PrepareAudio( const LPWSTR wavname )
 
     // create the source voice
     V_RETURN( g_audioState.pXAudio2->CreateSourceVoice( &g_audioState.pSourceVoice, pwfx, 0,
-                                                        2.0f, NULL, &sendList ) );
+                                                        2.0f, nullptr, &sendList ) );
 
     // Submit the wave sample data using an XAUDIO2_BUFFER structure
-    XAUDIO2_BUFFER buffer = {0};
-    buffer.pAudioData = g_audioState.pbSampleData;
+    XAUDIO2_BUFFER buffer = {};
+    buffer.pAudioData = sampleData;
     buffer.Flags = XAUDIO2_END_OF_STREAM;
-    buffer.AudioBytes = cbWaveSize;
+    buffer.AudioBytes = waveSize;
     buffer.LoopCount = XAUDIO2_LOOP_INFINITE;
 
     V_RETURN( g_audioState.pSourceVoice->SubmitSourceBuffer( &buffer ) );
@@ -329,16 +431,22 @@ HRESULT UpdateAudio( float fElapsedTime )
         if( g_audioState.vListenerPos.x != g_audioState.listener.Position.x
             || g_audioState.vListenerPos.z != g_audioState.listener.Position.z )
         {
-            D3DXVECTOR3 vDelta = g_audioState.vListenerPos - g_audioState.listener.Position;
+            const XMVECTOR v1 = XMLoadFloat3( &g_audioState.vListenerPos );
+            const XMVECTOR v2 = XMVectorSet( g_audioState.listener.Position.x, g_audioState.listener.Position.y, g_audioState.listener.Position.z, 0.f  );
 
-            g_audioState.fListenerAngle = float( atan2( vDelta.x, vDelta.z ) );
+            XMVECTOR vDelta = v1 - v2;
 
-            vDelta.y = 0.0f;
-            D3DXVec3Normalize( &vDelta, &vDelta );
+            g_audioState.fListenerAngle = float( atan2( XMVectorGetX( vDelta ), XMVectorGetZ( vDelta ) ) );
 
-            g_audioState.listener.OrientFront.x = vDelta.x;
+            vDelta = XMVectorSetY( vDelta, 0.f );
+            vDelta = XMVector3Normalize( vDelta );
+
+            XMFLOAT3 tmp;
+            XMStoreFloat3( &tmp, vDelta );
+
+            g_audioState.listener.OrientFront.x = tmp.x;
             g_audioState.listener.OrientFront.y = 0.f;
-            g_audioState.listener.OrientFront.z = vDelta.z;
+            g_audioState.listener.OrientFront.z = tmp.z;
         }
 
         if (g_audioState.fUseListenerCone)
@@ -347,7 +455,7 @@ HRESULT UpdateAudio( float fElapsedTime )
         }
         else
         {
-            g_audioState.listener.pCone = NULL;
+            g_audioState.listener.pCone = nullptr;
         }
         if (g_audioState.fUseInnerRadius)
         {
@@ -362,13 +470,32 @@ HRESULT UpdateAudio( float fElapsedTime )
 
         if( fElapsedTime > 0 )
         {
-            D3DXVECTOR3 lVelocity = ( g_audioState.vListenerPos - g_audioState.listener.Position ) / fElapsedTime;
-            g_audioState.listener.Position = g_audioState.vListenerPos;
-            g_audioState.listener.Velocity = lVelocity;
+            XMVECTOR v1 = XMLoadFloat3( &g_audioState.vListenerPos );
+            XMVECTOR v2 = XMVectorSet( g_audioState.listener.Position.x, g_audioState.listener.Position.y, g_audioState.listener.Position.z, 0 );
 
-            D3DXVECTOR3 eVelocity = ( g_audioState.vEmitterPos - g_audioState.emitter.Position ) / fElapsedTime;
-            g_audioState.emitter.Position = g_audioState.vEmitterPos;
-            g_audioState.emitter.Velocity = eVelocity;
+            const XMVECTOR lVelocity = ( v1 - v2 ) / fElapsedTime;
+            g_audioState.listener.Position.x = g_audioState.vListenerPos.x;
+            g_audioState.listener.Position.y = g_audioState.vListenerPos.y;
+            g_audioState.listener.Position.z = g_audioState.vListenerPos.z;
+
+            XMFLOAT3 tmp;
+            XMStoreFloat3( &tmp, lVelocity );
+            g_audioState.listener.Velocity.x = tmp.x;
+            g_audioState.listener.Velocity.y = tmp.y;
+            g_audioState.listener.Velocity.z = tmp.z;
+
+            v1 = XMLoadFloat3( &g_audioState.vEmitterPos );
+            v2 = XMVectorSet( g_audioState.emitter.Position.x, g_audioState.emitter.Position.y, g_audioState.emitter.Position.z, 0.f );
+
+            const XMVECTOR eVelocity = ( v1 - v2 ) / fElapsedTime;
+            g_audioState.emitter.Position.x = g_audioState.vEmitterPos.x;
+            g_audioState.emitter.Position.y = g_audioState.vEmitterPos.y;
+            g_audioState.emitter.Position.z = g_audioState.vEmitterPos.z;
+
+            XMStoreFloat3( &tmp, eVelocity );
+            g_audioState.emitter.Velocity.x = tmp.x;
+            g_audioState.emitter.Velocity.y = tmp.y;
+            g_audioState.emitter.Velocity.z = tmp.z;
         }
 
         DWORD dwCalcFlags = X3DAUDIO_CALCULATE_MATRIX | X3DAUDIO_CALCULATE_DOPPLER
@@ -457,26 +584,35 @@ VOID CleanupAudio()
     if( g_audioState.pSourceVoice )
     {
         g_audioState.pSourceVoice->DestroyVoice();
-        g_audioState.pSourceVoice = NULL;
+        g_audioState.pSourceVoice = nullptr;
     }
 
     if( g_audioState.pSubmixVoice )
     {
         g_audioState.pSubmixVoice->DestroyVoice();
-        g_audioState.pSubmixVoice = NULL;
+        g_audioState.pSubmixVoice = nullptr;
     }
 
     if( g_audioState.pMasteringVoice )
     {
         g_audioState.pMasteringVoice->DestroyVoice();
-        g_audioState.pMasteringVoice = NULL;
+        g_audioState.pMasteringVoice = nullptr;
     }
 
     g_audioState.pXAudio2->StopEngine();
-    SAFE_RELEASE( g_audioState.pXAudio2 );
-    SAFE_RELEASE( g_audioState.pReverbEffect );
+    g_audioState.pXAudio2.Reset();
+    g_audioState.pVolumeLimiter.Reset();
+    g_audioState.pReverbEffect.Reset();
 
-    SAFE_DELETE_ARRAY( g_audioState.pbSampleData );
+    g_audioState.waveData.reset();
+
+#ifdef USING_XAUDIO2_7_DIRECTX
+    if (g_audioState.mXAudioDLL)
+    {
+        FreeLibrary(g_audioState.mXAudioDLL);
+        g_audioState.mXAudioDLL = nullptr;
+    }
+#endif
 
     CoUninitialize();
 

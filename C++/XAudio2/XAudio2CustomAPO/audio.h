@@ -1,12 +1,13 @@
 //--------------------------------------------------------------------------------------
 // File: audio.h
 //
-// XNA Developer Connection
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
-#include <xaudio2.h>
-#include <xaudio2fx.h>
-#include <x3daudio.h>
+
+#include "XAudio2Versions.h"
+
+#include <wrl/client.h>
 
 #include "SimpleAPO.h"
 #include "MonitorAPO.h"
@@ -23,10 +24,13 @@ struct AUDIO_STATE
     bool bInitialized;
 
     // XAudio2
-    IXAudio2* pXAudio2;
+#ifdef USING_XAUDIO2_7_DIRECTX
+    HMODULE mXAudioDLL;
+#endif
+    Microsoft::WRL::ComPtr<IXAudio2> pXAudio2;
     IXAudio2MasteringVoice* pMasteringVoice;
     IXAudio2SourceVoice* pSourceVoice;
-    BYTE* pbSampleData;
+    std::unique_ptr<uint8_t[]> waveData;
 
     // APOs
     SimpleAPOParams simpleParams;
@@ -45,7 +49,7 @@ extern AUDIO_STATE  g_audioState;
 // External functions
 //--------------------------------------------------------------------------------------
 HRESULT InitAudio();
-HRESULT PrepareAudio( const LPWSTR wavname );
+HRESULT PrepareAudio( const LPCWSTR wavname );
 VOID SetSimpleGain( float gain );
 VOID PauseAudio( bool resume );
 VOID CleanupAudio();

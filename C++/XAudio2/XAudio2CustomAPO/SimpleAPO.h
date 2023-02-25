@@ -1,12 +1,18 @@
 //--------------------------------------------------------------------------------------
 // SimpleAPO.h
 //
-// XNA Developer Connection
-// Copyright (C) Microsoft Corporation. All rights reserved.
+// Example custom xAPO for XAudio2
+//
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #pragma once
 
 #include "SampleAPOBase.h"
+
+#pragma warning(push)
+#pragma warning(disable : 4481)
+// VS 2010 considers 'override' to be a extension, but it's part of C++11 as of VS 2012
 
 struct SimpleAPOParams
 {
@@ -21,6 +27,7 @@ public:
     CSimpleAPO();
     ~CSimpleAPO();
 
-    void DoProcess( const SimpleAPOParams&, FLOAT32* __restrict pData, UINT32 cFrames, UINT32 cChannels );
+    void DoProcess( const SimpleAPOParams&, _Inout_updates_all_(cFrames * cChannels) FLOAT32* __restrict pData, UINT32 cFrames, UINT32 cChannels ) override;
 };
 
+#pragma warning(pop)
