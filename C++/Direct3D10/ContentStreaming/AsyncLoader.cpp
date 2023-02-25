@@ -3,7 +3,8 @@
 //
 // Illustrates streaming content using Direct3D 9/10
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "SDKMisc.h"
@@ -403,7 +404,7 @@ void CAsyncLoader::ProcessDeviceWorkItems( UINT CurrentNumResourcesToService, BO
         {
             if( !ResourceRequest.bError )
             {
-                HRESULT hr = ResourceRequest.pDataProcessor->UnLockDeviceObject();
+                hr = ResourceRequest.pDataProcessor->UnLockDeviceObject();
                 if( ResourceRequest.pHR )
                     *ResourceRequest.pHR = hr;
             }

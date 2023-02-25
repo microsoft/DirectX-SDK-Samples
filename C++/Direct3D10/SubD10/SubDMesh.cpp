@@ -5,7 +5,8 @@
 // The mesh loads .obj files from disk and converts them to a Catmull-Clark patch based
 // format.
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "SubDMesh.h"
@@ -407,9 +408,9 @@ BYTE CSubDMesh::ConditionPoint( D3DXVECTOR4* pV, D3DXVECTOR4* vOtherPatchV, CGro
 
     while( pCurrentQuad != pEndQuad )
     {
-        int iFarEdgePoint = FindLocalIndexForPointInQuad( pCurrentQuad, &vFanPoint );
-        iOffEdgePoint = pCurrentQuad->m_Points[WRAPPOINT( iFarEdgePoint + 1 )];
-        iFanPoint = pCurrentQuad->m_Points[WRAPPOINT( iFarEdgePoint + 2 )];
+        int iFarEdgePoint2 = FindLocalIndexForPointInQuad( pCurrentQuad, &vFanPoint );
+        iOffEdgePoint = pCurrentQuad->m_Points[WRAPPOINT( iFarEdgePoint2 + 1 )];
+        iFanPoint = pCurrentQuad->m_Points[WRAPPOINT( iFarEdgePoint2 + 2 )];
         vOffEdgePoint = m_Vertices[iOffEdgePoint].m_Position;
         vFanPoint = m_Vertices[iFanPoint].m_Position;
 

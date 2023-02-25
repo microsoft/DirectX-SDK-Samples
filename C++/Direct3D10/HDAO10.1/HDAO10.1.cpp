@@ -4,7 +4,8 @@
 // This code sample demonstrates the use of the DX10.1 Gather instruction to accelerate the
 // HDAO technique  
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 
 #include "DXUT.h"
@@ -928,9 +929,9 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         g_pSceneTextureVar->SetResource( g_pSceneTextureSRV );
         g_pRenderUnCombined->GetPassByIndex( 0 )->Apply( 0 );
         pd3dDevice->IASetInputLayout( g_pQuadVertexLayout );
-        UINT Stride = sizeof( SpriteVertex );
-        UINT Offset = 0;
-        pd3dDevice->IASetVertexBuffers( 0, 1, &g_pQuadVertexBuffer, &Stride, &Offset );
+        UINT Stride2 = sizeof( SpriteVertex );
+        UINT Offset2 = 0;
+        pd3dDevice->IASetVertexBuffers( 0, 1, &g_pQuadVertexBuffer, &Stride2, &Offset2 );
         pd3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
         pd3dDevice->Draw( 6, 0 );
         g_pSceneTextureVar->SetResource( NULL );

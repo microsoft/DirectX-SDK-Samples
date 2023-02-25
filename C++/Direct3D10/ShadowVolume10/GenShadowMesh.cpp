@@ -3,7 +3,8 @@
 //
 // Functions to help generate a mesh with degenerate triangles between edges for shadow volumes
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 
 #include "DXUT.h"
@@ -175,9 +176,9 @@ HRESULT GenerateShadowMesh( IDirect3DDevice9* pd3dDevice, ID3DXMesh* pMesh, ID3D
                         int nIndex;
                         int nVertIndex[3] =
                         {
-                            pdwPtRep[pdwIBData[f * 3]],
-                            pdwPtRep[pdwIBData[f * 3 + 1]],
-                            pdwPtRep[pdwIBData[f * 3 + 2]]
+                            static_cast<int>(pdwPtRep[pdwIBData[f * 3]]),
+                            static_cast<int>(pdwPtRep[pdwIBData[f * 3 + 1]]),
+                            static_cast<int>(pdwPtRep[pdwIBData[f * 3 + 2]])
                         };
                         nIndex = FindEdgeInMappingTable( nVertIndex[0], nVertIndex[1], pMapping, dwNumEdges );
 

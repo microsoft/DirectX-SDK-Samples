@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: ParticlesGS.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTgui.h"
@@ -340,9 +341,9 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     {
         if( fTime - fLastRandomize > 2.0 )
         {
-            g_vParticleColor.x = fabs( RPercent() );
-            g_vParticleColor.y = fabs( RPercent() );
-            g_vParticleColor.z = fabs( RPercent() );
+            g_vParticleColor.x = fabsf( RPercent() );
+            g_vParticleColor.y = fabsf( RPercent() );
+            g_vParticleColor.z = fabsf( RPercent() );
 
             fLastRandomize = fTime;
         }

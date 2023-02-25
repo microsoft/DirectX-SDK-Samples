@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: ShadowVolume10.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTgui.h"
@@ -998,9 +999,9 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         UpdateLights( l );
 
         // Clear the stencil
-        ID3D10DepthStencilView* pDSV = DXUTGetD3D10DepthStencilView();
+        ID3D10DepthStencilView* pDSV2 = DXUTGetD3D10DepthStencilView();
         if( g_RenderType != RENDERTYPE_COMPLEXITY )
-            pd3dDevice->ClearDepthStencilView( pDSV, D3D10_CLEAR_STENCIL, 1.0, 0 );
+            pd3dDevice->ClearDepthStencilView( pDSV2, D3D10_CLEAR_STENCIL, 1.0, 0 );
 
         // Render the shadow volume
         ID3D10EffectTechnique* pTech = g_pRenderShadow;

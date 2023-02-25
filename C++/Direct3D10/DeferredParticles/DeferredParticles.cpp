@@ -4,7 +4,8 @@
 // This sample shows a method of rendering deferred particles systems.  This is a variation
 // of the method of deferred particle shading shown at unity3d.com/blogs/nf/files/page0_blog_entry73_1.pdf
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTcamera.h"
@@ -349,7 +350,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
             vCenter.x = RPercent() * g_fWorldBounds;
             vCenter.y = g_fGroundPlane;
             vCenter.z = RPercent() * g_fWorldBounds;
-            float fStartTime = -fabs( RPercent() ) * 4.0f;
+            float fStartTime = -fabsf( RPercent() ) * 4.0f;
             D3DXVECTOR4 vFlashColor = g_vFlashColor[ rand() % MAX_FLASH_COLORS ];
 
             g_ppParticleSystem[i]->SetCenter( vCenter );
@@ -386,7 +387,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
             vCenter.x = RPercent() * g_fWorldBounds;
             vCenter.y = g_fGroundPlane;
             vCenter.z = RPercent() * g_fWorldBounds;
-            float fStartTime = -fabs( RPercent() ) * 4.0f;
+            float fStartTime = -fabsf( RPercent() ) * 4.0f;
             D3DXVECTOR4 vFlashColor = g_vFlashColor[ rand() % MAX_FLASH_COLORS ];
 
             float fStartSpeed = g_fGroundBurstStartSpeed + RPercent() * 30.0f;
@@ -420,7 +421,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
             vCenter.x = RPercent() * g_fWorldBounds;
             vCenter.y = g_fGroundPlane;
             vCenter.z = RPercent() * g_fWorldBounds;
-            float fStartTime = -fabs( RPercent() ) * 4.0f;
+            float fStartTime = -fabsf( RPercent() ) * 4.0f;
             D3DXVECTOR4 vFlashColor = g_vFlashColor[ rand() % MAX_FLASH_COLORS ];
 
             float fStartSpeed = g_fLandMineStartSpeed + RPercent() * 100.0f;
