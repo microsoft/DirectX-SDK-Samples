@@ -6,7 +6,8 @@
 //
 // Contributed by the AMD Developer Relations Team
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 
 #include "DXUT.h"
@@ -1567,9 +1568,9 @@ void NormalizePlane( D3DXVECTOR4* pPlaneEquation )
 {
     float mag;
     
-    mag = sqrt( pPlaneEquation->x * pPlaneEquation->x + 
-                pPlaneEquation->y * pPlaneEquation->y + 
-                pPlaneEquation->z * pPlaneEquation->z );
+    mag = sqrtf( pPlaneEquation->x * pPlaneEquation->x + 
+                 pPlaneEquation->y * pPlaneEquation->y + 
+                 pPlaneEquation->z * pPlaneEquation->z );
     
     pPlaneEquation->x = pPlaneEquation->x / mag;
     pPlaneEquation->y = pPlaneEquation->y / mag;

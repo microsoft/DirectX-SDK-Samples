@@ -6,7 +6,8 @@
 //
 // Contributed by AMD Developer Relations Team
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 
 #include "DXUT.h"
@@ -574,7 +575,7 @@ void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmedia
     pd3dImmediateContext->RSGetViewports( &num, oldvp );
     oldvp[ 1 ] = oldvp[ 0 ];
 
-    D3D11_RECT rects[1] = { { 0, UINT(g_fShadowMapWidth), 0, UINT(g_fShadowMapHeight) } };
+    D3D11_RECT rects[1] = { { 0, LONG(g_fShadowMapWidth), 0, LONG(g_fShadowMapHeight) } };
     pd3dImmediateContext->RSSetScissorRects( 1, rects );
 
     D3D11_VIEWPORT vp[1] = { { 0, 0, g_fShadowMapWidth, g_fShadowMapHeight, 0.0f, 1.0f } };

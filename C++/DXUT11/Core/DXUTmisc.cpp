@@ -3,7 +3,8 @@
 //
 // Shortcut macros and functions for using DX objects
 //
-// Copyright (c) Microsoft Corporation. All rights reserved
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "dxut.h"
 #include <xinput.h>
@@ -759,7 +760,7 @@ void WINAPI DXUTTraceDecl( D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] )
     DXUTOutputDebugString( L"decl[%d]=D3DDECL_END\n", iDecl );
 }
 
-#define TRACE_ID(iD) case iD: return L#iD;
+#define TRACE_ID(iD) case iD: return L## #iD;
 
 //--------------------------------------------------------------------------------------
 WCHAR* WINAPI DXUTTraceWindowsMessage( UINT uMsg )
@@ -1111,10 +1112,9 @@ BOOL WINAPI DXUTGetMonitorInfo( HMONITOR hMonitor, LPMONITORINFO lpMonitorInfo )
         HMODULE hUser32 = GetModuleHandle( L"USER32" );
         if( hUser32 )
         {
-            OSVERSIONINFOA osvi =
-            {
-                0
-            }; osvi.dwOSVersionInfoSize = sizeof( osvi ); GetVersionExA( ( OSVERSIONINFOA* )&osvi );
+            OSVERSIONINFOA osvi = { sizeof(osvi) };
+#pragma warning(suppress : 4996)
+            GetVersionExA( ( OSVERSIONINFOA* )&osvi );
             bool bNT = ( VER_PLATFORM_WIN32_NT == osvi.dwPlatformId );
             s_pFnGetMonitorInfo = ( LPGETMONITORINFO )( bNT ? GetProcAddress( hUser32,
                                                                               "GetMonitorInfoW" ) :
@@ -1230,7 +1230,10 @@ HRESULT WINAPI DXUTTrace( const CHAR* strFile, DWORD dwLine, HRESULT hr,
     if( bPopMsgBox && bShowMsgBoxOnError == false )
         bPopMsgBox = false;
 
-    return DXTrace( strFile, dwLine, hr, strMsg, bPopMsgBox );
+    WCHAR szFile[MAX_PATH] = {};
+    MultiByteToWideChar(CP_UTF8, 0, strFile, -1, szFile, MAX_PATH);
+
+    return DXTrace(szFile, dwLine, hr, strMsg, bPopMsgBox );
 }
 
 

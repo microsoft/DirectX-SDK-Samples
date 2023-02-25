@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DXUT.h
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #pragma once
 #ifndef DXUT_H
@@ -9,11 +10,6 @@
 
 #ifndef UNICODE
 #error "DXUT requires a Unicode build."
-#endif
-
-#include "dxsdkver.h"
-#if ( _DXSDK_PRODUCT_MAJOR < 9 || _DXSDK_BUILD_MAJOR < 1949 )
-#error The installed DXSDK is out of date.
 #endif
 
 #ifndef STRICT
@@ -93,15 +89,15 @@
 #include <xinput.h>
 
 // HRESULT translation for Direct3D and other APIs 
-#include <dxerr.h>
+#include "dxerr.h"
 
 
 #if defined(DEBUG) || defined(_DEBUG)
 #ifndef V
-#define V(x)           { hr = (x); if( FAILED(hr) ) { DXUTTrace( __FILE__, (DWORD)__LINE__, hr, L#x, true ); } }
+#define V(x)           { hr = (x); if( FAILED(hr) ) { DXUTTrace( __FILE__, (DWORD)__LINE__, hr, L## #x, true ); } }
 #endif
 #ifndef V_RETURN
-#define V_RETURN(x)    { hr = (x); if( FAILED(hr) ) { return DXUTTrace( __FILE__, (DWORD)__LINE__, hr, L#x, true ); } }
+#define V_RETURN(x)    { hr = (x); if( FAILED(hr) ) { return DXUTTrace( __FILE__, (DWORD)__LINE__, hr, L## #x, true ); } }
 #endif
 #else
 #ifndef V

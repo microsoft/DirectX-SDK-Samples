@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: ImeUi.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "dxut.h"
 #include "ImeUi.h"
@@ -1722,8 +1723,7 @@ LPARAM ImeUi_ProcessMessage( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM& lParam
                                 for( i = 0; i < g_dwCount; i++ )
                                 {
                                     UINT uLen = lstrlen(
-                                        ( LPTSTR )( ( DWORD )lpCandList + lpCandList->dwOffset[i] ) ) +
-                                        ( 3 - sizeof( TCHAR ) );
+                                        (LPTSTR)((UINT_PTR)lpCandList + lpCandList->dwOffset[i])) + (3 - sizeof(TCHAR));
                                     if( uLen + cChars > maxCandChar )
                                     {
                                         if( i > g_dwSelection )
@@ -1755,8 +1755,8 @@ LPARAM ImeUi_ProcessMessage( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM& lParam
                                  ( DWORD )i < lpCandList->dwCount && j < g_uCandPageSize;
                                  i++, j++ )
                             {
-                                ComposeCandidateLine( j,
-                                                      ( LPTSTR )( ( DWORD )lpCandList + lpCandList->dwOffset[i] ) );
+                                ComposeCandidateLine(j,
+                                    (LPTSTR)((UINT_PTR)lpCandList + lpCandList->dwOffset[i]));
                             }
                             ImeUiCallback_Free( ( HANDLE )lpCandList );
                             _ImmReleaseContext( hWnd, himc );
@@ -1986,6 +1986,7 @@ bool ImeUi_Initialize( HWND hwnd, bool bDisable )
     g_disableCicero.Initialize();
 
     g_osi.dwOSVersionInfoSize = sizeof( OSVERSIONINFOA );
+#pragma warning(suppress : 4996)
     GetVersionExA( &g_osi );
 
     bool bUnicodeImm = false;
@@ -2196,7 +2197,7 @@ static DWORD GetImeId( UINT uIndex )
         return dwRet[uIndex];
     }
     hklPrev = kl;
-    DWORD dwLang = ( ( DWORD )kl & 0xffff );
+    DWORD dwLang = (static_cast<DWORD>(reinterpret_cast<UINT_PTR>(kl)) & 0xffff);
 
     if( g_bUILessMode && GETLANG() == LANG_CHT )
     {
@@ -2684,9 +2685,8 @@ static void CheckToggleState()
     {
         return;
     }
-
-    bool bIme = _ImmIsIME( g_hklCurrent ) != 0
-        && ( ( 0xF0000000 & ( DWORD )g_hklCurrent ) == 0xE0000000 ); // Hack to detect IME correctly. When IME is running as TIP, ImmIsIME() returns true for CHT US keyboard.
+    bool bIme = _ImmIsIME(g_hklCurrent) != 0
+        && ((0xF0000000 & static_cast<DWORD>(reinterpret_cast<UINT_PTR>(g_hklCurrent))) == 0xE0000000); // Hack to detect IME correctly. When IME is running as TIP, ImmIsIME() returns true for CHT US keyboard.
     g_bChineseIME = ( GETPRIMLANG() == LANG_CHINESE ) && bIme;
 
     HIMC himc;
@@ -3241,11 +3241,11 @@ void CTsfUiLessMode::UpdateImeState( BOOL bResetCompartmentEventSink )
 STDAPI CTsfUiLessMode::CUIElementSink::OnActivated( DWORD dwProfileType, LANGID langid, REFCLSID clsid, REFGUID catid,
                                                     REFGUID guidProfile, HKL hkl, DWORD dwFlags )
 {
-    static GUID TF_PROFILE_DAYI =
+    static GUID s_TF_PROFILE_DAYI =
     {
         0x037B2C25, 0x480C, 0x4D7F, 0xB0, 0x27, 0xD6, 0xCA, 0x6B, 0x69, 0x78, 0x8A
     };
-    g_iCandListIndexBase = IsEqualGUID( TF_PROFILE_DAYI, guidProfile ) ? 0 : 1;
+    g_iCandListIndexBase = IsEqualGUID( s_TF_PROFILE_DAYI, guidProfile ) ? 0 : 1;
     if( IsEqualIID( catid, GUID_TFCAT_TIP_KEYBOARD ) && ( dwFlags & TF_IPSINK_FLAG_ACTIVE ) )
     {
         g_bChineseIME = ( dwProfileType & TF_PROFILETYPE_INPUTPROCESSOR ) && langid == LANG_CHT;

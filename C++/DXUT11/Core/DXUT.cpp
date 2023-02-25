@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DXUT.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #define DXUT_MIN_WINDOW_SIZE_X 200
@@ -651,8 +652,8 @@ HWND WINAPI DXUTGetHWNDDeviceWindowed()                    { return GetDXUTState
 RECT WINAPI DXUTGetWindowClientRect()                      { RECT rc; GetClientRect( DXUTGetHWND(), &rc ); return rc; }
 LONG WINAPI DXUTGetWindowWidth()                           { RECT rc = DXUTGetWindowClientRect(); return ((LONG)rc.right - rc.left); }
 LONG WINAPI DXUTGetWindowHeight()                          { RECT rc = DXUTGetWindowClientRect(); return ((LONG)rc.bottom - rc.top); }
-RECT WINAPI DXUTGetWindowClientRectAtModeChange()          { RECT rc = { 0, 0, GetDXUTState().GetWindowBackBufferWidthAtModeChange(), GetDXUTState().GetWindowBackBufferHeightAtModeChange() }; return rc; }
-RECT WINAPI DXUTGetFullsceenClientRectAtModeChange()       { RECT rc = { 0, 0, GetDXUTState().GetFullScreenBackBufferWidthAtModeChange(), GetDXUTState().GetFullScreenBackBufferHeightAtModeChange() }; return rc; }
+RECT WINAPI DXUTGetWindowClientRectAtModeChange()          { RECT rc = { 0, 0, static_cast<LONG>(GetDXUTState().GetWindowBackBufferWidthAtModeChange()), static_cast<LONG>(GetDXUTState().GetWindowBackBufferHeightAtModeChange()) }; return rc; }
+RECT WINAPI DXUTGetFullsceenClientRectAtModeChange()       { RECT rc = { 0, 0, static_cast<LONG>(GetDXUTState().GetFullScreenBackBufferWidthAtModeChange()), static_cast<LONG>(GetDXUTState().GetFullScreenBackBufferHeightAtModeChange()) }; return rc; }
 double WINAPI DXUTGetTime()                                { return GetDXUTState().GetTime(); }
 float WINAPI DXUTGetElapsedTime()                          { return GetDXUTState().GetElapsedTime(); }
 float WINAPI DXUTGetFPS()                                  { return GetDXUTState().GetFPS(); }
@@ -1866,9 +1867,8 @@ HRESULT WINAPI DXUTCreateDevice(D3D_FEATURE_LEVEL reqFL,  bool bWindowed, int nS
 
     if ( hr ==  DXUTERR_NODIRECT3D11 && GetDXUTState().GetMessageWhenD3D11NotAvailable() ) {
         
-        OSVERSIONINFOEX osv;
-        memset( &osv, 0, sizeof(osv) );
-        osv.dwOSVersionInfoSize = sizeof(osv);
+        OSVERSIONINFOEX osv = { sizeof(osv) };
+#pragma warning(suppress : 4996)
         GetVersionEx( (LPOSVERSIONINFO)&osv );
         
 
@@ -4239,11 +4239,11 @@ void DXUTAllowShortcutKeys( bool bAllowKeys )
     else
     {
         // Set low level keyboard hook if haven't already
-        if( GetDXUTState().GetKeyboardHook() == NULL )
+        if (GetDXUTState().GetKeyboardHook() == NULL)
         {
             // Set the low-level hook procedure.  Only works on Windows 2000 and above
-            OSVERSIONINFO OSVersionInfo;
-            OSVersionInfo.dwOSVersionInfoSize = sizeof( OSVersionInfo );
+            OSVERSIONINFO OSVersionInfo = { sizeof(OSVersionInfo) };
+#pragma warning(suppress : 4996)
             GetVersionEx( &OSVersionInfo );
             if( OSVersionInfo.dwPlatformId == VER_PLATFORM_WIN32_NT && OSVersionInfo.dwMajorVersion > 4 )
             {
@@ -4734,10 +4734,10 @@ void DXUTResizeDXGIBuffers( UINT Width, UINT Height, BOOL bFullScreen )
 
     // Call releasing
     GetDXUTState().SetInsideDeviceCallback( true );
-    LPDXUTCALLBACKD3D11SWAPCHAINRELEASING pCallbackSwapChainReleasing = GetDXUTState().GetD3D11SwapChainReleasingFunc
+    auto cbSwapChainReleasing = GetDXUTState().GetD3D11SwapChainReleasingFunc
         ();
-    if( pCallbackSwapChainReleasing != NULL )
-        pCallbackSwapChainReleasing( GetDXUTState().GetD3D11SwapChainResizedFuncUserContext() );
+    if(cbSwapChainReleasing != NULL )
+        cbSwapChainReleasing( GetDXUTState().GetD3D11SwapChainResizedFuncUserContext() );
     GetDXUTState().SetInsideDeviceCallback( false );
 
     // Release our old depth stencil texture and view 
@@ -4809,10 +4809,10 @@ void DXUTResizeDXGIBuffers( UINT Width, UINT Height, BOOL bFullScreen )
             hr = DXUTERR_RESETTINGDEVICEOBJECTS;
 
         GetDXUTState().SetInsideDeviceCallback( true );
-        LPDXUTCALLBACKD3D11SWAPCHAINRELEASING pCallbackSwapChainReleasing =
+        cbSwapChainReleasing =
             GetDXUTState().GetD3D11SwapChainReleasingFunc();
-        if( pCallbackSwapChainReleasing != NULL )
-            pCallbackSwapChainReleasing( GetDXUTState().GetD3D11SwapChainResizedFuncUserContext() );
+        if(cbSwapChainReleasing != NULL )
+            cbSwapChainReleasing( GetDXUTState().GetD3D11SwapChainResizedFuncUserContext() );
         GetDXUTState().SetInsideDeviceCallback( false );
         DXUTPause( false, false );
         PostQuitMessage( 0 );
