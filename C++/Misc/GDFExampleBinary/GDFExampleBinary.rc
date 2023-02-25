@@ -1,0 +1,64 @@
+/////////////////////////////////////////////////////////////////////////////
+//  Resource File for : GDFExampleBinary
+#include "GDFExampleBinary.h"
+
+// The following line is a workaround for a redefinition warning in sal.h
+// when using Visual Studio 2005 compilers and includes.  Comment out the
+// line if you would like to see the warning.
+#define _INC_CRTDEFS
+
+
+/////////////////////////////////////////////////////////////////////////////
+// This resource files requires the Platform SDK to be compiled.
+#include <gameux.h>
+
+
+#define APSTUDIO_READONLY_SYMBOLS
+
+#include <afxres.h>
+
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral Resources
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
+#ifdef _WIN32
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(DEFAULT)
+#endif //_WIN32
+
+ID_GDF_XML           DATA     "NEU\\GDFExampleBinary.gdf.xml"
+ID_GDF_THUMBNAIL     DATA     "NEU\\boxart_NEU.png"
+ID_ICON              ICON     "NEU\\gameicon_NEU.ico"
+
+#endif    // Neutral resources
+/////////////////////////////////////////////////////////////////////////////
+// English Resources
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+
+LANGUAGE LANG_ENGLISH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+ID_GDF_XML           DATA     "ENU\\GDFExampleBinary.gdf.xml"
+ID_GDF_THUMBNAIL     DATA     "ENU\\boxart_ENU.png"
+ID_ICON              ICON     "ENU\\gameicon_ENU.ico"
+
+#endif    // English resources
+/////////////////////////////////////////////////////////////////////////////
+// French Resources
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_FRA)
+#ifdef _WIN32
+
+LANGUAGE LANG_FRENCH, SUBLANG_DEFAULT
+#pragma code_page(1252)
+#endif //_WIN32
+
+ID_GDF_XML           DATA     "FRA\\GDFExampleBinary.gdf.xml"
+ID_GDF_THUMBNAIL     DATA     "FRA\\boxart_FRA.png"
+ID_ICON              ICON     "FRA\\gameicon_FRA.ico"
+
+#endif    // French resources
+/////////////////////////////////////////////////////////////////////////////

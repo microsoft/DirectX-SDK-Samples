@@ -1,0 +1,31 @@
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Collision", "Collision_2008.vcproj", "{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Debug|x64 = Debug|x64
+		Profile|Win32 = Profile|Win32
+		Profile|x64 = Profile|x64
+		Release|Win32 = Release|Win32
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Debug|Win32.Build.0 = Debug|Win32
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Debug|x64.ActiveCfg = Debug|x64
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Debug|x64.Build.0 = Debug|x64
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Profile|Win32.ActiveCfg = Profile|Win32
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Profile|Win32.Build.0 = Profile|Win32
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Profile|x64.ActiveCfg = Profile|x64
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Profile|x64.Build.0 = Profile|x64
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Release|Win32.ActiveCfg = Release|Win32
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Release|Win32.Build.0 = Release|Win32
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Release|x64.ActiveCfg = Release|x64
+		{F8738B59-CA6A-46F9-84F0-F0FF7C729DB7}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

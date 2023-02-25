@@ -1,0 +1,4 @@
+; ProviderGDFExampleBinary.def
+;
+LIBRARY    "ProviderGDFExampleBinary"
+EXPORTS

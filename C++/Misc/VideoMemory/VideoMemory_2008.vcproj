@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject ProjectType="Visual C++" Version="9.00" Name="VideoMemory" ProjectGUID="{A0763B6A-73EC-42D1-A283-F07D7613AC3C}" RootNamespace="VideoMemory" Keyword="Win32Proj" TargetFrameworkVersion="131072">
+<Platforms>
+<Platform Name="Win32" />
+<Platform Name="x64" />
+</Platforms>
+<ToolFiles />
+<Configurations>
+<Configuration Name="Debug|Win32" OutputDirectory="$(SolutionDir)$(ConfigurationName)" IntermediateDirectory="$(ConfigurationName)" ConfigurationType="1" CharacterSet="1">
+<Tool Name="VCPreBuildEventTool" CommandLine="" />
+<Tool Name="VCCustomBuildTool" />
+<Tool Name="VCXMLDataGeneratorTool" />
+<Tool Name="VCWebServiceProxyGeneratorTool" />
+<Tool Name="VCMIDLTool" />
+<Tool Name="VCCLCompilerTool" Optimization="0" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories="..\..\\Core;..\..\\Optional;" PreprocessorDefinitions="WIN32;_DEBUG;DEBUG;PROFILE;_CONSOLE;D3DXFX_LARGEADDRESS_HANDLE;" MinimalRebuild="true" BasicRuntimeChecks="3" RuntimeLibrary="3" EnableEnhancedInstructionSet="2" FloatingPointModel="2" UsePrecompiledHeader="0" PrecompiledHeaderThrough="DXUT.h" WarningLevel="4" Detect64BitPortabilityProblems="false" DebugInformationFormat="4" ExceptionHandling="1" ForceConformanceInForLoopScope="true" OpenMP="false" AdditionalOptions="" />
+<Tool Name="VCManagedResourceCompilerTool" />
+<Tool Name="VCResourceCompilerTool" />
+<Tool Name="VCPreLinkEventTool" />
+<Tool Name="VCLinkerTool" AdditionalOptions="" AdditionalDependencies="odbc32.lib odbccp32.lib wbemuuid.lib d3d9.lib " LinkIncremental="2" GenerateManifest="true" DelayLoadDLLs="" GenerateDebugInformation="true" SubSystem="1" LargeAddressAware="2" RandomizedBaseAddress="2" DataExecutionPrevention="2" TargetMachine="1" UACExecutionLevel="0" />
+<Tool Name="VCALinkTool" />
+<Tool Name="VCManifestTool" EmbedManifest="true" />
+<Tool Name="VCXDCMakeTool" />
+<Tool Name="VCBscMakeTool" />
+<Tool Name="VCFxCopTool" />
+<Tool Name="VCAppVerifierTool" />
+<Tool Name="VCPostBuildEventTool" CommandLine="" />
+</Configuration>
+<Configuration Name="Debug|x64" OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)" ConfigurationType="1" CharacterSet="1">
+<Tool Name="VCPreBuildEventTool" CommandLine="" />
+<Tool Name="VCCustomBuildTool" />
+<Tool Name="VCXMLDataGeneratorTool" />
+<Tool Name="VCWebServiceProxyGeneratorTool" />
+<Tool Name="VCMIDLTool" TargetEnvironment="3" />
+<Tool Name="VCCLCompilerTool" Optimization="0" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories="..\..\\Core;..\..\\Optional;" PreprocessorDefinitions="WIN32;_DEBUG;DEBUG;PROFILE;_CONSOLE;D3DXFX_LARGEADDRESS_HANDLE;" MinimalRebuild="true" BasicRuntimeChecks="3" RuntimeLibrary="3" FloatingPointModel="2" UsePrecompiledHeader="0" PrecompiledHeaderThrough="DXUT.h" WarningLevel="4" Detect64BitPortabilityProblems="false" DebugInformationFormat="3" ExceptionHandling="1" ForceConformanceInForLoopScope="true" OpenMP="false" AdditionalOptions="" />
+<Tool Name="VCManagedResourceCompilerTool" />
+<Tool Name="VCResourceCompilerTool" />
+<Tool Name="VCPreLinkEventTool" />
+<Tool Name="VCLinkerTool" AdditionalOptions="" AdditionalDependencies="odbc32.lib odbccp32.lib wbemuuid.lib d3d9.lib " LinkIncremental="2" GenerateManifest="true" DelayLoadDLLs="" GenerateDebugInformation="true" SubSystem="1" LargeAddressAware="2" RandomizedBaseAddress="2" DataExecutionPrevention="2" TargetMachine="17" UACExecutionLevel="0" />
+<Tool Name="VCALinkTool" />
+<Tool Name="VCManifestTool" EmbedManifest="true" />
+<Tool Name="VCXDCMakeTool" />
+<Tool Name="VCBscMakeTool" />
+<Tool Name="VCFxCopTool" />
+<Tool Name="VCAppVerifierTool" />
+<Tool Name="VCPostBuildEventTool" CommandLine="" />
+</Configuration>
+<Configuration Name="Release|Win32" OutputDirectory="$(SolutionDir)$(ConfigurationName)" IntermediateDirectory="$(ConfigurationName)" ConfigurationType="1" CharacterSet="1">
+<Tool Name="VCPreBuildEventTool" CommandLine="" />
+<Tool Name="VCCustomBuildTool" />
+<Tool Name="VCXMLDataGeneratorTool" />
+<Tool Name="VCWebServiceProxyGeneratorTool" />
+<Tool Name="VCMIDLTool" />
+<Tool Name="VCCLCompilerTool" Optimization="2" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories="..\..\\Core;..\..\\Optional;" PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;D3DXFX_LARGEADDRESS_HANDLE;" RuntimeLibrary="2" EnableEnhancedInstructionSet="2" FloatingPointModel="2" UsePrecompiledHeader="0" PrecompiledHeaderThrough="DXUT.h" WarningLevel="4" Detect64BitPortabilityProblems="false" DebugInformationFormat="3" ExceptionHandling="1" ForceConformanceInForLoopScope="true" OpenMP="false" AdditionalOptions="" />
+<Tool Name="VCManagedResourceCompilerTool" />
+<Tool Name="VCResourceCompilerTool" />
+<Tool Name="VCPreLinkEventTool" />
+<Tool Name="VCLinkerTool" AdditionalOptions="" AdditionalDependencies="odbc32.lib odbccp32.lib wbemuuid.lib d3d9.lib " LinkIncremental="1" GenerateManifest="true" DelayLoadDLLs="" GenerateDebugInformation="true" SubSystem="1" LargeAddressAware="2" OptimizeReferences="2" EnableCOMDATFolding="2" RandomizedBaseAddress="2" DataExecutionPrevention="2" TargetMachine="1" UACExecutionLevel="0" />
+<Tool Name="VCALinkTool" />
+<Tool Name="VCManifestTool" EmbedManifest="true" />
+<Tool Name="VCXDCMakeTool" />
+<Tool Name="VCBscMakeTool" />
+<Tool Name="VCFxCopTool" />
+<Tool Name="VCAppVerifierTool" />
+<Tool Name="VCPostBuildEventTool" CommandLine="" />
+</Configuration>
+<Configuration Name="Release|x64" OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)" ConfigurationType="1" CharacterSet="1">
+<Tool Name="VCPreBuildEventTool" CommandLine="" />
+<Tool Name="VCCustomBuildTool" />
+<Tool Name="VCXMLDataGeneratorTool" />
+<Tool Name="VCWebServiceProxyGeneratorTool" />
+<Tool Name="VCMIDLTool" TargetEnvironment="3" />
+<Tool Name="VCCLCompilerTool" Optimization="2" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories="..\..\\Core;..\..\\Optional;" PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE;D3DXFX_LARGEADDRESS_HANDLE;" RuntimeLibrary="2" FloatingPointModel="2" UsePrecompiledHeader="0" PrecompiledHeaderThrough="DXUT.h" WarningLevel="4" Detect64BitPortabilityProblems="false" DebugInformationFormat="3" ExceptionHandling="1" ForceConformanceInForLoopScope="true" OpenMP="false" AdditionalOptions="" />
+<Tool Name="VCManagedResourceCompilerTool" />
+<Tool Name="VCResourceCompilerTool" />
+<Tool Name="VCPreLinkEventTool" />
+<Tool Name="VCLinkerTool" AdditionalOptions="" AdditionalDependencies="odbc32.lib odbccp32.lib wbemuuid.lib d3d9.lib " LinkIncremental="1" GenerateManifest="true" DelayLoadDLLs="" GenerateDebugInformation="true" SubSystem="1" LargeAddressAware="2" OptimizeReferences="2" EnableCOMDATFolding="2" RandomizedBaseAddress="2" DataExecutionPrevention="2" TargetMachine="17" UACExecutionLevel="0" />
+<Tool Name="VCALinkTool" />
+<Tool Name="VCManifestTool" EmbedManifest="true" />
+<Tool Name="VCXDCMakeTool" />
+<Tool Name="VCBscMakeTool" />
+<Tool Name="VCFxCopTool" />
+<Tool Name="VCAppVerifierTool" />
+<Tool Name="VCPostBuildEventTool" CommandLine="" />
+</Configuration>
+<Configuration Name="Profile|Win32" OutputDirectory="$(SolutionDir)$(ConfigurationName)" IntermediateDirectory="$(ConfigurationName)" ConfigurationType="1" CharacterSet="1">
+<Tool Name="VCPreBuildEventTool" CommandLine="" />
+<Tool Name="VCCustomBuildTool" />
+<Tool Name="VCXMLDataGeneratorTool" />
+<Tool Name="VCWebServiceProxyGeneratorTool" />
+<Tool Name="VCMIDLTool" />
+<Tool Name="VCCLCompilerTool" Optimization="2" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories="..\..\\Core;..\..\\Optional;" PreprocessorDefinitions="WIN32;NDEBUG;PROFILE;_CONSOLE;D3DXFX_LARGEADDRESS_HANDLE;" RuntimeLibrary="2" EnableEnhancedInstructionSet="2" FloatingPointModel="2" UsePrecompiledHeader="0" PrecompiledHeaderThrough="DXUT.h" WarningLevel="4" Detect64BitPortabilityProblems="false" DebugInformationFormat="3" ExceptionHandling="1" ForceConformanceInForLoopScope="true" OpenMP="false" AdditionalOptions="" />
+<Tool Name="VCManagedResourceCompilerTool" />
+<Tool Name="VCResourceCompilerTool" />
+<Tool Name="VCPreLinkEventTool" />
+<Tool Name="VCLinkerTool" AdditionalOptions="" AdditionalDependencies="odbc32.lib odbccp32.lib wbemuuid.lib d3d9.lib " LinkIncremental="1" GenerateManifest="true" DelayLoadDLLs="" GenerateDebugInformation="true" SubSystem="1" LargeAddressAware="2" OptimizeReferences="2" EnableCOMDATFolding="2" RandomizedBaseAddress="2" DataExecutionPrevention="2" TargetMachine="1" UACExecutionLevel="0" />
+<Tool Name="VCALinkTool" />
+<Tool Name="VCManifestTool" EmbedManifest="true" />
+<Tool Name="VCXDCMakeTool" />
+<Tool Name="VCBscMakeTool" />
+<Tool Name="VCFxCopTool" />
+<Tool Name="VCAppVerifierTool" />
+<Tool Name="VCPostBuildEventTool" CommandLine="" />
+</Configuration>
+<Configuration Name="Profile|x64" OutputDirectory="$(SolutionDir)$(PlatformName)\$(ConfigurationName)" IntermediateDirectory="$(PlatformName)\$(ConfigurationName)" ConfigurationType="1" CharacterSet="1">
+<Tool Name="VCPreBuildEventTool" CommandLine="" />
+<Tool Name="VCCustomBuildTool" />
+<Tool Name="VCXMLDataGeneratorTool" />
+<Tool Name="VCWebServiceProxyGeneratorTool" />
+<Tool Name="VCMIDLTool" TargetEnvironment="3" />
+<Tool Name="VCCLCompilerTool" Optimization="2" EnableIntrinsicFunctions="true" AdditionalIncludeDirectories="..\..\\Core;..\..\\Optional;" PreprocessorDefinitions="WIN32;NDEBUG;PROFILE;_CONSOLE;D3DXFX_LARGEADDRESS_HANDLE;" RuntimeLibrary="2" FloatingPointModel="2" UsePrecompiledHeader="0" PrecompiledHeaderThrough="DXUT.h" WarningLevel="4" Detect64BitPortabilityProblems="false" DebugInformationFormat="3" ExceptionHandling="1" ForceConformanceInForLoopScope="true" OpenMP="false" AdditionalOptions="" />
+<Tool Name="VCManagedResourceCompilerTool" />
+<Tool Name="VCResourceCompilerTool" />
+<Tool Name="VCPreLinkEventTool" />
+<Tool Name="VCLinkerTool" AdditionalOptions="" AdditionalDependencies="odbc32.lib odbccp32.lib wbemuuid.lib d3d9.lib " LinkIncremental="1" GenerateManifest="true" DelayLoadDLLs="" GenerateDebugInformation="true" SubSystem="1" LargeAddressAware="2" OptimizeReferences="2" EnableCOMDATFolding="2" RandomizedBaseAddress="2" DataExecutionPrevention="2" TargetMachine="17" UACExecutionLevel="0" />
+<Tool Name="VCALinkTool" />
+<Tool Name="VCManifestTool" EmbedManifest="true" />
+<Tool Name="VCXDCMakeTool" />
+<Tool Name="VCBscMakeTool" />
+<Tool Name="VCFxCopTool" />
+<Tool Name="VCAppVerifierTool" />
+<Tool Name="VCPostBuildEventTool" CommandLine="" />
+</Configuration>
+</Configurations>
+<References />
+<Files>
+<Filter Name="DXUT" />
+      <File RelativePath="VideoMemory.cpp" />
+      <File RelativePath="VidMemViaD3D9.cpp" />
+      <File RelativePath="VidMemViaDDraw.cpp" />
+      <File RelativePath="VidMemViaDxDiag.cpp" />
+      <File RelativePath="VidMemViaDXGI.cpp" />
+      <File RelativePath="VidMemViaWMI.cpp" />
+  <Filter Name="Shaders" Filter="fx;fxh;hlsl">
+  </Filter>
+<Filter Name="Resource Files" Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+      <File RelativePath="VideoMemory.rc" />
+  </Filter>
+</Files>
+<Globals />
+</VisualStudioProject>
