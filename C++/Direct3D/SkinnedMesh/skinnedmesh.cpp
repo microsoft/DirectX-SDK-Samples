@@ -1,13 +1,16 @@
 //--------------------------------------------------------------------------------------
 // File: SkinnedMesh.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTcamera.h"
 #include "DXUTsettingsdlg.h"
 #include "SDKmisc.h"
 #include "resource.h"
+
+#pragma warning(disable : 4316)
 
 //#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
 //#define DEBUG_PS   // Uncomment this line to debug pixel shaders 

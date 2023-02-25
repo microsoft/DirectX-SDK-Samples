@@ -5,7 +5,8 @@
 // This inteface can be used to implement custom state-change handling for the D3DX
 // Effects system.
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTcamera.h"
@@ -13,7 +14,6 @@
 #include "SDKmisc.h"
 #pragma warning(disable: 4995)
 #include "resource.h"
-
 
 //--------------------------------------------------------------------------------------
 // Defines custom interface to a sample implementation of the ID3DXEffectStateManager
@@ -40,7 +40,7 @@
 #include "LoadSceneFromX.h"
 #pragma warning(default: 4995)
 
-
+#pragma warning(disable : 4316)
 
 //--------------------------------------------------------------------------------------
 // Global variables

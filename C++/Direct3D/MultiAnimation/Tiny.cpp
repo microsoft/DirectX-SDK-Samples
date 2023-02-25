@@ -8,7 +8,8 @@
 //       classes use the MultiAnimation class library to control the
 //       animations.
 //
-// Copyright (c) Microsoft Corporation. All rights reserved
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #include "DXUT.h"
 #include "SDKmisc.h"
@@ -204,6 +205,7 @@ HRESULT CTiny::Setup( CMultiAnim* pMA,
 //-----------------------------------------------------------------------------
 void CTiny::Cleanup()
 {
+#pragma warning(suppress : 5205)
     delete m_pCallbackHandler; m_pCallbackHandler = NULL;
 }
 
@@ -479,8 +481,6 @@ void CTiny::ChooseNewLocation( D3DXVECTOR3* pV )
 //-----------------------------------------------------------------------------
 bool CTiny::IsBlockedByCharacter( D3DXVECTOR3* pV )
 {
-    D3DXVECTOR3 vSub;
-
     // move through each character to see if it blocks this
     vector <CTiny*>::iterator itCur, itEnd = m_pv_pChars->end();
     for( itCur = m_pv_pChars->begin(); itCur != itEnd; ++ itCur )

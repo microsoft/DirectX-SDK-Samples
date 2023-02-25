@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: PixelMotionBlur.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTsettingsdlg.h"
@@ -12,6 +13,7 @@
 //#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
 //#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
 
+#pragma warning(disable : 4316)
 
 //-----------------------------------------------------------------------------
 // Globals variables and definitions

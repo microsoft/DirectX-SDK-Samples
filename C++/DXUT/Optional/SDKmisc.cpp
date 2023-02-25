@@ -3,7 +3,8 @@
 //
 // Various helper functionality that is shared between SDK samples
 //
-// Copyright (c) Microsoft Corporation. All rights reserved
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "dxut.h"
 #include "SDKmisc.h"
@@ -141,7 +142,7 @@ INT_PTR CALLBACK DisplaySwitchToREFWarningProc( HWND hDlg, UINT message, WPARAM 
             SendMessage( GetDlgItem( hDlg, 0x100 ), STM_SETIMAGE, IMAGE_ICON, ( LPARAM )LoadIcon( 0, IDI_QUESTION ) );
             WCHAR sz[512];
             swprintf_s( sz, 512,
-                             L"This program needs to use the Direct3D %d reference device.  This device implements the entire Direct3D %d feature set, but runs very slowly.  Do you wish to continue?", lParam, lParam );
+                             L"This program needs to use the Direct3D %zu reference device.  This device implements the entire Direct3D %zu feature set, but runs very slowly.  Do you wish to continue?", lParam, lParam );
             SetDlgItemText( hDlg, 0x101, sz );
             SetDlgItemText( hDlg, IDYES, L"&Yes" );
             SetDlgItemText( hDlg, IDNO, L"&No" );

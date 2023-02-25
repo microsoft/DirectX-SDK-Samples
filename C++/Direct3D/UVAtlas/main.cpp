@@ -1172,7 +1172,7 @@ HRESULT ProcessFile( IDirect3DDevice9* pd3dDevice, WCHAR* strFile, SETTINGS* pSe
     // add _result before the last period in the file name
     size_t ustrLen, uPeriodPos;
 
-    wprintf( L"Processing file %s\n", strFile, strResult );
+    wprintf( L"Processing file %ls\n", strFile );
 
     ustrLen = lstrlen(strFile);
 

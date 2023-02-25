@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: EffectParam.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTsettingsdlg.h"
@@ -809,7 +810,6 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
     }
 
     HRESULT hr;
-    D3DXMATRIXA16 mWorld;
     D3DXMATRIXA16 mWorldView;
     D3DXMATRIXA16 mViewProj;
     D3DXMATRIXA16 mWorldViewProjection;

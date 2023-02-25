@@ -18,6 +18,7 @@ issues and bugs as well.
 |Effects for Direct3D 11| See [FX11](https://github.com/microsoft/FX11).|
 |XNAMath| See [DirectXMath](https://github.com/microsoft/DirectXMath).|
 |DirectX Capabilities Viewer| See [DxCapsViewer](https://github.com/microsoft/DxCapsViewer).|
+|UVAtlas isochart texture atlas| See [UVAtlas](https://github.com/Microsoft/UVAtlas).|
 
 ## Code of Conduct
 
