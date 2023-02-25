@@ -1,28 +1,27 @@
-# Project
+![DirectX Logo](https://raw.githubusercontent.com/wiki/Microsoft/DXUT/Dx_logo.GIF)
 
-> This repo has been populated by an initial template to help get you started. Please
-> make sure to update the content to build a great experience for community-building.
+# DirectX SDK Samples
 
-As the maintainer of this project, please make a few updates:
+This repository contains an archive of DirectX samples that shipped in the legacy DirectX SDK. They have been updated to build with Visual Studio 2019, require only the current Windows SDK, and make use the [Microsoft.DXSDK.D3DX](https://www.nuget.org/packages/Microsoft.DXSDK.D3DX) NuGet package.
 
-- Improving this README.MD file to provide a great experience
-- Updating SUPPORT.MD with content about this project's support experience
-- Understanding the security reporting process in SECURITY.MD
-- Remove this section from the README
+## Disclaimer
 
-## Contributing
+The DirectX SDK itself is deprecated and legacy per [Microsoft Docs](https://learn.microsoft.com/windows/win32/directx-sdk--august-2009-), along with D3DX9, D3DX10, D3DX11, XACT, Managed DirectX 1.1, XInput 1.1-1.3, and XAudio 2.0-2.7. These samples are provided here for developer education, but new projects are *strongly encouraged* to seek out supported alternatives to these legacy components. They also have known security 
+issues and bugs as well.
 
-This project welcomes contributions and suggestions.  Most contributions require you to agree to a
-Contributor License Agreement (CLA) declaring that you have the right to, and actually do, grant us
-the rights to use your contribution. For details, visit https://cla.opensource.microsoft.com.
+|Technology|Notes|
+|--|--|
+|DirectX 12|See [DirectX-Graphics-Samples](https://github.com/microsoft/DirectX-Graphics-Samples), [DirectX-Headers](https://github.com/microsoft/DirectX-Headers), and [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler).|
+|Microsoft GDK</br>Xbox Development| See [Xbox-GDK-Samples](https://github.com/microsoft/Xbox-GDK-Samples) and [Xbox-ATG-Samples](https://github.com/microsoft/Xbox-ATG-Samples).|
+|Universal Windows Platform (UWP)| See [Windows-universal-samples](https://github.com/microsoft/Windows-universal-samples).|
+|DXUT for Direct3D 11| See [DXUT](https://github.com/microsoft/DXUT/).|
+|Effects for Direct3D 11| See [FX11](https://github.com/microsoft/FX11).|
+|XNAMath| See [DirectXMath](https://github.com/microsoft/DirectXMath).|
+|DirectX Capabilities Viewer| See [DxCapsViewer](https://github.com/microsoft/DxCapsViewer).|
 
-When you submit a pull request, a CLA bot will automatically determine whether you need to provide
-a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions
-provided by the bot. You will only need to do this once across all repos using our CLA.
+## Code of Conduct
 
-This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
-For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or
-contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
+This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/). For more information see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
 
 ## Trademarks
 
