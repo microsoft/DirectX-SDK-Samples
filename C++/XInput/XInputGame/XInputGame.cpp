@@ -3,7 +3,8 @@
 //
 // Basic starting point for new Direct3D samples
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTsettingsdlg.h"
@@ -226,21 +227,23 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
     g_SampleUI.SetLocation( pBackBufferSurfaceDesc->Width - 170, pBackBufferSurfaceDesc->Height - 350 );
     g_SampleUI.SetSize( 170, 300 );
 
-    float fSizeInPixels = pBackBufferSurfaceDesc->Width / 15.0f;
-    for( int iPlayer = 0; iPlayer < DXUT_MAX_CONTROLLERS; iPlayer++ )
     {
-        g_GameState.player[iPlayer].vSizeInPixels = D3DXVECTOR2( fSizeInPixels, fSizeInPixels );
-        SetAnimationRect( &g_GameState.player[iPlayer].rcTexture, iPlayer, 0 );
-        g_GameState.player[iPlayer].clr = 0xFFFFFFFF;
+        float fSizeInPixels = pBackBufferSurfaceDesc->Width / 15.0f;
+        for (int iPlayer = 0; iPlayer < DXUT_MAX_CONTROLLERS; iPlayer++)
+        {
+            g_GameState.player[iPlayer].vSizeInPixels = D3DXVECTOR2(fSizeInPixels, fSizeInPixels);
+            SetAnimationRect(&g_GameState.player[iPlayer].rcTexture, iPlayer, 0);
+            g_GameState.player[iPlayer].clr = 0xFFFFFFFF;
+        }
+        g_GameState.player[0].vPosition = D3DXVECTOR2(pBackBufferSurfaceDesc->Width / 2.0f,
+            pBackBufferSurfaceDesc->Height / 2.0f);
+        g_GameState.player[1].vPosition = D3DXVECTOR2(pBackBufferSurfaceDesc->Width / 2.0f - fSizeInPixels * 4,
+            pBackBufferSurfaceDesc->Height / 2.0f - fSizeInPixels * 4);
+        g_GameState.player[2].vPosition = D3DXVECTOR2(pBackBufferSurfaceDesc->Width / 2.0f - fSizeInPixels * 4,
+            pBackBufferSurfaceDesc->Height / 2.0f + fSizeInPixels * 4);
+        g_GameState.player[3].vPosition = D3DXVECTOR2(pBackBufferSurfaceDesc->Width / 2.0f + fSizeInPixels * 4,
+            pBackBufferSurfaceDesc->Height / 2.0f - fSizeInPixels * 4);
     }
-    g_GameState.player[0].vPosition = D3DXVECTOR2( pBackBufferSurfaceDesc->Width / 2.0f,
-                                                   pBackBufferSurfaceDesc->Height / 2.0f );
-    g_GameState.player[1].vPosition = D3DXVECTOR2( pBackBufferSurfaceDesc->Width / 2.0f - fSizeInPixels * 4,
-                                                   pBackBufferSurfaceDesc->Height / 2.0f - fSizeInPixels * 4 );
-    g_GameState.player[2].vPosition = D3DXVECTOR2( pBackBufferSurfaceDesc->Width / 2.0f - fSizeInPixels * 4,
-                                                   pBackBufferSurfaceDesc->Height / 2.0f + fSizeInPixels * 4 );
-    g_GameState.player[3].vPosition = D3DXVECTOR2( pBackBufferSurfaceDesc->Width / 2.0f + fSizeInPixels * 4,
-                                                   pBackBufferSurfaceDesc->Height / 2.0f - fSizeInPixels * 4 );
 
     for( int iAmmo = 0; iAmmo < MAX_AMMO; iAmmo++ )
     {
@@ -824,8 +827,10 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
                      DXUTGetD3D9BackBufferSurfaceDesc()->Height );
             D3DXMatrixScaling( &matTransform, 1.0f, 1.0f, 1.0f );
             g_pSprite->SetTransform( &matTransform );
-            D3DXVECTOR3 vPos = D3DXVECTOR3( 0.0f, 0.0f, 0.0f );
-            g_pSprite->Draw( g_pStarTexture, &rcTexture, NULL, &vPos, 0xFFFFFFFF );
+            {
+                D3DXVECTOR3 vPos = D3DXVECTOR3(0.0f, 0.0f, 0.0f);
+                g_pSprite->Draw(g_pStarTexture, &rcTexture, NULL, &vPos, 0xFFFFFFFF);
+            }
 
             for( int i = 0; i < MAX_AMMO; i++ )
             {

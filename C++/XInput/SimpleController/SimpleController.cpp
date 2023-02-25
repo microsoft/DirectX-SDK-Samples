@@ -1,18 +1,28 @@
 //-----------------------------------------------------------------------------
 // File: SimpleController.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Simple read of XInput gamepad controller state
+//
+// Note: This sample works with all versions of XInput (1.4, 1.3, and 9.1.0)
+//
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
-#define STRICT
-#include <windows.h>
-#include <commdlg.h>
-#include <XInput.h> // XInput API
-#include <basetsd.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
-#include <strsafe.h>
-#pragma warning( default : 4996 )
-#include "resource.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <stdio.h>
+#include <commdlg.h>
+#include <basetsd.h>
+#include <objbase.h>
+
+#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/)
+#include <XInput.h>
+#pragma comment(lib,"xinput.lib")
+#else
+#include <XInput.h>
+#pragma comment(lib,"xinput9_1_0.lib")
+#endif
 
 //-----------------------------------------------------------------------------
 // Function-prototypes
@@ -25,19 +35,16 @@ void RenderFrame();
 //-----------------------------------------------------------------------------
 // Defines, constants, and global variables
 //-----------------------------------------------------------------------------
-#define SAFE_DELETE(p)  { if(p) { delete (p);     (p)=NULL; } }
-#define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=NULL; } }
-
 #define MAX_CONTROLLERS 4  // XInput handles up to 4 controllers 
 #define INPUT_DEADZONE  ( 0.24f * FLOAT(0x7FFF) )  // Default to 24% of the +/- 32767 range.   This is a reasonable default value but can be altered if needed.
 
-struct CONTROLER_STATE
+struct CONTROLLER_STATE
 {
     XINPUT_STATE state;
     bool bConnected;
 };
 
-CONTROLER_STATE g_Controllers[MAX_CONTROLLERS];
+CONTROLLER_STATE g_Controllers[MAX_CONTROLLERS];
 WCHAR g_szMessage[4][1024] = {0};
 HWND    g_hWnd;
 bool    g_bDeadZoneOn = true;
@@ -48,15 +55,20 @@ bool    g_bDeadZoneOn = true;
 // Desc: Entry point for the application.  Since we use a simple dialog for 
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-int APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE, LPWSTR, int )
+int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int )
 {
+    // Initialize COM
+    HRESULT hr;
+    if( FAILED( hr = CoInitializeEx(nullptr, COINIT_MULTITHREADED) ) )
+        return 1;
+
     // Register the window class
     HBRUSH hBrush = CreateSolidBrush( 0xFF0000 );
     WNDCLASSEX wc =
     {
-        sizeof( WNDCLASSEX ), 0, MsgProc, 0L, 0L, hInst, NULL,
-        LoadCursor( NULL, IDC_ARROW ), hBrush,
-        NULL, L"XInputSample", NULL
+        sizeof( WNDCLASSEX ), 0, MsgProc, 0L, 0L, hInstance, nullptr,
+        LoadCursor( nullptr, IDC_ARROW ), hBrush,
+        nullptr, L"XInputSample", nullptr
     };
     RegisterClassEx( &wc );
 
@@ -64,10 +76,10 @@ int APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE, LPWSTR, int )
     g_hWnd = CreateWindow( L"XInputSample", L"XInput Sample: SimpleController",
                            WS_OVERLAPPED | WS_VISIBLE | WS_CAPTION | WS_SYSMENU | WS_MINIMIZEBOX,
                            CW_USEDEFAULT, CW_USEDEFAULT, 600, 600,
-                           NULL, NULL, hInst, NULL );
+                           nullptr, nullptr, hInstance, nullptr );
 
     // Init state
-    ZeroMemory( g_Controllers, sizeof( CONTROLER_STATE ) * MAX_CONTROLLERS );
+    ZeroMemory( g_Controllers, sizeof( CONTROLLER_STATE ) * MAX_CONTROLLERS );
 
     // Enter the message loop
     bool bGotMsg;
@@ -77,7 +89,7 @@ int APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE, LPWSTR, int )
     while( WM_QUIT != msg.message )
     {
         // Use PeekMessage() so we can use idle time to render the scene and call pEngine->DoWork()
-        bGotMsg = ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) != 0 );
+        bGotMsg = ( PeekMessage( &msg, nullptr, 0U, 0U, PM_REMOVE ) != 0 );
 
         if( bGotMsg )
         {
@@ -93,7 +105,9 @@ int APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE, LPWSTR, int )
     }
 
     // Clean up 
-    UnregisterClass( L"XInputSample", NULL );
+    UnregisterClass( L"XInputSample", nullptr );
+
+    CoUninitialize();
 
     return 0;
 }
@@ -152,11 +166,11 @@ void RenderFrame()
                 }
             }
 
-            StringCchPrintfW( sz[i], 1024,
-                              L"Controller %d: Connected\n"
+            swprintf_s( sz[i], 1024,
+                              L"Controller %u: Connected\n"
                               L"  Buttons: %s%s%s%s%s%s%s%s%s%s%s%s%s%s\n"
-                              L"  Left Trigger: %d\n"
-                              L"  Right Trigger: %d\n"
+                              L"  Left Trigger: %u\n"
+                              L"  Right Trigger: %u\n"
                               L"  Left Thumbstick: %d/%d\n"
                               L"  Right Thumbstick: %d/%d", i,
                               ( wButtons & XINPUT_GAMEPAD_DPAD_UP ) ? L"DPAD_UP " : L"",
@@ -182,13 +196,12 @@ void RenderFrame()
         }
         else
         {
-            StringCchPrintf( sz[i], 1024,
-                             L"Controller %d: Not connected", i );
+            swprintf_s( sz[i], 1024, L"Controller %u: Not connected", i );
         }
 
         if( wcscmp( sz[i], g_szMessage[i] ) != 0 )
         {
-            StringCchCopy( g_szMessage[i], 1024, sz[i] );
+            wcscpy_s( g_szMessage[i], 1024, sz[i] );
             bRepaint = true;
         }
     }
@@ -196,7 +209,7 @@ void RenderFrame()
     if( bRepaint )
     {
         // Repaint the window if needed 
-        InvalidateRect( g_hWnd, NULL, TRUE );
+        InvalidateRect( g_hWnd, nullptr, TRUE );
         UpdateWindow( g_hWnd );
     }
 
@@ -215,18 +228,26 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
     {
         case WM_ACTIVATEAPP:
         {
+#if (_WIN32_WINNT >= 0x0602 /*_WIN32_WINNT_WIN8*/) && (_WIN32_WINNT < 0x0A00 /*_WIN32_WINNT_WIN10*/)
+
+            //
+            // XInputEnable is implemented by XInput 1.3 and 1.4, but not 9.1.0
+            //
+
             if( wParam == TRUE )
             {
                 // App is now active, so re-enable XInput
-                XInputEnable( true );
+                XInputEnable( TRUE );
             }
             else
             {
                 // App is now inactive, so disable XInput to prevent
                 // user input from effecting application and to 
                 // disable rumble. 
-                XInputEnable( false );
+                XInputEnable( FALSE );
             }
+
+#endif
             break;
         }
 
@@ -271,6 +292,3 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
 
     return DefWindowProc( hWnd, msg, wParam, lParam );
 }
-
-
-
