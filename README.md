@@ -54,3 +54,11 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 ## Trademarks
 
 This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general). Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
+
+## Credits
+
+A full list of credits for all these samples is lost to history. They have been developed by various Microsoft engineers over many years.
+
+A partial list of contributors includes: Dave Bonora, David Cook, Shanon Drone, Kev Gee, Xin Huang, Matt Lee, Cody Pritchard, Jason Sandlin, David Tuft, and Chuck Walbourn.
+
+The following samples were provided by AMD: DepthOfField10.1, HDAO10.1, TransparencyAA10.1, ContactHardeningShadows11, DecalTessellation11, DetailTessellation11, and PNTriangles11.
