@@ -873,7 +873,7 @@ FAIL:
     if( bResult == FALSE )
     {
         SAFE_DELETE( pAdjacencyAlloc );
-        SAFE_DELETE( *pMeshOut );
+        SAFE_RELEASE( *pMeshOut );
     }
     *ppAdjacency = pAdjacencyIn;
     return bResult;
