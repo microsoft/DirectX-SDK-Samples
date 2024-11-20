@@ -166,7 +166,7 @@ HRESULT DisplayStatistics(IGameStatistics* piStats)
 // Name: wmain
 // Desc: Main function
 //--------------------------------------------------------------------------------------
-int __cdecl wmain(int argc, __in_ecount(argc) wchar_t *argv[ ], __in wchar_t *)
+int __cdecl wmain()
 {
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
     if (SUCCEEDED(hr))
