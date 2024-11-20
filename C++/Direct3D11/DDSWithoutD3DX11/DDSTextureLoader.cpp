@@ -361,14 +361,14 @@ static void GetSurfaceInfo( UINT width, UINT height, D3DFORMAT fmt, UINT* pNumBy
 
     // From the DXSDK docs:
     //
-    //     When computing DXTn compressed sizes for non-square textures, the 
+    //     When computing DXTn compressed sizes for non-square textures, the
     //     following formula should be used at each mipmap level:
     //
-    //         max(1, width * 4) x max(1, height * 4) x 8(DXT1) or 16(DXT2-5)
+    //         max(1, width / 4) x max(1, height / 4) x 8(DXT1) or 16(DXT2-5)
     //
-    //     The pitch for DXTn formats is different from what was returned in 
-    //     Microsoft DirectX 7.0. It now refers the pitch of a row of blocks. 
-    //     For example, if you have a width of 16, then you will have a pitch 
+    //     The pitch for DXTn formats is different from what was returned in
+    //     Microsoft DirectX 7.0. It now refers the pitch of a row of blocks.
+    //     For example, if you have a width of 16, then you will have a pitch
     //     of four blocks (4*8 for DXT1, 4*16 for DXT2-5.)"
 
     switch( fmt )
@@ -701,6 +701,10 @@ static DXGI_FORMAT GetDXGIFormat( const DDS_PIXELFORMAT& ddpf )
         switch (ddpf.RGBBitCount)
         {
         case 32:
+            // DXGI_FORMAT_B8G8R8A8_UNORM_SRGB & DXGI_FORMAT_B8G8R8X8_UNORM_SRGB should be
+            // written using the DX10 extended header instead since these formats require
+            // DXGI 1.1
+            //
             // This code will use the fallback to swizzle BGR to RGB in memory for standard
             // DDS files which works on 10 and 10.1 devices with WDDM 1.0 drivers
             //
@@ -916,7 +920,7 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
                                      __out LPDIRECT3DBASETEXTURE9* ppTex )
 {
     HRESULT hr = S_OK;
-    
+
     UINT iWidth = pHeader->width;
     UINT iHeight = pHeader->height;
 
@@ -1200,7 +1204,7 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
 
         if ( BitsPerPixel( d3d10ext->dxgiFormat ) == 0 )
             return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
-           
+
         format = d3d10ext->dxgiFormat;
 
         switch ( d3d10ext->resourceDimension )
@@ -1243,7 +1247,7 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
         {
             resDim = DDS_DIMENSION_TEXTURE3D;
         }
-        else 
+        else
         {
             if ( pHeader->caps2 & DDS_CUBEMAP )
             {
@@ -1317,12 +1321,12 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
             {
                 // This is the right bound because we set arraySize to (NumCubes*6) above
                 if ( (arraySize > D3D11_REQ_TEXTURECUBE_DIMENSION)
-                     || (iWidth > D3D11_REQ_TEXTURECUBE_DIMENSION) 
+                     || (iWidth > D3D11_REQ_TEXTURECUBE_DIMENSION)
                      || (iHeight > D3D11_REQ_TEXTURECUBE_DIMENSION))
                     return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
             }
             else if ( (arraySize > D3D11_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION)
-                 || (iWidth > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION) 
+                 || (iWidth > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION)
                  || (iHeight > D3D11_REQ_TEXTURE2D_U_OR_V_DIMENSION))
             {
                 return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
@@ -1331,14 +1335,14 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
 
         case DDS_DIMENSION_TEXTURE3D:
             if ( (arraySize > 1)
-                 || (iWidth > D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION) 
+                 || (iWidth > D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION)
                  || (iHeight > D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION)
                  || (iDepth > D3D11_REQ_TEXTURE3D_U_V_OR_W_DIMENSION) )
                 return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
             break;
         }
 
-    
+
     if ( bSRGB )
         format = MAKE_SRGB( format );
 
@@ -1404,7 +1408,7 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
                                 rptr += RowBytes;
                             }
                             sptr += NumBytes;
-                        }           
+                        }
                     }
                     break;
 
@@ -1424,18 +1428,18 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
                                         DWORD t = *ptr;
                                         DWORD u = (t & 0x3ff00000) >> 20;
                                         DWORD v = (t & 0x000003ff) << 20;
-                                        *ptr = ( t & ~0x3ff003ff ) | u | v; 
+                                        *ptr = ( t & ~0x3ff003ff ) | u | v;
                                     }
                                 }
                                 rptr += RowBytes;
                             }
                             sptr += NumBytes;
-                        }           
+                        }
                     }
                     break;
                 }
             }
-    
+
             pSrcBits += NumBytes * d;
 
             w = w >> 1;
@@ -1450,12 +1454,12 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
         }
     }
 
-    switch ( resDim ) 
+    switch ( resDim )
     {
         case DDS_DIMENSION_TEXTURE1D:
             {
                 D3D11_TEXTURE1D_DESC desc;
-                desc.Width = iWidth; 
+                desc.Width = iWidth;
                 desc.MipLevels = iMipCount;
                 desc.ArraySize = arraySize;
                 desc.Format = format;
@@ -1583,7 +1587,7 @@ static HRESULT CreateTextureFromDDS( ID3D11Device* pDev, DDS_HEADER* pHeader, __
                     SAFE_RELEASE( pTex );
                 }
             }
-            break; 
+            break;
     }
 
     SAFE_DELETE_ARRAY( pInitData );
@@ -1708,7 +1712,7 @@ HRESULT CreateDDSTextureFromFile( ID3D11Device* pDev, const WCHAR* szFileName, I
             pstrName = strFileA;
         else
             pstrName++;
-        
+
         (*ppSRV)->SetPrivateData( WKPDID_D3DDebugObjectName, lstrlenA(pstrName), pstrName );
     }
 #endif
