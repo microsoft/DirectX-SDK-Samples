@@ -23,6 +23,10 @@ The DirectX SDK itself is deprecated and legacy per [Microsoft Docs](https://lea
 |DirectX Capabilities Viewer| See [DxCapsViewer](https://github.com/microsoft/DxCapsViewer).|https://github.com/walbourn/directx-sdk-legacy-samples.git
 |UVAtlas isochart texture atlas| See [UVAtlas](https://github.com/Microsoft/UVAtlas).|
 
+## Documentation
+
+A catalog of samples can be found on the project [wiki](https://github.com/microsoft/DirectX-SDK-Samples/wiki).
+
 ## Release Notes
 
 FOR SECURITY ADVISORIES, see [GitHub](https://github.com/microsoft/DirectX-SDK-Samples/security/advisories).
@@ -30,6 +34,8 @@ FOR SECURITY ADVISORIES, see [GitHub](https://github.com/microsoft/DirectX-SDK-S
 For a full change history, see [CHANGELOG.md](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/CHANGELOG.md).
 
 * The XInput samples have been updated to use XInput 1.4 or XInput 9.1.0. XInput 1.3 usage requires the legacy DirectX SDK and is *strongly discouraged*.
+
+* The XAudio2 samples have been updated to use XAudio 2.9 built into Windows 10/Windows 11 or via [XAudio2Redist](https://aka.ms/XAudio2Redist).
 
 * The XACT samples are not included in this repository because they will only build with the legacy DirectX SDK.
 
@@ -46,6 +52,12 @@ For a full change history, see [CHANGELOG.md](https://github.com/microsoft/Direc
    1. "DXUT11.1" is a Direct3D 11 only version that does not make use of legacy D3DX which shipped on [GitHub](https://github.com/microsoft/DXUT).
 
 * The version of Effects for Direct3D 11 included in this repository matches the updated version which shipped on [GitHub](https://github.com/microsoft/FX11). Note that the required `fx_*` profiles for the HLSL compiler are deprecated.
+
+## Contributing
+
+This project is largely a historical reference of the legacy DirectX SDK samples with some modernization over the past decade. There's no *Issues* tab as the content is largely provided "as is". PRs for critical fixes, in particular security issues, are welcome.
+
+When you submit a pull request, a CLA bot will automatically determine whether you need to provide a CLA and decorate the PR appropriately (e.g., status check, comment). Simply follow the instructions provided by the bot. You will only need to do this once across all repos using our CLA.
 
 ## Code of Conduct
 

@@ -10,6 +10,10 @@
 #include "DDSTextureLoader.h"
 #include "DDS.h"
 
+#include <new>
+
+using namespace DirectX;
+
 //--------------------------------------------------------------------------------------
 static HRESULT LoadTextureDataFromFile( __in_z const WCHAR* szFileName, BYTE** ppHeapData,
                                         DDS_HEADER** ppHeader,
@@ -22,7 +26,7 @@ static HRESULT LoadTextureDataFromFile( __in_z const WCHAR* szFileName, BYTE** p
         return HRESULT_FROM_WIN32( GetLastError() );
 
     // Get the file size
-    LARGE_INTEGER FileSize = {0};
+    LARGE_INTEGER FileSize = {};
     GetFileSizeEx( hFile, &FileSize );
 
     // File is too big for 32-bit allocation, so reject read
@@ -33,14 +37,14 @@ static HRESULT LoadTextureDataFromFile( __in_z const WCHAR* szFileName, BYTE** p
     }
 
     // Need at least enough data to fill the header and magic number to be a valid DDS
-    if( FileSize.LowPart < (sizeof(DDS_HEADER)+sizeof(DWORD)) )
+    if ( FileSize.LowPart < DDS_MIN_HEADER_SIZE )
     {
         CloseHandle( hFile );
         return E_FAIL;
     }
 
     // create enough space for the file data
-    *ppHeapData = new BYTE[ FileSize.LowPart ];
+    *ppHeapData = new (std::nothrow) BYTE[FileSize.LowPart];
     if( !( *ppHeapData ) )
     {
         CloseHandle( hFile );
@@ -75,8 +79,8 @@ static HRESULT LoadTextureDataFromFile( __in_z const WCHAR* szFileName, BYTE** p
     DDS_HEADER* pHeader = reinterpret_cast<DDS_HEADER*>( *ppHeapData + sizeof( DWORD ) );
 
     // Verify header to validate DDS file
-    if( pHeader->dwSize != sizeof(DDS_HEADER)
-        || pHeader->ddspf.dwSize != sizeof(DDS_PIXELFORMAT) )
+    if( pHeader->size != sizeof(DDS_HEADER)
+        || pHeader->ddspf.size != sizeof(DDS_PIXELFORMAT) )
     {
         CloseHandle( hFile );
         SAFE_DELETE_ARRAY( *ppHeapData );
@@ -85,11 +89,11 @@ static HRESULT LoadTextureDataFromFile( __in_z const WCHAR* szFileName, BYTE** p
 
     // Check for DX10 extension
     bool bDXT10Header = false;
-    if ( (pHeader->ddspf.dwFlags & DDS_FOURCC)
-        && (MAKEFOURCC( 'D', 'X', '1', '0' ) == pHeader->ddspf.dwFourCC) )
+    if ( (pHeader->ddspf.flags & DDS_FOURCC)
+        && (MAKEFOURCC( 'D', 'X', '1', '0' ) == pHeader->ddspf.fourCC) )
     {
         // Must be long enough for both headers and magic value
-        if( FileSize.LowPart < (sizeof(DDS_HEADER)+sizeof(DWORD)+sizeof(DDS_HEADER_DXT10)) )
+        if (FileSize.LowPart < DDS_DX10_HEADER_SIZE)
         {
             CloseHandle( hFile );
             SAFE_DELETE_ARRAY( *ppHeapData );
@@ -101,7 +105,7 @@ static HRESULT LoadTextureDataFromFile( __in_z const WCHAR* szFileName, BYTE** p
 
     // setup the pointers in the process request
     *ppHeader = pHeader;
-    INT offset = sizeof( DWORD ) + sizeof( DDS_HEADER )
+    INT offset = DDS_MIN_HEADER_SIZE
                  + (bDXT10Header ? sizeof( DDS_HEADER_DXT10 ) : 0);
     *ppBitData = *ppHeapData + offset;
     *pBitSize = FileSize.LowPart - offset;
@@ -359,14 +363,14 @@ static void GetSurfaceInfo( UINT width, UINT height, D3DFORMAT fmt, UINT* pNumBy
 
     // From the DXSDK docs:
     //
-    //     When computing DXTn compressed sizes for non-square textures, the 
+    //     When computing DXTn compressed sizes for non-square textures, the
     //     following formula should be used at each mipmap level:
     //
-    //         max(1, width ÷ 4) x max(1, height ÷ 4) x 8(DXT1) or 16(DXT2-5)
+    //         max(1, width / 4) x max(1, height / 4) x 8(DXT1) or 16(DXT2-5)
     //
-    //     The pitch for DXTn formats is different from what was returned in 
-    //     Microsoft DirectX 7.0. It now refers the pitch of a row of blocks. 
-    //     For example, if you have a width of 16, then you will have a pitch 
+    //     The pitch for DXTn formats is different from what was returned in
+    //     Microsoft DirectX 7.0. It now refers the pitch of a row of blocks.
+    //     For example, if you have a width of 16, then you will have a pitch
     //     of four blocks (4*8 for DXT1, 4*16 for DXT2-5.)"
 
     switch( fmt )
@@ -497,14 +501,14 @@ static void GetSurfaceInfo( UINT width, UINT height, DXGI_FORMAT fmt, UINT* pNum
 
 
 //--------------------------------------------------------------------------------------
-#define ISBITMASK( r,g,b,a ) ( ddpf.dwRBitMask == r && ddpf.dwGBitMask == g && ddpf.dwBBitMask == b && ddpf.dwABitMask == a )
+#define ISBITMASK( r,g,b,a ) ( ddpf.RBitMask == r && ddpf.GBitMask == g && ddpf.BBitMask == b && ddpf.ABitMask == a )
 
 //--------------------------------------------------------------------------------------
 static D3DFORMAT GetD3D9Format( const DDS_PIXELFORMAT& ddpf )
 {
-    if( ddpf.dwFlags & DDS_RGB )
+    if( ddpf.flags & DDS_RGB )
     {
-        switch (ddpf.dwRGBBitCount)
+        switch (ddpf.RGBBitCount)
         {
         case 32:
             if( ISBITMASK(0x00ff0000,0x0000ff00,0x000000ff,0xff000000) )
@@ -551,60 +555,128 @@ static D3DFORMAT GetD3D9Format( const DDS_PIXELFORMAT& ddpf )
             if( ISBITMASK(0x00000f00,0x000000f0,0x0000000f,0x00000000) )
                 return D3DFMT_X4R4G4B4;
 
-            // 3:3:2, 3:3:2:8, and paletted texture formats are typically not supported on modern video cards
-            break;
-        }
-    }
-    else if( ddpf.dwFlags & DDS_LUMINANCE )
-    {
-        if( 8 == ddpf.dwRGBBitCount )
-        {
-            if( ISBITMASK(0x0000000f,0x00000000,0x00000000,0x000000f0) )
-                return D3DFMT_A4L4;
-            if( ISBITMASK(0x000000ff,0x00000000,0x00000000,0x00000000) )
-                return D3DFMT_L8;
-        }
+            if (ISBITMASK(0x00e0, 0x001c, 0x0003, 0xff00))
+                return D3DFMT_A8R3G3B2;
 
-        if( 16 == ddpf.dwRGBBitCount )
-        {
-            if( ISBITMASK(0x0000ffff,0x00000000,0x00000000,0x00000000) )
+            // NVTT versions 1.x wrote these as RGB instead of LUMINANCE
+            if (ISBITMASK(0xffff, 0, 0, 0))
                 return D3DFMT_L16;
-            if( ISBITMASK(0x000000ff,0x00000000,0x00000000,0x0000ff00) )
+            if (ISBITMASK(0x00ff, 0, 0, 0xff00))
                 return D3DFMT_A8L8;
+            break;
+
+        case 8:
+            if (ISBITMASK(0xe0, 0x1c, 0x03, 0))
+                return D3DFMT_R3G3B2;
+
+            // NVTT versions 1.x wrote these as RGB instead of LUMINANCE
+            if (ISBITMASK(0xff, 0, 0, 0))
+                return D3DFMT_L8;
+
+            // Paletted texture formats are typically not supported on modern video cards aka D3DFMT_P8, D3DFMT_A8P8
+            break;
+
+        default:
+            return D3DFMT_UNKNOWN;
         }
     }
-    else if( ddpf.dwFlags & DDS_ALPHA )
+    else if( ddpf.flags & DDS_LUMINANCE )
     {
-        if( 8 == ddpf.dwRGBBitCount )
+        switch (ddpf.RGBBitCount)
+        {
+        case 16:
+            if (ISBITMASK(0xffff, 0, 0, 0))
+                return D3DFMT_L16;
+            if (ISBITMASK(0x00ff, 0, 0, 0xff00))
+                return D3DFMT_A8L8;
+            break;
+
+        case 8:
+            if (ISBITMASK(0x0f, 0, 0, 0xf0))
+                return D3DFMT_A4L4;
+            if (ISBITMASK(0xff, 0, 0, 0))
+                return D3DFMT_L8;
+
+            if (ISBITMASK(0x00ff, 0, 0, 0xff00))
+                return D3DFMT_A8L8; // Some DDS writers assume the bitcount should be 8 instead of 16
+            break;
+
+        default:
+            return D3DFMT_UNKNOWN;
+        }
+    }
+    else if( ddpf.flags & DDS_ALPHA )
+    {
+        if( 8 == ddpf.RGBBitCount )
         {
             return D3DFMT_A8;
         }
     }
-    else if( ddpf.dwFlags & DDS_FOURCC )
+    else if (ddpf.flags & DDS_BUMPDUDV)
     {
-        if( MAKEFOURCC( 'D', 'X', 'T', '1' ) == ddpf.dwFourCC )
+        switch (ddpf.RGBBitCount)
+        {
+        case 32:
+            if (ISBITMASK(0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000))
+                return D3DFMT_Q8W8V8U8;
+            if (ISBITMASK(0x0000ffff, 0xffff0000, 0x00000000, 0x00000000))
+                return D3DFMT_V16U16;
+            if (ISBITMASK(0x3ff00000, 0x000ffc00, 0x000003ff, 0xc0000000))
+                return D3DFMT_A2W10V10U10;
+            break;
+
+        case 16:
+            if (ISBITMASK(0x00ff, 0xff00, 0, 0))
+                return D3DFMT_V8U8;
+            break;
+
+        default:
+            return D3DFMT_UNKNOWN;
+        }
+    }
+    else if (ddpf.flags & DDS_BUMPLUMINANCE)
+    {
+        switch (ddpf.RGBBitCount)
+        {
+        case 32:
+            if (ISBITMASK(0x000000ff, 0x0000ff00, 0x00ff0000, 0))
+                return D3DFMT_X8L8V8U8;
+            break;
+
+        case 16:
+            if (ISBITMASK(0x001f, 0x03e0, 0xfc00, 0))
+                return D3DFMT_L6V5U5;
+            break;
+
+        default:
+            return D3DFMT_UNKNOWN;
+        }
+    }
+    else if( ddpf.flags & DDS_FOURCC )
+    {
+        if( MAKEFOURCC( 'D', 'X', 'T', '1' ) == ddpf.fourCC )
             return D3DFMT_DXT1;
-        if( MAKEFOURCC( 'D', 'X', 'T', '2' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '2' ) == ddpf.fourCC )
             return D3DFMT_DXT2;
-        if( MAKEFOURCC( 'D', 'X', 'T', '3' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '3' ) == ddpf.fourCC )
             return D3DFMT_DXT3;
-        if( MAKEFOURCC( 'D', 'X', 'T', '4' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '4' ) == ddpf.fourCC )
             return D3DFMT_DXT4;
-        if( MAKEFOURCC( 'D', 'X', 'T', '5' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '5' ) == ddpf.fourCC )
             return D3DFMT_DXT5;
 
-        if( MAKEFOURCC( 'R', 'G', 'B', 'G' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'R', 'G', 'B', 'G' ) == ddpf.fourCC )
             return D3DFMT_R8G8_B8G8;
-        if( MAKEFOURCC( 'G', 'R', 'G', 'B' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'G', 'R', 'G', 'B' ) == ddpf.fourCC )
             return D3DFMT_G8R8_G8B8;
 
-        if( MAKEFOURCC( 'U', 'Y', 'V', 'Y' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'U', 'Y', 'V', 'Y' ) == ddpf.fourCC )
             return D3DFMT_UYVY;
-        if( MAKEFOURCC( 'Y', 'U', 'Y', '2' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'Y', 'U', 'Y', '2' ) == ddpf.fourCC )
             return D3DFMT_YUY2;
 
         // Check for D3DFORMAT enums being set here
-        switch( ddpf.dwFourCC )
+        switch( ddpf.fourCC )
         {
         case D3DFMT_A16B16G16R16:
         case D3DFMT_Q16W16V16U16:
@@ -615,7 +687,10 @@ static D3DFORMAT GetD3D9Format( const DDS_PIXELFORMAT& ddpf )
         case D3DFMT_G32R32F:
         case D3DFMT_A32B32G32R32F:
         case D3DFMT_CxV8U8:
-            return (D3DFORMAT)ddpf.dwFourCC;
+            return static_cast<D3DFORMAT>(ddpf.fourCC);
+
+        default:
+            return D3DFMT_UNKNOWN;
         }
     }
 
@@ -625,9 +700,9 @@ static D3DFORMAT GetD3D9Format( const DDS_PIXELFORMAT& ddpf )
 //--------------------------------------------------------------------------------------
 static DXGI_FORMAT GetDXGIFormat( const DDS_PIXELFORMAT& ddpf )
 {
-    if( ddpf.dwFlags & DDS_RGB )
+    if( ddpf.flags & DDS_RGB )
     {
-        switch (ddpf.dwRGBBitCount)
+        switch (ddpf.RGBBitCount)
         {
         case 32:
             // DXGI_FORMAT_B8G8R8A8_UNORM_SRGB & DXGI_FORMAT_B8G8R8X8_UNORM_SRGB should be
@@ -656,6 +731,8 @@ static DXGI_FORMAT GetDXGIFormat( const DDS_PIXELFORMAT& ddpf )
             if( ISBITMASK(0x3ff00000,0x000ffc00,0x000003ff,0xc0000000) )
                 return DXGI_FORMAT_R10G10B10A2_UNORM;
 
+            // No DXGI format maps to ISBITMASK(0x000003ff,0x000ffc00,0x3ff00000,0xc0000000) aka D3DFMT_A2R10G10B10
+
             if( ISBITMASK(0x0000ffff,0xffff0000,0x00000000,0x00000000) )
                 return DXGI_FORMAT_R16G16_UNORM;
 
@@ -669,74 +746,105 @@ static DXGI_FORMAT GetDXGIFormat( const DDS_PIXELFORMAT& ddpf )
             break;
 
         case 16:
-            // 5:5:5 & 5:6:5 formats are defined for DXGI, but are deprecated for D3D10, 10.0, and 11
+            // 5:5:5 & 5:6:5 formats are defined for DXGI, but are deprecated for D3D10, 10.x
 
-            // No 4bpp, 3:3:2, 3:3:2:8, or paletted DXGI formats
+            // No 4bpp, 3:3:2, 3:3:2:8, or paletted DXGI formats for 10.x
             break;
         }
     }
-    else if( ddpf.dwFlags & DDS_LUMINANCE )
+    else if( ddpf.flags & DDS_LUMINANCE )
     {
-        if( 8 == ddpf.dwRGBBitCount )
+        switch (ddpf.RGBBitCount)
         {
-            if( ISBITMASK(0x000000ff,0x00000000,0x00000000,0x00000000) )
+        case 16:
+            if (ISBITMASK(0xffff, 0, 0, 0))
+                return DXGI_FORMAT_R16_UNORM; // D3DX10/11 writes this out as DX10 extension
+            if (ISBITMASK(0x00ff, 0, 0, 0xff00))
+                return DXGI_FORMAT_R8G8_UNORM; // D3DX10/11 writes this out as DX10 extension
+            break;
+
+        case 8:
+            if (ISBITMASK(0xff, 0, 0, 0))
                 return DXGI_FORMAT_R8_UNORM; // D3DX10/11 writes this out as DX10 extension
 
-            // No 4bpp DXGI formats
-        }
+            if (ISBITMASK(0x00ff, 0, 0, 0xff00))
+                return DXGI_FORMAT_R8G8_UNORM; // Some DDS writers assume the bitcount should be 8 instead of 16
 
-        if( 16 == ddpf.dwRGBBitCount )
-        {
-            if( ISBITMASK(0x0000ffff,0x00000000,0x00000000,0x00000000) )
-                return DXGI_FORMAT_R16_UNORM; // D3DX10/11 writes this out as DX10 extension
-            if( ISBITMASK(0x000000ff,0x00000000,0x00000000,0x0000ff00) )
-                return DXGI_FORMAT_R8G8_UNORM; // D3DX10/11 writes this out as DX10 extension
+            // No 4bpp DXGI formats for 10.x
+            break;
+
+        default:
+            return DXGI_FORMAT_UNKNOWN;
         }
     }
-    else if( ddpf.dwFlags & DDS_ALPHA )
+    else if( ddpf.flags & DDS_ALPHA )
     {
-        if( 8 == ddpf.dwRGBBitCount )
+        if( 8 == ddpf.RGBBitCount )
         {
             return DXGI_FORMAT_A8_UNORM;
         }
     }
-    else if( ddpf.dwFlags & DDS_FOURCC )
+    else if (ddpf.flags & DDS_BUMPDUDV)
     {
-        if( MAKEFOURCC( 'D', 'X', 'T', '1' ) == ddpf.dwFourCC )
+        switch (ddpf.RGBBitCount)
+        {
+        case 32:
+            if (ISBITMASK(0x000000ff, 0x0000ff00, 0x00ff0000, 0xff000000))
+                return DXGI_FORMAT_R8G8B8A8_SNORM; // D3DX10/11 writes this out as DX10 extension
+            if (ISBITMASK(0x0000ffff, 0xffff0000, 0, 0))
+                return DXGI_FORMAT_R16G16_SNORM; // D3DX10/11 writes this out as DX10 extension
+
+            // No DXGI format maps to ISBITMASK(0x3ff00000, 0x000ffc00, 0x000003ff, 0xc0000000) aka D3DFMT_A2W10V10U10
+            break;
+
+        case 16:
+            if (ISBITMASK(0x00ff, 0xff00, 0, 0))
+                return DXGI_FORMAT_R8G8_SNORM; // D3DX10/11 writes this out as DX10 extension
+            break;
+
+        default:
+            return DXGI_FORMAT_UNKNOWN;
+        }
+
+        // No DXGI format maps to DDPF_BUMPLUMINANCE aka D3DFMT_L6V5U5, D3DFMT_X8L8V8U8
+    }
+    else if( ddpf.flags & DDS_FOURCC )
+    {
+        if( MAKEFOURCC( 'D', 'X', 'T', '1' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC1_UNORM;
-        if( MAKEFOURCC( 'D', 'X', 'T', '3' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '3' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC2_UNORM;
-        if( MAKEFOURCC( 'D', 'X', 'T', '5' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '5' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC3_UNORM;
 
         // While pre-mulitplied alpha isn't directly supported by the DXGI formats,
         // they are basically the same as these BC formats so they can be mapped
-        if( MAKEFOURCC( 'D', 'X', 'T', '2' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '2' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC2_UNORM;
-        if( MAKEFOURCC( 'D', 'X', 'T', '4' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'D', 'X', 'T', '4' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC3_UNORM;
 
-        if( MAKEFOURCC( 'A', 'T', 'I', '1' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'A', 'T', 'I', '1' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC4_UNORM;
-        if( MAKEFOURCC( 'B', 'C', '4', 'U' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'B', 'C', '4', 'U' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC4_UNORM;
-        if( MAKEFOURCC( 'B', 'C', '4', 'S' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'B', 'C', '4', 'S' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC4_SNORM;
 
-        if( MAKEFOURCC( 'A', 'T', 'I', '2' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'A', 'T', 'I', '2' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC5_UNORM;
-        if( MAKEFOURCC( 'B', 'C', '5', 'U' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'B', 'C', '5', 'U' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC5_UNORM;
-        if( MAKEFOURCC( 'B', 'C', '5', 'S' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'B', 'C', '5', 'S' ) == ddpf.fourCC )
             return DXGI_FORMAT_BC5_SNORM;
 
-        if( MAKEFOURCC( 'R', 'G', 'B', 'G' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'R', 'G', 'B', 'G' ) == ddpf.fourCC )
             return DXGI_FORMAT_R8G8_B8G8_UNORM;
-        if( MAKEFOURCC( 'G', 'R', 'G', 'B' ) == ddpf.dwFourCC )
+        if( MAKEFOURCC( 'G', 'R', 'G', 'B' ) == ddpf.fourCC )
             return DXGI_FORMAT_G8R8_G8B8_UNORM;
 
         // Check for D3DFORMAT enums being set here
-        switch( ddpf.dwFourCC )
+        switch( ddpf.fourCC )
         {
         case D3DFMT_A16B16G16R16: // 36
             return DXGI_FORMAT_R16G16B16A16_UNORM;
@@ -761,6 +869,11 @@ static DXGI_FORMAT GetDXGIFormat( const DDS_PIXELFORMAT& ddpf )
 
         case D3DFMT_A32B32G32R32F: // 116
             return DXGI_FORMAT_R32G32B32A32_FLOAT;
+
+            // No DXGI format maps to D3DFMT_CxV8U8
+
+        default:
+            return DXGI_FORMAT_UNKNOWN;
         }
     }
 
@@ -773,11 +886,11 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
                                      __out LPDIRECT3DBASETEXTURE9* ppTex )
 {
     HRESULT hr = S_OK;
-    
-    UINT iWidth = pHeader->dwWidth;
-    UINT iHeight = pHeader->dwHeight;
 
-    UINT iMipCount = pHeader->dwMipMapCount;
+    UINT iWidth = pHeader->width;
+    UINT iHeight = pHeader->height;
+
+    UINT iMipCount = pHeader->mipMapCount;
     if( 0 == iMipCount )
         iMipCount = 1;
 
@@ -788,9 +901,9 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
     if ( fmt == D3DFMT_UNKNOWN || BitsPerPixel( fmt ) == 0 )
         return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
 
-    if ( pHeader->dwFlags & DDS_HEADER_FLAGS_VOLUME )
+    if ( pHeader->flags & DDS_HEADER_FLAGS_VOLUME )
     {
-        UINT iDepth = pHeader->dwDepth;
+        UINT iDepth = pHeader->depth;
 
         // Create the volume texture (let the runtime do the validation)
         LPDIRECT3DVOLUMETEXTURE9 pTexture;
@@ -812,7 +925,7 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
         UINT NumBytes, RowBytes, NumRows;
         const BYTE* pSrcBits = pBitData;
         const BYTE *pEndBits = pBitData + BitSize;
-        D3DLOCKED_BOX LockedBox = {0};
+        D3DLOCKED_BOX LockedBox = {};
 
         for( UINT i = 0; i < iMipCount; ++i )
         {
@@ -870,10 +983,10 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
 
         *ppTex = pTexture;
     }
-    else if ( pHeader->dwCaps2 & DDS_CUBEMAP )
+    else if ( pHeader->caps2 & DDS_CUBEMAP )
     {
         // We require at least one face to be defined, and the faces must be square
-        if ( (pHeader->dwCaps2 & DDS_CUBEMAP_ALLFACES ) == 0 || iHeight != iWidth )
+        if ( (pHeader->caps2 & DDS_CUBEMAP_ALLFACES ) == 0 || iHeight != iWidth )
             return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
 
         // Create the cubemap (let the runtime do the validation)
@@ -896,12 +1009,12 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
         UINT NumBytes, RowBytes, NumRows;
         const BYTE* pSrcBits = pBitData;
         const BYTE *pEndBits = pBitData + BitSize;
-        D3DLOCKED_RECT LockedRect = {0};
+        D3DLOCKED_RECT LockedRect = {};
 
         UINT mask = DDS_CUBEMAP_POSITIVEX & ~DDS_CUBEMAP;
         for( UINT f = 0; f < 6; ++f, mask <<= 1 )
         {
-            if( !(pHeader->dwCaps2 & mask ) )
+            if( !(pHeader->caps2 & mask ) )
                 continue;
 
             UINT w = iWidth;
@@ -973,7 +1086,7 @@ static HRESULT CreateTextureFromDDS( LPDIRECT3DDEVICE9 pDev, DDS_HEADER* pHeader
         UINT NumBytes, RowBytes, NumRows;
         const BYTE* pSrcBits = pBitData;
         const BYTE *pEndBits = pBitData + BitSize;
-        D3DLOCKED_RECT LockedRect = {0};
+        D3DLOCKED_RECT LockedRect = {};
 
         for( UINT i = 0; i < iMipCount; ++i )
         {
@@ -1030,24 +1143,24 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
 {
     HRESULT hr = S_OK;
 
-    UINT iWidth = pHeader->dwWidth;
-    UINT iHeight = pHeader->dwHeight;
-    UINT iDepth = pHeader->dwDepth;
+    UINT iWidth = pHeader->width;
+    UINT iHeight = pHeader->height;
+    UINT iDepth = pHeader->depth;
 
     UINT resDim = D3D10_RESOURCE_DIMENSION_UNKNOWN;
     UINT arraySize = 1;
     DXGI_FORMAT format = DXGI_FORMAT_UNKNOWN;
     bool isCubeMap = false;
 
-    UINT iMipCount = pHeader->dwMipMapCount;
+    UINT iMipCount = pHeader->mipMapCount;
     if( 0 == iMipCount )
         iMipCount = 1;
 
     bool swaprgb = false;
     bool seta = false;
 
-    if ((pHeader->ddspf.dwFlags & DDS_FOURCC)
-        && (MAKEFOURCC( 'D', 'X', '1', '0' ) == pHeader->ddspf.dwFourCC ) )
+    if ((pHeader->ddspf.flags & DDS_FOURCC)
+        && (MAKEFOURCC( 'D', 'X', '1', '0' ) == pHeader->ddspf.fourCC ) )
     {
         DDS_HEADER_DXT10* d3d10ext = (DDS_HEADER_DXT10*)( (char*)pHeader + sizeof(DDS_HEADER) );
 
@@ -1057,14 +1170,14 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
 
         if ( BitsPerPixel( d3d10ext->dxgiFormat ) == 0 )
             return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
-           
+
         format = d3d10ext->dxgiFormat;
 
         switch ( d3d10ext->resourceDimension )
         {
         case DDS_DIMENSION_TEXTURE1D:
             // D3DX writes 1D textures with a fixed Height of 1
-            if ( (pHeader->dwFlags & DDS_HEIGHT) && iHeight != 1 )
+            if ( (pHeader->flags & DDS_HEIGHT) && iHeight != 1 )
                 return HRESULT_FROM_WIN32( ERROR_INVALID_DATA );
             iHeight = iDepth = 1;
             break;
@@ -1079,7 +1192,7 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
             break;
 
         case DDS_DIMENSION_TEXTURE3D:
-            if ( !(pHeader->dwFlags & DDS_HEADER_FLAGS_VOLUME) )
+            if ( !(pHeader->flags & DDS_HEADER_FLAGS_VOLUME) )
                 return HRESULT_FROM_WIN32( ERROR_INVALID_DATA );
 
             if ( arraySize > 1 )
@@ -1096,16 +1209,16 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
     {
         format = GetDXGIFormat( pHeader->ddspf );
 
-        if ( pHeader->dwFlags & DDS_HEADER_FLAGS_VOLUME )
+        if ( pHeader->flags & DDS_HEADER_FLAGS_VOLUME )
         {
             resDim = DDS_DIMENSION_TEXTURE3D;
         }
-        else 
+        else
         {
-            if ( pHeader->dwCaps2 & DDS_CUBEMAP )
+            if ( pHeader->caps2 & DDS_CUBEMAP )
             {
                // We require all six faces to be defined
-               if ( (pHeader->dwCaps2 & DDS_CUBEMAP_ALLFACES ) != DDS_CUBEMAP_ALLFACES )
+               if ( (pHeader->caps2 & DDS_CUBEMAP_ALLFACES ) != DDS_CUBEMAP_ALLFACES )
                    return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
 
                 arraySize = 6;
@@ -1174,12 +1287,12 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
             {
                 // This is the right bound because we set arraySize to (NumCubes*6) above
                 if ( (arraySize > D3D10_REQ_TEXTURECUBE_DIMENSION)
-                     || (iWidth > D3D10_REQ_TEXTURECUBE_DIMENSION) 
+                     || (iWidth > D3D10_REQ_TEXTURECUBE_DIMENSION)
                      || (iHeight > D3D10_REQ_TEXTURECUBE_DIMENSION))
                     return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
             }
             else if ( (arraySize > D3D10_REQ_TEXTURE2D_ARRAY_AXIS_DIMENSION)
-                 || (iWidth > D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION) 
+                 || (iWidth > D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION)
                  || (iHeight > D3D10_REQ_TEXTURE2D_U_OR_V_DIMENSION))
             {
                 return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
@@ -1188,14 +1301,14 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
 
         case DDS_DIMENSION_TEXTURE3D:
             if ( (arraySize > 1)
-                 || (iWidth > D3D10_REQ_TEXTURE3D_U_V_OR_W_DIMENSION) 
+                 || (iWidth > D3D10_REQ_TEXTURE3D_U_V_OR_W_DIMENSION)
                  || (iHeight > D3D10_REQ_TEXTURE3D_U_V_OR_W_DIMENSION)
                  || (iDepth > D3D10_REQ_TEXTURE3D_U_V_OR_W_DIMENSION) )
                 return HRESULT_FROM_WIN32( ERROR_NOT_SUPPORTED );
             break;
         }
 
-    
+
     if ( bSRGB )
         format = MAKE_SRGB( format );
 
@@ -1261,7 +1374,7 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
                                 rptr += RowBytes;
                             }
                             sptr += NumBytes;
-                        }           
+                        }
                     }
                     break;
 
@@ -1281,18 +1394,18 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
                                         DWORD t = *ptr;
                                         DWORD u = (t & 0x3ff00000) >> 20;
                                         DWORD v = (t & 0x000003ff) << 20;
-                                        *ptr = ( t & ~0x3ff003ff ) | u | v; 
+                                        *ptr = ( t & ~0x3ff003ff ) | u | v;
                                     }
                                 }
                                 rptr += RowBytes;
                             }
                             sptr += NumBytes;
-                        }           
+                        }
                     }
                     break;
                 }
             }
-    
+
             pSrcBits += NumBytes * d;
 
             w = w >> 1;
@@ -1307,12 +1420,12 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
         }
     }
 
-    switch ( resDim ) 
+    switch ( resDim )
     {
         case DDS_DIMENSION_TEXTURE1D:
             {
                 D3D10_TEXTURE1D_DESC desc;
-                desc.Width = iWidth; 
+                desc.Width = iWidth;
                 desc.MipLevels = iMipCount;
                 desc.ArraySize = arraySize;
                 desc.Format = format;
@@ -1440,7 +1553,7 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
                     SAFE_RELEASE( pTex );
                 }
             }
-            break; 
+            break;
     }
 
     SAFE_DELETE_ARRAY( pInitData );
@@ -1565,7 +1678,7 @@ HRESULT CreateDDSTextureFromFile( ID3D10Device1* pDev, const WCHAR* szFileName, 
             pstrName = strFileA;
         else
             pstrName++;
-        
+
         (*ppSRV)->SetPrivateData( WKPDID_D3DDebugObjectName, lstrlenA(pstrName), pstrName );
     }
 #endif
