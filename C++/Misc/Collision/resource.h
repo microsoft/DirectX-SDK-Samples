@@ -1,6 +1,6 @@
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Collision.rc
+// Used by SimpleSample.rc
 //
 #define IDI_MAIN_ICON                   101
 
