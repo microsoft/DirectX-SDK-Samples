@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Autorun", "Autorun_2010.vcxproj", "{75DF5B66-3656-4B30-A11E-4CA197B3008A}"
+# Visual Studio Version 2019
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Autorun", "Autorun_2019.vcxproj", "{75DF5B66-3656-4B30-A11E-4CA197B3008A}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Installer", "InstallerAndGame\Installer_2010.vcxproj", "{0A6C0CD2-C607-4850-87C1-48A53ACA5D26}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Installer", "InstallerAndGame\Installer_2019.vcxproj", "{0A6C0CD2-C607-4850-87C1-48A53ACA5D26}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "InstallerAndGame\Game_2010.vcxproj", "{9DDFF5DB-C1BB-4518-990D-FFB6ADB954F9}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Game", "InstallerAndGame\Game_2019.vcxproj", "{9DDFF5DB-C1BB-4518-990D-FFB6ADB954F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
