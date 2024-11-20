@@ -3,6 +3,8 @@
 
   <ItemGroup>
     <X86SolutionList Include="$(MSBuildThisProjectDirectory)C++\Direct3D11\*FX*\*.sln" />
+    <X86SolutionList Include="$(MSBuildThisProjectDirectory)C++\Direct3D11\EmptyProject11.1\*sln" />
+    <X86SolutionList Include="$(MSBuildThisProjectDirectory)C++\Direct3D11\SimpleSample11.1\*sln" />
     <X86SolutionList Include="$(MSBuildThisProjectDirectory)C++\Direct3D11\Tutorials\**\*.sln" />
     <X86SolutionList Include="$(MSBuildThisProjectDirectory)C++\Misc\Collision\*.sln" />
   </ItemGroup>
