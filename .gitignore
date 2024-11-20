@@ -28,9 +28,9 @@ x64
 packages
 Test
 /wiki
-/Direct3D/CompiledEffect/*.fxo
-/Direct3D10/EffectPools/*.fxo9
-/Direct3D10/EffectPools/*.fxo10
+/C++/Direct3D/CompiledEffect/*.fxo
+/C++/Direct3D10/EffectPools/*.fxo9
+/C++/Direct3D10/EffectPools/*.fxo10
 /Media/misc/*.ldprt
 /Media/misc/*.prt
 /Media/misc/*.sn

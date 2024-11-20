@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="BuildAll" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <ItemGroup>
+    <FullSolutionList Include="$(MSBuildThisProjectDirectory)**\*.sln" />
+  </ItemGroup>
+
+  <PropertyGroup>
+      <Configuration Condition="'$(Configuration)'==''">Debug</Configuration>
+      <Platform Condition="'$(Platform)'==''">x64</Platform>
+  </PropertyGroup>
+
+  <Target Name="BuildAll"
+    Outputs="%(FullSolutionList.Identity)">
+
+    <PropertyGroup>
+      <_OneSln>%(FullSolutionList.Identity)</_OneSln>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(_OneSln)"
+      Properties="RestorePackagesConfig=true"
+      Targets="Restore" />
+
+    <MSBuild Projects="$(_OneSln)"
+      Properties="Configuration=$(Configuration);Platform=$(Platform)" />
+  </Target>
+</Project>
