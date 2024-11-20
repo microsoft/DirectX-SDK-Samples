@@ -1313,7 +1313,7 @@ static HRESULT CreateTextureFromDDS( ID3D10Device1* pDev, DDS_HEADER* pHeader, _
         format = MAKE_SRGB( format );
 
     // Create the texture
-    D3D10_SUBRESOURCE_DATA* pInitData = new D3D10_SUBRESOURCE_DATA[ iMipCount * arraySize ];
+    D3D10_SUBRESOURCE_DATA* pInitData = new (std::nothrow) D3D10_SUBRESOURCE_DATA[ iMipCount * arraySize ];
     if( !pInitData )
         return E_OUTOFMEMORY;
 
