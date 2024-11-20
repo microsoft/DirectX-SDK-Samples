@@ -1,7 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: GameuxInstallHelper.h
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include <windows.h>
 #include <gameux.h>
@@ -14,9 +15,11 @@
 #ifdef UNICODE
     #define GameExplorerInstall GameExplorerInstallW
     #define GameExplorerUninstall GameExplorerUninstallW
+    #define GameExplorerUpdate GameExplorerUpdateW
 #else
     #define GameExplorerInstall GameExplorerInstallA
     #define GameExplorerUninstall GameExplorerUninstallA
+    #define GameExplorerUpdate GameExplorerUpdateA
 #endif
 
 //--------------------------------------------------------------------------------------
@@ -37,6 +40,14 @@ STDAPI GameExplorerInstallA( CHAR* strGDFBinPath, CHAR* strGameInstallPath, GAME
 //--------------------------------------------------------------------------------------
 STDAPI GameExplorerUninstallW( WCHAR* strGDFBinPath );
 STDAPI GameExplorerUninstallA( CHAR* strGDFBinPath );
+
+//--------------------------------------------------------------------------------------
+// Given a game path to GDF binary, updates a registered game with Game Explorer
+//
+// [in] strGDFBinPath: the full path to the GDF binary 
+//--------------------------------------------------------------------------------------
+STDAPI GameExplorerUpdateW( WCHAR* strGDFBinPath );
+STDAPI GameExplorerUpdateA( CHAR* strGDFBinPath );
 
 //--------------------------------------------------------------------------------------
 // For use during an MSI custom action install. 

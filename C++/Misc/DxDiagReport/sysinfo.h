@@ -3,30 +3,30 @@
 //
 // Desc: 
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
-#ifndef SYSINFO_H
-#define SYSINFO_H
+#pragma once
 
 struct LogicalDisk
 {
-    TCHAR   m_szDriveLetter[64];
-    TCHAR   m_szFreeSpace[128];
-    TCHAR   m_szMaxSpace[128];
-    TCHAR   m_szFileSystem[128];
-    TCHAR   m_szModel[512];
-    TCHAR   m_szPNPDeviceID[512];
+    WCHAR   m_szDriveLetter[64];
+    WCHAR   m_szFreeSpace[128];
+    WCHAR   m_szMaxSpace[128];
+    WCHAR   m_szFileSystem[128];
+    WCHAR   m_szModel[512];
+    WCHAR   m_szPNPDeviceID[512];
     DWORD m_dwHardDriveIndex;
-    vector <FileNode*> m_vDriverList;
+    std::vector <FileNode*> m_vDriverList;
 
     DWORD m_nElementCount;
 };
 
 struct SystemDevice
 {
-    TCHAR   m_szDescription[500];
-    TCHAR   m_szDeviceID[300];
-    vector <FileNode*> m_vDriverList;
+    WCHAR   m_szDescription[500];
+    WCHAR   m_szDeviceID[300];
+    std::vector <FileNode*> m_vDriverList;
 
     DWORD m_nElementCount;
 };
@@ -47,7 +47,7 @@ struct SysInfo
     DWORD m_dwOSPlatformID;           // OS platform id
     DWORD m_dwDirectXVersionMajor;    // DirectX major version (ex. 8) -- info in m_szDirectXVersion*
     DWORD m_dwDirectXVersionMinor;    // DirectX minor version (ex. 1) -- info in m_szDirectXVersion*
-    TCHAR                       m_szDirectXVersionLetter[2]; // DirectX letter version (ex. a) -- info in m_szDirectXVersion*
+    WCHAR                       m_szDirectXVersionLetter[2]; // DirectX letter version (ex. a) -- info in m_szDirectXVersion*
     BOOL m_bDebug;                   // debug version of user.exe -- info in m_szOSEx*
     BOOL m_bNECPC98;                 // info in m_szMachineName*
     DWORDLONG m_ullPhysicalMemory;        // info in m_szPageFile*
@@ -74,40 +74,38 @@ struct SysInfo
     LONG m_nDShowDebugLevel;
 
     // English only or un-localizable strings 
-    TCHAR                       m_szWindowsDir[MAX_PATH];             // location of windows dir
-    TCHAR                       m_szBuildLab[100];                    // Win2k build lab (not localizable)
-    TCHAR                       m_szDxDiagVersion[100];               // DxDiag version (not localizable)
-    TCHAR                       m_szSetupParamEnglish[100];           // setup params (English)
-    TCHAR                       m_szProcessorEnglish[200];            // Processor name and speed (english)
-    TCHAR                       m_szSystemManufacturerEnglish[200];   // System manufacturer (english)
-    TCHAR                       m_szSystemModelEnglish[200];          // System model (english)
-    TCHAR                       m_szBIOSEnglish[200];                 // BIOS (english)
-    TCHAR                       m_szPhysicalMemoryEnglish[100];       // Formatted version of physical memory (english)
-    TCHAR                       m_szCSDVersion[200];                  // OS version with CSD info (localized)
-    TCHAR                       m_szDirectXVersionEnglish[100];       // DirectX version (english)
-    TCHAR                       m_szDirectXVersionLongEnglish[100];   // long DirectX version (english)
+    WCHAR                       m_szWindowsDir[MAX_PATH];             // location of windows dir
+    WCHAR                       m_szBuildLab[100];                    // Win2k build lab (not localizable)
+    WCHAR                       m_szDxDiagVersion[100];               // DxDiag version (not localizable)
+    WCHAR                       m_szSetupParamEnglish[100];           // setup params (English)
+    WCHAR                       m_szProcessorEnglish[200];            // Processor name and speed (english)
+    WCHAR                       m_szSystemManufacturerEnglish[200];   // System manufacturer (english)
+    WCHAR                       m_szSystemModelEnglish[200];          // System model (english)
+    WCHAR                       m_szBIOSEnglish[200];                 // BIOS (english)
+    WCHAR                       m_szPhysicalMemoryEnglish[100];       // Formatted version of physical memory (english)
+    WCHAR                       m_szCSDVersion[200];                  // OS version with CSD info (localized)
+    WCHAR                       m_szDirectXVersionEnglish[100];       // DirectX version (english)
+    WCHAR                       m_szDirectXVersionLongEnglish[100];   // long DirectX version (english)
 
     // strings localized to OS language 
-    TCHAR                       m_szMachineNameLocalized[200];        // machine name 
-    TCHAR                       m_szOSLocalized[100];                 // Formatted version of platform (localized)
-    TCHAR                       m_szOSExLocalized[100];               // Formatted version of platform, version, build num (localized)
-    TCHAR                       m_szOSExLongLocalized[300];           // Formatted version of platform, version, build num, patch, lab (localized)
-    TCHAR                       m_szLanguagesLocalized[200];          // m_szLanguages, in local language (localized)
-    TCHAR                       m_szPageFileLocalized[100];           // Formatted version of pagefile (localized)
-    TCHAR                       m_szTimeLocalized[100];               // Date/time, localized for UI (localized)
+    WCHAR                       m_szMachineNameLocalized[200];        // machine name 
+    WCHAR                       m_szOSLocalized[100];                 // Formatted version of platform (localized)
+    WCHAR                       m_szOSExLocalized[100];               // Formatted version of platform, version, build num (localized)
+    WCHAR                       m_szOSExLongLocalized[300];           // Formatted version of platform, version, build num, patch, lab (localized)
+    WCHAR                       m_szLanguagesLocalized[200];          // m_szLanguages, in local language (localized)
+    WCHAR                       m_szPageFileLocalized[100];           // Formatted version of pagefile (localized)
+    WCHAR                       m_szTimeLocalized[100];               // Date/time, localized for UI (localized)
 
     // strings localized to english 
-    TCHAR                       m_szMachineNameEnglish[200];          // machine name 
-    TCHAR                       m_szOSEnglish[100];                   // Formatted version of platform (english)
-    TCHAR                       m_szOSExEnglish[100];                 // Formatted version of platform, version, build num (english)
-    TCHAR                       m_szOSExLongEnglish[300];             // Formatted version of platform, version, build num, patch, lab (english)
-    TCHAR                       m_szLanguagesEnglish[200];            // Formatted version of m_szLanguage, m_szLanguageRegional (english) 
-    TCHAR                       m_szPageFileEnglish[100];             // Formatted version of pagefile (english)
-    TCHAR                       m_szTimeEnglish[100];                 // Date/time, dd/mm/yyyy hh:mm:ss for saved report (english)
+    WCHAR                       m_szMachineNameEnglish[200];          // machine name 
+    WCHAR                       m_szOSEnglish[100];                   // Formatted version of platform (english)
+    WCHAR                       m_szOSExEnglish[100];                 // Formatted version of platform, version, build num (english)
+    WCHAR                       m_szOSExLongEnglish[300];             // Formatted version of platform, version, build num, patch, lab (english)
+    WCHAR                       m_szLanguagesEnglish[200];            // Formatted version of m_szLanguage, m_szLanguageRegional (english) 
+    WCHAR                       m_szPageFileEnglish[100];             // Formatted version of pagefile (english)
+    WCHAR                       m_szTimeEnglish[100];                 // Date/time, dd/mm/yyyy hh:mm:ss for saved report (english)
 
     CPUExtendedFunctionBitmask  m_ExtFuncBitmasks[16];  // 128-bit CPU Extended Function Bitmasks (array of 16-byte structs) 
 
     DWORD m_nElementCount;
 };
-
-#endif // SYSINFO_H

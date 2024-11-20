@@ -1,17 +1,17 @@
 //----------------------------------------------------------------------------
 // File: dispinfo.h
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT)
 //-----------------------------------------------------------------------------
-#ifndef DISPINFO_H
-#define DISPINFO_H
+#pragma once
 
 struct DxDiag_DXVA_DeinterlaceCaps
 {
-    TCHAR   szD3DInputFormat[100];
-    TCHAR   szD3DOutputFormat[100];
-    TCHAR   szGuid[100];
-    TCHAR   szCaps[100];
+    WCHAR   szD3DInputFormat[100];
+    WCHAR   szD3DOutputFormat[100];
+    WCHAR   szGuid[100];
+    WCHAR   szCaps[100];
     DWORD dwNumPreviousOutputFrames;
     DWORD dwNumForwardRefSamples;
     DWORD dwNumBackwardRefSamples;
@@ -21,40 +21,40 @@ struct DxDiag_DXVA_DeinterlaceCaps
 
 struct DisplayInfo
 {
-    TCHAR   m_szDeviceName[100];
-    TCHAR   m_szDescription[200];
-    TCHAR   m_szKeyDeviceID[200];
-    TCHAR   m_szKeyDeviceKey[200];
-    TCHAR   m_szManufacturer[200];
-    TCHAR   m_szChipType[100];
-    TCHAR   m_szDACType[100];
-    TCHAR   m_szRevision[100];
-    TCHAR   m_szDisplayMemoryLocalized[100];
-    TCHAR   m_szDisplayMemoryEnglish[100];
-    TCHAR   m_szDisplayModeLocalized[100];
-    TCHAR   m_szDisplayModeEnglish[100];
+    WCHAR   m_szDeviceName[100];
+    WCHAR   m_szDescription[200];
+    WCHAR   m_szKeyDeviceID[200];
+    WCHAR   m_szKeyDeviceKey[200];
+    WCHAR   m_szManufacturer[200];
+    WCHAR   m_szChipType[100];
+    WCHAR   m_szDACType[100];
+    WCHAR   m_szRevision[100];
+    WCHAR   m_szDisplayMemoryLocalized[100];
+    WCHAR   m_szDisplayMemoryEnglish[100];
+    WCHAR   m_szDisplayModeLocalized[100];
+    WCHAR   m_szDisplayModeEnglish[100];
 
     DWORD m_dwWidth;
     DWORD m_dwHeight;
     DWORD m_dwBpp;
     DWORD m_dwRefreshRate;
 
-    TCHAR   m_szMonitorName[100];
-    TCHAR   m_szMonitorMaxRes[100];
+    WCHAR   m_szMonitorName[100];
+    WCHAR   m_szMonitorMaxRes[100];
 
-    TCHAR   m_szDriverName[100];
-    TCHAR   m_szDriverVersion[100];
-    TCHAR   m_szDriverAttributes[100];
-    TCHAR   m_szDriverLanguageEnglish[100];
-    TCHAR   m_szDriverLanguageLocalized[100];
-    TCHAR   m_szDriverDateEnglish[100];
-    TCHAR   m_szDriverDateLocalized[100];
+    WCHAR   m_szDriverName[100];
+    WCHAR   m_szDriverVersion[100];
+    WCHAR   m_szDriverAttributes[100];
+    WCHAR   m_szDriverLanguageEnglish[100];
+    WCHAR   m_szDriverLanguageLocalized[100];
+    WCHAR   m_szDriverDateEnglish[100];
+    WCHAR   m_szDriverDateLocalized[100];
     LONG m_lDriverSize;
-    TCHAR   m_szMiniVdd[100];
-    TCHAR   m_szMiniVddDateLocalized[100];
-    TCHAR   m_szMiniVddDateEnglish[100];
+    WCHAR   m_szMiniVdd[100];
+    WCHAR   m_szMiniVddDateLocalized[100];
+    WCHAR   m_szMiniVddDateEnglish[100];
     LONG m_lMiniVddSize;
-    TCHAR   m_szVdd[100];
+    WCHAR   m_szVdd[100];
 
     BOOL m_bCanRenderWindow;
     BOOL m_bDriverBeta;
@@ -62,17 +62,17 @@ struct DisplayInfo
     BOOL m_bDriverSigned;
     BOOL m_bDriverSignedValid;
     DWORD m_dwDDIVersion;
-    TCHAR   m_szDDIVersionEnglish[100];
-    TCHAR   m_szDDIVersionLocalized[100];
+    WCHAR   m_szDDIVersionEnglish[100];
+    WCHAR   m_szDDIVersionLocalized[100];
 
     DWORD m_iAdapter;
-    TCHAR   m_szVendorId[50];
-    TCHAR   m_szDeviceId[50];
-    TCHAR   m_szSubSysId[50];
-    TCHAR   m_szRevisionId[50];
+    WCHAR   m_szVendorId[50];
+    WCHAR   m_szDeviceId[50];
+    WCHAR   m_szSubSysId[50];
+    WCHAR   m_szRevisionId[50];
     DWORD m_dwWHQLLevel;
-    TCHAR   m_szDeviceIdentifier[100];
-    TCHAR   m_szDriverSignDate[50];
+    WCHAR   m_szDeviceIdentifier[100];
+    WCHAR   m_szDriverSignDate[50];
 
     BOOL m_bNoHardware;
     BOOL m_bDDAccelerationEnabled;
@@ -82,31 +82,29 @@ struct DisplayInfo
     BOOL m_bAGPExists;
     BOOL m_bAGPExistenceValid;
 
-    TCHAR   m_szDXVAModes[100];
+    WCHAR   m_szDXVAModes[100];
 
-    vector <DxDiag_DXVA_DeinterlaceCaps*> m_vDXVACaps;
+    std::vector <DxDiag_DXVA_DeinterlaceCaps*> m_vDXVACaps;
 
-    TCHAR   m_szDDStatusLocalized[100];
-    TCHAR   m_szDDStatusEnglish[100];
-    TCHAR   m_szD3DStatusLocalized[100];
-    TCHAR   m_szD3DStatusEnglish[100];
-    TCHAR   m_szAGPStatusLocalized[100];
-    TCHAR   m_szAGPStatusEnglish[100];
+    WCHAR   m_szDDStatusLocalized[100];
+    WCHAR   m_szDDStatusEnglish[100];
+    WCHAR   m_szD3DStatusLocalized[100];
+    WCHAR   m_szD3DStatusEnglish[100];
+    WCHAR   m_szAGPStatusLocalized[100];
+    WCHAR   m_szAGPStatusEnglish[100];
 
-    TCHAR   m_szNotesLocalized[3000];
-    TCHAR   m_szNotesEnglish[3000];
-    TCHAR   m_szRegHelpText[3000];
+    WCHAR   m_szNotesLocalized[3000];
+    WCHAR   m_szNotesEnglish[3000];
+    WCHAR   m_szRegHelpText[3000];
 
-    TCHAR   m_szTestResultDDLocalized[3000];
-    TCHAR   m_szTestResultDDEnglish[3000];
-    TCHAR   m_szTestResultD3D7Localized[3000];
-    TCHAR   m_szTestResultD3D7English[3000];
-    TCHAR   m_szTestResultD3D8Localized[3000];
-    TCHAR   m_szTestResultD3D8English[3000];
-    TCHAR   m_szTestResultD3D9Localized[3000];
-    TCHAR   m_szTestResultD3D9English[3000];
+    WCHAR   m_szTestResultDDLocalized[3000];
+    WCHAR   m_szTestResultDDEnglish[3000];
+    WCHAR   m_szTestResultD3D7Localized[3000];
+    WCHAR   m_szTestResultD3D7English[3000];
+    WCHAR   m_szTestResultD3D8Localized[3000];
+    WCHAR   m_szTestResultD3D8English[3000];
+    WCHAR   m_szTestResultD3D9Localized[3000];
+    WCHAR   m_szTestResultD3D9English[3000];
 
     DWORD m_nElementCount;
 };
-
-#endif // DISPINFO_H

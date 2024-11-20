@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------
 // File: D3D11InstallHelper.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #define _WIN32_DCOM
-#define _CRT_SECURE_NO_DEPRECATE
 
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=NULL; } }
@@ -43,6 +43,7 @@ STDAPI CheckDirect3D11Status( UINT *pStatus )
     // OS Version check tells us most of what we need to know
     OSVERSIONINFOEX osinfo;
     osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+    #pragma warning(suppress:4996)
     if ( !GetVersionEx( (OSVERSIONINFO*)&osinfo ) )
     {
         HRESULT hr = HRESULT_FROM_WIN32( GetLastError() );
@@ -128,22 +129,22 @@ static void D3D11UpdateProgressCBDefault( UINT phase, UINT progress, void *pCont
     switch( phase )
     {
     case D3D11IH_PROGRESS_BEGIN:
-        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Begin %d\n", progress );
+        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Begin %u\n", progress );
         break;
     case D3D11IH_PROGRESS_SEARCHING:
-        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Searching %d\n", progress );
+        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Searching %u\n", progress );
         break;
     case D3D11IH_PROGRESS_DOWNLOADING:
-        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Downloading %d\n", progress );
+        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Downloading %u\n", progress );
         break;
     case D3D11IH_PROGRESS_INSTALLING:
-        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Installing %d\n", progress );
+        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Installing %u\n", progress );
         break;
     case D3D11IH_PROGRESS_END:
-        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress End %d\n", progress );
+        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress End %u\n", progress );
         break;
     default:
-        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Unknown (%d)\n", phase );
+        DEBUG_MSG( L"DoUpdateForDirect3D11: Progress Unknown (%u)\n", phase );
         break;
     }
 #endif
@@ -192,7 +193,7 @@ public:
         CloseHandle( _Event );
     }
 
-    STDMETHODIMP Invoke(ISearchJob* job, ISearchCompletedCallbackArgs* args)
+    STDMETHODIMP Invoke( _In_opt_ ISearchJob* job, _In_opt_ ISearchCompletedCallbackArgs* args)
     {
         _pfnProgress( D3D11IH_PROGRESS_SEARCHING, 100, _pContext );
         SetEvent( _Event );
@@ -207,10 +208,10 @@ public:
     IDPC( D3D11UPDATEPROGRESSCB pfnProgress, void* pContext ) :
         IUNK<IDownloadProgressChangedCallback>( pfnProgress, pContext ) {}
 
-    STDMETHODIMP Invoke(IDownloadJob* job, IDownloadProgressChangedCallbackArgs* args)
+    STDMETHODIMP Invoke( _In_opt_ IDownloadJob* job, _In_opt_ IDownloadProgressChangedCallbackArgs* args)
     {
         IDownloadProgress* prg = NULL;
-        if ( SUCCEEDED( args->get_Progress( &prg ) ) )
+        if ( args && SUCCEEDED( args->get_Progress( &prg ) ) )
         {
             long percent = 0;
             prg->get_PercentComplete( &percent );
@@ -236,7 +237,7 @@ public:
         CloseHandle( _Event );
     }
 
-    STDMETHODIMP Invoke(IDownloadJob* job, IDownloadCompletedCallbackArgs* args)
+    STDMETHODIMP Invoke( _In_opt_ IDownloadJob* job, _In_opt_ IDownloadCompletedCallbackArgs* args)
     {
         _pfnProgress( D3D11IH_PROGRESS_DOWNLOADING, 100, _pContext );
         SetEvent( _Event );
@@ -251,10 +252,10 @@ public:
     IIPC( D3D11UPDATEPROGRESSCB pfnProgress, void* pContext ) :
         IUNK<IInstallationProgressChangedCallback>( pfnProgress, pContext ) {}
 
-    STDMETHODIMP Invoke(IInstallationJob* job, IInstallationProgressChangedCallbackArgs* args)
+    STDMETHODIMP Invoke( _In_opt_ IInstallationJob* job, _In_opt_ IInstallationProgressChangedCallbackArgs* args)
     {
         IInstallationProgress* prg = NULL;
-        if ( SUCCEEDED( args->get_Progress( &prg ) ) )
+        if ( args && SUCCEEDED( args->get_Progress( &prg ) ) )
         {
             long percent = 0;
             prg->get_PercentComplete( &percent );
@@ -280,7 +281,7 @@ public:
         CloseHandle( _Event );
     }
 
-    STDMETHODIMP Invoke(IInstallationJob* job, IInstallationCompletedCallbackArgs* args)
+    STDMETHODIMP Invoke( _In_opt_ IInstallationJob* job, _In_opt_ IInstallationCompletedCallbackArgs* args)
     {
         _pfnProgress( D3D11IH_PROGRESS_INSTALLING, 100, _pContext );
         SetEvent( _Event );
@@ -324,6 +325,7 @@ STDAPI DoUpdateForDirect3D11( DWORD dwFlags, D3D11UPDATEPROGRESSCB pfnProgress,
     // Verify we have Windows Vista/Server 2008 SP2 already installed
     OSVERSIONINFOEX osinfo;
     osinfo.dwOSVersionInfoSize = sizeof(osinfo);
+    #pragma warning(suppress:4996)
     if ( !GetVersionEx( (OSVERSIONINFO*)&osinfo ) )
     {
         HRESULT hr = HRESULT_FROM_WIN32( GetLastError() );
@@ -647,6 +649,8 @@ STDAPI DoUpdateForDirect3D11( DWORD dwFlags, D3D11UPDATEPROGRESSCB pfnProgress,
     {
         switch (hr)
         {
+        // We use 'magic numbers' here to avoid reliance on an updated Windows SDK header
+        // wuerror.h is included in the Windows SDK 7.0A or later
         case 0x8024402C: // WU_E_PT_WINHTTP_NAME_NOT_RESOLVED
         case 0x80244016: // WU_E_PT_HTTP_STATUS_BAD_REQUEST 
         case 0x80244017: // WU_E_PT_HTTP_STATUS_DENIED  
@@ -802,7 +806,7 @@ UINT WINAPI SetD3D11InstallMSIProperties( MSIHANDLE hModule )
     }
 
     size_t nLength = wcsnlen( szCustomActionData, 1024 );
-    if( szCustomActionData[nLength - 1] != L'\\' )
+    if( nLength > 0 && nLength < 1024 && szCustomActionData[nLength - 1] != L'\\' )
         wcscat_s( szCustomActionData, 1024, L"\\" );
 
     // Set the CustomActionData property for the deferred custom action

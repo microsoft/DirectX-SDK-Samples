@@ -11,3 +11,5 @@ EXPORTS
     GameExplorerInstallW
     GameExplorerUninstallA
     GameExplorerUninstallW
+    GameExplorerUpdateA
+    GameExplorerUpdateW

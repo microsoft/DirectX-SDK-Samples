@@ -4,7 +4,8 @@
 // DxDiag internally uses both DirectDraw 7 and WMI and returns the rounded WMI 
 // value if WMI is available. Otherwise, it returns a rounded DirectDraw 7 value. 
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #define INITGUID
 #include <windows.h>
@@ -12,20 +13,16 @@
 #include <stdio.h>
 #include <assert.h>
 #include <initguid.h>
-#include <dxdiag.h>
 
+// dxdiag is not present in the Windows 7.1 SDK used by "v110_xp". Could get it from the legacy DirectX SDK if
+// needed for Windows XP
+#include <dxdiag.h>
 
 //-----------------------------------------------------------------------------
 // Defines, and constants
 //-----------------------------------------------------------------------------
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
-#endif
-#ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=NULL; } }
-#endif
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
+#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=nullptr; } }
 #endif
 
 HRESULT GetDeviceIDFromHMonitor( HMONITOR hm, WCHAR* strDeviceID, int cchDeviceID ); // from vidmemviaddraw.cpp
@@ -39,10 +36,10 @@ HRESULT GetVideoMemoryViaDxDiag( HMONITOR hMonitor, DWORD* pdwDisplayMemory )
     HRESULT hr;
     HRESULT hrCoInitialize = S_OK;
     bool bGotMemory = false;
-    IDxDiagProvider* pDxDiagProvider = NULL;
-    IDxDiagContainer* pDxDiagRoot = NULL;
-    IDxDiagContainer* pDevices = NULL;
-    IDxDiagContainer* pDevice = NULL;
+    IDxDiagProvider* pDxDiagProvider = nullptr;
+    IDxDiagContainer* pDxDiagRoot = nullptr;
+    IDxDiagContainer* pDevices = nullptr;
+    IDxDiagContainer* pDevice = nullptr;
     WCHAR wszChildName[256];
     WCHAR wszPropValue[256];
     DWORD dwDeviceCount;
@@ -54,18 +51,17 @@ HRESULT GetVideoMemoryViaDxDiag( HMONITOR hMonitor, DWORD* pdwDisplayMemory )
 
     // CoCreate a IDxDiagProvider*
     hr = CoCreateInstance( CLSID_DxDiagProvider,
-                           NULL,
+                           nullptr,
                            CLSCTX_INPROC_SERVER,
                            IID_IDxDiagProvider,
                            ( LPVOID* )&pDxDiagProvider );
     if( SUCCEEDED( hr ) ) // if FAILED(hr) then it is likely DirectX 9 is not installed
     {
-        DXDIAG_INIT_PARAMS dxDiagInitParam;
-        ZeroMemory( &dxDiagInitParam, sizeof( DXDIAG_INIT_PARAMS ) );
+        DXDIAG_INIT_PARAMS dxDiagInitParam = {};
         dxDiagInitParam.dwSize = sizeof( DXDIAG_INIT_PARAMS );
         dxDiagInitParam.dwDxDiagHeaderVersion = DXDIAG_DX9_SDK_VERSION;
         dxDiagInitParam.bAllowWHQLChecks = FALSE;
-        dxDiagInitParam.pReserved = NULL;
+        dxDiagInitParam.pReserved = nullptr;
         pDxDiagProvider->Initialize( &dxDiagInitParam );
 
         hr = pDxDiagProvider->GetRootContainer( &pDxDiagRoot );

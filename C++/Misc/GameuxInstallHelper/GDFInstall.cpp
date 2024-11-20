@@ -4,18 +4,20 @@
 // Desc: Windows code that calls GameuxInstallHelper sample dll and displays the results.
 // The Microsoft Platform SDK or Microsoft Windows SDK is required to compile this sample
 //
-// (C) Copyright Microsoft Corp.  All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #define _WIN32_DCOM
 #define _CRT_SECURE_NO_DEPRECATE
 #include <rpcsal.h>
 #include <gameux.h>
 #include "GameuxInstallHelper.h"
-#include <strsafe.h>
+#include <stdio.h>
 #include <shlobj.h>
 #include <wbemidl.h>
 #include <objbase.h>
 #define NO_SHLWAPI_STRFCNS
+#include <shellapi.h>
 #include <shlwapi.h>
 
 #ifndef SAFE_DELETE
@@ -34,6 +36,7 @@ struct SETTINGS
     WCHAR   strGDFBinPath[MAX_PATH];
     bool bEnumMode;
     bool bUninstall;
+    bool bUpdate;
     bool bAllUsers;
     bool bSilent;
 };
@@ -48,9 +51,8 @@ void DisplayUsage();
 // Desc: Entry point to the program. Initializes everything, and pops
 //       up a message box with the results of the GameuxInstallHelper calls
 //-----------------------------------------------------------------------------
-int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR strCmdLine, int nCmdShow )
+int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR strCmdLine, _In_ int nCmdShow )
 {
-    GUID guid = GUID_NULL;
     HRESULT hr;
     WCHAR szMsg[512];
     bool bFailure = false;
@@ -83,7 +85,7 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR strCmdLi
                     MB_OK );
     }
 
-    if( !settings.bUninstall )
+    if( !settings.bUninstall && !settings.bUpdate )
     {
         // Installing
 
@@ -93,7 +95,7 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR strCmdLi
         hr = GameExplorerInstall( settings.strGDFBinPath, settings.strInstallPath, installScope );
         if( FAILED( hr ) )
         {
-            StringCchPrintf( szMsg, 512, L"Adding game failed: 0x%0.8x\nGDF binary: %s\nGDF Install path: %s\nAll users: %d\n\nNote: This will fail if the game has already been added.  Make sure the game is removed first.",
+            swprintf_s( szMsg, 512, L"Adding game failed: 0x%0.8x\nGDF binary: %s\nGDF Install path: %s\nAll users: %d\n\nNote: This will fail if the game has already been added.  Make sure the game is removed first.",
                 hr, settings.strGDFBinPath, settings.strInstallPath, settings.bAllUsers );
             if( !settings.bSilent )
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerInstall" ), MB_OK | MB_ICONINFORMATION );
@@ -101,30 +103,48 @@ int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR strCmdLi
         }
         else 
         {
-            StringCchPrintf( szMsg, 512, L"GDF binary: %s\nGDF Install path: %s\nAll users: %d\n\n",
+            swprintf_s( szMsg, 512, L"GDF binary: %s\nGDF Install path: %s\nAll users: %d\n\n",
                              settings.strGDFBinPath, settings.strInstallPath, settings.bAllUsers );
 
-            StringCchCat( szMsg, 512, L"Adding GDF binary succeeded\n" );
-            StringCchCat( szMsg, 512, L"\nGDFInstall.exe /? for a list of options" );
+            wcscat_s( szMsg, 512, L"Adding GDF binary succeeded\n" );
+            wcscat_s( szMsg, 512, L"\nGDFInstall.exe /? for a list of options" );
 
             if( !settings.bSilent )
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerInstall" ), MB_OK | MB_ICONINFORMATION );
         }
     }
-    else
+    else if ( settings.bUpdate )
+    {
+        // Updating
+        hr = GameExplorerUpdate( settings.strGDFBinPath );
+        if( FAILED( hr ) )
+        {
+            swprintf_s( szMsg, 256, L"Updating game failed: 0x%0.8x", hr );
+            if( !settings.bSilent )
+                MessageBox( NULL, szMsg, TEXT( "GameExplorerUpdate" ), MB_OK | MB_ICONINFORMATION );
+            bFailure = true;
+        }
+        else 
+        {
+            swprintf_s( szMsg, 256, L"Update of '%s' succeeded\n", settings.strGDFBinPath );
+            if( !settings.bSilent )
+                MessageBox( NULL, szMsg, TEXT( "GameExplorerUpdate" ), MB_OK | MB_ICONINFORMATION );
+        }
+    }
+    else if ( settings.bUninstall )
     {
         // Uninstalling
         hr = GameExplorerUninstall( settings.strGDFBinPath );
         if( FAILED( hr ) )
         {
-            StringCchPrintf( szMsg, 256, L"Removing game failed: 0x%0.8x", hr );
+            swprintf_s( szMsg, 256, L"Removing game failed: 0x%0.8x", hr );
             if( !settings.bSilent )
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerUninstall" ), MB_OK | MB_ICONINFORMATION );
             bFailure = true;
         }
         else 
         {
-            StringCchPrintf( szMsg, 256, L"Uninstall of '%s' succeeded\n", settings.strGDFBinPath );
+            swprintf_s( szMsg, 256, L"Uninstall of '%s' succeeded\n", settings.strGDFBinPath );
             if( !settings.bSilent )
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerUninstall" ), MB_OK | MB_ICONINFORMATION );
         }
@@ -201,7 +221,7 @@ HRESULT EnumAndRemoveGames()
                 BSTR bstrQueryType = SysAllocString( L"WQL" );
 
                 WCHAR szQuery[1024];
-                StringCchCopy( szQuery, 1024, L"SELECT * FROM GAME" );
+                wcscpy_s( szQuery, 1024, L"SELECT * FROM GAME" );
                 BSTR bstrQuery = SysAllocString( szQuery );
 
                 hr = pIWbemServices->ExecQuery( bstrQueryType, bstrQuery,
@@ -226,7 +246,7 @@ HRESULT EnumAndRemoveGames()
                             hr = pGameClass->Get( pPropName, 0L, &var, NULL, NULL );
                             if( SUCCEEDED( hr ) && var.vt == VT_BSTR )
                             {
-                                StringCchCopy( strGameGUID, 256, var.bstrVal );
+                                wcscpy_s( strGameGUID, 256, var.bstrVal );
                                 ConvertStringToGUID( var.bstrVal, &guid );
                             }
                             if( pPropName ) SysFreeString( pPropName );
@@ -236,7 +256,7 @@ HRESULT EnumAndRemoveGames()
                             hr = pGameClass->Get( pPropName, 0L, &var, NULL, NULL );
                             if( SUCCEEDED( hr ) && var.vt == VT_BSTR )
                             {
-                                StringCchCopy( strGameName, 256, var.bstrVal );
+                                wcscpy_s( strGameName, 256, var.bstrVal );
                             }
                             if( pPropName ) SysFreeString( pPropName );
 
@@ -245,12 +265,12 @@ HRESULT EnumAndRemoveGames()
                             hr = pGameClass->Get( pPropName, 0L, &var, NULL, NULL );
                             if( SUCCEEDED( hr ) && var.vt == VT_BSTR )
                             {
-                                StringCchCopy( strGDFBinaryPath, 256, var.bstrVal );
+                                wcscpy_s( strGDFBinaryPath, 256, var.bstrVal );
                             }
                             if( pPropName ) SysFreeString( pPropName );
 
                             WCHAR szMsg[256];
-                            StringCchPrintf( szMsg, 256, L"Remove %s [%s] [%s]?", strGameName, strGDFBinaryPath,
+                            swprintf_s( szMsg, 256, L"Remove %s [%s] [%s]?", strGameName, strGDFBinaryPath,
                                              strGameGUID );
                             if( IDYES == MessageBox( NULL, szMsg, L"GDFInstall", MB_YESNO ) )
                             {
@@ -310,6 +330,12 @@ bool ParseCommandLine( SETTINGS* pSettings )
                 continue;
             }
 
+            if( IsNextArg( strCmdLine, L"r" ) )
+            {
+                pSettings->bUpdate = true;
+                continue;
+            }
+
             if( IsNextArg( strCmdLine, L"allusers" ) )
             {
                 pSettings->bAllUsers = true;
@@ -321,7 +347,7 @@ bool ParseCommandLine( SETTINGS* pSettings )
                 if( iArg + 1 < nNumArgs )
                 {
                     strArg = pstrArgList[++iArg];
-                    StringCchCopy( pSettings->strInstallPath, MAX_PATH, strArg );
+                    wcscpy_s( pSettings->strInstallPath, MAX_PATH, strArg );
                     continue;
                 }
 
@@ -379,6 +405,7 @@ void DisplayUsage()
                 L"  [/enum]\t\tEnters enum mode where each installed GDF is enumerated\n"
                 L"  \t\tand the user is prompted to uninstalled. Other arguments are ignored.\n"
                 L"  [/u]\t\tUninstalls the game instead of installing\n"
+                L"  [/r]\t\tRefresh/update the game instead of installing or uninstalling\n"
                 L"  [/allusers]\tInstalls the game for all users.  Defaults to current user\n"
                 L"  \t\tNote: This requires the process have adminstrator privledges\n"
                 L"  [/installpath x]\tSets the install path for the game. Defaults to the current working directory\n"

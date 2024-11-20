@@ -1,14 +1,11 @@
 //--------------------------------------------------------------------------------------
 // File: GDFParse.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #define _WIN32_DCOM
-#define _CRT_SECURE_NO_DEPRECATE
 
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
-#endif
 #ifndef SAFE_DELETE_ARRAY
 #define SAFE_DELETE_ARRAY(p) { if(p) { delete[] (p);   (p)=NULL; } }
 #endif
@@ -20,7 +17,7 @@
 #include <rpcsal.h>
 #include <gameux.h>
 #include <crtdbg.h>
-#include <strsafe.h>
+#include <stdio.h>
 #include <assert.h>
 #include <shellapi.h>
 #include <shlobj.h>
@@ -70,7 +67,7 @@ HRESULT CGDFParse::ExtractXML( WCHAR* strGDFBinPath )
                     {
                         // HGLOBAL from LoadResource() needs to be copied for CreateStreamOnHGlobal() to work
                         HGLOBAL hgResourceCopy = GlobalAlloc( GMEM_MOVEABLE, dwGDFXMLSize );
-                        if( hgResource )
+                        if( hgResourceCopy )
                         {
                             LPVOID pCopy = GlobalLock( hgResourceCopy );
                             if( pCopy )
@@ -235,7 +232,7 @@ HRESULT CGDFParse::GetXMLValue( WCHAR* strXPath, WCHAR* strValue, int cchValue )
     {
         HRESULT hr = pChild->get_nodeTypedValue( &v );
         if( SUCCEEDED( hr ) && v.vt == VT_BSTR )
-            StringCchCopy( strValue, cchValue, v.bstrVal );
+            wcscpy_s( strValue, cchValue, v.bstrVal );
         VariantClear( &v );
         SAFE_RELEASE( pChild );
     }
@@ -272,7 +269,7 @@ HRESULT CGDFParse::GetXMLAttrib( WCHAR* strXPath, WCHAR* strAttribName, WCHAR* s
             pIXMLDOMNode->get_nodeValue( &v );
             if( SUCCEEDED( hr ) && v.vt == VT_BSTR )
             {
-                StringCchCopy( strValue, cchValue, v.bstrVal );
+                wcscpy_s( strValue, cchValue, v.bstrVal );
                 bFound = true;
             }
             VariantClear( &v );

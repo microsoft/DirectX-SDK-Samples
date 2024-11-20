@@ -3,10 +3,11 @@
 //
 // Desc: Sample code that calls FirewallInstallHelper sample dll and displays the results.
 //
-// (C) Copyright Microsoft Corp.  All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #define _WIN32_DCOM
-#define _CRT_SECURE_NO_DEPRECATE
+
 #include <windows.h>
 // The Microsoft Platform SDK or Microsoft Windows SDK is required to compile this sample
 #include <rpcsal.h>
@@ -27,7 +28,7 @@
 #define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=NULL; } }
 #endif
 
-
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
@@ -35,8 +36,8 @@
 //       up a message box with the results of the FirewallInstallHelper calls
 //-----------------------------------------------------------------------------
 int
-PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
-                LPSTR strCmdLine, int nCmdShow )
+PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
+                _In_ LPSTR strCmdLine, _In_ int nCmdShow )
 {
     bool bFailure = false;
 

@@ -3,11 +3,10 @@
 // 
 // CpuToplogy class declaration.
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-------------------------------------------------------------------------------------
 #pragma once
-#ifndef CPU_TOPOLOGY_H
-#define CPU_TOPOLOGY_H
 
 #include <windows.h>
 
@@ -22,19 +21,17 @@ class ICpuTopology;
 class CpuTopology
 {
 public:
-                CpuTopology( BOOL bForceCpuid = FALSE );
+                CpuTopology( bool bForceCpuid = false );
                 ~CpuTopology();
 
-    BOOL        IsDefaultImpl() const;
+    bool        IsDefaultImpl() const;
     DWORD       NumberOfProcessCores() const;
     DWORD       NumberOfSystemCores() const;
     DWORD_PTR   CoreAffinityMask( DWORD coreIdx ) const;
 
-    void        ForceCpuid( BOOL bForce );
+    void        ForceCpuid( bool bForce );
 private:
     void        Destroy_();
 
     ICpuTopology* m_pImpl;
 };
-
-#endif  // CPU_TOPOLOGY_H

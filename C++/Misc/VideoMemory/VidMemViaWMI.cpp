@@ -6,7 +6,8 @@
 // often close to the amount of dedicated video memory and usually does not take 
 // into account the amount of shared system memory. 
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #define INITGUID
 #include <windows.h>
@@ -22,14 +23,8 @@
 //-----------------------------------------------------------------------------
 // Defines, and constants
 //-----------------------------------------------------------------------------
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
-#endif
-#ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=NULL; } }
-#endif
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
+#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=nullptr; } }
 #endif
 
 HRESULT GetDeviceIDFromHMonitor( HMONITOR hm, WCHAR* strDeviceID, int cchDeviceID ); // from vidmemviaddraw.cpp
@@ -45,15 +40,15 @@ HRESULT GetVideoMemoryViaWMI( HMONITOR hMonitor, DWORD* pdwAdapterRam )
     HRESULT hr;
     bool bGotMemory = false;
     HRESULT hrCoInitialize = S_OK;
-    IWbemLocator* pIWbemLocator = NULL;
-    IWbemServices* pIWbemServices = NULL;
-    BSTR pNamespace = NULL;
+    IWbemLocator* pIWbemLocator = nullptr;
+    IWbemServices* pIWbemServices = nullptr;
+    BSTR pNamespace = nullptr;
 
     *pdwAdapterRam = 0;
     hrCoInitialize = CoInitialize( 0 );
 
     hr = CoCreateInstance( CLSID_WbemLocator,
-                           NULL,
+                           nullptr,
                            CLSCTX_INPROC_SERVER,
                            IID_IWbemLocator,
                            ( LPVOID* )&pIWbemLocator );
@@ -66,38 +61,38 @@ HRESULT GetVideoMemoryViaWMI( HMONITOR hMonitor, DWORD* pdwAdapterRam )
         // Using the locator, connect to WMI in the given namespace.
         pNamespace = SysAllocString( L"\\\\.\\root\\cimv2" );
 
-        hr = pIWbemLocator->ConnectServer( pNamespace, NULL, NULL, 0L,
-                                           0L, NULL, NULL, &pIWbemServices );
+        hr = pIWbemLocator->ConnectServer( pNamespace, nullptr, nullptr, 0L,
+                                           0L, nullptr, nullptr, &pIWbemServices );
 #ifdef PRINTF_DEBUGGING
         if( FAILED( hr ) ) wprintf( L"WMI: pIWbemLocator->ConnectServer failed: 0x%0.8x\n", hr );
 #endif
-        if( SUCCEEDED( hr ) && pIWbemServices != NULL )
+        if( SUCCEEDED( hr ) && pIWbemServices != 0 )
         {
-            HINSTANCE hinstOle32 = NULL;
+            HINSTANCE hinstOle32 = nullptr;
 
             hinstOle32 = LoadLibraryW( L"ole32.dll" );
             if( hinstOle32 )
             {
-                PfnCoSetProxyBlanket pfnCoSetProxyBlanket = NULL;
+                PfnCoSetProxyBlanket pfnCoSetProxyBlanket = nullptr;
 
                 pfnCoSetProxyBlanket = ( PfnCoSetProxyBlanket )GetProcAddress( hinstOle32, "CoSetProxyBlanket" );
-                if( pfnCoSetProxyBlanket != NULL )
+                if( pfnCoSetProxyBlanket != 0 )
                 {
                     // Switch security level to IMPERSONATE. 
-                    pfnCoSetProxyBlanket( pIWbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL,
-                                          RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, 0 );
+                    pfnCoSetProxyBlanket( pIWbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, nullptr,
+                                          RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, nullptr, 0 );
                 }
 
                 FreeLibrary( hinstOle32 );
             }
 
-            IEnumWbemClassObject* pEnumVideoControllers = NULL;
-            BSTR pClassName = NULL;
+            IEnumWbemClassObject* pEnumVideoControllers = nullptr;
+            BSTR pClassName = nullptr;
 
             pClassName = SysAllocString( L"Win32_VideoController" );
 
             hr = pIWbemServices->CreateInstanceEnum( pClassName, 0,
-                                                     NULL, &pEnumVideoControllers );
+                                                     nullptr, &pEnumVideoControllers );
 #ifdef PRINTF_DEBUGGING
             if( FAILED( hr ) ) wprintf( L"WMI: pIWbemServices->CreateInstanceEnum failed: 0x%0.8x\n", hr );
 #endif
@@ -106,7 +101,7 @@ HRESULT GetVideoMemoryViaWMI( HMONITOR hMonitor, DWORD* pdwAdapterRam )
             {
                 IWbemClassObject* pVideoControllers[10] = {0};
                 DWORD uReturned = 0;
-                BSTR pPropName = NULL;
+                BSTR pPropName = nullptr;
 
                 // Get the first one in the list
                 pEnumVideoControllers->Reset();
@@ -125,8 +120,11 @@ HRESULT GetVideoMemoryViaWMI( HMONITOR hMonitor, DWORD* pdwAdapterRam )
                     bool bFound = false;
                     for( UINT iController = 0; iController < uReturned; iController++ )
                     {
+                        if ( !pVideoControllers[iController] )
+                            continue;
+
                         pPropName = SysAllocString( L"PNPDeviceID" );
-                        hr = pVideoControllers[iController]->Get( pPropName, 0L, &var, NULL, NULL );
+                        hr = pVideoControllers[iController]->Get( pPropName, 0L, &var, nullptr, nullptr );
 #ifdef PRINTF_DEBUGGING
                         if( FAILED( hr ) )
                             wprintf( L"WMI: pVideoControllers[iController]->Get PNPDeviceID failed: 0x%0.8x\n", hr );
@@ -142,7 +140,7 @@ HRESULT GetVideoMemoryViaWMI( HMONITOR hMonitor, DWORD* pdwAdapterRam )
                         if( bFound )
                         {
                             pPropName = SysAllocString( L"AdapterRAM" );
-                            hr = pVideoControllers[iController]->Get( pPropName, 0L, &var, NULL, NULL );
+                            hr = pVideoControllers[iController]->Get( pPropName, 0L, &var, nullptr, nullptr );
 #ifdef PRINTF_DEBUGGING
                             if( FAILED( hr ) )
                                 wprintf( L"WMI: pVideoControllers[iController]->Get AdapterRAM failed: 0x%0.8x\n",

@@ -6,7 +6,8 @@
 // the shared system memory minus the amount of memory in use by textures 
 // and render targets. 
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #define INITGUID
 #include <windows.h>
@@ -19,14 +20,8 @@
 //-----------------------------------------------------------------------------
 // Defines, and constants
 //-----------------------------------------------------------------------------
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if (p) { delete (p);     (p)=NULL; } }
-#endif
-#ifndef SAFE_DELETE_ARRAY
-#define SAFE_DELETE_ARRAY(p) { if (p) { delete[] (p);   (p)=NULL; } }
-#endif
 #ifndef SAFE_RELEASE
-#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=NULL; } }
+#define SAFE_RELEASE(p)      { if (p) { (p)->Release(); (p)=nullptr; } }
 #endif
 
 
@@ -36,14 +31,14 @@ HRESULT GetVideoMemoryViaD3D9( HMONITOR hMonitor, UINT* pdwAvailableTextureMem )
     bool bGotMemory = false;
     *pdwAvailableTextureMem = 0;
 
-    IDirect3D9* pD3D9 = NULL;
+    IDirect3D9* pD3D9 = nullptr;
     pD3D9 = Direct3DCreate9( D3D_SDK_VERSION );
     if( pD3D9 )
     {
         UINT dwAdapterCount = pD3D9->GetAdapterCount();
         for( UINT iAdapter = 0; iAdapter < dwAdapterCount; iAdapter++ )
         {
-            IDirect3DDevice9* pd3dDevice = NULL;
+            IDirect3DDevice9* pd3dDevice = nullptr;
 
             HMONITOR hAdapterMonitor = pD3D9->GetAdapterMonitor( iAdapter );
             if( hMonitor != hAdapterMonitor )
@@ -51,8 +46,7 @@ HRESULT GetVideoMemoryViaD3D9( HMONITOR hMonitor, UINT* pdwAvailableTextureMem )
 
             HWND hWnd = GetDesktopWindow();
 
-            D3DPRESENT_PARAMETERS pp;
-            ZeroMemory( &pp, sizeof( D3DPRESENT_PARAMETERS ) );
+            D3DPRESENT_PARAMETERS pp = {};
             pp.BackBufferWidth = 800;
             pp.BackBufferHeight = 600;
             pp.BackBufferFormat = D3DFMT_R5G6B5;
@@ -91,11 +85,11 @@ HRESULT GetVideoMemoryViaD3D9( HMONITOR hMonitor, UINT* pdwAvailableTextureMem )
 HRESULT GetHMonitorFromD3D9Device( IDirect3DDevice9* pd3dDevice, HMONITOR hMonitor )
 {
     D3DDEVICE_CREATION_PARAMETERS cp;
-    hMonitor = NULL;
+    hMonitor = nullptr;
     bool bFound = false;
     if( SUCCEEDED( pd3dDevice->GetCreationParameters( &cp ) ) )
     {
-        IDirect3D9* pD3D = NULL;
+        IDirect3D9* pD3D = nullptr;
         if( SUCCEEDED( pd3dDevice->GetDirect3D( &pD3D ) ) )
         {
             hMonitor = pD3D->GetAdapterMonitor( cp.AdapterOrdinal );

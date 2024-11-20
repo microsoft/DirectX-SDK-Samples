@@ -1,4 +1,0 @@
-; GDFExampleBinary.def
-;
-LIBRARY    "GDFExampleBinary"
-EXPORTS

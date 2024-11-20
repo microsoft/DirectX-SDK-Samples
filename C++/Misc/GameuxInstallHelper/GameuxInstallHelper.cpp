@@ -1,14 +1,11 @@
 //--------------------------------------------------------------------------------------
 // File: GameuxInstallHelper.cpp
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #define _WIN32_DCOM
-#define _CRT_SECURE_NO_DEPRECATE
 
-#ifndef SAFE_DELETE
-#define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=NULL; } }
-#endif
 #ifndef SAFE_DELETE_ARRAY
 #define SAFE_DELETE_ARRAY(p) { if(p) { delete[] (p);   (p)=NULL; } }
 #endif
@@ -24,7 +21,7 @@
 // The Microsoft Platform SDK or Microsoft Windows SDK is required to compile this sample
 #include <msi.h>
 #include <msiquery.h>
-#include <strsafe.h>
+#include <stdio.h>
 #include <assert.h>
 #include <wbemidl.h>
 #include <objbase.h>
@@ -38,8 +35,8 @@
 #include "GDFParse.h"
 
 // Uncomment to get a debug messagebox
-//#define SHOW_S1_DEBUG_MSGBOXES 
-//#define SHOW_S2_DEBUG_MSGBOXES // more detail
+// #define SHOW_S1_DEBUG_MSGBOXES 
+// #define SHOW_S2_DEBUG_MSGBOXES // more detail
 
 //--------------------------------------------------------------------------------------
 // Forward declarations 
@@ -97,6 +94,11 @@ STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath,
                             WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope);
 
+HRESULT GameExplorerUpdateUsingIGameExplorer(IGameExplorer* pFwGameExplorer, WCHAR* strGDFBinPath);
+
+STDAPI GameExplorerUpdateW( WCHAR* strGDFBinPath );
+STDAPI GameExplorerUpdateA( CHAR* strGDFBinPath );
+
 //--------------------------------------------------------------------------------------
 // This stores the install location
 // sets up the CustomActionData properties for the deferred custom actions
@@ -136,20 +138,20 @@ UINT __stdcall GameExplorerSetMSIProperties(MSIHANDLE hModule)
         WCHAR* szRelativePathToGDF = GetPropertyFromMSI(hModule, L"RelativePathToGDF");
         if (szRelativePathToGDF != NULL )
         {
-            StringCchCopy(szCustomActionData, 1024, szInstallDir);
-            StringCchCat(szCustomActionData, 1024, szRelativePathToGDF);
-            StringCchCat(szCustomActionData, 1024, L"|");
-            StringCchCat(szCustomActionData, 1024, szInstallDir);
-            StringCchCat(szCustomActionData, 1024, L"|");
+            wcscpy_s(szCustomActionData, 1024, szInstallDir);
+            wcscat_s(szCustomActionData, 1024, szRelativePathToGDF);
+            wcscat_s(szCustomActionData, 1024, L"|");
+            wcscat_s(szCustomActionData, 1024, szInstallDir);
+            wcscat_s(szCustomActionData, 1024, L"|");
             
             WCHAR* szALLUSERS = GetPropertyFromMSI(hModule, L"ALLUSERS");
             if (szALLUSERS && (szALLUSERS[0] == '1' || szALLUSERS[0] == '2'))
             {
-                StringCchCat(szCustomActionData, 1024, L"3");
+                wcscat_s(szCustomActionData, 1024, L"3");
             }
             else
             {
-                StringCchCat(szCustomActionData, 1024, L"2");
+                wcscat_s(szCustomActionData, 1024, L"2");
             }
 
             // Set the CustomActionData property for the deferred custom actions
@@ -159,8 +161,8 @@ UINT __stdcall GameExplorerSetMSIProperties(MSIHANDLE hModule)
             MsiSetProperty(hModule, L"GameUXRollBackRemoveAsCurUser", szCustomActionData);
 
             WCHAR szFullPathToGDF[MAX_PATH] = {0};
-            StringCchCopy(szFullPathToGDF, MAX_PATH, szInstallDir);
-            StringCchCat(szFullPathToGDF, MAX_PATH, szRelativePathToGDF);
+            wcscpy_s(szFullPathToGDF, MAX_PATH, szInstallDir);
+            wcscat_s(szFullPathToGDF, MAX_PATH, szRelativePathToGDF);
 
             // Set the CustomActionData property for the deferred custom actions
             MsiSetProperty(hModule, L"GameUXRemoveAsAdmin", szFullPathToGDF);
@@ -206,16 +208,16 @@ UINT __stdcall GameExplorerInstallUsingMSI(MSIHANDLE hModule)
                 *pSecondDelim = 0;
                 InstallScope = (GAME_INSTALL_SCOPE)_wtoi(pSecondDelim + 1);
             }
-            StringCchCopy(szGameInstallPath, MAX_PATH, pFirstDelim + 1);
+            wcscpy_s(szGameInstallPath, MAX_PATH, pFirstDelim + 1);
         }
-        StringCchCopy(szGDFBinPath, MAX_PATH, szCustomActionData);
+        wcscpy_s(szGDFBinPath, MAX_PATH, szCustomActionData);
 
 
 #ifdef SHOW_S1_DEBUG_MSGBOXES
         HRESULT hr = GameExplorerInstallW(szGDFBinPath, szGameInstallPath, InstallScope);
         WCHAR sz[1024];
         WCHAR szGUID[64] = {0};
-        StringCchPrintf(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nhr=0x%0.8x\n",
+        swprintf_s(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nhr=0x%0.8x\n",
             szGDFBinPath, szGameInstallPath, (InstallScope == GIS_ALL_USERS) ? L"GIS_ALL_USERS" : L"GIS_CURRENT_USER", szGUID, hr);
         MessageBox(NULL, sz, L"GameExplorerInstallUsingMSI", MB_OK);
 #else
@@ -228,7 +230,7 @@ UINT __stdcall GameExplorerInstallUsingMSI(MSIHANDLE hModule)
     {
 #ifdef SHOW_S1_DEBUG_MSGBOXES
         WCHAR sz[1024];
-        StringCchPrintf(sz, 1024, L"CustomActionData property not found\n");
+        swprintf_s(sz, 1024, L"CustomActionData property not found\n");
         MessageBox(NULL, sz, L"GameExplorerInstallUsingMSI", MB_OK);
 #endif
     }
@@ -251,13 +253,13 @@ UINT __stdcall GameExplorerUninstallUsingMSI(MSIHANDLE hModule)
     if (szCustomActionData)
     {
         WCHAR szGDFBinPath[MAX_PATH] = {0};
-        StringCchCopy(szGDFBinPath, MAX_PATH, szCustomActionData);
+        wcscpy_s(szGDFBinPath, MAX_PATH, szCustomActionData);
         SAFE_DELETE_ARRAY(szCustomActionData);
 
 #ifdef SHOW_S2_DEBUG_MSGBOXES
         HRESULT hr = GameExplorerUninstallW(szGDFBinPath);
         WCHAR sz[1024];
-        StringCchPrintf(sz, 1024, L"szGDFBinPath='%s'\nhr=0x%0.8x", szGDFBinPath, hr);
+        swprintf_s(sz, 1024, L"szGDFBinPath='%s'\nhr=0x%0.8x", szGDFBinPath, hr);
         MessageBox(NULL, sz, L"GameExplorerUninstallUsingMSI", MB_OK);
 #else
         GameExplorerUninstallW(szGDFBinPath);
@@ -270,7 +272,7 @@ UINT __stdcall GameExplorerUninstallUsingMSI(MSIHANDLE hModule)
 
 
 //--------------------------------------------------------------------------------------
-// Install a game to the Game Explorer
+// Install a game to the Game Explorer (UNICODE)
 //--------------------------------------------------------------------------------------
 STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath, 
                             WCHAR* strGameInstallPath,
@@ -345,7 +347,7 @@ STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath,
 }
 
 //--------------------------------------------------------------------------------------
-// Adds application from exception list
+// Install game to the Game Explorer (ASCII)
 //--------------------------------------------------------------------------------------
 STDAPI GameExplorerInstallA(CHAR* strGDFBinPath, 
                             CHAR* strGameInstallPath,
@@ -369,7 +371,7 @@ STDAPI GameExplorerInstallA(CHAR* strGDFBinPath,
 
 
 //--------------------------------------------------------------------------------------
-// Uninstall a game to the Game Explorer
+// Uninstall a game to the Game Explorer (UNICODE)
 //--------------------------------------------------------------------------------------
 STDAPI GameExplorerUninstallW(WCHAR* strGDFBinPath)
 {
@@ -441,7 +443,7 @@ STDAPI GameExplorerUninstallW(WCHAR* strGDFBinPath)
 }
 
 //--------------------------------------------------------------------------------------
-// Adds application from exception list
+// Uninstall a game to the Game Explorer (ASCII)
 //--------------------------------------------------------------------------------------
 STDAPI GameExplorerUninstallA(CHAR* strGDFBinPath)
 {
@@ -455,6 +457,52 @@ STDAPI GameExplorerUninstallA(CHAR* strGDFBinPath)
     WCHAR wstrBinPath[MAX_PATH] = {0};
     MultiByteToWideChar(CP_ACP, 0, strGDFBinPath, MAX_PATH, wstrBinPath, MAX_PATH);
     return GameExplorerUninstallW(wstrBinPath);
+}
+
+//--------------------------------------------------------------------------------------
+// Update a game with the Game Explorer (UNICODE)
+//--------------------------------------------------------------------------------------
+STDAPI GameExplorerUpdateW(WCHAR* strGDFBinPath)
+{
+    assert(strGDFBinPath);
+
+    if (strGDFBinPath == NULL)
+    {
+        return E_INVALIDARG;
+    }
+
+    HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
+    if (SUCCEEDED(hr))
+    {
+        IGameExplorer* pFwGameExplorer = NULL;
+        // Create an instance of the IGameExplorer Interface
+        hr = CoCreateInstance(__uuidof(GameExplorer), NULL, CLSCTX_INPROC_SERVER, __uuidof(IGameExplorer), (void**)&pFwGameExplorer);
+        if (SUCCEEDED(hr) && (pFwGameExplorer != NULL))
+        {
+            hr = GameExplorerUpdateUsingIGameExplorer(pFwGameExplorer, strGDFBinPath);
+            pFwGameExplorer->Release();
+        }
+
+        CoUninitialize();
+    }
+    return hr;
+}
+
+//--------------------------------------------------------------------------------------
+// Update a game with the Game Explorer (ASCII)
+//--------------------------------------------------------------------------------------
+STDAPI GameExplorerUpdateA(CHAR* strGDFBinPath)
+{
+    assert(strGDFBinPath);
+
+    if (strGDFBinPath == NULL)
+    {
+        return E_INVALIDARG;
+    }
+
+    WCHAR wstrBinPath[MAX_PATH] = {0};
+    MultiByteToWideChar(CP_ACP, 0, strGDFBinPath, MAX_PATH, wstrBinPath, MAX_PATH);
+    return GameExplorerUpdateW(wstrBinPath);
 }
 
 //--------------------------------------------------------------------------------------
@@ -508,7 +556,7 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
         
 #ifdef SHOW_S1_DEBUG_MSGBOXES
         WCHAR sz[1024];
-        StringCchPrintf(sz, 1024, L"RegCreateKeyEx lResult=%d", lResult);
+        swprintf_s(sz, 1024, L"RegCreateKeyEx lResult=%d", lResult);
         MessageBox(NULL, sz, L"GameExplorerInstallForXP", MB_OK);
 #endif
         hr = HRESULT_FROM_WIN32(lResult);
@@ -530,8 +578,8 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
                 if (SUCCEEDED(hr))
                 {
                     size_t nGDFBinPath = 0, nGameInstallPath = 0;
-                    StringCchLength(strGDFBinPath, MAX_PATH, &nGDFBinPath);
-                    StringCchLength(strGameInstallPath, MAX_PATH, &nGameInstallPath);
+                    nGDFBinPath = wcsnlen(strGDFBinPath, MAX_PATH);
+                    nGameInstallPath = wcsnlen(strGameInstallPath, MAX_PATH);
                     RegSetValueEx(hKeyGame, L"GDFBinaryPath", 0, REG_SZ, (BYTE*)strGDFBinPath, (DWORD)
                                    ((nGDFBinPath + 1) * sizeof(WCHAR)));
                     RegSetValueEx(hKeyGame, L"GameInstallPath", 0, REG_SZ, (BYTE*)strGameInstallPath, (DWORD)
@@ -595,7 +643,7 @@ HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer,
         WCHAR sz[1024] = {0};
         WCHAR strGameInstanceGUID[128] = {0};
         StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
-        StringCchPrintf(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nAccount=%s\\%s\nAdmin=%d\nhr=0x%0.8x",
+        swprintf_s(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nAccount=%s\\%s\nAdmin=%d\nhr=0x%0.8x",
                          bstrGDFBinPath, bstrGameInstallPath, (InstallScope == GIS_ALL_USERS) ? L"GIS_ALL_USERS" : L"GIS_CURRENT_USER", strGameInstanceGUID, strDomain, strUser, bAdmin, hr);
         MessageBox(NULL, sz, L"GameExplorerInstallUsingIGameExplorer", MB_OK);
 #endif
@@ -652,7 +700,7 @@ HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2,
        
        RetrieveGUIDForApplication(strGDFBinPath, &InstanceGUID);
        StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
-       StringCchPrintf(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nAccount=%s\\%s\nAdmin=%d\nhr=0x%0.8x",
+       swprintf_s(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nAccount=%s\\%s\nAdmin=%d\nhr=0x%0.8x",
                         bstrGDFBinPath, bstrGameInstallPath, (InstallScope == GIS_ALL_USERS) ? L"GIS_ALL_USERS" : L"GIS_CURRENT_USER", strGameInstanceGUID, strDomain, strUser, bAdmin, hr);
        MessageBox(NULL, sz, L"GameExplorerInstallUsingIGameExplorer2", MB_OK);
 #endif
@@ -688,13 +736,13 @@ HRESULT GameExplorerUninstallFromRegistry(WCHAR* strGDFBinPath)
             if (StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID)) != 0)
             {
                 WCHAR szKeyPath[1024];
-                if (SUCCEEDED(StringCchPrintf(szKeyPath, 1024,
+                if (SUCCEEDED(swprintf_s(szKeyPath, 1024,
                                                 L"Software\\Classes\\Software\\Microsoft\\Windows\\CurrentVersion\\GameUX\\GamesToFindOnWindowsUpgrade\\%s", strGameInstanceGUID)))
                 {
                     SHDeleteKey(HKEY_CURRENT_USER, szKeyPath);
                 }
 
-                if (SUCCEEDED(StringCchPrintf(szKeyPath, 1024,
+                if (SUCCEEDED(swprintf_s(szKeyPath, 1024,
                                                 L"Software\\Microsoft\\Windows\\CurrentVersion\\GameUX\\GamesToFindOnWindowsUpgrade\\%s", strGameInstanceGUID)))
                 {
                     SHDeleteKey(HKEY_LOCAL_MACHINE, szKeyPath);
@@ -708,7 +756,7 @@ HRESULT GameExplorerUninstallFromRegistry(WCHAR* strGDFBinPath)
     WCHAR strGameInstanceGUID[128] = {0};
                 
     StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
-    StringCchPrintf(sz, 1024, L"bVistaPath=%d\npInstanceGUID='%s'\nhr=0x%0.8x", false, strGameInstanceGUID, hr);
+    swprintf_s(sz, 1024, L"bVistaPath=%d\npInstanceGUID='%s'\nhr=0x%0.8x", false, strGameInstanceGUID, hr);
     MessageBox(NULL, sz, L"GameExplorerUninstallForXP", MB_OK);
 #endif
 
@@ -745,7 +793,7 @@ HRESULT GameExplorerUninstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer, 
     WCHAR sz[1024];
     WCHAR strGameInstanceGUID[128] = {0};
     StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
-    StringCchPrintf(sz, 1024, L"\npInstanceGUID='%s'\nhr=0x%0.8x", strGameInstanceGUID, hr);
+    swprintf_s(sz, 1024, L"\npInstanceGUID='%s'\nhr=0x%0.8x", strGameInstanceGUID, hr);
     MessageBox(NULL, sz, L"GameExplorerUninstallUsingIGameExplorer", MB_OK);
 #endif
 
@@ -778,12 +826,46 @@ HRESULT GameExplorerUninstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer
 
 #ifdef SHOW_S1_DEBUG_MSGBOXES
     WCHAR sz[1024];
-    StringCchPrintf(sz, 1024, L"\npInstanceGUID='%s'\nhr=0x%0.8x", strGameInstanceGUID, hr);
+    swprintf_s(sz, 1024, L"\npInstanceGUID='%s'\nhr=0x%0.8x", strGameInstanceGUID, hr);
     MessageBox(NULL, sz, L"GameExplorerUninstallUsingIGameExplorer2", MB_OK);
 #endif
 
     return hr;
 }
+
+
+//--------------------------------------------------------------------------------------
+// Updates a game with Game Explorer
+//--------------------------------------------------------------------------------------
+HRESULT GameExplorerUpdateUsingIGameExplorer(IGameExplorer* pFwGameExplorer, WCHAR* strGDFBinPath)
+{
+    assert(pFwGameExplorer);
+    assert(strGDFBinPath);
+    
+    if (strGDFBinPath == NULL || pFwGameExplorer == NULL)
+    {
+        return E_INVALIDARG;
+    }
+
+    GUID InstanceGUID = GUID_NULL;
+    HRESULT hr = RetrieveGUIDForApplication(strGDFBinPath, &InstanceGUID);
+    if (SUCCEEDED(hr))
+    {
+        // Update game using Game Explorer
+        hr = pFwGameExplorer->UpdateGame(InstanceGUID);
+    }
+
+#ifdef SHOW_S1_DEBUG_MSGBOXES
+    WCHAR sz[1024];
+    WCHAR strGameInstanceGUID[128] = {0};
+    StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
+    swprintf_s(sz, 1024, L"\npInstanceGUID='%s'\nhr=0x%0.8x", strGameInstanceGUID, hr);
+    MessageBox(NULL, sz, L"GameExplorerUpdateUsingIGameExplorer", MB_OK);
+#endif
+
+    return hr;
+}
+
 
 //--------------------------------------------------------------------------------------
 // Generates a random GUID
@@ -850,7 +932,7 @@ HRESULT ConvertStringToGUID(const WCHAR* strSrc, GUID* pGuidDest)
     
     UINT aiTmp[10];
 
-    if (swscanf(strSrc, L"{%8X-%4X-%4X-%2X%2X-%2X%2X%2X%2X%2X%2X}",
+    if (swscanf_s(strSrc, L"{%8X-%4X-%4X-%2X%2X-%2X%2X%2X%2X%2X%2X}",
                  &pGuidDest->Data1,
                  &aiTmp[0], &aiTmp[1],
                  &aiTmp[2], &aiTmp[3],
@@ -891,7 +973,7 @@ HRESULT ConvertGUIDToStringCch(const GUID* pGuidSrc,
         return E_INVALIDARG;
     }
     
-    return StringCchPrintf(strDest, cchDestChar, L"{%0.8X-%0.4X-%0.4X-%0.2X%0.2X-%0.2X%0.2X%0.2X%0.2X%0.2X%0.2X}",
+    return swprintf_s(strDest, cchDestChar, L"{%0.8X-%0.4X-%0.4X-%0.2X%0.2X-%0.2X%0.2X%0.2X%0.2X%0.2X%0.2X}",
                            pGuidSrc->Data1, pGuidSrc->Data2, pGuidSrc->Data3,
                            pGuidSrc->Data4[0], pGuidSrc->Data4[1],
                            pGuidSrc->Data4[2], pGuidSrc->Data4[3],
@@ -1007,7 +1089,7 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
                 szDoubleSlash[iDest] = 0;
 
                 WCHAR szQuery[1024];
-                StringCchPrintf(szQuery, 1024, L"SELECT * FROM GAME WHERE GDFBinaryPath = \"%s\"", szDoubleSlash);
+                swprintf_s(szQuery, 1024, L"SELECT * FROM GAME WHERE GDFBinaryPath = \"%s\"", szDoubleSlash);
                 BSTR bstrQuery = SysAllocString(szQuery);
 
                 IEnumWbemClassObject* pEnum = NULL;
@@ -1063,7 +1145,7 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
 
 #ifdef SHOW_S2_DEBUG_MSGBOXES
     WCHAR sz[1024];
-    StringCchPrintf(sz, 1024, L"szPathToGDFdll=%s \nbFound=%d", szPathToGDFdll, bFound);
+    swprintf_s(sz, 1024, L"szPathToGDFdll=%s \nbFound=%d", szPathToGDFdll, bFound);
     MessageBox(NULL, sz, L"RetrieveGUIDForApplication", MB_OK);
 #endif
 
@@ -1176,7 +1258,7 @@ HRESULT GetXMLAttribute(IXMLDOMNode* pNode,
             pIXMLDOMNode->get_nodeValue( &v );
             if( SUCCEEDED( hr ) && v.vt == VT_BSTR )
             {
-                StringCchCopy( strValue, cchValue, v.bstrVal );
+                wcscpy_s( strValue, cchValue, v.bstrVal );
                 bFound = true;
             }
             VariantClear( &v );
@@ -1362,25 +1444,25 @@ HRESULT SubCreateSingleTask(GAME_INSTALL_SCOPE InstallScope,         // Either G
         return E_FAIL;
     }
     // Create dir path for shortcut
-    StringCchPrintf(strPath, 512, L"%s\\Microsoft\\Windows\\GameExplorer\\%s\\%s\\%d",
+    swprintf_s(strPath, 512, L"%s\\Microsoft\\Windows\\GameExplorer\\%s\\%s\\%d",
                      strCommonFolder, strGUID, (bSupportTask) ? L"SupportTasks" : L"PlayTasks", nTaskID);
 
     // Create the directory and all intermediate directories
     SHCreateDirectoryEx(NULL, strPath, NULL);
 
     // Create full file path to shortcut 
-    StringCchPrintf(strShortcutFilePath, 512, L"%s\\%s.lnk", strPath, strTaskName);
+    swprintf_s(strShortcutFilePath, 512, L"%s\\%s.lnk", strPath, strTaskName);
 
 #ifdef SHOW_S2_DEBUG_MSGBOXES
     WCHAR sz[1024];
-    StringCchPrintf(sz, 1024, L"strShortcutFilePath='%s' strTaskName='%s'", strShortcutFilePath, strTaskName);
+    swprintf_s(sz, 1024, L"strShortcutFilePath='%s' strTaskName='%s'", strShortcutFilePath, strTaskName);
     MessageBox(NULL, sz, L"CreateTask", MB_OK);
 #endif
 
     // Create shortcut
-    CreateShortcut(strLaunchPath, strCommandLineArgs, strShortcutFilePath, bFileTask);
+    hr = CreateShortcut(strLaunchPath, strCommandLineArgs, strShortcutFilePath, bFileTask);
 
-    return S_OK;
+    return hr;
 }
 
 //-----------------------------------------------------------------------------
@@ -1417,20 +1499,19 @@ HRESULT RemoveTasks(WCHAR* strGDFBinPath) // valid GameInstance GUID that was pa
     if (StringFromGUID2(InstanceGUID, strGUID, ARRAYSIZE(strGUID)) == 0)
         return E_FAIL;
 
-    if (FAILED(hr = StringCchPrintf(strPath, 512, L"%s\\Microsoft\\Windows\\GameExplorer\\%s", strLocalAppData,
+    if (FAILED(hr = swprintf_s(strPath, 512, L"%s\\Microsoft\\Windows\\GameExplorer\\%s", strLocalAppData,
                                       strGUID)))
     {
         return hr;
     }
 
-    SHFILEOPSTRUCT fileOp;
-    ZeroMemory(&fileOp, sizeof(SHFILEOPSTRUCT));
+    SHFILEOPSTRUCT fileOp = {};
     fileOp.wFunc = FO_DELETE;
     fileOp.pFrom = strPath;
     fileOp.fFlags = FOF_NOCONFIRMATION | FOF_NOERRORUI | FOF_SILENT;
     SHFileOperation(&fileOp);
 
-    if (FAILED(hr = StringCchPrintf(strPath, 512, L"%s\\Microsoft\\Windows\\GameExplorer\\%s", strCommonAppData,
+    if (FAILED(hr = swprintf_s(strPath, 512, L"%s\\Microsoft\\Windows\\GameExplorer\\%s", strCommonAppData,
                                       strGUID)))
     {
         return hr;
@@ -1467,7 +1548,7 @@ HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
     WCHAR strTaskName[256] = {0};
     if (bPrimaryTask)
     {
-        StringCchCopy( strTaskName, 256, L"Play");
+        wcscpy_s( strTaskName, 256, L"Play");
     }
     else
     {
@@ -1478,7 +1559,7 @@ HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
         WCHAR strTaskID[256] = {0};
         if (bPrimaryTask)
         {
-            StringCchCopy( strTaskID, 256, L"0");
+            wcscpy_s( strTaskID, 256, L"0");
         }
         else
         {
@@ -1513,7 +1594,7 @@ HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
                                 if (SUCCEEDED(hr))
                                 {
                                     WCHAR strLaunchPath[MAX_PATH] = {0};
-                                    StringCchPrintf( strLaunchPath, MAX_PATH, L"%s\\%s", strFolderPath, strPath);
+                                    swprintf_s( strLaunchPath, MAX_PATH, L"%s\\%s", strFolderPath, strPath);
                                     hr = SubCreateSingleTask(InstallScope, strGDFBinPath, strTaskName, strLaunchPath, strCommandLineArgs, nTaskID, bSupportTask, true);
                                 }
                             }
@@ -1521,7 +1602,7 @@ HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
                         else if(hr == S_FALSE)
                         {
                             WCHAR strLaunchPath[MAX_PATH];
-                            StringCchPrintf( strLaunchPath, MAX_PATH, L"%s%s", strGameInstallPath, strPath);
+                            swprintf_s( strLaunchPath, MAX_PATH, L"%s%s", strGameInstallPath, strPath);
                             hr = SubCreateSingleTask(InstallScope, strGDFBinPath, strTaskName, strLaunchPath, strCommandLineArgs, nTaskID, bSupportTask, true);
                         }
                     }
@@ -1608,9 +1689,11 @@ HRESULT CreateTasks(WCHAR* strGDFBinPath,
             }
             else
             {
+#ifdef SHOW_S1_DEBUG_MSGBOXES 
                 WCHAR sz[1024];
-                StringCchPrintf(sz, 1024, L"The game task information is missing! Please check your GDF file and reinstall the game again!");
+                swprintf_s(sz, 1024, L"The game task information is missing! Please check your GDF file and reinstall the game again!");
                 MessageBox(NULL, sz, L"GameExplorerInstall", MB_OK);
+#endif
                 hr = S_FALSE;
             }
         }
@@ -1632,7 +1715,7 @@ HRESULT IsV2GDF (
     assert(pfV2GDF);
 #ifdef SHOW_S1_DEBUG_MSGBOXES
         WCHAR sz[1024];
-        StringCchPrintf(sz, 1024, L"IsV2GDF\n");
+        swprintf_s(sz, 1024, L"IsV2GDF\n");
         MessageBox(NULL, sz, L"IsV2GDF", MB_OK);
 #endif
 

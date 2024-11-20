@@ -3,31 +3,31 @@
 //
 // Desc: 
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
-#ifndef SNDINFO_H
-#define SNDINFO_H
+#pragma once
 
 struct SoundInfo
 {
     DWORD m_dwDevnode;
-    TCHAR   m_szGuidDeviceID[100];
-    TCHAR   m_szHardwareID[200];
-    TCHAR   m_szRegKey[200];
-    TCHAR   m_szManufacturerID[100];
-    TCHAR   m_szProductID[100];
-    TCHAR   m_szDescription[200];
-    TCHAR   m_szDriverName[200];
-    TCHAR   m_szDriverPath[MAX_PATH+1];
-    TCHAR   m_szDriverVersion[100];
-    TCHAR   m_szDriverLanguageEnglish[100];
-    TCHAR   m_szDriverLanguageLocalized[100];
-    TCHAR   m_szDriverAttributes[100];
-    TCHAR   m_szDriverDateEnglish[60];
-    TCHAR   m_szDriverDateLocalized[60];
-    TCHAR   m_szOtherDrivers[200];
-    TCHAR   m_szProvider[200];
-    TCHAR   m_szType[100]; // Emulated / vxd / wdm
+    WCHAR   m_szGuidDeviceID[100];
+    WCHAR   m_szHardwareID[200];
+    WCHAR   m_szRegKey[200];
+    WCHAR   m_szManufacturerID[100];
+    WCHAR   m_szProductID[100];
+    WCHAR   m_szDescription[200];
+    WCHAR   m_szDriverName[200];
+    WCHAR   m_szDriverPath[MAX_PATH + 1];
+    WCHAR   m_szDriverVersion[100];
+    WCHAR   m_szDriverLanguageEnglish[100];
+    WCHAR   m_szDriverLanguageLocalized[100];
+    WCHAR   m_szDriverAttributes[100];
+    WCHAR   m_szDriverDateEnglish[60];
+    WCHAR   m_szDriverDateLocalized[60];
+    WCHAR   m_szOtherDrivers[200];
+    WCHAR   m_szProvider[200];
+    WCHAR   m_szType[100]; // Emulated / vxd / wdm
     LONG m_lNumBytes;
     BOOL m_bDriverBeta;
     BOOL m_bDriverDebug;
@@ -67,27 +67,27 @@ struct SoundInfo
     DWORD m_dwUnlockTransferRateHwBuffers;
     DWORD m_dwPlayCpuOverheadSwBuffers;
 
-    TCHAR   m_szNotesLocalized[3000];
-    TCHAR   m_szNotesEnglish[3000];
-    TCHAR   m_szRegHelpText[3000];
-    TCHAR   m_szTestResultLocalized[3000];
-    TCHAR   m_szTestResultEnglish[3000];
+    WCHAR   m_szNotesLocalized[3000];
+    WCHAR   m_szNotesEnglish[3000];
+    WCHAR   m_szRegHelpText[3000];
+    WCHAR   m_szTestResultLocalized[3000];
+    WCHAR   m_szTestResultEnglish[3000];
 
     DWORD m_nElementCount;
 };
 
 struct SoundCaptureInfo
 {
-    TCHAR   m_szDescription[200];
-    TCHAR   m_szGuidDeviceID[100];
-    TCHAR   m_szDriverName[200];
-    TCHAR   m_szDriverPath[MAX_PATH+1];
-    TCHAR   m_szDriverVersion[100];
-    TCHAR   m_szDriverLanguageEnglish[100];
-    TCHAR   m_szDriverLanguageLocalized[100];
-    TCHAR   m_szDriverAttributes[100];
-    TCHAR   m_szDriverDateEnglish[60];
-    TCHAR   m_szDriverDateLocalized[60];
+    WCHAR   m_szDescription[200];
+    WCHAR   m_szGuidDeviceID[100];
+    WCHAR   m_szDriverName[200];
+    WCHAR   m_szDriverPath[MAX_PATH + 1];
+    WCHAR   m_szDriverVersion[100];
+    WCHAR   m_szDriverLanguageEnglish[100];
+    WCHAR   m_szDriverLanguageLocalized[100];
+    WCHAR   m_szDriverAttributes[100];
+    WCHAR   m_szDriverDateEnglish[60];
+    WCHAR   m_szDriverDateLocalized[60];
     LONG m_lNumBytes;
     BOOL m_bDriverBeta;
     BOOL m_bDriverDebug;
@@ -100,5 +100,3 @@ struct SoundCaptureInfo
 
     DWORD m_nElementCount;
 };
-
-#endif // SNDINFO_H

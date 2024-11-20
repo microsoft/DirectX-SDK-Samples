@@ -4,10 +4,11 @@
 // Desc: Windows code that calls D3D11InstallHelper sample DLL and displays
 //       the recommended UI prompts and messages.
 //
-// (C) Copyright Microsoft Corp.  All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #define _WIN32_DCOM
-#define _CRT_SECURE_NO_DEPRECATE
+
 #include "D3D11InstallHelper.h"
 #include "resource.h"
 
@@ -17,6 +18,8 @@
 #include <shellapi.h>
 
 #define MSG_SIZE    1024
+
+#pragma comment(linker,"\"/manifestdependency:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 
 struct SETTINGS
 {
@@ -78,7 +81,7 @@ WORD g_langId = 1024; // MAKELANGID( LANG_NEUTRAL, SUBLANG_DEFAULT )
 //         Return value 1 = reboot required
 //         Return value 2 - error encountered
 //-----------------------------------------------------------------------------
-int PASCAL WinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR strCmdLine, int nCmdShow )
+int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR strCmdLine, _In_ int nCmdShow )
 {
     g_hInstance = hInstance;
 

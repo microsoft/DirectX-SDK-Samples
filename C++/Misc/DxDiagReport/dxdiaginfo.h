@@ -3,10 +3,10 @@
 //
 // Desc: 
 //
-// Copyright (c) Microsoft Corp. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT)
 //-----------------------------------------------------------------------------
-#ifndef DXDIAG_H
-#define DXDIAG_H
+#pragma once
 
 // Headers for dxdiagn.dll
 #include <dxdiag.h>
@@ -27,47 +27,47 @@
 class CDxDiagInfo
 {
 public:
-            CDxDiagInfo();
-            ~CDxDiagInfo();
+    CDxDiagInfo();
+    ~CDxDiagInfo();
 
-    HRESULT Init( BOOL bAllowWHQLChecks );
+    HRESULT Init(BOOL bAllowWHQLChecks);
     HRESULT QueryDxDiagViaDll();
 
 protected:
-    HRESULT GetSystemInfo( SysInfo** ppSysInfo );
-    HRESULT GetSystemDevices( vector <SystemDevice*>& vSystemDevices );
-    HRESULT GatherSystemDeviceDriverList( IDxDiagContainer* pParent, vector <FileNode*>& vDriverList );
-    HRESULT GatherFileNodeInst( FileNode* pFileNode, IDxDiagContainer* pObject );
-    HRESULT GetDirectXFilesInfo( FileInfo** ppFileInfo );
-    HRESULT GetDisplayInfo( vector <DisplayInfo*>& vDisplayInfo );
-    HRESULT GatherDXVA_DeinterlaceCaps( IDxDiagContainer* pParent, vector <DxDiag_DXVA_DeinterlaceCaps*>& vDXVACaps );
-    HRESULT GetSoundInfo( vector <SoundInfo*>& vSoundInfos, vector <SoundCaptureInfo*>& vSoundCaptureInfos );
-    HRESULT GetMusicInfo( MusicInfo** ppMusicInfo );
-    HRESULT GetInputInfo( InputInfo** ppInputInfo );
-    HRESULT GatherInputRelatedDeviceInst( InputRelatedDeviceInfo* pInputRelatedDevice, IDxDiagContainer* pContainer );
-    HRESULT GatherInputRelatedDeviceInstDrivers( InputRelatedDeviceInfo* pInputRelatedDevice,
-                                                 IDxDiagContainer* pChild );
-    HRESULT GetNetworkInfo( NetInfo** ppNetInfo );
-    HRESULT GetShowInfo( ShowInfo** ppShowInfo );
-    HRESULT GetLogicalDiskInfo( vector <LogicalDisk*>& vLogicalDisks );
+    HRESULT GetSystemInfo(SysInfo** ppSysInfo);
+    HRESULT GetSystemDevices(std::vector <SystemDevice*>& vSystemDevices);
+    HRESULT GatherSystemDeviceDriverList(IDxDiagContainer* pParent, std::vector <FileNode*>& vDriverList);
+    HRESULT GatherFileNodeInst(FileNode* pFileNode, IDxDiagContainer* pObject);
+    HRESULT GetDirectXFilesInfo(FileInfo** ppFileInfo);
+    HRESULT GetDisplayInfo(std::vector <DisplayInfo*>& vDisplayInfo);
+    HRESULT GatherDXVA_DeinterlaceCaps(IDxDiagContainer* pParent, std::vector <DxDiag_DXVA_DeinterlaceCaps*>& vDXVACaps);
+    HRESULT GetSoundInfo(std::vector <SoundInfo*>& vSoundInfos, std::vector <SoundCaptureInfo*>& vSoundCaptureInfos);
+    HRESULT GetMusicInfo(MusicInfo** ppMusicInfo);
+    HRESULT GetInputInfo(InputInfo** ppInputInfo);
+    HRESULT GatherInputRelatedDeviceInst(InputRelatedDeviceInfo* pInputRelatedDevice, IDxDiagContainer* pContainer);
+    HRESULT GatherInputRelatedDeviceInstDrivers(InputRelatedDeviceInfo* pInputRelatedDevice,
+        IDxDiagContainer* pChild);
+    HRESULT GetNetworkInfo(NetInfo** ppNetInfo);
+    HRESULT GetShowInfo(ShowInfo** ppShowInfo);
+    HRESULT GetLogicalDiskInfo(std::vector <LogicalDisk*>& vLogicalDisks);
 
-    HRESULT GetStringValue( IDxDiagContainer* pObject, WCHAR* wstrName, TCHAR* strValue, int nStrLen );
-    HRESULT GetUIntValue( IDxDiagContainer* pObject, WCHAR* wstrName, DWORD* pdwValue );
-    HRESULT GetIntValue( IDxDiagContainer* pObject, WCHAR* wstrName, LONG* pnValue );
-    HRESULT GetBoolValue( IDxDiagContainer* pObject, WCHAR* wstrName, BOOL* pbValue );
-    HRESULT GetInt64Value( IDxDiagContainer* pObject, WCHAR* wstrName, ULONGLONG* pullValue );
+    HRESULT GetStringValue(IDxDiagContainer* pObject, WCHAR* wstrName, WCHAR* strValue, int nStrLen);
+    HRESULT GetUIntValue(IDxDiagContainer* pObject, WCHAR* wstrName, DWORD* pdwValue);
+    HRESULT GetIntValue(IDxDiagContainer* pObject, WCHAR* wstrName, LONG* pnValue);
+    HRESULT GetBoolValue(IDxDiagContainer* pObject, WCHAR* wstrName, BOOL* pbValue);
+    HRESULT GetInt64Value(IDxDiagContainer* pObject, WCHAR* wstrName, ULONGLONG* pullValue);
 
-    VOID    DestroyFileList( FileInfo* pFileInfo );
-    VOID    DestroySystemDevice( vector <SystemDevice*>& vSystemDevices );
-    VOID    DestroyDisplayInfo( vector <DisplayInfo*>& vDisplayInfo );
-    VOID    DeleteInputTree( vector <InputRelatedDeviceInfo*>& vDeviceList );
-    VOID    DeleteFileList( vector <FileNode*>& vDriverList );
-    VOID    DestroyInputInfo( InputInfo* pInputInfo );
-    VOID    DestroyMusicInfo( MusicInfo* pMusicInfo );
-    VOID    DestroyNetworkInfo( NetInfo* pNetInfo );
-    VOID    DestroySoundInfo( vector <SoundInfo*>& vSoundInfos );
-    VOID    DestroySoundCaptureInfo( vector <SoundCaptureInfo*>& vSoundCaptureInfos );
-    VOID    DestroyShowInfo( ShowInfo* pShowInfo );
+    VOID    DestroyFileList(FileInfo* pFileInfo);
+    VOID    DestroySystemDevice(std::vector <SystemDevice*>& vSystemDevices);
+    VOID    DestroyDisplayInfo(std::vector <DisplayInfo*>& vDisplayInfo);
+    VOID    DeleteInputTree(std::vector <InputRelatedDeviceInfo*>& vDeviceList);
+    VOID    DeleteFileList(std::vector <FileNode*>& vDriverList);
+    VOID    DestroyInputInfo(InputInfo* pInputInfo);
+    VOID    DestroyMusicInfo(MusicInfo* pMusicInfo);
+    VOID    DestroyNetworkInfo(NetInfo* pNetInfo);
+    VOID    DestroySoundInfo(std::vector <SoundInfo*>& vSoundInfos);
+    VOID    DestroySoundCaptureInfo(std::vector <SoundCaptureInfo*>& vSoundCaptureInfos);
+    VOID    DestroyShowInfo(ShowInfo* pShowInfo);
 
     IDxDiagProvider* m_pDxDiagProvider;
     IDxDiagContainer* m_pDxDiagRoot;
@@ -75,17 +75,15 @@ protected:
 
 public:
     SysInfo* m_pSysInfo;
-    vector <SystemDevice*> m_vSystemDevices;
+    std::vector <SystemDevice*> m_vSystemDevices;
     FileInfo* m_pFileInfo;
-    vector <DisplayInfo*> m_vDisplayInfo;
-    vector <SoundInfo*> m_vSoundInfos;
-    vector <SoundCaptureInfo*> m_vSoundCaptureInfos;
+    std::vector <DisplayInfo*> m_vDisplayInfo;
+    std::vector <SoundInfo*> m_vSoundInfos;
+    std::vector <SoundCaptureInfo*> m_vSoundCaptureInfos;
     MusicInfo* m_pMusicInfo;
     InputInfo* m_pInputInfo;
     NetInfo* m_pNetInfo;
     ShowInfo* m_pShowInfo;
-    vector <LogicalDisk*> m_vLogicalDiskList;
+    std::vector <LogicalDisk*> m_vLogicalDiskList;
 };
 
-
-#endif // DXDIAG_H
