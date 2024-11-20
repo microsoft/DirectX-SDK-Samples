@@ -5,7 +5,8 @@
 // Shader Language (HLSL) using Dynamic Shader Linkage in conjunction
 // with Effects 11.
 //
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
 #include "DXUTcamera.h"
@@ -16,7 +17,10 @@
 #include "resource.h"
 
 #include <d3dx11effect.h>
-#include <strsafe.h>
+
+#pragma warning( disable : 4100 )
+
+using namespace DirectX;
 
 // We show two ways of handling dynamic linkage binding.
 // This #define selects between a single technique where
@@ -34,7 +38,7 @@ CDXUTDirectionWidget        g_LightControl;
 CD3DSettingsDlg             g_D3DSettingsDlg;       // Device settings dialog
 CDXUTDialog                 g_HUD;                  // manages the 3D   
 CDXUTDialog                 g_SampleUI;             // dialog for sample specific controls
-D3DXMATRIXA16               g_mCenterMesh;
+XMMATRIX                    g_mCenterMesh;
 float                       g_fLightScale;
 int                         g_nNumActiveLights;
 int                         g_nActiveLight;
@@ -47,49 +51,49 @@ bool                        g_bLightingOnly = false;
 bool                        g_bWireFrame = false;
 
 // Resources
-CDXUTTextHelper*            g_pTxtHelper = NULL;
+CDXUTTextHelper*            g_pTxtHelper = nullptr;
 
 CDXUTSDKMesh                g_Mesh11;
 
-ID3D11Buffer*               g_pVertexBuffer = NULL;
-ID3D11Buffer*               g_pIndexBuffer = NULL;
+ID3D11Buffer*               g_pVertexBuffer = nullptr;
+ID3D11Buffer*               g_pIndexBuffer = nullptr;
 
-ID3D11InputLayout*          g_pVertexLayout11 = NULL;
+ID3D11InputLayout*          g_pVertexLayout11 = nullptr;
 
-ID3DX11Effect*              g_pEffect = NULL;
-ID3DX11EffectTechnique*     g_pTechnique = NULL;
+ID3DX11Effect*              g_pEffect = nullptr;
+ID3DX11EffectTechnique*     g_pTechnique = nullptr;
 
-ID3DX11EffectMatrixVariable*         g_pWorldViewProjection = NULL;
-ID3DX11EffectMatrixVariable*         g_pWorld = NULL;
+ID3DX11EffectMatrixVariable*         g_pWorldViewProjection = nullptr;
+ID3DX11EffectMatrixVariable*         g_pWorld = nullptr;
 
-ID3DX11EffectScalarVariable*         g_pFillMode = NULL;
+ID3DX11EffectScalarVariable*         g_pFillMode = nullptr;
 
-ID3D11ShaderResourceView*            g_pEnvironmentMapSRV = NULL;
-ID3DX11EffectShaderResourceVariable* g_pEnvironmentMapVar = NULL;
+ID3D11ShaderResourceView*            g_pEnvironmentMapSRV = nullptr;
+ID3DX11EffectShaderResourceVariable* g_pEnvironmentMapVar = nullptr;
 
 // Shader Linkage Interface and Class variables
-ID3DX11EffectInterfaceVariable*      g_pAmbientLightIface = NULL;
-ID3DX11EffectInterfaceVariable*      g_pDirectionalLightIface = NULL;
-ID3DX11EffectInterfaceVariable*      g_pEnvironmentLightIface = NULL;
-ID3DX11EffectInterfaceVariable*      g_pMaterialIface = NULL;
+ID3DX11EffectInterfaceVariable*      g_pAmbientLightIface = nullptr;
+ID3DX11EffectInterfaceVariable*      g_pDirectionalLightIface = nullptr;
+ID3DX11EffectInterfaceVariable*      g_pEnvironmentLightIface = nullptr;
+ID3DX11EffectInterfaceVariable*      g_pMaterialIface = nullptr;
 
-ID3DX11EffectClassInstanceVariable*  g_pAmbientLightClass = NULL;
-ID3DX11EffectVectorVariable*         g_pAmbientLightColor = NULL;
-ID3DX11EffectScalarVariable*         g_pAmbientLightEnable = NULL;
-ID3DX11EffectClassInstanceVariable*  g_pHemiAmbientLightClass = NULL;
-ID3DX11EffectVectorVariable*         g_pHemiAmbientLightColor = NULL;
-ID3DX11EffectScalarVariable*         g_pHemiAmbientLightEnable = NULL;
-ID3DX11EffectVectorVariable*         g_pHemiAmbientLightGroundColor = NULL;
-ID3DX11EffectVectorVariable*         g_pHemiAmbientLightDirUp = NULL;
-ID3DX11EffectClassInstanceVariable*  g_pDirectionalLightClass = NULL;
-ID3DX11EffectVectorVariable*         g_pDirectionalLightColor = NULL;
-ID3DX11EffectScalarVariable*         g_pDirectionalLightEnable = NULL;
-ID3DX11EffectVectorVariable*         g_pDirectionalLightDir = NULL;
-ID3DX11EffectClassInstanceVariable*  g_pEnvironmentLightClass = NULL;
-ID3DX11EffectVectorVariable*         g_pEnvironmentLightColor = NULL;
-ID3DX11EffectScalarVariable*         g_pEnvironmentLightEnable = NULL;
+ID3DX11EffectClassInstanceVariable*  g_pAmbientLightClass = nullptr;
+ID3DX11EffectVectorVariable*         g_pAmbientLightColor = nullptr;
+ID3DX11EffectScalarVariable*         g_pAmbientLightEnable = nullptr;
+ID3DX11EffectClassInstanceVariable*  g_pHemiAmbientLightClass = nullptr;
+ID3DX11EffectVectorVariable*         g_pHemiAmbientLightColor = nullptr;
+ID3DX11EffectScalarVariable*         g_pHemiAmbientLightEnable = nullptr;
+ID3DX11EffectVectorVariable*         g_pHemiAmbientLightGroundColor = nullptr;
+ID3DX11EffectVectorVariable*         g_pHemiAmbientLightDirUp = nullptr;
+ID3DX11EffectClassInstanceVariable*  g_pDirectionalLightClass = nullptr;
+ID3DX11EffectVectorVariable*         g_pDirectionalLightColor = nullptr;
+ID3DX11EffectScalarVariable*         g_pDirectionalLightEnable = nullptr;
+ID3DX11EffectVectorVariable*         g_pDirectionalLightDir = nullptr;
+ID3DX11EffectClassInstanceVariable*  g_pEnvironmentLightClass = nullptr;
+ID3DX11EffectVectorVariable*         g_pEnvironmentLightColor = nullptr;
+ID3DX11EffectScalarVariable*         g_pEnvironmentLightEnable = nullptr;
 
-ID3DX11EffectVectorVariable*         g_pEyeDir = NULL;
+ID3DX11EffectVectorVariable*         g_pEyeDir = nullptr;
 
 // Material Dynamic Permutation 
 enum E_MATERIAL_TYPES
@@ -123,7 +127,7 @@ struct MaterialVars
     ID3DX11EffectScalarVariable*        pSpecPower;
 };
 
-MaterialVars g_MaterialClasses[ MATERIAL_TYPE_COUNT ] = { NULL };
+MaterialVars g_MaterialClasses[ MATERIAL_TYPE_COUNT ] = { nullptr };
 
 //--------------------------------------------------------------------------------------
 // UI control IDs
@@ -177,10 +181,10 @@ void RenderText();
 // Entry point to the program. Initializes everything and goes into a message processing 
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
-int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
+int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
 {
     // Enable run-time memory check for debug builds.
-#if defined(DEBUG) | defined(_DEBUG)
+#ifdef _DEBUG
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
@@ -201,10 +205,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackD3D11DeviceDestroyed( OnD3D11DestroyDevice );
     
     InitApp();
-    DXUTInit( true, true, NULL ); // Parse the command line, show msgboxes on error, no extra command line params
+    DXUTInit( true, true, nullptr ); // Parse the command line, show msgboxes on error, no extra command line params
     DXUTSetCursorSettings( true, true ); // Show the cursor and clip it when in full screen
     DXUTCreateWindow( L"DynamicShaderLinkageFX11" );
-    DXUTCreateDevice(D3D_FEATURE_LEVEL_11_0, true, 640, 480 );
+    DXUTCreateDevice(D3D_FEATURE_LEVEL_10_0, true, 800, 600 );
     DXUTMainLoop(); // Enter into the DXUT render loop
 
     return DXUTGetExitCode();
@@ -216,8 +220,8 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
-    D3DXVECTOR3 vLightDir( -1, 1, -1 );
-    D3DXVec3Normalize( &vLightDir, &vLightDir );
+    static const XMVECTORF32 s_vLightDir = { -1.f, 1.f, -1.f, 0.f };
+    XMVECTOR vLightDir = XMVector3Normalize( s_vLightDir );
     g_LightControl.SetLightDirection( vLightDir );
 
     // Initialize dialogs
@@ -237,7 +241,7 @@ void InitApp()
     g_SampleUI.AddRadioButton( IDC_MATERIAL_PLASTIC_TEXTURED, IDC_MATERIAL_GROUP, L"Plastic Textured", 0, iY += 26, 170, 22 );
     g_SampleUI.AddRadioButton( IDC_MATERIAL_ROUGH, IDC_MATERIAL_GROUP, L"Rough", 0, iY += 26, 170, 22 );
     g_SampleUI.AddRadioButton( IDC_MATERIAL_ROUGH_TEXTURED, IDC_MATERIAL_GROUP, L"Rough Textured", 0, iY += 26, 170, 22 );
-    CDXUTRadioButton*   pRadioButton = g_SampleUI.GetRadioButton( IDC_MATERIAL_PLASTIC_TEXTURED );
+    auto pRadioButton = g_SampleUI.GetRadioButton( IDC_MATERIAL_PLASTIC_TEXTURED );
     pRadioButton->SetChecked( true );
 
     iY += 24;
@@ -256,23 +260,11 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// Called right before creating a D3D9 or D3D10 device, allowing the app to modify the device settings as needed
+// Called right before creating a D3D device, allowing the app to modify the device settings as needed
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
-    // For the first device created if its a REF device, optionally display a warning dialog box
-    static bool s_bFirstTime = true;
-    if( s_bFirstTime )
-    {
-        s_bFirstTime = false;
-        if( ( DXUT_D3D11_DEVICE == pDeviceSettings->ver &&
-              pDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_REFERENCE ) )
-        {
-            DXUTDisplaySwitchingToREFWarning( pDeviceSettings->ver );
-        }
-    }
-
-    return true;
+     return true;
 }
 
 
@@ -291,12 +283,11 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 //--------------------------------------------------------------------------------------
 void RenderText()
 {
-    UINT nBackBufferHeight = ( DXUTIsAppRenderingWithD3D9() ) ? DXUTGetD3D9BackBufferSurfaceDesc()->Height :
-            DXUTGetDXGIBackBufferSurfaceDesc()->Height;
+    UINT nBackBufferHeight = DXUTGetDXGIBackBufferSurfaceDesc()->Height;
 
     g_pTxtHelper->Begin();
     g_pTxtHelper->SetInsertionPos( 2, 0 );
-    g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
+    g_pTxtHelper->SetForegroundColor( Colors::Yellow );
     g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
 
@@ -304,7 +295,7 @@ void RenderText()
     if( g_bShowHelp )
     {
         g_pTxtHelper->SetInsertionPos( 2, nBackBufferHeight - 20 * 6 );
-        g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 0.75f, 0.0f, 1.0f ) );
+        g_pTxtHelper->SetForegroundColor( Colors::Orange );
         g_pTxtHelper->DrawTextLine( L"Controls:" );
 
         g_pTxtHelper->SetInsertionPos( 20, nBackBufferHeight - 20 * 5 );
@@ -319,7 +310,7 @@ void RenderText()
     }
     else
     {
-        g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f ) );
+        g_pTxtHelper->SetForegroundColor( Colors::White );
         g_pTxtHelper->DrawTextLine( L"Press F1 for help" );
     }
 
@@ -433,7 +424,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Reject any D3D10 devices that aren't acceptable by returning false
+// Reject any D3D devices that aren't acceptable by returning false
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo, UINT Output, const CD3D11EnumDeviceInfo *DeviceInfo,
                                        DXGI_FORMAT BackBufferFormat, bool bWindowed, void* pUserContext )
@@ -442,207 +433,26 @@ bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo,
 }
 
 //--------------------------------------------------------------------------------------
-// Use this until D3DX11 comes online and we get some compilation helpers
-//--------------------------------------------------------------------------------------
-static const unsigned int MAX_INCLUDES = 9;
-struct sInclude
-{
-   HANDLE         hFile;
-   HANDLE         hFileMap;
-   LARGE_INTEGER  FileSize;
-   void           *pMapData;
-};
-
-class CIncludeHandler : public ID3DInclude
-{
-   private:
-      struct sInclude   m_includeFiles[MAX_INCLUDES];
-      unsigned int      m_nIncludes;
-
-   public:
-   CIncludeHandler()
-   {
-      // array initialization
-      for ( unsigned int i=0; i<MAX_INCLUDES; i++)
-      {
-         m_includeFiles[i].hFile = INVALID_HANDLE_VALUE;
-         m_includeFiles[i].hFileMap = INVALID_HANDLE_VALUE;
-         m_includeFiles[i].pMapData = NULL;
-      }
-      m_nIncludes = 0;
-   }
-   ~CIncludeHandler()
-   {
-      for (unsigned int i=0; i<m_nIncludes; i++)
-      {
-         UnmapViewOfFile( m_includeFiles[i].pMapData );
-
-         if ( m_includeFiles[i].hFileMap != INVALID_HANDLE_VALUE)
-            CloseHandle( m_includeFiles[i].hFileMap );
-
-         if ( m_includeFiles[i].hFile != INVALID_HANDLE_VALUE)
-            CloseHandle( m_includeFiles[i].hFile );
-      }
-
-      m_nIncludes = 0;
-   }
-
-   STDMETHOD(Open(
-     D3D_INCLUDE_TYPE IncludeType,
-     LPCSTR pFileName,
-     LPCVOID pParentData,
-     LPCVOID *ppData,
-     UINT *pBytes
-   ))
-   {
-      unsigned int   incIndex = m_nIncludes+1;
-
-      // Make sure we have enough room for this include file
-      if ( incIndex >= MAX_INCLUDES )
-        return E_FAIL;
-
-      // try to open the file
-      m_includeFiles[incIndex].hFile  = CreateFileA( pFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
-                                             FILE_FLAG_SEQUENTIAL_SCAN, NULL );
-      if( INVALID_HANDLE_VALUE == m_includeFiles[incIndex].hFile )
-      {
-        return E_FAIL;
-      }
-
-      // Get the file size
-      GetFileSizeEx( m_includeFiles[incIndex].hFile, &m_includeFiles[incIndex].FileSize );
-
-      // Use Memory Mapped File I/O for the header data
-      m_includeFiles[incIndex].hFileMap = CreateFileMappingA( m_includeFiles[incIndex].hFile, NULL, PAGE_READONLY, m_includeFiles[incIndex].FileSize.HighPart, m_includeFiles[incIndex].FileSize.LowPart, pFileName);
-      if( m_includeFiles[incIndex].hFileMap == NULL  )
-      {
-        if (m_includeFiles[incIndex].hFile != INVALID_HANDLE_VALUE)
-           CloseHandle( m_includeFiles[incIndex].hFile );
-        return E_FAIL;
-      }
-
-      // Create Map view
-      *ppData = MapViewOfFile( m_includeFiles[incIndex].hFileMap, FILE_MAP_READ, 0, 0, 0 );
-      *pBytes = m_includeFiles[incIndex].FileSize.LowPart;
-
-      // Success - Increment the include file count
-      m_nIncludes= incIndex;
-
-      return S_OK;
-   }
-
-   STDMETHOD(Close( LPCVOID pData ))
-   {
-      // Defer Closure until the container destructor 
-      return S_OK;
-   }
-};
-
-HRESULT CompileShaderFromFile( WCHAR* szFileName, DWORD flags, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut )
-{
-    HRESULT hr = S_OK;
-
-    // find the file
-    WCHAR str[MAX_PATH];
-    WCHAR workingPath[MAX_PATH], filePath[MAX_PATH];
-    WCHAR *strLastSlash = NULL;
-    bool  resetCurrentDir = false;
-
-    // Get the current working directory so we can restore it later
-    UINT nBytes = GetCurrentDirectory( MAX_PATH, workingPath );
-    if (nBytes==MAX_PATH)
-    {
-      return E_FAIL;
-    }
-
-    // Check we can find the file first
-    V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, szFileName ) );
-
-    // Check if the file is in the current working directory
-    wcscpy_s( filePath, MAX_PATH, str );
-
-    strLastSlash = wcsrchr( filePath, TEXT( '\\' ) );
-    if( strLastSlash )
-    {
-        // Chop the exe name from the exe path
-        *strLastSlash = 0;
-
-        SetCurrentDirectory( filePath );
-        resetCurrentDir  = true;
-    }
-
-    // open the file
-    HANDLE hFile = CreateFile( str, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING,
-                               FILE_FLAG_SEQUENTIAL_SCAN, NULL );
-    if( INVALID_HANDLE_VALUE == hFile )
-        return E_FAIL;
-
-    // Get the file size
-    LARGE_INTEGER FileSize;
-    GetFileSizeEx( hFile, &FileSize );
-
-    // create enough space for the file data
-    BYTE* pFileData = new BYTE[ FileSize.LowPart ];
-    if( !pFileData )
-        return E_OUTOFMEMORY;
-
-    // read the data in
-    DWORD BytesRead;
-    if( !ReadFile( hFile, pFileData, FileSize.LowPart, &BytesRead, NULL ) )
-        return E_FAIL; 
-
-    CloseHandle( hFile );
-
-    // Create an Include handler instance
-    CIncludeHandler* pIncludeHandler = new CIncludeHandler;
-
-    // Compile the shader using optional defines and an include handler for header processing
-    ID3DBlob* pErrorBlob;
-    hr = D3DCompile( pFileData, FileSize.LowPart, "none", NULL,     static_cast< ID3DInclude* > (pIncludeHandler), 
-                     szEntryPoint, szShaderModel, flags, D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS, ppBlobOut, &pErrorBlob );
-
-    delete pIncludeHandler;
-    delete []pFileData;
-
-    // Restore the current working directory if we need to 
-    if ( resetCurrentDir )
-    {
-        SetCurrentDirectory( workingPath );
-    }
-
-
-    if( FAILED(hr) )
-    {
-        OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
-        SAFE_RELEASE( pErrorBlob );
-        return hr;
-    }
-    SAFE_RELEASE( pErrorBlob );
-
-    return hr;
-}
-
-//--------------------------------------------------------------------------------------
-// Create any D3D10 resources that aren't dependant on the back buffer
+// Create any D3D resources that aren't dependant on the back buffer
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc,
                                       void* pUserContext )
 {
     HRESULT hr = S_OK;
 
-    ID3D11DeviceContext* pd3dImmediateContext = DXUTGetD3D11DeviceContext();
+    auto pd3dImmediateContext = DXUTGetD3D11DeviceContext();
     V_RETURN( g_DialogResourceManager.OnD3D11CreateDevice( pd3dDevice, pd3dImmediateContext ) );
     V_RETURN( g_D3DSettingsDlg.OnD3D11CreateDevice( pd3dDevice ) );
     g_pTxtHelper = new CDXUTTextHelper( pd3dDevice, pd3dImmediateContext, &g_DialogResourceManager, 15 );
 
-    D3DXVECTOR3 vCenter( 0.25767413f, -28.503521f, 111.00689f );
+    XMFLOAT3 vCenter( 0.25767413f, -28.503521f, 111.00689f );
     FLOAT fObjectRadius = 378.15607f;
 
-    D3DXMatrixTranslation( &g_mCenterMesh, -vCenter.x, -vCenter.y, -vCenter.z );
-    D3DXMATRIXA16 m;
-    D3DXMatrixRotationY( &m, D3DX_PI );
+    g_mCenterMesh = XMMatrixTranslation( -vCenter.x, -vCenter.y, -vCenter.z );
+    XMMATRIX m;
+    m = XMMatrixRotationY( XM_PI );
     g_mCenterMesh *= m;
-    D3DXMatrixRotationX( &m, D3DX_PI / 2.0f );
+    m = XMMatrixRotationX( XM_PI / 2.0f );
     g_mCenterMesh *= m;
 
     // Init the UI widget for directional lighting
@@ -650,15 +460,45 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     g_LightControl.SetRadius( fObjectRadius );
 
     // Compile and create the effect.
-    ID3DBlob* pEffectBuffer = NULL;
+    DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
+#ifdef _DEBUG
+    // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
+    // Setting this flag improves the shader debugging experience, but still allows 
+    // the shaders to be optimized and to run exactly the way they will run in 
+    // the release configuration of this program.
+    dwShaderFlags |= D3DCOMPILE_DEBUG;
 
-    V_RETURN( CompileShaderFromFile( L"DynamicShaderLinkageFX11.fx", 0,
-                                     NULL, "fx_5_0", &pEffectBuffer ) );
-    V_RETURN( D3DX11CreateEffectFromMemory( pEffectBuffer->GetBufferPointer(),
-                                            pEffectBuffer->GetBufferSize(),
-                                            0,
-                                            pd3dDevice,
-                                            &g_pEffect ) );
+    // Disable optimizations to further improve shader debugging
+    dwShaderFlags |= D3DCOMPILE_SKIP_OPTIMIZATION;
+#endif
+
+#if D3D_COMPILER_VERSION >= 46
+
+    WCHAR str[MAX_PATH];
+    V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"DynamicShaderLinkageFX11.fx" ) );
+
+    ID3DBlob* pErrorBlob = nullptr;
+    hr = D3DX11CompileEffectFromFile( str, nullptr, D3D_COMPILE_STANDARD_FILE_INCLUDE, dwShaderFlags, D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS, pd3dDevice, &g_pEffect, &pErrorBlob );
+    if ( pErrorBlob )
+    {
+        OutputDebugStringA( reinterpret_cast<const char*>( pErrorBlob->GetBufferPointer() ) );
+        pErrorBlob->Release();
+    }
+    if( FAILED(hr) )
+    {
+        return hr;
+    }
+
+#else
+
+    ID3DBlob* pEffectBuffer = nullptr;
+    V_RETURN( DXUTCompileFromFile( L"DynamicShaderLinkageFX11.fx", nullptr, "none", "fx_5_0", dwShaderFlags, D3DCOMPILE_EFFECT_ALLOW_SLOW_OPS, &pEffectBuffer ) );
+    hr = D3DX11CreateEffectFromMemory( pEffectBuffer->GetBufferPointer(), pEffectBuffer->GetBufferSize(), 0, pd3dDevice, &g_pEffect );
+    SAFE_RELEASE( pEffectBuffer );
+    if ( FAILED(hr) )
+        return hr;
+    
+#endif
 
     // Get the light Class Interfaces for setting values
     // and as potential binding sources.
@@ -688,9 +528,9 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     {
         char pTechName[50];
 
-        StringCbPrintfA( pTechName, sizeof(pTechName),
-                         "FeatureLevel11_%s",
-                         g_pMaterialClassNames[ i ] );
+        sprintf_s( pTechName, sizeof(pTechName),
+                   "FeatureLevel11_%s",
+                   g_pMaterialClassNames[ i ] );
         g_MaterialClasses[i].pTechnique = g_pEffect->GetTechniqueByName( pTechName );
 
         g_MaterialClasses[i].pClass = g_pEffect->GetVariableByName( g_pMaterialClassNames[i] )->AsClassInstance();
@@ -715,7 +555,12 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     else // Lower feature levels than 11 have no support for Dynamic Shader Linkage - need to use a statically specialized shaders
     {
         LPCSTR pTechniqueName;
-        
+
+        g_pAmbientLightIface = nullptr;
+        g_pDirectionalLightIface = nullptr;
+        g_pEnvironmentLightIface = nullptr;
+        g_pMaterialIface = nullptr;
+
         switch( supportedFeatureLevel )
         {
         case D3D_FEATURE_LEVEL_10_1:
@@ -723,13 +568,6 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
             break;
         case D3D_FEATURE_LEVEL_10_0:
             pTechniqueName = "FeatureLevel10";
-            break;
-        case D3D_FEATURE_LEVEL_9_3:
-            pTechniqueName = "FeatureLevel9_3";
-            break;
-        case D3D_FEATURE_LEVEL_9_2: // Shader model 2 fits feature level 9_1
-        case D3D_FEATURE_LEVEL_9_1:
-            pTechniqueName = "FeatureLevel9_1";
             break;
 
         default:
@@ -739,8 +577,6 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         g_pTechnique = g_pEffect->GetTechniqueByName( pTechniqueName );
     }
 
-    SAFE_RELEASE( pEffectBuffer );
-    
     // Create our vertex input layout
     const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
@@ -757,8 +593,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     D3DX11_PASS_SHADER_DESC VsPassDesc;
     D3DX11_EFFECT_SHADER_DESC VsDesc;
 
-    g_pTechnique->GetPassByIndex(0)->GetVertexShaderDesc(&VsPassDesc);
-    VsPassDesc.pShaderVariable->GetShaderDesc(VsPassDesc.ShaderIndex, &VsDesc);
+    V_RETURN( g_pTechnique->GetPassByIndex(0)->GetVertexShaderDesc(&VsPassDesc) );
+    V_RETURN( VsPassDesc.pShaderVariable->GetShaderDesc(VsPassDesc.ShaderIndex, &VsDesc) );
 
     V_RETURN( pd3dDevice->CreateInputLayout( layout, ARRAYSIZE( layout ),
                                              VsDesc.pBytecode,
@@ -773,16 +609,13 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     g_pWorld = g_pEffect->GetVariableByName( "g_mWorld" )->AsMatrix();
     
     // Load a HDR Environment for reflections
-    WCHAR str[MAX_PATH];
-    V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"Light Probes\\uffizi_cross.dds" ) );
-    V_RETURN( D3DX11CreateShaderResourceViewFromFile( pd3dDevice, str, NULL, NULL, &g_pEnvironmentMapSRV, NULL ));
+    V_RETURN( DXUTCreateShaderResourceViewFromFile( pd3dDevice, L"Light Probes\\uffizi_cross.dds", &g_pEnvironmentMapSRV ));
     g_pEnvironmentMapVar = g_pEffect->GetVariableByName( "g_txEnvironmentMap" )->AsShaderResource();
     g_pEnvironmentMapVar->SetResource( g_pEnvironmentMapSRV );
 
     // Setup the camera's view parameters
-    D3DXVECTOR3 vecEye( 0.0f, 0.0f, -50.0f );
-    D3DXVECTOR3 vecAt ( 0.0f, 0.0f, -0.0f );
-    g_Camera.SetViewParams( &vecEye, &vecAt );
+    static const XMVECTORF32 s_vecEye = { 0.0f, 0.0f, -50.0f, 0.f };
+    g_Camera.SetViewParams( s_vecEye, g_XMZero );
     g_Camera.SetRadius( fObjectRadius , fObjectRadius , fObjectRadius );
 
     // Find Rasterizer State Object index for WireFrame / Solid rendering
@@ -805,7 +638,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 
     // Setup the camera's projection parameters
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
-    g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 2.0f, 4000.0f );
+    g_Camera.SetProjParams( XM_PI / 4, fAspectRatio, 2.0f, 4000.0f );
     g_Camera.SetWindow( pBackBufferSurfaceDesc->Width, pBackBufferSurfaceDesc->Height );
     g_Camera.SetButtonMasks( MOUSE_LEFT_BUTTON, MOUSE_WHEEL, MOUSE_MIDDLE_BUTTON );
 
@@ -834,73 +667,57 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     }
 
     // Clear the render target and depth stencil
-    float ClearColor[4] = { 0.0f, 0.25f, 0.25f, 0.55f };
-    ID3D11RenderTargetView* pRTV = DXUTGetD3D11RenderTargetView();
-    pd3dImmediateContext->ClearRenderTargetView( pRTV, ClearColor );
-    ID3D11DepthStencilView* pDSV = DXUTGetD3D11DepthStencilView();
+    auto pRTV = DXUTGetD3D11RenderTargetView();
+    pd3dImmediateContext->ClearRenderTargetView( pRTV, Colors::MidnightBlue );
+    auto pDSV = DXUTGetD3D11DepthStencilView();
     pd3dImmediateContext->ClearDepthStencilView( pDSV, D3D11_CLEAR_DEPTH, 1.0, 0 );
 
-    D3DXMATRIX mWorldViewProjection;
-    D3DXVECTOR3 vLightDir;
-    D3DXMATRIX mWorld;
-    D3DXMATRIX mView;
-    D3DXMATRIX mProj;
-
     // Get the projection & view matrix from the camera class
-    mWorld = *g_Camera.GetWorldMatrix();
-    mProj  = *g_Camera.GetProjMatrix();
-    mView  = *g_Camera.GetViewMatrix();
+    XMMATRIX mWorld = g_Camera.GetWorldMatrix();
+    XMMATRIX mProj  = g_Camera.GetProjMatrix();
+    XMMATRIX mView  = g_Camera.GetViewMatrix();
 
     // Get the light direction
-    vLightDir = g_LightControl.GetLightDirection();
+    XMVECTOR vLightDir = g_LightControl.GetLightDirection();
 
     // Render the light arrow so the user can visually see the light dir
-    //D3DXCOLOR arrowColor = ( i == g_nActiveLight ) ? D3DXVECTOR4( 1, 1, 0, 1 ) : D3DXVECTOR4( 1, 1, 1, 1 );
-    D3DXCOLOR arrowColor = D3DXVECTOR4( 1, 1, 0, 1 );
-    V( g_LightControl.OnRender11( arrowColor, &mView, &mProj, g_Camera.GetEyePt() ) );
+    V( g_LightControl.OnRender( Colors::Yellow, mView, mProj, g_Camera.GetEyePt() ) );
 
     // Ambient Light
-    D3DXVECTOR4 vLightColor(0.1f, 0.1f, 0.1f, 1.0f);
-    g_pAmbientLightColor->SetFloatVector(vLightColor);
+    static const XMVECTORF32 s_vLightColorA = { 0.1f, 0.1f, 0.1f, 1.0f };
+    g_pAmbientLightColor->SetFloatVector( s_vLightColorA );
     g_pAmbientLightEnable->SetBool(true);
 
     // Hemi Ambient Light
-    vLightColor.x = 0.3f;
-    vLightColor.y = 0.3f;
-    vLightColor.z = 0.4f;
-    g_pHemiAmbientLightColor->SetFloatVector(vLightColor);
+    static const XMVECTORF32 s_vLightColorH1 = { 0.3f, 0.3f, 0.4f, 1.0f };
+    g_pHemiAmbientLightColor->SetFloatVector( s_vLightColorH1 );
     g_pHemiAmbientLightEnable->SetBool(true);
-    vLightColor.x = 0.05f;
-    vLightColor.y = 0.05f;
-    vLightColor.z = 0.05f;
-    vLightColor.w = 1.0f;
-    g_pHemiAmbientLightGroundColor->SetFloatVector(vLightColor);
-    D3DXVECTOR4 vVec(0.0f, 1.0f, 0.0f, 1.0f);
-    g_pHemiAmbientLightDirUp->SetFloatVector(vVec);
+
+    XMFLOAT4 vLightGrndClr( 0.05f, 0.05f, 0.05f, 1.f );
+    g_pHemiAmbientLightGroundColor->SetFloatVector( reinterpret_cast<float*>( &vLightGrndClr ) );
+
+    XMFLOAT4 vVec(0.0f, 1.0f, 0.0f, 1.0f);
+    g_pHemiAmbientLightDirUp->SetFloatVector( reinterpret_cast<float*>( &vVec ) );
 
     // Directional Light
-    vLightColor.x = 1.0f;
-    vLightColor.y = 1.0f;
-    vLightColor.z = 1.0f;
-    g_pDirectionalLightColor->SetFloatVector(vLightColor);
+    g_pDirectionalLightColor->SetFloatVector( Colors::White );
     g_pDirectionalLightEnable->SetBool(true);
-    vVec.x = vLightDir.x;
-    vVec.y = vLightDir.y;
-    vVec.z = vLightDir.z;
-    vVec.w = 1.0f;
-    g_pDirectionalLightDir->SetFloatVector(vVec);
+
+    XMFLOAT4 tmp;
+    XMStoreFloat4( &tmp, vLightDir );
+    tmp.w = 1.f;
+    g_pDirectionalLightDir->SetFloatVector( reinterpret_cast<float*>( &tmp ) );
 
     // Environment Light - color comes from the texture
-    vLightColor.x = 0.0f;
-    vLightColor.y = 0.0f;
-    vLightColor.z = 0.0f;
-    g_pEnvironmentLightColor->SetFloatVector(vLightColor);
+    g_pEnvironmentLightColor->SetFloatVector( Colors::Black );
     g_pEnvironmentLightEnable->SetBool(true);
 
     // Setup the Eye based on the DXUT camera
-    D3DXVECTOR3 vEyePt = *g_Camera.GetEyePt();
-    D3DXVECTOR3 vDir = *g_Camera.GetLookAtPt() - vEyePt;
-    g_pEyeDir->SetFloatVector(D3DXVECTOR4( vDir.x, vDir.y, vDir.z, 1.0f ));
+    XMVECTOR vEyePt = g_Camera.GetEyePt();
+    XMVECTOR vDir = g_Camera.GetLookAtPt() - vEyePt;
+    XMStoreFloat4( &tmp, vDir );
+    tmp.w = 1.f;
+    g_pEyeDir->SetFloatVector( reinterpret_cast<float*>( &tmp ) );
 
     //Get the mesh
     //IA setup
@@ -915,11 +732,14 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     pd3dImmediateContext->IASetIndexBuffer( g_Mesh11.GetIB11( 0 ), g_Mesh11.GetIBFormat11( 0 ), 0 );
  
     // Set the per object constant data
-    mWorldViewProjection = mWorld * mView * mProj;
+    XMMATRIX mWorldViewProjection = mWorld * mView * mProj;
 
     // VS Per object
-    g_pWorldViewProjection->SetMatrix(mWorldViewProjection);
-    g_pWorld->SetMatrix(mWorld);
+    XMFLOAT4X4 tmp4x4;
+    XMStoreFloat4x4( &tmp4x4, mWorldViewProjection );
+    g_pWorldViewProjection->SetMatrix( reinterpret_cast<float*>( &tmp4x4 ) );
+    XMStoreFloat4x4( &tmp4x4, mWorld );
+    g_pWorld->SetMatrix( reinterpret_cast<float*>( &tmp4x4 ) );
 
     // Setup the Shader Linkage based on the user settings for Lighting
     ID3DX11EffectClassInstanceVariable* pLightClassVar;
@@ -1003,27 +823,33 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // PS Per Prim
 
     // Shiny Plastic
-    g_MaterialClasses[MATERIAL_PLASTIC].pColor->SetFloatVector(D3DXVECTOR3(1, 0, 0.5f));
+    XMFLOAT3 clr1(1, 0, 0.5f);
+    g_MaterialClasses[MATERIAL_PLASTIC].pColor->SetFloatVector( reinterpret_cast<float*>( &clr1 ) );
     g_MaterialClasses[MATERIAL_PLASTIC].pSpecPower->SetInt(255);
 
     // Shiny Plastic with Textures
-    g_MaterialClasses[MATERIAL_PLASTIC_TEXTURED].pColor->SetFloatVector(D3DXVECTOR3(1, 0, 0.5f));
+    XMFLOAT3 clr2(1, 0, 0.5f);
+    g_MaterialClasses[MATERIAL_PLASTIC_TEXTURED].pColor->SetFloatVector( reinterpret_cast<float*>( &clr2 ) );
     g_MaterialClasses[MATERIAL_PLASTIC_TEXTURED].pSpecPower->SetInt(128);
 
     // Lighting Only Plastic
-    g_MaterialClasses[MATERIAL_PLASTIC_LIGHTING_ONLY].pColor->SetFloatVector(D3DXVECTOR3(1, 1, 1));
+    XMFLOAT3 clr3(1, 1, 1);
+    g_MaterialClasses[MATERIAL_PLASTIC_LIGHTING_ONLY].pColor->SetFloatVector( reinterpret_cast<float*>( &clr3 ) );
     g_MaterialClasses[MATERIAL_PLASTIC_LIGHTING_ONLY].pSpecPower->SetInt(128);
 
     // Rough Material
-    g_MaterialClasses[MATERIAL_ROUGH].pColor->SetFloatVector(D3DXVECTOR3(0, 0.5f, 1));
+    XMFLOAT3 clr4(0, 0.5f, 1);
+    g_MaterialClasses[MATERIAL_ROUGH].pColor->SetFloatVector( reinterpret_cast<float*>( &clr4 ) );
     g_MaterialClasses[MATERIAL_ROUGH].pSpecPower->SetInt(6);
 
     // Rough Material with Textures
-    g_MaterialClasses[MATERIAL_ROUGH_TEXTURED].pColor->SetFloatVector(D3DXVECTOR3(0, 0.5f, 1));
+    XMFLOAT3 clr5(0, 0.5f, 1);
+    g_MaterialClasses[MATERIAL_ROUGH_TEXTURED].pColor->SetFloatVector( reinterpret_cast<float*>( &clr5 ) );
     g_MaterialClasses[MATERIAL_ROUGH_TEXTURED].pSpecPower->SetInt(6);
 
     // Lighting Only Rough
-    g_MaterialClasses[MATERIAL_ROUGH_LIGHTING_ONLY].pColor->SetFloatVector(D3DXVECTOR3(1, 1, 1));
+    XMFLOAT3 clr6(1, 1, 1);
+    g_MaterialClasses[MATERIAL_ROUGH_LIGHTING_ONLY].pColor->SetFloatVector( reinterpret_cast<float*>( &clr6 ) );
     g_MaterialClasses[MATERIAL_ROUGH_LIGHTING_ONLY].pSpecPower->SetInt(6);
 
     if (g_bWireFrame)
@@ -1047,7 +873,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D10ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain 
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1056,7 +882,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D10CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice 
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {

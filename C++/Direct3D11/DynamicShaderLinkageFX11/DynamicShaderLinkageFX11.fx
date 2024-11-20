@@ -3,7 +3,8 @@
 //
 // The effect file for the DynamicShaderLinkageFX11 sample.  
 // 
-// Copyright (c) Microsoft Corporation. All rights reserved.
+// Copyright (c) Microsoft Corporation.
+// Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 
 #include "DynamicShaderLinkageFX11_VS.hlsl"
@@ -23,36 +24,6 @@
 #define StaticAmbientLight     g_ambientLight
 #define StaticDirectLight      g_directionalLight
 #define StaticEnvironmentLight g_environmentLight
-
-technique11 FeatureLevel9_1
-{
-    pass
-    {
-        SetRasterizerState(g_rasterizerState[g_fillMode]);
-        SetVertexShader(CompileShader(vs_4_0_level_9_1,
-                                      VSMain()));
-        SetPixelShader(CompileShader(ps_4_0_level_9_1,
-                                     PSMainUniform(StaticAmbientLight,
-                                                   StaticDirectLight,
-                                                   StaticEnvironmentLight,
-                                                   StaticMaterial)));
-    }
-}
-
-technique11 FeatureLevel9_3
-{
-    pass
-    {
-        SetRasterizerState(g_rasterizerState[g_fillMode]);
-        SetVertexShader(CompileShader(vs_4_0_level_9_3,
-                                      VSMain()));
-        SetPixelShader(CompileShader(ps_4_0_level_9_3,
-                                     PSMainUniform(StaticAmbientLight,
-                                                   StaticDirectLight,
-                                                   StaticEnvironmentLight,
-                                                   StaticMaterial)));
-    }
-}
 
 technique11 FeatureLevel10
 {
