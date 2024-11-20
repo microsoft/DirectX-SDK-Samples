@@ -350,9 +350,8 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     if( INSTALLSTATE_UNKNOWN == ProductState )
     {
         MessageBox( NULL, L"The sample must be installed by Windows Installer first before "
-                    L"it can run.  Please use the Install Project option in the Sample "
-                    L"Browser to copy the sample files to a folder, then launch "
-                    L"InstallOnDemand.msi in that folder.",
+                    L"it can run.  Please launch"
+                    L"InstallOnDemand.msi in the sample folder.",
                     L"Sample Error", MB_OK | MB_ICONSTOP );
         return 0;
     }
@@ -956,8 +955,8 @@ void RenderLoadingScreen( IDirect3DDevice9* pd3dDevice, double fTime, float fEla
     {
         RECT rc =
         {
-            pdsd->Width / 2 - 150, pdsd->Height - 90,
-            pdsd->Width / 2 + 150, pdsd->Height - 40
+            static_cast<long>(pdsd->Width) / 2l - 150l, static_cast<long>(pdsd->Height) - 90l,
+            static_cast<long>(pdsd->Width) / 2l + 150l, static_cast<long>(pdsd->Height) - 40l
         };
         RenderProgressBar( pd3dDevice, rc, g_Msi.GetProgress(), g_Msi.GetProgressMax() );
 
@@ -965,13 +964,13 @@ void RenderLoadingScreen( IDirect3DDevice9* pd3dDevice, double fTime, float fEla
         // show help is turned on.
         if( g_bShowHelp )
         {
-            const D3DSURFACE_DESC* pdsd = DXUTGetD3D9BackBufferSurfaceDesc();
-            RECT rc =
+            const D3DSURFACE_DESC* pdsd2 = DXUTGetD3D9BackBufferSurfaceDesc();
+            RECT rc2 =
             {
-                pdsd->Width / 2 - 50, pdsd->Height - 25,
-                pdsd->Width / 2 + 50, pdsd->Height - 5
+                static_cast<long>(pdsd2->Width) / 2l - 50l, static_cast<long>(pdsd2->Height) - 25l,
+                static_cast<long>(pdsd2->Width) / 2l + 50l, static_cast<long>(pdsd2->Height) - 5l
             };
-            RenderProgressBar( pd3dDevice, rc, g_Msi.GetProgress(), g_Msi.GetProgressMax() );
+            RenderProgressBar( pd3dDevice, rc2, g_Msi.GetProgress(), g_Msi.GetProgressMax() );
         }
     }
 
@@ -1060,8 +1059,8 @@ void RenderIntro( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime
             const D3DSURFACE_DESC* pdsd = DXUTGetD3D9BackBufferSurfaceDesc();
             RECT rc =
             {
-                pdsd->Width / 2 - 50, pdsd->Height - 25,
-                pdsd->Width / 2 + 50, pdsd->Height - 5
+                static_cast<long>(pdsd->Width) / 2l - 50l, static_cast<long>(pdsd->Height) - 25l,
+                static_cast<long>(pdsd->Width) / 2l + 50l, static_cast<long>(pdsd->Height) - 5l
             };
             RenderProgressBar( pd3dDevice, rc, g_Msi.GetProgress(), g_Msi.GetProgressMax() );
         }
@@ -1202,8 +1201,8 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
             {
                 RECT rc =
                 {
-                    pdsd->Width / 2 - 50, pdsd->Height - 25,
-                    pdsd->Width / 2 + 50, pdsd->Height - 5
+                    static_cast<long>(pdsd->Width) / 2l - 50l, static_cast<long>(pdsd->Height) - 25l,
+                    static_cast<long>(pdsd->Width) / 2l + 50l, static_cast<long>(pdsd->Height) - 5l
                 };
                 RenderProgressBar( pd3dDevice, rc, g_Msi.GetProgress(), g_Msi.GetProgressMax() );
             }
@@ -1211,8 +1210,8 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
             // Render the progress bar for passive install.
             RECT rc =
             {
-                pdsd->Width - 150, pdsd->Height - 25,
-                pdsd->Width - 20, pdsd->Height - 5
+                static_cast<long>(pdsd->Width) - 150l, static_cast<long>(pdsd->Height) - 25l,
+                static_cast<long>(pdsd->Width) - 20l, static_cast<long>(pdsd->Height) - 5l
             };
             RenderProgressBar( pd3dDevice, rc, g_Msi.GetPassiveProgress(), g_Msi.GetPassiveProgressMax() );
         }
