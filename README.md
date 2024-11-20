@@ -1,8 +1,10 @@
 ![DirectX Logo](https://raw.githubusercontent.com/wiki/Microsoft/DXUT/Dx_logo.GIF)
 
-# DirectX SDK Samples
+# DirectX SDK Legacy Samples
 
 This repository contains an archive of DirectX samples that shipped in the legacy DirectX SDK. They have been updated to build with Visual Studio 2019 or later, require only the current Windows SDK, and make use the [Microsoft.DXSDK.D3DX](https://www.nuget.org/packages/Microsoft.DXSDK.D3DX) NuGet package.
+
+Copyright (c) Microsoft Corporation.
 
 ## Disclaimer
 
@@ -20,6 +22,10 @@ The DirectX SDK itself is deprecated and legacy per [Microsoft Docs](https://lea
 |UVAtlas isochart texture atlas| See [UVAtlas](https://github.com/Microsoft/UVAtlas).|
 
 ## Release Notes
+
+FOR SECURITY ADVISORIES, see [GitHub](https://github.com/microsoft/DirectX-SDK-Samples/security/advisories).
+
+For a full change history, see [CHANGELOG.md](https://github.com/microsoft/DirectX-SDK-Samples/blob/main/CHANGELOG.md).
 
 * The XInput samples have been updated to use XInput 1.4 or XInput 9.1.0. XInput 1.3 usage requires the legacy DirectX SDK and is *strongly discouraged*.
 
@@ -45,8 +51,4 @@ This project has adopted the [Microsoft Open Source Code of Conduct](https://ope
 
 ## Trademarks
 
-This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft
-trademarks or logos is subject to and must follow
-[Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general).
-Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship.
-Any use of third-party trademarks or logos are subject to those third-party's policies.
+This project may contain trademarks or logos for projects, products, or services. Authorized use of Microsoft trademarks or logos is subject to and must follow [Microsoft's Trademark & Brand Guidelines](https://www.microsoft.com/en-us/legal/intellectualproperty/trademarks/usage/general). Use of Microsoft trademarks or logos in modified versions of this project must not cause confusion or imply Microsoft sponsorship. Any use of third-party trademarks or logos are subject to those third-party's policies.
