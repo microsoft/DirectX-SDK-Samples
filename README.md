@@ -4,6 +4,8 @@
 
 This repository contains an archive of DirectX samples that shipped in the legacy DirectX SDK. They have been updated to build with Visual Studio 2019 or later, require only the current Windows SDK, and make use the [Microsoft.DXSDK.D3DX](https://www.nuget.org/packages/Microsoft.DXSDK.D3DX) NuGet package.
 
+*THIS REPOSITORY IS ONLY FOR EDUCATIONAL AND HISTORICAL REFERENCE. Use of the legacy DirectX SDK, D3DX9, D3DX10, D3DX11, DXUT, and/or FX11 is not recommended for new projects.*
+
 Copyright (c) Microsoft Corporation.
 
 ## Disclaimer
@@ -12,7 +14,7 @@ The DirectX SDK itself is deprecated and legacy per [Microsoft Docs](https://lea
 
 |Technology|Notes|
 |--|--|
-|DirectX 12|See [DirectX-Graphics-Samples](https://github.com/microsoft/DirectX-Graphics-Samples), [DirectX-Headers](https://github.com/microsoft/DirectX-Headers), and [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler).|
+|DirectX 12|See [DirectX-Graphics-Samples](https://github.com/microsoft/DirectX-Graphics-Samples), [DirectX-Headers](https://github.com/microsoft/DirectX-Headers), [DirectXShaderCompiler](https://github.com/microsoft/DirectXShaderCompiler), and the [DirectX 12 Agility SDK](https://aka.ms/directx12agility).|
 |Microsoft GDK</br>Xbox Development| See [Xbox-GDK-Samples](https://github.com/microsoft/Xbox-GDK-Samples) and [Xbox-ATG-Samples](https://github.com/microsoft/Xbox-ATG-Samples).|
 |Universal Windows Platform (UWP)| See [Windows-universal-samples](https://github.com/microsoft/Windows-universal-samples).|
 |DXUT for Direct3D 11| See [DXUT](https://github.com/microsoft/DXUT/).|
@@ -43,7 +45,7 @@ For a full change history, see [CHANGELOG.md](https://github.com/microsoft/Direc
 
    1. "DXUT11.1" is a Direct3D 11 only version that does not make use of legacy D3DX which shipped on [GitHub](https://github.com/microsoft/DXUT).
 
-* The version of Effects for Direct3D 11 included in this repository matches the updated version which shipped on [GitHub](https://github.com/microsoft/FX11).
+* The version of Effects for Direct3D 11 included in this repository matches the updated version which shipped on [GitHub](https://github.com/microsoft/FX11). Note that the required `fx_*` profiles for the HLSL compiler are deprecated.
 
 ## Code of Conduct
 
