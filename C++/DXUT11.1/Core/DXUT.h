@@ -17,12 +17,6 @@
 #endif
 
 // If app hasn't choosen, set to work with Windows 7 and beyond
-#ifndef WINVER
-#define WINVER         0x0601
-#endif
-#ifndef _WIN32_WINDOWS
-#define _WIN32_WINDOWS 0x0601
-#endif
 #ifndef _WIN32_WINNT
 #define _WIN32_WINNT   0x0601
 #endif
@@ -58,7 +52,11 @@
 #include <new>
 #include <tuple>
 
+#pragma warning(push)
+#pragma warning(disable : 6553)
 #include <Windows.h>
+#pragma warning(pop)
+
 #include <initguid.h>
 #include <commctrl.h> // for InitCommonControls() 
 #include <shellapi.h> // for ExtractIcon()
@@ -137,7 +135,7 @@
     ((DWORD)((((a)&0xff)<<24)|(((r)&0xff)<<16)|(((g)&0xff)<<8)|((b)&0xff)))
 #endif
 
-#define DXUT_VERSION 1131
+#define DXUT_VERSION 1132
 
 //--------------------------------------------------------------------------------------
 // Structs

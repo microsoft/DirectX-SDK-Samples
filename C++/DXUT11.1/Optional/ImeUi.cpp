@@ -867,7 +867,7 @@ static void DrawCompositionString( _In_ bool bDrawCompAttr )
                     pszCurrentCompLine = g_szCompositionString + i;
                     if( bWrite )
                     {
-                        if( pszMlcs == g_szMultiLineCompString || pszMlcs[-1] == 0 )
+                        if( pszMlcs == g_szMultiLineCompString || pszMlcs[-1] == 0 ) // CodeQL [CodeQL.SM01947] This code relies on short-cut evaluation to avoid the overflow
                             *pszMlcs++ = ' ';	// to avoid zero length line
                         *pszMlcs++ = 0;
                     }
@@ -1379,7 +1379,15 @@ LPARAM ImeUi_ProcessMessage( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM& lParam
                     }
                     bNoReentrance = false;
                 }
-                    // fall through
+
+                #if (__cplusplus >= 201703L)
+                    [[fallthrough]];
+                #elif defined(__clang__)
+                    [[clang::fallthrough]];
+                #elif defined(_MSC_VER)
+                    __fallthrough;
+                #endif
+
                 case IMN_SETOPENSTATUS:
                     if( g_bUILessMode )
                         break;
@@ -1538,7 +1546,15 @@ LPARAM ImeUi_ProcessMessage( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM& lParam
             {
                 PostMessageA( GetFocus(), WM_KEYUP, ( WPARAM )VK_SHIFT, ( lShift & 0x01ff0000 ) | 0xC0000001 );
             }
-            // fall through WM_KEYDOWN / WM_SYSKEYDOWN
+
+            #if (__cplusplus >= 201703L)
+                [[fallthrough]];
+            #elif defined(__clang__)
+                [[clang::fallthrough]];
+            #elif defined(_MSC_VER)
+                __fallthrough;
+            #endif
+
         case WM_KEYDOWN:
         case WM_SYSKEYDOWN:
             {
