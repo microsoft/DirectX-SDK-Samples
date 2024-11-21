@@ -37,4 +37,17 @@
     <MSBuild Projects="$(_OneSln)"
       Properties="Configuration=$(Configuration);Platform=$(Platform)" />
   </Target>
+
+<Target Name="Clean"
+    Outputs="%(FullSolutionList.Identity)">
+
+    <PropertyGroup>
+      <_OneSln>%(FullSolutionList.Identity)</_OneSln>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(_OneSln)"
+      Properties="Configuration=$(Configuration);Platform=$(Platform)"
+      Targets="Clean" />
+  </Target>
 </Project>
+
