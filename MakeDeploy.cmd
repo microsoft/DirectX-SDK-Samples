@@ -59,6 +59,7 @@ copy /y BasicHLSL11\x64\Release\d3dx11_43.dll "bin\x64" >NUL
 @if ERRORLEVEL 1 goto error
 for /R %%1 in (Release\*.exe) do copy /y "%%1" "bin\x64\%%~nx1" >NUL
 @if ERRORLEVEL 1 goto error
+del /q "bin\x64\Tutorial*.exe"
 popd
 REM XAudio2
 pushd "C++\XAudio2"
