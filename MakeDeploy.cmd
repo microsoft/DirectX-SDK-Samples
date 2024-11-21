@@ -105,6 +105,7 @@ for /R %%1 in (Release\*.exe) do copy /y "%%1" "bin\x64\%%~nx1" >NUL
 @if ERRORLEVEL 1 goto error
 popd
 @echo --- DEPLOY COMPLETE ---
+msbuild BuildAllSolutions.targets /v:q /p:Configuration=Release /p:Platform=x64 /t:Clean
 @goto end
 :error
 @echo --- ERROR: FAILED ---
