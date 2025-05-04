@@ -25,22 +25,22 @@ struct SimpleVertex
 //--------------------------------------------------------------------------------------
 // Global Variables
 //--------------------------------------------------------------------------------------
-HINSTANCE                   g_hInst = NULL;
-HWND                        g_hWnd = NULL;
+HINSTANCE                   g_hInst = nullptr;
+HWND                        g_hWnd = nullptr;
 D3D10_DRIVER_TYPE           g_driverType = D3D10_DRIVER_TYPE_NULL;
-ID3D10Device*               g_pd3dDevice = NULL;
-IDXGISwapChain*             g_pSwapChain = NULL;
-ID3D10RenderTargetView*     g_pRenderTargetView = NULL;
-ID3D10Texture2D*            g_pDepthStencil = NULL;
-ID3D10DepthStencilView*     g_pDepthStencilView = NULL;
-ID3D10Effect*               g_pEffect = NULL;
-ID3D10EffectTechnique*      g_pTechnique = NULL;
-ID3D10InputLayout*          g_pVertexLayout = NULL;
-ID3D10Buffer*               g_pVertexBuffer = NULL;
-ID3D10Buffer*               g_pIndexBuffer = NULL;
-ID3D10EffectMatrixVariable* g_pWorldVariable = NULL;
-ID3D10EffectMatrixVariable* g_pViewVariable = NULL;
-ID3D10EffectMatrixVariable* g_pProjectionVariable = NULL;
+ID3D10Device*               g_pd3dDevice = nullptr;
+IDXGISwapChain*             g_pSwapChain = nullptr;
+ID3D10RenderTargetView*     g_pRenderTargetView = nullptr;
+ID3D10Texture2D*            g_pDepthStencil = nullptr;
+ID3D10DepthStencilView*     g_pDepthStencilView = nullptr;
+ID3D10Effect*               g_pEffect = nullptr;
+ID3D10EffectTechnique*      g_pTechnique = nullptr;
+ID3D10InputLayout*          g_pVertexLayout = nullptr;
+ID3D10Buffer*               g_pVertexBuffer = nullptr;
+ID3D10Buffer*               g_pIndexBuffer = nullptr;
+ID3D10EffectMatrixVariable* g_pWorldVariable = nullptr;
+ID3D10EffectMatrixVariable* g_pViewVariable = nullptr;
+ID3D10EffectMatrixVariable* g_pProjectionVariable = nullptr;
 D3DXMATRIX                  g_World1;
 D3DXMATRIX                  g_World2;
 D3DXMATRIX                  g_View;
@@ -76,10 +76,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     }
 
     // Main message loop
-    MSG msg = {0};
+    MSG msg = {};
     while( WM_QUIT != msg.message )
     {
-        if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+        if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
         {
             TranslateMessage( &msg );
             DispatchMessage( &msg );
@@ -92,7 +92,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
     CleanupDevice();
 
-    return ( int )msg.wParam;
+    return static_cast<int>(msg.wParam);
 }
 
 
@@ -102,17 +102,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 {
     // Register class
-    WNDCLASSEX wcex;
+    WNDCLASSEX wcex = {};
     wcex.cbSize = sizeof( WNDCLASSEX );
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon( hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
-    wcex.hCursor = LoadCursor( NULL, IDC_ARROW );
+    wcex.hCursor = LoadCursor( nullptr, IDC_ARROW );
     wcex.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
-    wcex.lpszMenuName = NULL;
+    wcex.lpszMenuName = nullptr;
     wcex.lpszClassName = L"TutorialWindowClass";
     wcex.hIconSm = LoadIcon( wcex.hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
     if( !RegisterClassEx( &wcex ) )
@@ -123,8 +121,8 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     RECT rc = { 0, 0, 640, 480 };
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
     g_hWnd = CreateWindow( L"TutorialWindowClass", L"Direct3D 10 Tutorial 5", WS_OVERLAPPEDWINDOW,
-                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
-                           NULL );
+                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+                           nullptr );
     if( !g_hWnd )
         return E_FAIL;
 
@@ -158,8 +156,7 @@ HRESULT InitDevice()
     };
     UINT numDriverTypes = sizeof( driverTypes ) / sizeof( driverTypes[0] );
 
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory( &sd, sizeof( sd ) );
+    DXGI_SWAP_CHAIN_DESC sd = {};
     sd.BufferCount = 1;
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
@@ -175,7 +172,7 @@ HRESULT InitDevice()
     for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
     {
         g_driverType = driverTypes[driverTypeIndex];
-        hr = D3D10CreateDeviceAndSwapChain( NULL, g_driverType, NULL, createDeviceFlags,
+        hr = D3D10CreateDeviceAndSwapChain( nullptr, g_driverType, nullptr, createDeviceFlags,
                                             D3D10_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice );
         if( SUCCEEDED( hr ) )
             break;
@@ -189,7 +186,7 @@ HRESULT InitDevice()
     if( FAILED( hr ) )
         return hr;
 
-    hr = g_pd3dDevice->CreateRenderTargetView( pBuffer, NULL, &g_pRenderTargetView );
+    hr = g_pd3dDevice->CreateRenderTargetView( pBuffer, nullptr, &g_pRenderTargetView );
     pBuffer->Release();
     if( FAILED( hr ) )
         return hr;
@@ -207,7 +204,7 @@ HRESULT InitDevice()
     descDepth.BindFlags = D3D10_BIND_DEPTH_STENCIL;
     descDepth.CPUAccessFlags = 0;
     descDepth.MiscFlags = 0;
-    hr = g_pd3dDevice->CreateTexture2D( &descDepth, NULL, &g_pDepthStencil );
+    hr = g_pd3dDevice->CreateTexture2D( &descDepth, nullptr, &g_pDepthStencil );
     if( FAILED( hr ) )
         return hr;
 
@@ -241,11 +238,11 @@ HRESULT InitDevice()
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
-    hr = D3DX10CreateEffectFromFile( L"Tutorial05.fx", NULL, NULL, "fx_4_0", dwShaderFlags, 0, g_pd3dDevice, NULL,
-                                         NULL, &g_pEffect, NULL, NULL );
+    hr = D3DX10CreateEffectFromFile( L"Tutorial05.fx", nullptr, nullptr, "fx_4_0", dwShaderFlags, 0, g_pd3dDevice, nullptr,
+                                         nullptr, &g_pEffect, nullptr, nullptr );
     if( FAILED( hr ) )
     {
-        MessageBox( NULL,
+        MessageBox( nullptr,
                     L"The FX file cannot be located.  Please run this executable from the directory that contains the FX file.", L"Error", MB_OK );
         return hr;
     }
@@ -259,7 +256,7 @@ HRESULT InitDevice()
     g_pProjectionVariable = g_pEffect->GetVariableByName( "Projection" )->AsMatrix();
 
     // Define the input layout
-    D3D10_INPUT_ELEMENT_DESC layout[] =
+    const D3D10_INPUT_ELEMENT_DESC layout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D10_INPUT_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D10_INPUT_PER_VERTEX_DATA, 0 },
@@ -274,11 +271,8 @@ HRESULT InitDevice()
     if( FAILED( hr ) )
         return hr;
 
-    // Set the input layout
-    g_pd3dDevice->IASetInputLayout( g_pVertexLayout );
-
     // Create vertex buffer
-    SimpleVertex vertices[] =
+    const SimpleVertex vertices[] =
     {
         { D3DXVECTOR3( -1.0f, 1.0f, -1.0f ), D3DXVECTOR4( 0.0f, 0.0f, 1.0f, 1.0f ) },
         { D3DXVECTOR3( 1.0f, 1.0f, -1.0f ), D3DXVECTOR4( 0.0f, 1.0f, 0.0f, 1.0f ) },
@@ -289,26 +283,19 @@ HRESULT InitDevice()
         { D3DXVECTOR3( 1.0f, -1.0f, 1.0f ), D3DXVECTOR4( 1.0f, 1.0f, 1.0f, 1.0f ) },
         { D3DXVECTOR3( -1.0f, -1.0f, 1.0f ), D3DXVECTOR4( 0.0f, 0.0f, 0.0f, 1.0f ) },
     };
-    D3D10_BUFFER_DESC bd;
+    D3D10_BUFFER_DESC bd = {};
     bd.Usage = D3D10_USAGE_DEFAULT;
     bd.ByteWidth = sizeof( SimpleVertex ) * 8;
     bd.BindFlags = D3D10_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
-    bd.MiscFlags = 0;
-    D3D10_SUBRESOURCE_DATA InitData;
+
+    D3D10_SUBRESOURCE_DATA InitData = {};
     InitData.pSysMem = vertices;
     hr = g_pd3dDevice->CreateBuffer( &bd, &InitData, &g_pVertexBuffer );
     if( FAILED( hr ) )
         return hr;
 
-    // Set vertex buffer
-    UINT stride = sizeof( SimpleVertex );
-    UINT offset = 0;
-    g_pd3dDevice->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
-
     // Create index buffer
-    // Create vertex buffer
-    DWORD indices[] =
+    const DWORD indices[] =
     {
         3,1,0,
         2,1,3,
@@ -331,18 +318,10 @@ HRESULT InitDevice()
     bd.Usage = D3D10_USAGE_DEFAULT;
     bd.ByteWidth = sizeof( DWORD ) * 36;
     bd.BindFlags = D3D10_BIND_INDEX_BUFFER;
-    bd.CPUAccessFlags = 0;
-    bd.MiscFlags = 0;
     InitData.pSysMem = indices;
     hr = g_pd3dDevice->CreateBuffer( &bd, &InitData, &g_pIndexBuffer );
     if( FAILED( hr ) )
         return hr;
-
-    // Set index buffer
-    g_pd3dDevice->IASetIndexBuffer( g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0 );
-
-    // Set primitive topology
-    g_pd3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
     // Initialize the world matrices
     D3DXMatrixIdentity( &g_World1 );
@@ -461,6 +440,20 @@ void Render()
     g_pWorldVariable->SetMatrix( ( float* )&g_World1 );
     g_pViewVariable->SetMatrix( ( float* )&g_View );
     g_pProjectionVariable->SetMatrix( ( float* )&g_Projection );
+
+    // Set the input layout
+    g_pd3dDevice->IASetInputLayout(g_pVertexLayout);
+
+    // Set vertex buffer
+    UINT stride = sizeof(SimpleVertex);
+    UINT offset = 0;
+    g_pd3dDevice->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+
+    // Set index buffer
+    g_pd3dDevice->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+    // Set primitive topology
+    g_pd3dDevice->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     //
     // Render the first cube

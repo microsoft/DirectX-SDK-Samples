@@ -80,7 +80,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     }
 
     // Main message loop
-    MSG msg = {0};
+    MSG msg = {};
     while( WM_QUIT != msg.message )
     {
         if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
@@ -96,7 +96,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
     CleanupDevice();
 
-    return ( int )msg.wParam;
+    return static_cast<int>(msg.wParam);
 }
 
 
@@ -106,12 +106,10 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 {
     // Register class
-    WNDCLASSEX wcex;
+    WNDCLASSEX wcex = {};
     wcex.cbSize = sizeof( WNDCLASSEX );
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon( hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
     wcex.hCursor = LoadCursor( nullptr, IDC_ARROW );
@@ -321,9 +319,9 @@ HRESULT InitDevice()
     g_pImmediateContext->OMSetRenderTargets( 1, &g_pRenderTargetView, nullptr );
 
     // Setup the viewport
-    D3D11_VIEWPORT vp;
-    vp.Width = (FLOAT)width;
-    vp.Height = (FLOAT)height;
+    D3D11_VIEWPORT vp = {};
+    vp.Width = static_cast<FLOAT>(width);
+    vp.Height = static_cast<FLOAT>(height);
     vp.MinDepth = 0.0f;
     vp.MaxDepth = 1.0f;
     vp.TopLeftX = 0;
@@ -349,7 +347,7 @@ HRESULT InitDevice()
 	}
 
     // Define the input layout
-    D3D11_INPUT_ELEMENT_DESC layout[] =
+    const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
@@ -361,9 +359,6 @@ HRESULT InitDevice()
 	pVSBlob->Release();
 	if( FAILED( hr ) )
         return hr;
-
-    // Set the input layout
-    g_pImmediateContext->IASetInputLayout( g_pVertexLayout );
 
 	// Compile the pixel shader
 	ID3DBlob* pPSBlob = nullptr;
@@ -382,7 +377,7 @@ HRESULT InitDevice()
         return hr;
 
     // Create vertex buffer
-    SimpleVertex vertices[] =
+    const SimpleVertex vertices[] =
     {
         XMFLOAT3( 0.0f, 0.5f, 0.5f ),
         XMFLOAT3( 0.5f, -0.5f, 0.5f ),
@@ -392,21 +387,12 @@ HRESULT InitDevice()
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof( SimpleVertex ) * 3;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
 
     D3D11_SUBRESOURCE_DATA InitData = {};
     InitData.pSysMem = vertices;
     hr = g_pd3dDevice->CreateBuffer( &bd, &InitData, &g_pVertexBuffer );
     if( FAILED( hr ) )
         return hr;
-
-    // Set vertex buffer
-    UINT stride = sizeof( SimpleVertex );
-    UINT offset = 0;
-    g_pImmediateContext->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
-
-    // Set primitive topology
-    g_pImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
     return S_OK;
 }
@@ -470,6 +456,17 @@ void Render()
 {
     // Clear the back buffer 
     g_pImmediateContext->ClearRenderTargetView( g_pRenderTargetView, Colors::MidnightBlue );
+
+    // Set the input layout
+    g_pImmediateContext->IASetInputLayout(g_pVertexLayout);
+
+    // Set vertex buffer
+    UINT stride = sizeof(SimpleVertex);
+    UINT offset = 0;
+    g_pImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+
+    // Set primitive topology
+    g_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     // Render a triangle
 	g_pImmediateContext->VSSetShader( g_pVertexShader, nullptr, 0 );

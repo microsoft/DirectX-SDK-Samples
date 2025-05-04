@@ -13,8 +13,8 @@
 //--------------------------------------------------------------------------------------
 // Global Variables
 //--------------------------------------------------------------------------------------
-HINSTANCE   g_hInst = NULL;
-HWND        g_hWnd = NULL;
+HINSTANCE   g_hInst = nullptr;
+HWND        g_hWnd = nullptr;
 
 
 //--------------------------------------------------------------------------------------
@@ -37,14 +37,14 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
         return 0;
 
     // Main message loop
-    MSG msg = {0};
-    while( GetMessage( &msg, NULL, 0, 0 ) )
+    MSG msg = {};
+    while( GetMessage( &msg, nullptr, 0, 0 ) )
     {
         TranslateMessage( &msg );
         DispatchMessage( &msg );
     }
 
-    return ( int )msg.wParam;
+    return static_cast<int>(msg.wParam);
 }
 
 
@@ -54,17 +54,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 {
     // Register class
-    WNDCLASSEX wcex;
+    WNDCLASSEX wcex = {};
     wcex.cbSize = sizeof( WNDCLASSEX );
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon( hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
-    wcex.hCursor = LoadCursor( NULL, IDC_ARROW );
+    wcex.hCursor = LoadCursor( nullptr, IDC_ARROW );
     wcex.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
-    wcex.lpszMenuName = NULL;
+    wcex.lpszMenuName = nullptr;
     wcex.lpszClassName = L"TutorialWindowClass";
     wcex.hIconSm = LoadIcon( wcex.hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
     if( !RegisterClassEx( &wcex ) )
@@ -75,8 +73,8 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     RECT rc = { 0, 0, 640, 480 };
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
     g_hWnd = CreateWindow( L"TutorialWindowClass", L"Direct3D 10 Tutorial 0: Setting Up Window", WS_OVERLAPPEDWINDOW,
-                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
-                           NULL );
+                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+                           nullptr );
     if( !g_hWnd )
         return E_FAIL;
 
