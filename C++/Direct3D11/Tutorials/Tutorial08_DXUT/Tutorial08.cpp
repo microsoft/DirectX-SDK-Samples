@@ -79,8 +79,6 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 {
     HRESULT hr = S_OK;
 
-    auto pd3dImmediateContext = DXUTGetD3D11DeviceContext();
-
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
@@ -106,7 +104,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     }
 
     // Define the input layout
-    D3D11_INPUT_ELEMENT_DESC layout[] =
+    const D3D11_INPUT_ELEMENT_DESC layout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -120,9 +118,6 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     if( FAILED( hr ) )
         return hr;
 
-    // Set the input layout
-    pd3dImmediateContext->IASetInputLayout( g_pVertexLayout );
-
     // Compile the pixel shader
     ID3DBlob* pPSBlob  = nullptr;
     V_RETURN( DXUTCompileFromFile( L"Tutorial08.fx", nullptr, "PS", "ps_4_0", dwShaderFlags, 0, &pPSBlob  ) );
@@ -134,7 +129,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         return hr;
 
     // Create vertex buffer
-    SimpleVertex vertices[] =
+    const SimpleVertex vertices[] =
     {
         { XMFLOAT3( -1.0f, 1.0f, -1.0f ), XMFLOAT2( 1.0f, 0.0f ) },
         { XMFLOAT3( 1.0f, 1.0f, -1.0f ), XMFLOAT2( 0.0f, 0.0f ) },
@@ -171,19 +166,13 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof( SimpleVertex ) * 24;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-    bd.CPUAccessFlags = 0;
 
     D3D11_SUBRESOURCE_DATA InitData = {};
     InitData.pSysMem = vertices;
     V_RETURN( pd3dDevice->CreateBuffer( &bd, &InitData, &g_pVertexBuffer ) );
 
-    // Set vertex buffer
-    UINT stride = sizeof( SimpleVertex );
-    UINT offset = 0;
-    pd3dImmediateContext->IASetVertexBuffers( 0, 1, &g_pVertexBuffer, &stride, &offset );
-
     // Create index buffer
-    DWORD indices[] =
+    const DWORD indices[] =
     {
         3,1,0,
         2,1,3,
@@ -207,16 +196,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof( DWORD ) * 36;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    bd.CPUAccessFlags = 0;
-    bd.MiscFlags = 0;
     InitData.pSysMem = indices;
     V_RETURN( pd3dDevice->CreateBuffer( &bd, &InitData, &g_pIndexBuffer ) );
-
-    // Set index buffer
-    pd3dImmediateContext->IASetIndexBuffer( g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0 );
-
-    // Set primitive topology
-    pd3dImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
     // Create the constant buffers
     bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -310,6 +291,20 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     XMStoreFloat4x4( &pCB->mWorld, XMMatrixTranspose( g_World ) );
     pCB->vMeshColor = g_vMeshColor;
     pd3dImmediateContext->Unmap( g_pCBChangesEveryFrame , 0 );
+
+    // Set the input layout
+    pd3dImmediateContext->IASetInputLayout(g_pVertexLayout);
+
+    // Set vertex buffer
+    UINT stride = sizeof(SimpleVertex);
+    UINT offset = 0;
+    pd3dImmediateContext->IASetVertexBuffers(0, 1, &g_pVertexBuffer, &stride, &offset);
+
+    // Set index buffer
+    pd3dImmediateContext->IASetIndexBuffer(g_pIndexBuffer, DXGI_FORMAT_R32_UINT, 0);
+
+    // Set primitive topology
+    pd3dImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
     //
     // Render the cube

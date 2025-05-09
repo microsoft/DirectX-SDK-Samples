@@ -15,12 +15,12 @@
 //--------------------------------------------------------------------------------------
 // Global Variables
 //--------------------------------------------------------------------------------------
-HINSTANCE               g_hInst = NULL;
-HWND                    g_hWnd = NULL;
+HINSTANCE               g_hInst = nullptr;
+HWND                    g_hWnd = nullptr;
 D3D10_DRIVER_TYPE       g_driverType = D3D10_DRIVER_TYPE_NULL;
-ID3D10Device*           g_pd3dDevice = NULL;
-IDXGISwapChain*         g_pSwapChain = NULL;
-ID3D10RenderTargetView* g_pRenderTargetView = NULL;
+ID3D10Device*           g_pd3dDevice = nullptr;
+IDXGISwapChain*         g_pSwapChain = nullptr;
+ID3D10RenderTargetView* g_pRenderTargetView = nullptr;
 
 
 //--------------------------------------------------------------------------------------
@@ -52,10 +52,10 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     }
 
     // Main message loop
-    MSG msg = {0};
+    MSG msg = {};
     while( WM_QUIT != msg.message )
     {
-        if( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+        if( PeekMessage( &msg, nullptr, 0, 0, PM_REMOVE ) )
         {
             TranslateMessage( &msg );
             DispatchMessage( &msg );
@@ -68,7 +68,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
     CleanupDevice();
 
-    return ( int )msg.wParam;
+    return static_cast<int>(msg.wParam);
 }
 
 
@@ -78,17 +78,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
 {
     // Register class
-    WNDCLASSEX wcex;
+    WNDCLASSEX wcex = {};
     wcex.cbSize = sizeof( WNDCLASSEX );
     wcex.style = CS_HREDRAW | CS_VREDRAW;
     wcex.lpfnWndProc = WndProc;
-    wcex.cbClsExtra = 0;
-    wcex.cbWndExtra = 0;
     wcex.hInstance = hInstance;
     wcex.hIcon = LoadIcon( hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
-    wcex.hCursor = LoadCursor( NULL, IDC_ARROW );
+    wcex.hCursor = LoadCursor( nullptr, IDC_ARROW );
     wcex.hbrBackground = ( HBRUSH )( COLOR_WINDOW + 1 );
-    wcex.lpszMenuName = NULL;
+    wcex.lpszMenuName = nullptr;
     wcex.lpszClassName = L"TutorialWindowClass";
     wcex.hIconSm = LoadIcon( wcex.hInstance, ( LPCTSTR )IDI_TUTORIAL1 );
     if( !RegisterClassEx( &wcex ) )
@@ -99,8 +97,8 @@ HRESULT InitWindow( HINSTANCE hInstance, int nCmdShow )
     RECT rc = { 0, 0, 640, 480 };
     AdjustWindowRect( &rc, WS_OVERLAPPEDWINDOW, FALSE );
     g_hWnd = CreateWindow( L"TutorialWindowClass", L"Direct3D 10 Tutorial 1: Direct3D 10 Basics", WS_OVERLAPPEDWINDOW,
-                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, NULL, NULL, hInstance,
-                           NULL );
+                           CW_USEDEFAULT, CW_USEDEFAULT, rc.right - rc.left, rc.bottom - rc.top, nullptr, nullptr, hInstance,
+                           nullptr );
     if( !g_hWnd )
         return E_FAIL;
 
@@ -161,8 +159,7 @@ HRESULT InitDevice()
     };
     UINT numDriverTypes = sizeof( driverTypes ) / sizeof( driverTypes[0] );
 
-    DXGI_SWAP_CHAIN_DESC sd;
-    ZeroMemory( &sd, sizeof( sd ) );
+    DXGI_SWAP_CHAIN_DESC sd = {};
     sd.BufferCount = 1;
     sd.BufferDesc.Width = width;
     sd.BufferDesc.Height = height;
@@ -178,7 +175,7 @@ HRESULT InitDevice()
     for( UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++ )
     {
         g_driverType = driverTypes[driverTypeIndex];
-        hr = D3D10CreateDeviceAndSwapChain( NULL, g_driverType, NULL, createDeviceFlags,
+        hr = D3D10CreateDeviceAndSwapChain( nullptr, g_driverType, nullptr, createDeviceFlags,
                                             D3D10_SDK_VERSION, &sd, &g_pSwapChain, &g_pd3dDevice );
         if( SUCCEEDED( hr ) )
             break;
@@ -192,12 +189,12 @@ HRESULT InitDevice()
     if( FAILED( hr ) )
         return hr;
 
-    hr = g_pd3dDevice->CreateRenderTargetView( pBackBuffer, NULL, &g_pRenderTargetView );
+    hr = g_pd3dDevice->CreateRenderTargetView( pBackBuffer, nullptr, &g_pRenderTargetView );
     pBackBuffer->Release();
     if( FAILED( hr ) )
         return hr;
 
-    g_pd3dDevice->OMSetRenderTargets( 1, &g_pRenderTargetView, NULL );
+    g_pd3dDevice->OMSetRenderTargets( 1, &g_pRenderTargetView, nullptr );
 
     // Setup the viewport
     D3D10_VIEWPORT vp;
