@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DynamicShaderLinkageFX11.fx
 //
-// The effect file for the DynamicShaderLinkageFX11 sample.  
-// 
+// The effect file for the DynamicShaderLinkageFX11 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -75,7 +75,7 @@ iBaseLight g_abstractAmbientLighting;
 iBaseLight g_abstractDirectLighting;
 iBaseLight g_abstractEnvironmentLighting;
 iBaseMaterial g_abstractMaterial;
-    
+
 technique11 FeatureLevel11
 {
     pass

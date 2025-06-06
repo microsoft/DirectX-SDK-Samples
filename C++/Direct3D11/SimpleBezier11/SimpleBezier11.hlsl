@@ -83,7 +83,7 @@ struct HS_OUTPUT
 
 HS_CONSTANT_DATA_OUTPUT BezierConstantHS( InputPatch<VS_CONTROL_POINT_OUTPUT, INPUT_PATCH_SIZE> ip,
                                           uint PatchID : SV_PrimitiveID )
-{    
+{
     HS_CONSTANT_DATA_OUTPUT Output;
 
     float TessAmount = g_fTessellationFactor;
@@ -111,7 +111,7 @@ HS_CONSTANT_DATA_OUTPUT BezierConstantHS( InputPatch<VS_CONTROL_POINT_OUTPUT, IN
 [outputtopology("triangle_cw")]
 [outputcontrolpoints(OUTPUT_PATCH_SIZE)]
 [patchconstantfunc("BezierConstantHS")]
-HS_OUTPUT BezierHS( InputPatch<VS_CONTROL_POINT_OUTPUT, INPUT_PATCH_SIZE> p, 
+HS_OUTPUT BezierHS( InputPatch<VS_CONTROL_POINT_OUTPUT, INPUT_PATCH_SIZE> p,
                     uint i : SV_OutputControlPointID,
                     uint PatchID : SV_PrimitiveID )
 {
@@ -182,7 +182,7 @@ float3 EvaluateBezier( const OutputPatch<HS_OUTPUT, OUTPUT_PATCH_SIZE> bezpatch,
 // rasterization pipeline and get drawn to the screen.
 
 [domain("quad")]
-DS_OUTPUT BezierDS( HS_CONSTANT_DATA_OUTPUT input, 
+DS_OUTPUT BezierDS( HS_CONSTANT_DATA_OUTPUT input,
                     float2 UV : SV_DomainLocation,
                     const OutputPatch<HS_OUTPUT, OUTPUT_PATCH_SIZE> bezpatch )
 {
@@ -201,7 +201,7 @@ DS_OUTPUT BezierDS( HS_CONSTANT_DATA_OUTPUT input,
     Output.vWorldPos = WorldPos;
     Output.vNormal = Norm;
 
-    return Output;    
+    return Output;
 }
 
 //--------------------------------------------------------------------------------------

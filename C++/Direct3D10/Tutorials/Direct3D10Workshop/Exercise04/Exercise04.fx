@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -128,7 +128,7 @@ float3 GetNormal( GSSceneIn triPts[3] )
 void ExtrudeBranch( GSSceneIn triPts[3], float growAmt, inout TriangleStream<PSSceneIn> OutputStream )
 {
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob TODO: Find the normal for the triangle.  You can do this 
+	// o/__   <-- BreakdancinBob TODO: Find the normal for the triangle.  You can do this
 	// |  (\			yourself or use the GetNormal helper function above.
 	//-----------------------------------------------------------------------------------------
 	//float3 TriNormal = ?
@@ -141,15 +141,15 @@ void ExtrudeBranch( GSSceneIn triPts[3], float growAmt, inout TriangleStream<PSS
 		//-----------------------------------------------------------------------------------------
 		// o/__   <-- BreakdancinBob TODO: Extrude the triangle points along the triangle normal.
 		// |  (\			
-		//					The original input position is in triPts[i].Pos.  ExtrudePos should 
+		//					The original input position is in triPts[i].Pos.  ExtrudePos should
 		//					be the input position moved growAmt (passed in) in the direction of
 		//					the tirangle normal (TriNormal).
 		//-----------------------------------------------------------------------------------------
 		//float3 extrudePos = ?
 		
 		//-----------------------------------------------------------------------------------------
-		// o/__   <-- BreakdancinBob TODO: After you extrude the point along the normal, don't 
-		// |  (\			forget to multiply by the projection matrix (g_mProj) or it won't show 
+		// o/__   <-- BreakdancinBob TODO: After you extrude the point along the normal, don't
+		// |  (\			forget to multiply by the projection matrix (g_mProj) or it won't show
 		//					up properly on the screen.  Uncomment the line below to do this.
 		//-----------------------------------------------------------------------------------------
 		//output.Pos = mul( float4( extrudePos, 1 ), g_mProj );
@@ -170,8 +170,8 @@ void ExtrudeBranch( GSSceneIn triPts[3], float growAmt, inout TriangleStream<PSS
 //-----------------------------------------------------------------------------------------
 [maxvertexcount(6)]
 //-----------------------------------------------------------------------------------------
-// o/__   <-- BreakdancinBob Note:	We will not use adjacency for the rest of the exercises.  
-// |  (\			Therefore the triangles passed into this GS are triangle (not triangleadj).  
+// o/__   <-- BreakdancinBob Note:	We will not use adjacency for the rest of the exercises.
+// |  (\			Therefore the triangles passed into this GS are triangle (not triangleadj).
 //					Only three vertices are input for normal triangles.
 //-----------------------------------------------------------------------------------------
 void GSScene( triangle GSSceneIn input[3], inout TriangleStream<PSSceneIn> OutputStream )
@@ -204,7 +204,7 @@ float4 PSScene(PSSceneIn input) : SV_Target
 }
 
 //-----------------------------------------------------------------------------------------
-// Technique: RenderTextured  
+// Technique: RenderTextured
 //-----------------------------------------------------------------------------------------
 technique10 RenderTextured
 {
@@ -214,11 +214,11 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScene() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-        
+
         //disable culling so we can see the thin extruded triangles
         SetRasterizerState( NoCulling );
-    }  
+    }
 }
 

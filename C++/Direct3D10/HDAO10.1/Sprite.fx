@@ -17,24 +17,24 @@
 
 struct VsSpriteInput
 {
-    float3 v3Pos : POSITION; 
-    float2 v2Tex : TEXTURE0; 
+    float3 v3Pos : POSITION;
+    float2 v2Tex : TEXTURE0;
 };
 
 struct PsSpriteInput
 {
-    float4 v4Pos : SV_Position; 
+    float4 v4Pos : SV_Position;
     float2 v2Tex : TEXTURE0;
 };
 
 struct VsSpriteBorderInput
 {
-    float3 v3Pos : POSITION; 
+    float3 v3Pos : POSITION;
 };
 
 struct PsSpriteBorderInput
 {
-    float4 v4Pos : SV_Position; 
+    float4 v4Pos : SV_Position;
 };
 
 //=================================================================================================================================
@@ -98,10 +98,10 @@ PsSpriteInput VsSprite( VsSpriteInput I )
     O.v4Pos.y = -( ( g_fHeight * I.v3Pos.y + g_fStartPosY ) / ( g_fViewportHeight / 2.0 ) ) + 1.0;
     O.v4Pos.z = I.v3Pos.z;
     O.v4Pos.w = 1.0;
-    
+
     // Propogate texture coordinate
     O.v2Tex = I.v2Tex;
-     
+
     return O;
 }
 
@@ -114,7 +114,7 @@ PsSpriteBorderInput VsSpriteBorder( VsSpriteBorderInput I )
     O.v4Pos.y = -( ( g_fHeight * I.v3Pos.y + g_fStartPosY ) / ( g_fViewportHeight / 2.0 ) ) + 1.0;
     O.v4Pos.z = I.v3Pos.z;
     O.v4Pos.w = 1.0;
-     
+
     return O;
 }
 
@@ -136,13 +136,13 @@ float4 PsSpriteMS( PsSpriteInput I ) : SV_Target
     int2 n2TexCoord;
     n2TexCoord.x = (int)(I.v2Tex.x * g_fTextureWidth);
     n2TexCoord.y = (int)(I.v2Tex.y * g_fTextureHeight);
-    
+
     float4 v4Color;
-    v4Color.x = 0.0f;    
+    v4Color.x = 0.0f;
     v4Color.y = 0.0f;
     v4Color.z = 0.0f;
     v4Color.w = 0.0f;
-    
+
     switch( g_nSampleIndex )
     {
     case 0:
@@ -170,30 +170,30 @@ float4 PsSpriteMS( PsSpriteInput I ) : SV_Target
         v4Color = g_SpriteTextureMS.Load( int3( n2TexCoord, 0), 7 );
         break;
     }
-    
+
     return v4Color;
 }
 
 float4 PsSpriteAsDepth( PsSpriteInput I ) : SV_Target
 {
     float4 v4Color = g_SpriteTexture.Sample( g_SamplerPoint, I.v2Tex );
-    
+
     v4Color.x = 1.0f - v4Color.x;
-    
+
     if( v4Color.x < g_fDepthRangeMin )
     {
         v4Color.x = g_fDepthRangeMin;
     }
-    
+
     if( v4Color.x > g_fDepthRangeMax )
     {
         v4Color.x = g_fDepthRangeMax;
     }
-    
+
     float fRange = g_fDepthRangeMax - g_fDepthRangeMin;
-    
+
     v4Color.x = ( v4Color.x - g_fDepthRangeMin ) / fRange;
-    
+
     return v4Color.xxxw;
 }
 
@@ -202,9 +202,9 @@ float4 PsSpriteAsDepthMS( PsSpriteInput I ) : SV_Target
     int2 n2TexCoord;
     n2TexCoord.x = (int)(I.v2Tex.x * g_fTextureWidth);
     n2TexCoord.y = (int)(I.v2Tex.y * g_fTextureHeight);
-    
+
     float fColor = 0.0f;
-        
+
     switch( g_nSampleIndex )
     {
     case 0:
@@ -232,23 +232,23 @@ float4 PsSpriteAsDepthMS( PsSpriteInput I ) : SV_Target
         fColor = g_SpriteDepthTextureMS.Load( int3( n2TexCoord, 0), 7 ).x;
         break;
     }
-    
+
     fColor = 1.0f - fColor;
-    
+
     if( fColor < g_fDepthRangeMin )
     {
         fColor = g_fDepthRangeMin;
     }
-    
+
     if( fColor > g_fDepthRangeMax )
     {
         fColor = g_fDepthRangeMax;
     }
-    
+
     float fRange = g_fDepthRangeMax - g_fDepthRangeMin;
-    
+
     fColor = ( fColor - g_fDepthRangeMin ) / fRange;
-            
+
     return fColor.xxxx;
 
 }
@@ -309,7 +309,7 @@ technique10 RenderSprite
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( DisableCulling );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    
+
         SetVertexShader( CompileShader( vs_4_0, VsSprite() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PsSprite() ) );
@@ -323,7 +323,7 @@ technique10 RenderSpriteMS
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( DisableCulling );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    
+
         SetVertexShader( CompileShader( vs_4_0, VsSprite() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PsSpriteMS() ) );
@@ -337,7 +337,7 @@ technique10 RenderSpriteAsDepth
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( DisableCulling );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    
+
         SetVertexShader( CompileShader( vs_4_0, VsSprite() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PsSpriteAsDepth() ) );
@@ -351,7 +351,7 @@ technique10 RenderSpriteAsDepthMS
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( DisableCulling );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    
+
         SetVertexShader( CompileShader( vs_4_0, VsSprite() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PsSpriteAsDepthMS() ) );
@@ -365,7 +365,7 @@ technique10 RenderAlphaSprite
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( DisableCulling );
         SetBlendState( SrcAlphaBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    
+
         SetVertexShader( CompileShader( vs_4_0, VsSprite() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PsSprite() ) );
@@ -379,7 +379,7 @@ technique10 RenderSpriteBorder
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( DisableCulling );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    
+
         SetVertexShader( CompileShader( vs_4_0, VsSpriteBorder() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PsSpriteBorder() ) );

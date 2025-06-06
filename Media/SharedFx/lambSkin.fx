@@ -27,7 +27,7 @@ Comments:
 
 #include <sas\sas.fxh>
 
-int GlobalParameter : SasGlobal                                                             
+int GlobalParameter : SasGlobal
 <
     int3 SasVersion = {1, 1, 0};
     bool SasUiVisible = false;
@@ -35,33 +35,33 @@ int GlobalParameter : SasGlobal
 
 
 /************* UN-TWEAKABLES **************/
-float4x4 World : World 
+float4x4 World : World
 <
-	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]"; 
-	bool SasUiVisible = false;
->;         
-
-float4x4 View 
-<
-	string SasBindAddress = "Sas.Camera.WorldToView"; 
+	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";
 	bool SasUiVisible = false;
 >;
 
-float4x4 Projection 
+float4x4 View
 <
-	string SasBindAddress = "Sas.Camera.Projection"; 
+	string SasBindAddress = "Sas.Camera.WorldToView";
 	bool SasUiVisible = false;
 >;
 
-SasPointLight PointLight 
+float4x4 Projection
 <
-	string SasBindAddress = "Sas.PointLight[0]"; 
+	string SasBindAddress = "Sas.Camera.Projection";
+	bool SasUiVisible = false;
+>;
+
+SasPointLight PointLight
+<
+	string SasBindAddress = "Sas.PointLight[0]";
 	bool SasUiVisible = false;
 >;
 
 float3 CameraPos
 <
-	string SasBindAddress = "Sas.Camera.Position"; 
+	string SasBindAddress = "Sas.Camera.Position";
 	bool SasUiVisible = false;
 >;
 
@@ -95,7 +95,7 @@ float RollOff
 
 texture ColorTexture : DIFFUSE <
 	string SasUiLabel = "Color Map";
-	string SasUiControl = "FilePicker"; 
+	string SasUiControl = "FilePicker";
 >;
 
 sampler2D ColorSampler = sampler_state
@@ -235,9 +235,9 @@ technique UntexturedVS
 	}
 }
 
-technique TexturedVS 
+technique TexturedVS
 {
-	pass p0 
+	pass p0
 	{		
 		VertexShader = compile vs_1_1 lambVS();
 		ZEnable = true;
@@ -255,9 +255,9 @@ technique TexturedVS
 	}
 }
 
-technique UntexturedPS 
+technique UntexturedPS
 {
-	pass p0 
+	pass p0
 	{		
 		VertexShader = compile vs_1_1 simpleVS();
 		ZEnable = true;
@@ -267,9 +267,9 @@ technique UntexturedPS
 	}
 }
 
-technique TexturedPS 
+technique TexturedPS
 {
-	pass p0 
+	pass p0
 	{		
 		VertexShader = compile vs_1_1 simpleVS();
 		ZEnable = true;

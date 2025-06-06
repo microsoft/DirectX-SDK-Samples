@@ -3,7 +3,7 @@
 //
 // This effect file contains functions for creating the Tangent patches as outlined
 // by the ACC technique.
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -16,7 +16,7 @@ void BezierRaise(inout float3 pQ[3], out float3 pC[4])
     pC[0] = pQ[0];
     pC[3] = pQ[2];
 
-    for( int i=1; i<3; i++ ) 
+    for( int i=1; i<3; i++ )
     {
         pC[i] = ( 1.0f / 3.0f ) * ( pQ[i - 1] * i + ( 3.0f - i ) * pQ[i] );
     }
@@ -76,10 +76,10 @@ void ComputeTanPatch(in float3 vIn[16], inout float3 vOut[16], in float fCWts[4]
 
     vD = 3.0f*(vIn[2*cX + 1*cY] - vIn[3*cX + 1*cY]);
     vE = 3.0f*(vIn[2*cX + 2*cY] - vIn[3*cX + 2*cY]);
-    
+
     fC0 = fCWts[1];
     fC1 = fCWts[2];
- 
+
     vQuadB[2] = 1.0f/3.0f*(2.0f*fC0*vB - fC1*vA) + vD;
     vQuad[2] = 1.0f/3.0f*(fC0*vC - 2.0f*fC1*vB) + vE;
 

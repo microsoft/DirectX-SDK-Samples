@@ -18,7 +18,7 @@ BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
 /************* "UN-TWEAKABLES," TRACKED BY CPU APPLICATION **************/
 #include <sas\sas.fxh>
 
-int GlobalParameter : SasGlobal                                                             
+int GlobalParameter : SasGlobal
 <
     int3 SasVersion = {1, 1, 0};
     bool SasUiVisible = false;
@@ -26,25 +26,25 @@ int GlobalParameter : SasGlobal
 
 float4x4 WorldXf : World
 <
-	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]"; 
-	bool SasUiVisible = false;
->;         
-
-float4x4 View 
-<
-	string SasBindAddress = "Sas.Camera.WorldToView"; 
+	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";
 	bool SasUiVisible = false;
 >;
 
-float4x4 Projection 
+float4x4 View
 <
-	string SasBindAddress = "Sas.Camera.Projection"; 
+	string SasBindAddress = "Sas.Camera.WorldToView";
+	bool SasUiVisible = false;
+>;
+
+float4x4 Projection
+<
+	string SasBindAddress = "Sas.Camera.Projection";
 	bool SasUiVisible = false;
 >;
 
 float3 CameraPos
 <
-	string SasBindAddress = "Sas.Camera.Position"; 
+	string SasBindAddress = "Sas.Camera.Position";
 	bool SasUiVisible = false;
 >;
 
@@ -54,9 +54,9 @@ float3 CameraPos
 
 ////////////////////////////////////////////// point light
 
-SasPointLight PointLight 
+SasPointLight PointLight
 <
-	string SasBindAddress = "Sas.PointLight[0]"; 
+	string SasBindAddress = "Sas.PointLight[0]";
 	bool SasUiVisible = false;
 >;
 
@@ -163,7 +163,7 @@ sampler2D NormalSampler = sampler_state
 	AddressV = WRAP;
 };
 
-texture2D HeightTexture 
+texture2D HeightTexture
 <
     string SasUiLabel = "HeightMap";
     string SasUiControl = "FilePicker";
@@ -209,10 +209,10 @@ struct vertexOutput {
 
 vertexOutput basicVS(appdata IN) {
     vertexOutput OUT;
-    
+
     float4x4 WorldITXf = transpose(inverse(WorldXf));
     float4x4 WvpXf = mul( WorldXf, mul( View, Projection ) );
-    
+
     float3 Nw = normalize(mul(IN.Normal,WorldITXf).xyz);
     float3 Tw = normalize(mul(IN.Tangent,WorldITXf).xyz);
     float3 Bw = normalize(mul(IN.Binormal,WorldITXf).xyz);
@@ -221,7 +221,7 @@ vertexOutput basicVS(appdata IN) {
     OUT.WorldBinorm = Bw;
     float4 Po = float4(IN.Position.xyz,1.0);	// object coordinates
     float3 Pw = mul(Po,WorldXf).xyz;		// world coordinates
-    
+
     OUT.LightVec = PointLight.Position - Pw;
     OUT.UV = float2(UScale,VScale) * IN.UV.xy;
     float3 Vn = normalize(CameraPos - Pw);	// obj coords
@@ -298,7 +298,7 @@ float4 seevecPS(vertexOutput IN) : COLOR {
 /// TECHNIQUES /////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////
 
-technique Main 
+technique Main
 {
 	pass p0
 	{

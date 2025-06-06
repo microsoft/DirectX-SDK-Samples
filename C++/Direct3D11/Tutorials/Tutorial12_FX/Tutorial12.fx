@@ -73,20 +73,20 @@ BlendState NoBlending
 PS_INPUT VS( VS_INPUT input )
 {
     PS_INPUT output = (PS_INPUT)0;
-    
+
     output.Pos = mul( float4(input.Pos,1), World );
-    
+
     output.Pos.x += sin( output.Pos.y*0.1f + Time )*Waviness;
-    
+
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Norm = mul( input.Norm, (float3x3)World );
     output.Tex = input.Tex;
-    
+
     // Calculate the reflection vector
     float3 viewNorm = mul( output.Norm, (float3x3)View );
     output.ViewR = reflect( viewNorm, float3(0,0,-1.0) );
-    
+
     return output;
 }
 
@@ -98,13 +98,13 @@ float4 PS( PS_INPUT input) : SV_Target
 {
     // Calculate lighting assuming light color is <1,1,1,1>
     float fLighting = saturate( dot( input.Norm, vLightDir ) );
-   
+
     // Load the environment map texture
     float4 cReflect = g_txEnvMap.Sample( samLinearClamp, input.ViewR );
-    
+
     // Load the diffuse texture and multiply by the lighting amount
     float4 cDiffuse = g_txDiffuse.Sample( samLinear, input.Tex ) * fLighting;
-    
+
     // Add diffuse to reflection and go
     float4 cTotal = cDiffuse + cReflect;
     cTotal.a = 1;
@@ -121,7 +121,7 @@ technique11 Render
         SetVertexShader( CompileShader( vs_4_0, VS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }

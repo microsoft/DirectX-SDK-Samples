@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ struct VSSceneIn
 	float  GrowAmt : GROWAMT;
 	
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob NOTE: This is a vertex ID created automatically by the input assembler.  It 
+	// o/__   <-- BreakdancinBob NOTE: This is a vertex ID created automatically by the input assembler.  It
 	// |  (\			is a system variable denoted by SV.  System variables have special
 	//					meaning in Shader Model 4.0
 	//-----------------------------------------------------------------------------------------
@@ -77,7 +77,7 @@ sampler2D g_samLinear = sampler_state
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- New buffer to hold random data.
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 Buffer<float4> g_RandomBuffer;
 
@@ -147,8 +147,8 @@ GSSceneIn VSPassThrough(VSSceneIn input)
 
 
 //-----------------------------------------------------------------------------------------
-// o/__   <-- BreakdancinBob TODO: Implement this function in such a way that it takes in 
-// |  (\			the vertexID and returns a unique random direction from the random 
+// o/__   <-- BreakdancinBob TODO: Implement this function in such a way that it takes in
+// |  (\			the vertexID and returns a unique random direction from the random
 //					buffer which is stored in g_RandomBuffer.  Use the Load method.
 //
 //					The load syntax is:
@@ -160,8 +160,8 @@ GSSceneIn VSPassThrough(VSSceneIn input)
 float3 RandomDir(uint ID)
 {
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob HINT: ID will come in the range of [0..MaxVertices].  The 
-	// |  (\			buffer size will also be in the [0..MaxVertices] range.  To get 
+	// o/__   <-- BreakdancinBob HINT: ID will come in the range of [0..MaxVertices].  The
+	// |  (\			buffer size will also be in the [0..MaxVertices] range.  To get
 	//					different random effects try modifying the ID and then loading data
 	//					from the buffer.
 	//-----------------------------------------------------------------------------------------
@@ -221,16 +221,16 @@ void ExtrudeBranch( GSSceneIn triPts[3], float growAmt, inout TriangleStream<GSS
 	midPt += TriNormal*growAmt*SpreadModifier;
 	
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob NOTE: Here we are using the RandomDir function to change the 
-	// |  (\			geometry of the end of a branch, and therefore, the geometries of 
+	// o/__   <-- BreakdancinBob NOTE: Here we are using the RandomDir function to change the
+	// |  (\			geometry of the end of a branch, and therefore, the geometries of
 	//					subsequent branches.
 	//-----------------------------------------------------------------------------------------
 	midPt += normalize( RandomDir( triPts[0].vertID ) )*0.02;
 	
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob NOTE: Here we are using the RandomDir function determine if 
+	// o/__   <-- BreakdancinBob NOTE: Here we are using the RandomDir function determine if
 	// |  (\			we need to grow new branches off of our current branch.  Note, we
-	//					add 100 to the vertID so that we don't get the same value as the 
+	//					add 100 to the vertID so that we don't get the same value as the
 	//					previous call.
 	//-----------------------------------------------------------------------------------------
 	float3 random3 = RandomDir( triPts[0].vertID + 100 );
@@ -280,7 +280,7 @@ void GSGrowBranches( triangle GSSceneIn input[3], inout TriangleStream<GSSceneIn
 }
 
 //-----------------------------------------------------------------------------------------
-// Technique: RenderTextured  
+// Technique: RenderTextured
 //-----------------------------------------------------------------------------------------
 technique10 RenderTextured
 {
@@ -290,13 +290,13 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 
 //-----------------------------------------------------------------------------------------
-// Technique: GrowBranches 
+// Technique: GrowBranches
 //-----------------------------------------------------------------------------------------
 GeometryShader gsStreamOut = ConstructGSWithSO( CompileShader( gs_4_0, GSGrowBranches() ), "POS.xyz; NORMAL.xyz; TEXCOORD0.xy; GROWAMT.x" );
 technique10 GrowBranches
@@ -307,8 +307,8 @@ technique10 GrowBranches
         SetVertexShader( CompileShader( vs_4_0, VSPassThrough() ) );
         SetGeometryShader( gsStreamOut );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 

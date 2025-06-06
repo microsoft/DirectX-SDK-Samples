@@ -79,7 +79,7 @@ struct VS_OUTPUT
 // Vertex Shader
 //--------------------------------------------------------------------------------------
 VS_OUTPUT VS(
-    float3 Pos  : POSITION, 
+    float3 Pos  : POSITION,
     float3 Norm : NORMAL,
     float2 iT0  : TEXCOORD0 )
 {
@@ -96,7 +96,7 @@ VS_OUTPUT VS(
     float3 V = -normalize(P);                                // view direction (view space)
     float3 G = normalize(2 * dot(N, -P) * N + P);            // Glance vector (view space)
     float  f = 0.5 - dot(V, N); f = 1 - 4 * f * f;           // fresnel term
-  
+
 
     Out.Pos   = mul(float4(P, 1), matProj);                          // position (projected)
     Out.Diff  = I_a * Ambient + I_d * Diffuse * max(0, dot(N, L));   // diffuse + ambient
@@ -104,7 +104,7 @@ VS_OUTPUT VS(
     Out.T0    = iT0;                                                 // Diffuse Tex coords
     Out.T1    = mul( G, transpose( matView ) );                      // Glance Vector to View Space
     Out.Reflect = max( 0, k_r * f);                                  // Reflection
-    
+
     return Out;
 }
 
@@ -121,11 +121,11 @@ float4 PS(
 {
     // Vertex Diffuse Lighting is modulated with the Diffuse Texture
     float3 DiffuseC = Diff * tex2D( linear_sampler, Tex );
-    
+
     // Sample the Environment map
     float3 ReflectionC = Reflect * texCUBE( envmap_sampler, EnvCoords );
-    
-    // Return the sum of Vertex-Specular, the Reflection, 
+
+    // Return the sum of Vertex-Specular, the Reflection,
     return float4( DiffuseC + ReflectionC + Spec, 1.f );
 }
 
@@ -149,5 +149,5 @@ technique tec0
         AlphaBlendEnable = FALSE;
         CullMode         = CCW;
         AlphaTestEnable  = FALSE;
-    }  
+    }
 }

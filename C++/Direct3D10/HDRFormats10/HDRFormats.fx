@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // File: HDRFormats.fx
 //
-// Desc: 
+// Desc:
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -28,7 +28,7 @@ float3 g_vEyePt;
 
 textureCUBE g_tCube;
 
-samplerCUBE CubeSampler = 
+samplerCUBE CubeSampler =
 sampler_state
 {
     Texture = <g_tCube>;
@@ -46,7 +46,7 @@ sampler s2 : register(s2);
 
 //-----------------------------------------------------------------------------
 // RGBE8 Encoding/Decoding
-// The RGBE8 format stores a mantissa per color channel and a shared exponent 
+// The RGBE8 format stores a mantissa per color channel and a shared exponent
 // stored in alpha. Since the exponent is shared, it's computed based on the
 // highest intensity color component. The resulting color is RGB * 2^Alpha,
 // which scales the data across a logarithmic scale.
@@ -93,16 +93,16 @@ float3 DecodeRGBE8( in float4 rgbe )
 float4 EncodeRE8( in float f )
 {
     float4 vEncoded = float4( 0, 0, 0, 0 );
-    
+
     // Round to the nearest integer exponent
     float fExp = ceil( log2(f) );
-    
+
     // Divide by the exponent
     vEncoded.r = f / exp2(fExp);
-    
+
     // Store the exponent
     vEncoded.a = (fExp + 128) / 255;
-    
+
     return vEncoded;
 }
 
@@ -116,7 +116,7 @@ float DecodeRE8( in float4 rgbe )
 	// Multiply through the color components
 	fDecoded = rgbe.r * exp2(fExp);
 
-	return fDecoded;  
+	return fDecoded;
 }
 
 
@@ -133,7 +133,7 @@ float4 EncodeRGB16( in float3 rgb )
 	float4 vEncoded = 0;
 
     vEncoded.rgb = rgb / RGB16_MAX;
-    
+
 	return vEncoded;
 }
 
@@ -142,7 +142,7 @@ float3 DecodeRGB16( in float4 rgbx )
 	float3 vDecoded;
 
     vDecoded = rgbx.rgb * RGB16_MAX;
-    
+
 	return vDecoded;
 }
 
@@ -156,9 +156,9 @@ float3 DecodeRGB16( in float4 rgbx )
 float4 EncodeR16( in float f )
 {
     float4 vEncoded = 0;
-    
+
     vEncoded.r = f / RGB16_MAX;
-    
+
     return vEncoded;
 }
 
@@ -167,8 +167,8 @@ float DecodeR16( in float4 rgbx )
     float fDecoded;
 
     fDecoded = rgbx.r * RGB16_MAX;
-    
-	return fDecoded;  
+
+	return fDecoded;
 }
 
 
@@ -176,7 +176,7 @@ float DecodeR16( in float4 rgbx )
 //-----------------------------------------------------------------------------
 // Name: SceneVS
 // Type: Vertex Shader
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 struct SceneVS_Input
 {
@@ -194,14 +194,14 @@ struct SceneVS_Output
 SceneVS_Output SceneVS( SceneVS_Input Input )
 {
     SceneVS_Output Output;
-    
+
     Output.Pos = mul( float4(Input.Pos, 1.0f), g_mWorldViewProj );
-    
+
     Output.Normal_World = mul( Input.Normal, (float3x3)g_mWorld );
-    
+
     float4 pos_World = mul( float4(Input.Pos, 1.0f), g_mWorld );
     Output.ViewVec_World = pos_World.xyz - g_vEyePt;
-    
+
     return Output;
 }
 
@@ -213,25 +213,25 @@ SceneVS_Output SceneVS( SceneVS_Input Input )
 // Type: Pixel Shader
 // Desc: Environment mapping and simplified hemispheric lighting
 //-----------------------------------------------------------------------------
-float4 ScenePS( SceneVS_Output Input, 
+float4 ScenePS( SceneVS_Output Input,
                 uniform bool RGBE8,
                 uniform bool RGB16 ) : COLOR
 {
     // Sample the environment map
     float3 vReflect = reflect( Input.ViewVec_World, Input.Normal_World );
     float4 vEnvironment = texCUBE( CubeSampler, vReflect );
-    
+
     if( RGBE8 )
         vEnvironment.rgb = DecodeRGBE8( vEnvironment );
     else if( RGB16 )
         vEnvironment.rgb = DecodeRGB16( vEnvironment );
-        
+
     // Simple overhead lighting
     float3 vColor = saturate( MODEL_COLOR * Input.Normal_World.y );
-    
+
     // Add in reflection
     vColor = lerp( vColor, vEnvironment.rgb, MODEL_REFLECTIVITY );
-    
+
     if( RGBE8 )
         return EncodeRGBE8( vColor );
     else if( RGB16 )
@@ -246,28 +246,28 @@ float4 ScenePS( SceneVS_Output Input,
 //-----------------------------------------------------------------------------
 // Name: FinalPass
 // Type: Pixel Shader
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
-float4 FinalPass( float2 Tex : TEXCOORD0, 
+float4 FinalPass( float2 Tex : TEXCOORD0,
                   uniform bool RGBE8,
                   uniform bool RGB16 ) : COLOR
 {
     float4 vColor = tex2D( s0, Tex );
     float4 vLum = tex2D( s1, float2(0.5f, 0.5f) );
     float3 vBloom = tex2D( s2, Tex );
-    
+
     if( RGBE8 )
     {
-        vColor.rgb = DecodeRGBE8( vColor ); 
+        vColor.rgb = DecodeRGBE8( vColor );
         vLum.r = DecodeRE8( vLum );
     }
     else if( RGB16 )
     {
-        vColor.rgb = DecodeRGB16( vColor ); 
+        vColor.rgb = DecodeRGB16( vColor );
         vLum.r = DecodeR16( vLum );
     }
-    
-     
+
+
     // Tone mapping
     vColor.rgb *= MIDDLE_GRAY / (vLum.r + 0.001f);
     vColor.rgb *= (1.0f + vColor/LUM_WHITE);
@@ -278,20 +278,20 @@ float4 FinalPass( float2 Tex : TEXCOORD0,
 	
 	return vColor;
 }
-   
-   
+
+
 
 //-----------------------------------------------------------------------------
 // Name: FinalPassEncoded
 // Type: Pixel Shader
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
-float4 FinalPassEncoded( float2 Tex : TEXCOORD0, 
-                         uniform bool bRGB 
+float4 FinalPassEncoded( float2 Tex : TEXCOORD0,
+                         uniform bool bRGB
                        ) : COLOR
 {
     float4 vColor = tex2D( s0, Tex );
-    
+
     if( bRGB )
         return vColor;
     else
@@ -303,7 +303,7 @@ float4 FinalPassEncoded( float2 Tex : TEXCOORD0,
 
 //-----------------------------------------------------------------------------
 // Name: DownScale2x2_Lum
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Scale down the source texture from the average of 3x3 blocks and
 //       convert to grayscale
 //-----------------------------------------------------------------------------
@@ -313,20 +313,20 @@ float4 DownScale2x2_Lum ( in float2 vScreenPosition : TEXCOORD0,
 {
     float4 vColor = 0.0f;
     float  fAvg = 0.0f;
-    
+
     for( int i = 0; i < 4; i++ )
     {
         // Compute the sum of color values
         vColor = tex2D( s0, vScreenPosition + g_avSampleOffsets[i] );
-        
+
         if( RGBE8 )
             vColor.rgb = DecodeRGBE8( vColor );
         if( RGB16 )
             vColor.rgb = DecodeRGB16( vColor );
-            
+
         fAvg += dot( vColor.rgb, LUMINANCE_VECTOR );
     }
-    
+
     fAvg /= 4;
 
     if( RGBE8 )
@@ -342,29 +342,29 @@ float4 DownScale2x2_Lum ( in float2 vScreenPosition : TEXCOORD0,
 
 //-----------------------------------------------------------------------------
 // Name: DownScale3x3
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Scale down the source texture from the average of 3x3 blocks
 //-----------------------------------------------------------------------------
 float4 DownScale3x3( in float2 vScreenPosition : TEXCOORD0,
                      uniform bool RGBE8,
                      uniform bool RGB16 ) : COLOR
 {
-    float fAvg = 0.0f; 
+    float fAvg = 0.0f;
     float4 vColor;
-    
+
     for( int i = 0; i < 9; i++ )
     {
         // Compute the sum of color values
         vColor = tex2D( s0, vScreenPosition + g_avSampleOffsets[i] );
-        
+
         if( RGBE8 )
             fAvg += DecodeRE8( vColor );
         else if( RGB16 )
             fAvg += DecodeR16( vColor );
         else
-            fAvg += vColor.r; 
+            fAvg += vColor.r;
     }
-    
+
     // Divide the sum to complete the average
     fAvg /= 9;
 
@@ -381,7 +381,7 @@ float4 DownScale3x3( in float2 vScreenPosition : TEXCOORD0,
 
 //-----------------------------------------------------------------------------
 // Name: DownScale3x3_BrightPass
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Scale down the source texture from the average of 3x3 blocks
 //-----------------------------------------------------------------------------
 float4 DownScale3x3_BrightPass( in float2 vScreenPosition : TEXCOORD0,
@@ -391,19 +391,19 @@ float4 DownScale3x3_BrightPass( in float2 vScreenPosition : TEXCOORD0,
     float3 vColor = 0.0f;
     float4 vLum = tex2D( s1, float2(0.5f, 0.5f) );
     float  fLum;
-    
+
     if( RGBE8 )
         fLum = DecodeRE8( vLum );
     else if( RGB16 )
         fLum = DecodeR16( vLum );
     else
         fLum = vLum.r;
-        
+
     for( int i = 0; i < 9; i++ )
     {
         // Compute the sum of color values
         float4 vSample = tex2D( s0, vScreenPosition + g_avSampleOffsets[i] );
-        
+
         if( RGBE8 )
             vColor += DecodeRGBE8( vSample );
         else if( RGB16 )
@@ -411,10 +411,10 @@ float4 DownScale3x3_BrightPass( in float2 vScreenPosition : TEXCOORD0,
         else
             vColor += vSample.rgb;
     }
-    
+
     // Divide the sum to complete the average
     vColor /= 9;
- 
+
     // Bright pass and tone mapping
     vColor = max( 0.0f, vColor - BRIGHT_THRESHOLD );
     vColor *= MIDDLE_GRAY / (fLum + 0.001f);
@@ -428,35 +428,35 @@ float4 DownScale3x3_BrightPass( in float2 vScreenPosition : TEXCOORD0,
 
 //-----------------------------------------------------------------------------
 // Name: Bloom
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Blur the source image along the horizontal using a gaussian
 //       distribution
 //-----------------------------------------------------------------------------
 float4 BloomPS( in float2 vScreenPosition : TEXCOORD0 ) : COLOR
 {
-    
+
     float4 vSample = 0.0f;
     float4 vColor = 0.0f;
     float2 vSamplePosition;
-    
+
     for( int iSample = 0; iSample < 15; iSample++ )
     {
         // Sample from adjacent points
         vSamplePosition = vScreenPosition + g_avSampleOffsets[iSample];
         vColor = tex2D(s0, vSamplePosition);
-        
+
         vSample += g_avSampleWeights[iSample]*vColor;
     }
-    
+
     return vSample;
 }
 
 
-  
-    
+
+
 //-----------------------------------------------------------------------------
 // Technique: Bloom
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique Bloom
 {
@@ -471,7 +471,7 @@ technique Bloom
 
 //-----------------------------------------------------------------------------
 // Technique: Scene
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique Scene_FP16
 {
@@ -487,7 +487,7 @@ technique Scene_FP16
 
 //-----------------------------------------------------------------------------
 // Technique: Scene
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique Scene_RGBE8
 {
@@ -503,7 +503,7 @@ technique Scene_RGBE8
 
 //-----------------------------------------------------------------------------
 // Technique: Scene
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique Scene_RGB16
 {
@@ -519,7 +519,7 @@ technique Scene_RGB16
 
 //-----------------------------------------------------------------------------
 // Technique: FinalPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique FinalPass_FP16
 {
@@ -534,7 +534,7 @@ technique FinalPass_FP16
 
 //-----------------------------------------------------------------------------
 // Technique: FinalPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique FinalPass_RGBE8
 {
@@ -549,7 +549,7 @@ technique FinalPass_RGBE8
 
 //-----------------------------------------------------------------------------
 // Technique: FinalPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique FinalPass_RGB16
 {
@@ -564,7 +564,7 @@ technique FinalPass_RGB16
 
 //-----------------------------------------------------------------------------
 // Technique: FinalPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique FinalPassEncoded_RGB
 {
@@ -579,7 +579,7 @@ technique FinalPassEncoded_RGB
 
 //-----------------------------------------------------------------------------
 // Technique: FinalPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique FinalPassEncoded_A
 {
@@ -594,7 +594,7 @@ technique FinalPassEncoded_A
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale3x3
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale3x3_FP16
 {
@@ -609,7 +609,7 @@ technique DownScale3x3_FP16
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale3x3
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale3x3_RGBE8
 {
@@ -624,7 +624,7 @@ technique DownScale3x3_RGBE8
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale3x3
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale3x3_RGB16
 {
@@ -639,7 +639,7 @@ technique DownScale3x3_RGB16
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale2x2_Lum
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale2x2_Lum_FP16
 {
@@ -653,7 +653,7 @@ technique DownScale2x2_Lum_FP16
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale2x2_Lum
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale2x2_Lum_RGBE8
 {
@@ -668,7 +668,7 @@ technique DownScale2x2_Lum_RGBE8
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale2x2_Lum
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale2x2_Lum_RGB16
 {
@@ -683,7 +683,7 @@ technique DownScale2x2_Lum_RGB16
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale3x3_BrightPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale3x3_BrightPass_FP16
 {
@@ -698,7 +698,7 @@ technique DownScale3x3_BrightPass_FP16
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale3x3_BrightPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale3x3_BrightPass_RGBE8
 {
@@ -713,7 +713,7 @@ technique DownScale3x3_BrightPass_RGBE8
 
 //-----------------------------------------------------------------------------
 // Technique: DownScale3x3_BrightPass
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 technique DownScale3x3_BrightPass_RGB16
 {

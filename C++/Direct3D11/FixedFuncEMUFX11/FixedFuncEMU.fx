@@ -71,7 +71,7 @@ cbuffer cbPerTechnique
     float    g_pointScaleB;
     float    g_pointScaleC;
     float    g_pointSize;
-    
+
     //fog params
     int      g_fogMode = FOGMODE_NONE;
     float    g_fogStart;
@@ -79,7 +79,7 @@ cbuffer cbPerTechnique
     float    g_fogDensity;
     float4   g_fogColor;
 };
-    
+
 cbuffer cbPerViewChange
 {
     //viewport params
@@ -129,7 +129,7 @@ struct ColorsOutput
 ColorsOutput CalcLighting( float3 worldNormal, float3 worldPos, float3 cameraPos )
 {
     ColorsOutput output = (ColorsOutput)0.0;
-    
+
     for(int i=0; i<8; i++)
     {
         float3 toLight = g_lights[i].Position.xyz - worldPos;
@@ -137,11 +137,11 @@ ColorsOutput CalcLighting( float3 worldNormal, float3 worldPos, float3 cameraPos
         float fAtten = 1.0/dot( g_lights[i].Atten, float4(1,lightDist,lightDist*lightDist,0) );
         float3 lightDir = normalize( toLight );
         float3 halfAngle = normalize( normalize(-cameraPos) + lightDir );
-        
+
         output.Diffuse += max(0,dot( lightDir, worldNormal ) * g_lights[i].Diffuse * fAtten) + g_lights[i].Ambient;
         output.Specular += max(0,pow( dot( halfAngle, worldNormal ), 64 ) * g_lights[i].Specular * fAtten );
     }
-    
+
     return output;
 }
 
@@ -156,18 +156,18 @@ VSSceneOut VSScenemain(VSSceneIn input)
     float4 worldPos = mul( float4( input.pos, 1 ), g_mWorld );
     float4 cameraPos = mul( worldPos, g_mView ); //Save cameraPos for fog calculations
     output.pos = mul( cameraPos, g_mProj );
-    
+
     //save world pos for later
     output.wPos = worldPos;
-    
+
     //save the fog distance for later
     output.fogDist = cameraPos.z;
-    
+
     //find our clipping planes (fixed function clipping is done in world space)
     if( g_bEnableClipping )
     {
         worldPos.w = 1;
-        
+
         //calc the distance from the 3 clipping planes
         output.planeDist.x = dot( worldPos, g_clipplanes[0] );
         output.planeDist.y = dot( worldPos, g_clipplanes[1] );
@@ -179,7 +179,7 @@ VSSceneOut VSScenemain(VSSceneIn input)
         output.planeDist.y = 1;
         output.planeDist.z = 1;
     }
-    
+
     //do gouraud lighting
     if( g_bEnableLighting )
     {
@@ -193,10 +193,10 @@ VSSceneOut VSScenemain(VSSceneIn input)
     {
         output.colorD = float4(1,1,1,1);
     }
-    
+
     //propogate texture coordinate
     output.tex = input.tex;
-    
+
     return output;
 }
 
@@ -212,11 +212,11 @@ PSSceneIn VSScreenSpacemain(VSSceneIn input)
     output.pos.y = -(input.pos.y / (g_viewportHeight/2.0)) +1;
     output.pos.z = input.pos.z;
     output.pos.w = 1;
-    
+
     //propogate texture coordinate
     output.tex = input.tex;
     output.colorD = float4(1,1,1,1);
-    
+
     return output;
 }
 
@@ -228,7 +228,7 @@ PSSceneIn VSScreenSpacemain(VSSceneIn input)
 void GSFlatmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut> FlatTriStream )
 {
     VSSceneOut output;
-    
+
     //
     // Calculate the face normal
     //
@@ -239,26 +239,26 @@ void GSFlatmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut> 
     // Cross product
     //
     float3 faceNormal = cross(faceEdgeA, faceEdgeB);
-    
+
     //
     //calculate the face center
     //
     float3 faceCenter = (input[0].wPos + input[1].wPos + input[2].wPos)/3.0;
-    
+
     //find world pos and camera pos
     float4 worldPos = float4( faceCenter, 1 );
     float4 cameraPos = mul( worldPos, g_mView );
-    
+
     //do shading
     float3 worldNormal = normalize( faceNormal );
     ColorsOutput cOut = CalcLighting( worldNormal, worldPos, cameraPos );
-    
+
     for(int i=0; i<3; i++)
     {
         output = input[i];
         output.colorD = cOut.Diffuse;
         output.colorS = cOut.Specular;
-        
+
         FlatTriStream.Append( output );
     }
     FlatTriStream.RestartStrip();
@@ -271,36 +271,36 @@ void GSFlatmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut> 
 void GSPointmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut> PointTriStream )
 {
     VSSceneOut output;
-    
+
     //
     // Calculate the point size
     //
     //float fSizeX = (g_pointSize/g_viewportWidth)/4.0;
     float fSizeY = (g_pointSize/g_viewportHeight)/4.0;
     float fSizeX = fSizeY;
-    
+
     for(int i=0; i<3; i++)
     {
         output = input[i];
-    
+
         //find world pos and camera pos
         float4 worldPos = float4(input[i].wPos,1);
         float4 cameraPos = mul( worldPos, g_mView );
-        
+
         //find our size
         if( g_bPointScaleEnable )
-        {   
+        {
             float dEye = length( cameraPos.xyz );
-            fSizeX = fSizeY = g_viewportHeight * g_pointSize * 
+            fSizeX = fSizeY = g_viewportHeight * g_pointSize *
                     sqrt( 1.0f/( g_pointScaleA + g_pointScaleB*dEye + g_pointScaleC*(dEye*dEye) ) );
         }
-        
+
         //do shading
         if(g_bEnableLighting)
         {
             float3 worldNormal = input[i].wNorm;
             ColorsOutput cOut = CalcLighting( worldNormal, worldPos, cameraPos );
-        
+
             output.colorD = cOut.Diffuse;
             output.colorS = cOut.Specular;
         }
@@ -308,9 +308,9 @@ void GSPointmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut>
         {
             output.colorD = float4(1,1,1,1);
         }
-        
+
         output.tex = input[i].tex;
-        
+
         //
         // Emit two new triangles
         //
@@ -324,7 +324,7 @@ void GSPointmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut>
                                      0,
                                      0 );
             output.pos += posSize;
-            
+
             PointTriStream.Append(output);
         }
         PointTriStream.RestartStrip();
@@ -337,7 +337,7 @@ void GSPointmain( triangle VSSceneOut input[3], inout TriangleStream<VSSceneOut>
 float CalcFogFactor( float d )
 {
     float fogCoeff = 1.0;
-    
+
     if( FOGMODE_LINEAR == g_fogMode )
     {
         fogCoeff = (g_fogEnd - d)/(g_fogEnd - g_fogStart);
@@ -350,7 +350,7 @@ float CalcFogFactor( float d )
     {
         fogCoeff = 1.0 / pow( E, d*d*g_fogDensity*g_fogDensity );
     }
-    
+
     return clamp( fogCoeff, 0, 1 );
 }
 
@@ -358,24 +358,24 @@ float CalcFogFactor( float d )
 // PS for rendering with clip planes
 //
 float4 PSScenemain(PSSceneIn input) : SV_Target
-{   
-    //calculate the fog factor  
+{
+    //calculate the fog factor
     float fog = CalcFogFactor( input.fogDist );
-    
+
     //calculate the color based off of the normal, textures, etc
     float4 normalColor = g_txDiffuse.Sample( g_samLinear, input.tex ) * input.colorD + input.colorS;
-    
+
     //calculate the color from the projected texture
     float4 cookieCoord = mul( float4(input.wPos,1), g_mLightViewProj );
     //since we don't have texldp, we must perform the w divide ourselves befor the texture lookup
-    cookieCoord.xy = 0.5 * cookieCoord.xy / cookieCoord.w + float2( 0.5, 0.5 ); 
+    cookieCoord.xy = 0.5 * cookieCoord.xy / cookieCoord.w + float2( 0.5, 0.5 );
     float4 cookieColor = float4(0,0,0,0);
     if( cookieCoord.z > 0 )
         cookieColor = g_txProjected.Sample( g_samLinear, cookieCoord.xy );
-    
+
     //for standard light-modulating effects just multiply normalcolor and coookiecolor
     normalColor += cookieColor;
-    
+
     return fog * normalColor + (1.0 - fog)*g_fogColor;
 }
 
@@ -383,7 +383,7 @@ float4 PSScenemain(PSSceneIn input) : SV_Target
 // PS for rendering with alpha test
 //
 float4 PSAlphaTestmain(PSSceneIn input) : SV_Target
-{   
+{
     float4 color =  g_txDiffuse.Sample( g_samLinear, input.tex ) * input.colorD;
     if( color.a < 0.5 )
         discard;
@@ -400,9 +400,9 @@ technique10 RenderSceneGouraud
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -415,9 +415,9 @@ technique10 RenderSceneFlat
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSFlatmain() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -430,9 +430,9 @@ technique10 RenderScenePoint
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSPointmain() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -445,9 +445,9 @@ technique10 RenderScreenSpaceAlphaTest
         SetVertexShader( CompileShader( vs_4_0, VSScreenSpacemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSAlphaTestmain() ) );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -460,8 +460,8 @@ technique10 RenderTextureOnly
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 

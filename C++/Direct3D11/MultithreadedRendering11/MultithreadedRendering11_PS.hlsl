@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: MultithreadedRendering11_PS.hlsl
 //
-// The pixel shader file for the MultithreadedRendering11 sample.  
-// 
+// The pixel shader file for the MultithreadedRendering11 sample.
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -75,7 +75,7 @@ float3 CalcPerPixelNormal( float2 vTexcoord, float3 vVertNormal, float3 vVertTan
 	vVertNormal =   normalize( vVertNormal );	
 	vVertTangent =  normalize( vVertTangent );	
 	float3 vVertBinormal = normalize( cross( vVertTangent, vVertNormal ) );	
-	float3x3 mTangentSpaceToWorldSpace = float3x3( vVertTangent, vVertBinormal, vVertNormal ); 
+	float3x3 mTangentSpaceToWorldSpace = float3x3( vVertTangent, vVertBinormal, vVertNormal );
 	
 	// Compute per-pixel normal
 	float3 vBumpNormal = g_txNormal.Sample( g_samLinearWrap, vTexcoord );
@@ -90,20 +90,20 @@ float3 CalcPerPixelNormal( float2 vTexcoord, float3 vVertNormal, float3 vVertTan
 float4 CalcUnshadowedAmountPCF2x2( int iShadow, float4 vPosWorld )
 {
     matrix mLightViewProj = g_LightData[iShadow].m_mLightViewProj;
-    Texture2D txShadow =    g_txShadow[iShadow]; 
+    Texture2D txShadow =    g_txShadow[iShadow];
 
     // Compute pixel position in light space
-    float4 vLightSpacePos = mul( vPosWorld, mLightViewProj ); 
+    float4 vLightSpacePos = mul( vPosWorld, mLightViewProj );
     vLightSpacePos.xyz /= vLightSpacePos.w;
-    
+
     // Translate from surface coords to texture coords
     // Could fold these into the matrix
     float2 vShadowTexCoord = 0.5f * vLightSpacePos + 0.5f;
     vShadowTexCoord.y = 1.0f - vShadowTexCoord.y;
-    
+
     // Depth bias to avoid pixel self-shadowing
     float vLightSpaceDepth = vLightSpacePos.z - SHADOW_DEPTH_BIAS;
-    
+
     // Find sub-pixel weights
     float2 vShadowMapDims = float2( 2048.0f, 2048.0f ); // need to keep in sync with .cpp file
     float4 vSubPixelCoords;
@@ -118,7 +118,7 @@ float4 CalcUnshadowedAmountPCF2x2( int iShadow, float4 vPosWorld )
     vShadowDepths.y = txShadow.Sample( g_samPointClamp, vShadowTexCoord + float2( vTexelUnits.x, 0.0f ) );
     vShadowDepths.z = txShadow.Sample( g_samPointClamp, vShadowTexCoord + float2( 0.0f, vTexelUnits.y ) );
     vShadowDepths.w = txShadow.Sample( g_samPointClamp, vShadowTexCoord + vTexelUnits );
-    
+
     // What weighted fraction of the 4 samples are nearer to the light than this pixel?
     float4 vShadowTests = ( vShadowDepths >= vLightSpaceDepth ) ? 1.0f : 0.0f;
     return dot( vBilinearWeights, vShadowTests );
@@ -129,27 +129,27 @@ float4 CalcUnshadowedAmountPCF2x2( int iShadow, float4 vPosWorld )
 //--------------------------------------------------------------------------------------
 float4 CalcLightingColor( int iLight, float3 vPosWorld, float3 vPerPixelNormal )
 {
-    float3 vLightPos =      g_LightData[iLight].m_vLightPos.xyz; 
+    float3 vLightPos =      g_LightData[iLight].m_vLightPos.xyz;
     float3 vLightDir =      g_LightData[iLight].m_vLightDir.xyz;
-    float4 vLightColor =    g_LightData[iLight].m_vLightColor; 
-    float4 vFalloffs =      g_LightData[iLight].m_vFalloffs; 
-    
+    float4 vLightColor =    g_LightData[iLight].m_vLightColor;
+    float4 vFalloffs =      g_LightData[iLight].m_vFalloffs;
+
     float3 vLightToPixelUnNormalized = vPosWorld - vLightPos;
-    
+
     // Dist falloff = 0 at vFalloffs.x, 1 at vFalloffs.x - vFalloffs.y
     float fDist = length( vLightToPixelUnNormalized );
     float fDistFalloff = saturate( ( vFalloffs.x - fDist ) / vFalloffs.y );
-    
+
     // Normalize from here on
     float3 vLightToPixelNormalized = vLightToPixelUnNormalized / fDist;
-    
+
     // Angle falloff = 0 at vFalloffs.z, 1 at vFalloffs.z - vFalloffs.w
     float fCosAngle = dot( vLightToPixelNormalized, vLightDir );
     float fAngleFalloff = saturate( ( fCosAngle - vFalloffs.z ) / vFalloffs.w );
-    
+
     // Diffuse contribution
     float fNDotL = saturate( -dot( vLightToPixelNormalized, vPerPixelNormal ) );
-    
+
 	return vLightColor * fNDotL * fDistFalloff * fAngleFalloff;
 }
 
@@ -158,7 +158,7 @@ float4 CalcLightingColor( int iLight, float3 vPosWorld, float3 vPerPixelNormal )
 //--------------------------------------------------------------------------------------
 float4 PSMain( PS_INPUT Input ) : SV_TARGET
 {
-    // Manual clip test, so that objects which are behind the mirror 
+    // Manual clip test, so that objects which are behind the mirror
     // don't show up in the mirror.
     clip( dot( g_vMirrorPlane.xyz, Input.vPosWorld.xyz ) + g_vMirrorPlane.w );
 

@@ -9,9 +9,9 @@
 
 //--------------------------------------------------------------------------------------
 // Defines
-//--------------------------------------------------------------------------------------                  
+//--------------------------------------------------------------------------------------
 #define ADD_SPECULAR 0
-                                          
+
 //--------------------------------------------------------------------------------------
 // Textures
 //--------------------------------------------------------------------------------------
@@ -38,15 +38,15 @@ cbuffer cbMain : register( b0 )
     matrix g_mViewProjection;                   // VP matrix
     matrix g_mInvView;                          // Inverse of view matrix
     float4 g_vScreenResolution;                 // Screen resolution
-    
+
     float4 g_vMeshColor;                        // Mesh color
     float4 g_vTessellationFactor;               // Edge, inside, minimum tessellation factor and 1/desired triangle size
     float4 g_vDetailTessellationHeightScale;    // Height scale for detail tessellation of grid surface
     float4 g_vGridSize;                         // Grid size
-    
+
     float4 g_vDebugColorMultiply;               // Debug colors
     float4 g_vDebugColorAdd;                    // Debug colors
-    
+
     float4 g_vFrustumPlaneEquation[4];          // View frustum plane equations
 };
 
@@ -73,34 +73,34 @@ cbuffer cbMaterial : register( b1 )
 
 //--------------------------------------------------------------------------------------
 // Function:    ComputeIllumination
-// 
-// Description: Computes phong illumination for the given pixel using its attribute 
+//
+// Description: Computes phong illumination for the given pixel using its attribute
 //              textures and a light vector.
 //--------------------------------------------------------------------------------------
 float4 ComputeIllumination( float2 texCoord, float3 vLightTS, float3 vViewTS )
 {
    // Sample the normal from the normal map for the given texture sample:
    float3 vNormalTS = normalize( g_nmhTexture.Sample(g_samLinear, texCoord) * 2.0 - 1.0 );
-   
+
    // Sample base map
    float4 cBaseColor = g_baseTexture.Sample( g_samLinear, texCoord );
-   
+
    // Compute diffuse color component:
    float4 cDiffuse = saturate( dot( vNormalTS, vLightTS ) ) * g_materialDiffuseColor;
-   
-   // Compute the specular component if desired:  
+
+   // Compute the specular component if desired:
    float4 cSpecular = 0;
 
 #if ADD_SPECULAR==1
-   
+
    float3 vReflectionTS = normalize( 2 * dot( vViewTS, vNormalTS ) * vNormalTS - vViewTS );
    float fRdotL = saturate( dot( vReflectionTS, vLightTS ) );
    cSpecular = pow( fRdotL, g_fSpecularExponent.x ) * g_materialSpecularColor;
 
 #endif
-   
+
    // Composite the final color:
-   float4 cFinalColor = ( g_materialAmbientColor + cDiffuse ) * cBaseColor + cSpecular; 
-   
-   return cFinalColor;  
-}  
+   float4 cFinalColor = ( g_materialAmbientColor + cDiffuse ) * cBaseColor + cSpecular;
+
+   return cFinalColor;
+}

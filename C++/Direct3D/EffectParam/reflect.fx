@@ -7,7 +7,7 @@
 //       Diffuse lighting
 //       Specular lighting
 //       Environment mapping
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -38,7 +38,7 @@ shared float4x4 g_mWorld
 <
     bool SasUiVisible = false;
     string SasBindAddress= "Sas.Skeleton.MeshToJointToWorld[0]";
->;     
+>;
 
 shared float4x4 g_mView
 <
@@ -50,22 +50,22 @@ shared float4x4 g_mProj
 <
     bool SasUiVisible = false;
     string SasBindAddress= "Sas.Camera.Projection";
->;   
+>;
 
-shared float4 g_vLightColor 
-<  
+shared float4 g_vLightColor
+<
     string SasBindAddress= "Sas.SpotLight[0].Color";
     bool SasUiVisible = false;
 > = {1.0f, 1.0f, 1.0f, 1.0f}; // Light value
 
-shared float3 g_vLight 
-<  
+shared float3 g_vLight
+<
     string SasBindAddress= "Sas.SpotLight[0].Position";
     bool SasUiVisible = false;
 >;                                 // Light position in view space
 
-shared float  g_fTime 
-<  
+shared float  g_fTime
+<
     string SasBindAddress= "Sas.Time.Now";
     bool SasUiVisible = false;
 >;                                  // Time value
@@ -121,35 +121,35 @@ sampler_state
 float4x4 inverse_nonSAS(float4x4 m)
 {
     float4x4 adj;
-    
+
     // Calculate the adjoint matrix
     adj._11 = m._22*m._33*m._44 + m._23*m._34*m._42 + m._24*m._32*m._43 - m._22*m._34*m._43 - m._23*m._32*m._44 - m._24*m._33*m._42;
     adj._12 = m._12*m._34*m._43 + m._13*m._32*m._44 + m._14*m._33*m._42 - m._12*m._33*m._44 - m._13*m._34*m._42 - m._14*m._32*m._43;
     adj._13 = m._12*m._23*m._44 + m._13*m._24*m._42 + m._14*m._22*m._43 - m._12*m._24*m._43 - m._13*m._22*m._44 - m._14*m._23*m._42;
     adj._14 = m._12*m._24*m._33 + m._13*m._22*m._34 + m._14*m._23*m._32 - m._12*m._23*m._34 - m._13*m._24*m._32 - m._14*m._22*m._33;
-    
+
     adj._21 = m._21*m._34*m._43 + m._23*m._31*m._44 + m._24*m._33*m._41 - m._21*m._33*m._44 - m._23*m._34*m._41 - m._24*m._31*m._43;
     adj._22 = m._11*m._33*m._44 + m._13*m._34*m._41 + m._14*m._31*m._43 - m._11*m._34*m._43 - m._13*m._31*m._44 - m._14*m._33*m._41;
     adj._23 = m._11*m._24*m._43 + m._13*m._21*m._44 + m._14*m._23*m._41 - m._11*m._23*m._44 - m._13*m._24*m._41 - m._14*m._21*m._43;
     adj._24 = m._11*m._23*m._34 + m._13*m._24*m._31 + m._14*m._21*m._33 - m._11*m._24*m._33 - m._13*m._21*m._34 - m._14*m._23*m._31;
-    
+
     adj._31 = m._21*m._32*m._44 + m._22*m._34*m._41 + m._24*m._31*m._42 - m._21*m._34*m._42 - m._22*m._31*m._44 - m._24*m._32*m._41;
     adj._32 = m._11*m._34*m._42 + m._12*m._31*m._44 + m._14*m._32*m._41 - m._11*m._32*m._44 - m._12*m._34*m._41 - m._14*m._31*m._42;
     adj._33 = m._11*m._22*m._44 + m._12*m._24*m._41 + m._14*m._21*m._42 - m._11*m._24*m._42 - m._12*m._21*m._44 - m._14*m._22*m._41;
     adj._34 = m._11*m._24*m._32 + m._12*m._21*m._34 + m._14*m._22*m._31 - m._11*m._22*m._34 - m._12*m._24*m._31 - m._14*m._21*m._32;
-    
+
     adj._41 = m._21*m._33*m._42 + m._22*m._31*m._43 + m._23*m._32*m._41 - m._21*m._32*m._43 - m._22*m._33*m._41 - m._23*m._31*m._42;
     adj._42 = m._11*m._32*m._43 + m._12*m._33*m._41 + m._13*m._31*m._42 - m._11*m._33*m._42 - m._12*m._31*m._43 - m._13*m._32*m._41;
     adj._43 = m._11*m._23*m._42 + m._12*m._21*m._43 + m._13*m._22*m._41 - m._11*m._22*m._43 - m._12*m._23*m._41 - m._13*m._21*m._42;
     adj._44 = m._11*m._22*m._33 + m._12*m._23*m._31 + m._13*m._21*m._32 - m._11*m._23*m._32 - m._12*m._21*m._33 - m._13*m._22*m._31;
-    
+
     // Calculate the determinant
     float det = determinant(m);
-    
+
     float4x4 result = 0;
     if( 0.0f != det )
         result = 1.0f/det * adj;
-        
+
     return result;
 }
 

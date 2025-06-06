@@ -249,7 +249,7 @@ struct VS_OUTPUT_SCENEENV
     float4 wPos : TEXCOORD1; // World space position
     float4 wvPos : TEXCOORD2; // WorldView space position
     float3 wN : TEXCOORD3;       // World space normal
-    
+
     float3 Normals[6] : SIXNORMS; // 6 normal positions
 };
 
@@ -276,10 +276,10 @@ VS_OUTPUT_SCENEENV VS_EnvMappedScene( float4 Pos : POSITION, float3 Normal : NOR
 
     // Compute world space position
     o.wPos = mul( Pos, mWorld );
-    
+
     // Compute worldview space position
     o.wvPos = mul( Pos, mWorldView );
-    
+
     // Propogate the normal
     o.wN = Normal;
 
@@ -341,14 +341,14 @@ float4 PS_EnvMappedScene( VS_OUTPUT_SCENEENV vin ) : SV_Target
     float3 wN = HighOrderInterpolate( vin.Normals, vin.Bary.x, vin.Bary.y );
     float3 wvN = ( mul( wN, (float3x3)mWorldView ) );
     wN = ( mul( wN, (float3x3)mWorld ) );
-    
-    
+
+
     float3 I = vin.wPos.xyz - vEye;
     float3 wR = I - 2.0f * dot( I, wN ) * wN;
-    float4 CubeSample = lightMul*g_txEnvMap.Sample( g_samCube, wR ); 
+    float4 CubeSample = lightMul*g_txEnvMap.Sample( g_samCube, wR );
     float4 Diff = ColorApprox( float3(0,0,-1), wvN );
     float4 Shellac = FresnelApprox( float3(0,0,-1), wvN );
-    
+
      // Compute Specular for the Diffuse and Shellac layers of paint in view space
     float3 L = skyDir;
     float3 wvSHV = normalize(2 * dot(wvN, L) * wvN - L);
@@ -356,7 +356,7 @@ float4 PS_EnvMappedScene( VS_OUTPUT_SCENEENV vin ) : SV_Target
 
     float4 SpecDiff = pow(max(0, dot(wvSHV, V)), 32)*vHighlight1;   // specular for base paint
     float4 SpecShellac = pow(max(0, dot(wvSHV, V)), 64)*vHighlight2;   // specular for shellac layer
-    
+
     //combine them all
     float4 DiffColor = dot(wN, skyDir)*Diff + 1.25*SpecDiff;
     float4 ShellacColor = Shellac*(CubeSample) + 1.60*SpecShellac;
@@ -367,13 +367,13 @@ float4 PS_EnvMappedScene_NoTexture( VS_OUTPUT_SCENEENV vin ) : SV_Target
 {
     float3 wN = HighOrderInterpolate( vin.Normals, vin.Bary.x, vin.Bary.y );
     wN = mul( wN, (float3x3)mWorld );
-    
+
     float fLight = saturate( dot( skyDir, wN ) ) + 0.2f;
-    
+
     float3 I = vin.wPos.xyz - vEye;
     float3 wR = I - 2.0f * dot( I, wN ) * wN;
     float4 CubeSample = g_txEnvMap.Sample( g_samCube, wR );
-   
+
     //combine them all
     float4 outCol = 0.3*vMaterialDiff*fLight + 1.5 * vMaterialSpec*CubeSample;
     outCol.a = vMaterialDiff.a;	//preserve alpha
@@ -415,7 +415,7 @@ technique10 RenderCubeMap
         SetVertexShader( CompileShader( vs_4_0, VS_CubeMap() ) );
         SetGeometryShader( CompileShader( gs_4_0, GS_CubeMap() ) );
         SetPixelShader( CompileShader( ps_4_0, PS_CubeMap() ) );
-        
+
         SetBlendState( NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };
@@ -427,7 +427,7 @@ technique10 RenderCubeMap_Inst
         SetVertexShader( CompileShader( vs_4_0, VS_CubeMap_Inst() ) );
         SetGeometryShader( CompileShader( gs_4_0, GS_CubeMap_Inst() ) );
         SetPixelShader( CompileShader( ps_4_0, PS_CubeMap() ) );
-        
+
         SetBlendState( NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };
@@ -440,7 +440,7 @@ technique10 RenderScene
         SetVertexShader( CompileShader( vs_4_0, VS_Scene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_Scene() ) );
-        
+
         SetBlendState( NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };
@@ -453,7 +453,7 @@ technique10 RenderEnvMappedScene
         SetVertexShader( CompileShader( vs_4_0, VS_EnvMappedScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GS_SetupNormalInterp() ) );
         SetPixelShader( CompileShader( ps_4_0, PS_EnvMappedScene() ) );
-        
+
         SetBlendState( NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };
@@ -465,7 +465,7 @@ technique10 RenderEnvMappedScene_NoTexture
         SetVertexShader( CompileShader( vs_4_0, VS_EnvMappedScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GS_SetupNormalInterp() ) );
         SetPixelShader( CompileShader( ps_4_0, PS_EnvMappedScene_NoTexture() ) );
-        
+
         SetBlendState( NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };
@@ -477,7 +477,7 @@ technique10 RenderEnvMappedGlass
         SetVertexShader( CompileShader( vs_4_0, VS_EnvMappedScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GS_SetupNormalInterp() ) );
         SetPixelShader( CompileShader( ps_4_0, PS_EnvMappedScene_NoTexture() ) );
-        
+
         SetBlendState( GlassBlendState, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };
@@ -490,7 +490,7 @@ technique10 VisualizeCubeMap
         SetVertexShader( CompileShader( vs_4_0, VS_Visualize() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_Visualize() ) );
-        
+
         SetBlendState( NoBlend, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 };

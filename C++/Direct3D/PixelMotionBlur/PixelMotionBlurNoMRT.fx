@@ -2,10 +2,10 @@
 // File: PixelMotionBlur.fx
 //
 // Desc: Effect file for image based motion blur. The HLSL shaders are used to
-//       calculate the velocity of each pixel based on the last frame's matrix 
-//       transforms.  This per-pixel velocity is then used in a blur filter to 
+//       calculate the velocity of each pixel based on the last frame's matrix
+//       transforms.  This per-pixel velocity is then used in a blur filter to
 //       create the motion blur effect.
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -41,18 +41,18 @@ float RenderTargetHeight;
 //-----------------------------------------------------------------------------
 // Texture samplers
 //-----------------------------------------------------------------------------
-sampler RenderTargetSampler = 
+sampler RenderTargetSampler =
 sampler_state
 {
     Texture = <RenderTargetTexture>;
-    MinFilter = POINT;  
+    MinFilter = POINT;
     MagFilter = POINT;
 
     AddressU = Clamp;
     AddressV = Clamp;
 };
 
-sampler CurFramePixelVelSampler = 
+sampler CurFramePixelVelSampler =
 sampler_state
 {
     Texture = <CurFrameVelocityTexture>;
@@ -63,7 +63,7 @@ sampler_state
     AddressV = Clamp;
 };
 
-sampler LastFramePixelVelSampler = 
+sampler LastFramePixelVelSampler =
 sampler_state
 {
     Texture = <LastFrameVelocityTexture>;
@@ -74,7 +74,7 @@ sampler_state
     AddressV = Clamp;
 };
 
-sampler MeshTextureSampler = 
+sampler MeshTextureSampler =
 sampler_state
 {
     Texture = <MeshTexture>;
@@ -97,53 +97,53 @@ struct VS_OUTPUT
 
 
 //-----------------------------------------------------------------------------
-// Name: WorldVertexShader     
-// Type: Vertex shader                                      
-// Desc: In addition to standard transform and lighting, it calculates the velocity 
+// Name: WorldVertexShader
+// Type: Vertex shader
+// Desc: In addition to standard transform and lighting, it calculates the velocity
 //       of the vertex and outputs this as a texture coord.
 //-----------------------------------------------------------------------------
-VS_OUTPUT WorldVertexShader( float4 vPos : POSITION, 
+VS_OUTPUT WorldVertexShader( float4 vPos : POSITION,
                              float3 vNormal : NORMAL,
                              float2 vTexCoord0 : TEXCOORD0 )
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-    float4 vPosProjSpaceCurrent; 
-    float4 vPosProjSpaceLast; 
-  
+    float4 vPosProjSpaceCurrent;
+    float4 vPosProjSpaceLast;
+
     vNormalWorldSpace = normalize(mul(vNormal, (float3x3)mWorld)); // normal (world space)
-    
+
     // Transform from object space to homogeneous projection space
     vPosProjSpaceCurrent = mul(vPos, mWorldViewProjection);
     vPosProjSpaceLast = mul(vPos, mWorldViewProjectionLast);
-    
+
     // Output the vetrex position in projection space
     Output.Position = vPosProjSpaceCurrent;
 
-    // Convert to non-homogeneous points [-1,1] by dividing by w 
+    // Convert to non-homogeneous points [-1,1] by dividing by w
     vPosProjSpaceCurrent /= vPosProjSpaceCurrent.w;
     vPosProjSpaceLast /= vPosProjSpaceLast.w;
-    
-    // Vertex's velocity (in non-homogeneous projection space) is the position this frame minus 
-    // its position last frame.  This information is stored in a texture coord.  The pixel shader 
+
+    // Vertex's velocity (in non-homogeneous projection space) is the position this frame minus
+    // its position last frame.  This information is stored in a texture coord.  The pixel shader
     // will read the texture coordinate with a sampler and use it to output each pixel's velocity.
-    float2 velocity = vPosProjSpaceCurrent - vPosProjSpaceLast;    
-    
+    float2 velocity = vPosProjSpaceCurrent - vPosProjSpaceLast;
+
     // The velocity is now between (-2,2) so divide by 2 to get it to (-1,1)
-    velocity /= 2.0f;   
+    velocity /= 2.0f;
 
     // Store the velocity in a texture coord
     Output.VelocityUV = velocity;
-        
+
     // Compute simple lighting equation
-    Output.Diffuse.rgb = MaterialDiffuseColor * LightDiffuse * max(0,dot(vNormalWorldSpace, LightDir)) + 
-                         MaterialAmbientColor * LightAmbient;   
-    Output.Diffuse.a = 1.0f; 
-    
+    Output.Diffuse.rgb = MaterialDiffuseColor * LightDiffuse * max(0,dot(vNormalWorldSpace, LightDir)) +
+                         MaterialAmbientColor * LightAmbient;
+    Output.Diffuse.a = 1.0f;
+
     // Just copy the texture coordinate through
-    Output.TextureUV = vTexCoord0; 
-    
-    return Output;    
+    Output.TextureUV = vTexCoord0;
+
+    return Output;
 }
 
 //-----------------------------------------------------------------------------
@@ -151,10 +151,10 @@ VS_OUTPUT WorldVertexShader( float4 vPos : POSITION,
 //-----------------------------------------------------------------------------
 struct PS_OUTPUT_NO_MRT
 {
-    // The pixel shader can output 2+ values simulatanously if 
+    // The pixel shader can output 2+ values simulatanously if
     // d3dcaps.NumSimultaneousRTs > 1
-    
-    float4 RGBColor      : COLOR0;  // Pixel color    
+
+    float4 RGBColor      : COLOR0;  // Pixel color
 };
 
 //-----------------------------------------------------------------------------
@@ -178,8 +178,8 @@ PS_OUTPUT_NO_MRT WorldPixelShaderPass2(VS_OUTPUT In)
 }
 
 //-----------------------------------------------------------------------------
-// Name: PostProcessMotionBlurPS 
-// Type: Pixel shader                                      
+// Name: PostProcessMotionBlurPS
+// Type: Pixel shader
 // Desc: Uses the pixel's velocity to sum up and average pixel in that direction
 //       to create a blur effect based on the velocity in a fullscreen
 //       post process pass.
@@ -187,52 +187,52 @@ PS_OUTPUT_NO_MRT WorldPixelShaderPass2(VS_OUTPUT In)
 float4 PostProcessMotionBlurPS( float2 OriginalUV : TEXCOORD0 ) : COLOR
 {
     float2 pixelVelocity;
-    
+
     // Get this pixel's current velocity and this pixel's last frame velocity
     // The velocity is stored in .r & .g channels
     float4 curFramePixelVelocity = tex2D(CurFramePixelVelSampler, OriginalUV);
     float4 lastFramePixelVelocity = tex2D(LastFramePixelVelSampler, OriginalUV);
 
     // If this pixel's current velocity is zero, then use its last frame velocity
-    // otherwise use its current velocity.  We don't want to add them because then 
-    // you would get double the current velocity in the center.  
-    // If you just use the current velocity, then it won't blur where the object 
-    // was last frame because the current velocity at that point would be 0.  Instead 
-    // you could do a filter to find if any neighbors are non-zero, but that requires a lot 
-    // of texture lookups which are limited and also may not work if the object moved too 
+    // otherwise use its current velocity.  We don't want to add them because then
+    // you would get double the current velocity in the center.
+    // If you just use the current velocity, then it won't blur where the object
+    // was last frame because the current velocity at that point would be 0.  Instead
+    // you could do a filter to find if any neighbors are non-zero, but that requires a lot
+    // of texture lookups which are limited and also may not work if the object moved too
     // far, but could be done multi-pass.
     float curVelocitySqMag = curFramePixelVelocity.r * curFramePixelVelocity.r +
                              curFramePixelVelocity.g * curFramePixelVelocity.g;
     float lastVelocitySqMag = lastFramePixelVelocity.r * lastFramePixelVelocity.r +
                               lastFramePixelVelocity.g * lastFramePixelVelocity.g;
-                                   
+
     if( lastVelocitySqMag > curVelocitySqMag )
     {
-        pixelVelocity.x =  lastFramePixelVelocity.r * PixelBlurConst;   
+        pixelVelocity.x =  lastFramePixelVelocity.r * PixelBlurConst;
         pixelVelocity.y = -lastFramePixelVelocity.g * PixelBlurConst;
     }
     else
     {
-        pixelVelocity.x =  curFramePixelVelocity.r * PixelBlurConst;   
-        pixelVelocity.y = -curFramePixelVelocity.g * PixelBlurConst;    
+        pixelVelocity.x =  curFramePixelVelocity.r * PixelBlurConst;
+        pixelVelocity.y = -curFramePixelVelocity.g * PixelBlurConst;
     }
-    
+
     // For each sample, sum up each sample's color in "Blurred" and then divide
     // to average the color after all the samples are added.
-    float3 Blurred = 0;    
+    float3 Blurred = 0;
     for(float i = 0; i < NumberOfPostProcessSamples; i++)
-    {   
-        // Sample texture in a new spot based on pixelVelocity vector 
-        // and average it with the other samples        
+    {
+        // Sample texture in a new spot based on pixelVelocity vector
+        // and average it with the other samples
         float2 lookup = pixelVelocity * i / NumberOfPostProcessSamples + OriginalUV;
-        
+
         // Lookup the color at this new spot
         float4 Current = tex2D(RenderTargetSampler, lookup);
-        
+
         // Add it with the other samples
         Blurred += Current.rgb;
     }
-    
+
     // Return the average color of all the samples
     return float4(Blurred / NumberOfPostProcessSamples, 1.0f);
 }
@@ -240,33 +240,33 @@ float4 PostProcessMotionBlurPS( float2 OriginalUV : TEXCOORD0 ) : COLOR
 
 //-----------------------------------------------------------------------------
 // Name: WorldWithVelocity
-// Type: Technique                                     
-// Desc: Renders the scene's color in pass 0 and writes 
+// Type: Technique
+// Desc: Renders the scene's color in pass 0 and writes
 //       pixel velocity in pass 1.
 //-----------------------------------------------------------------------------
 technique WorldWithVelocity
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 WorldVertexShader();
         PixelShader  = compile ps_2_0 WorldPixelShaderPass1();
     }
     pass P1
-    {          
+    {
         VertexShader = compile vs_2_0 WorldVertexShader();
         PixelShader  = compile ps_2_0 WorldPixelShaderPass2();
     }
 }
 //-----------------------------------------------------------------------------
 // Name: PostProcessMotionBlur
-// Type: Technique                                     
-// Desc: Renders a full screen quad and uses velocity information stored in 
+// Type: Technique
+// Desc: Renders a full screen quad and uses velocity information stored in
 //       the textures to blur image.
 //-----------------------------------------------------------------------------
 technique PostProcessMotionBlur
 {
     pass P0
-    {        
+    {
         PixelShader = compile ps_2_0 PostProcessMotionBlurPS();
     }
 }

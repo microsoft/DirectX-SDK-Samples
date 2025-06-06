@@ -64,7 +64,7 @@ void VS ( in  float3 v0   : POSITION,
 
     // Output the position
     oPos = mul( float4(v0,1.f), mul( matViewNoTrans, matProj ) );
-    
+
     // Calculate the cube map texture coordinates
     // Because this is a cube-map, the 3-D texture coordinates are calculated
     // from the world-position of the skybox vertex.
@@ -101,7 +101,7 @@ technique tec0
     {
         VertexShader = compile vs_2_0 VS();
         PixelShader  = compile ps_2_0 PS();
-        
+
         ZEnable = FALSE;
         ZWriteEnable = FALSE;
         AlphaBlendEnable = FALSE;

@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -210,7 +210,7 @@ void GSGrowBranches( triangle VSSceneIn input[3], inout TriangleStream<VSSceneIn
 }
 
 //-----------------------------------------------------------------------------------------
-// Technique: RenderTextured  
+// Technique: RenderTextured
 //-----------------------------------------------------------------------------------------
 technique10 RenderTextured
 {
@@ -220,13 +220,13 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 
 //-----------------------------------------------------------------------------------------
-// Technique: GrowBranches 
+// Technique: GrowBranches
 //-----------------------------------------------------------------------------------------
 GeometryShader gsStreamOut = ConstructGSWithSO( CompileShader( gs_4_0, GSGrowBranches() ), "POS.xyz; NORMAL.xyz; TEXCOORD0.xy; GROWAMT.x" );
 technique10 GrowBranches
@@ -237,8 +237,8 @@ technique10 GrowBranches
         SetVertexShader( CompileShader( vs_4_0, VSPassThrough() ) );
         SetGeometryShader( gsStreamOut );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 

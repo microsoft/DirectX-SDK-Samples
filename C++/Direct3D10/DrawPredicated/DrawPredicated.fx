@@ -122,11 +122,11 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepthTestWrite, 0 );
         SetRasterizerState( EnableCulling );
-    }  
+    }
 }
 
 technique10 RenderOnTop
@@ -136,11 +136,11 @@ technique10 RenderOnTop
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSOccluder() ) );
-        
+
         SetBlendState( AlphaBlendState, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( EnableCulling );
-    }  
+    }
 }
 
 technique10 RenderOccluder
@@ -150,10 +150,10 @@ technique10 RenderOccluder
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSOccluder() ) );
-        
+
         SetBlendState( OccTestBlendState, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepthWrite, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }
 

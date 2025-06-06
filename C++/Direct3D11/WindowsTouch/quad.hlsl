@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: Quad.hlsl
 //
-// The effect file for the Skinning10 sample.  
-// 
+// The effect file for the Skinning10 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -53,10 +53,10 @@ PSIn VSMain( VSIn inn )
 // Pixel shader that performs bump mapping on the final vertex
 //--------------------------------------------------------------------------------------
 float4 PSMain(PSIn input) : SV_Target
-{    
+{
     float4 rt = float4 (1,1,1,.6);
     return rt;
-  
+
 }
 
 

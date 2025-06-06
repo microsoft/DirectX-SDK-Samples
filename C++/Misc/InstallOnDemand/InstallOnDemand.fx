@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: InstallOnDemand.fx
 //
-// The effect file for the InstallOnDemand sample.  
-// 
+// The effect file for the InstallOnDemand sample.
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ sampler_state
 
 sampler g_samSkybox =
 sampler_state
-{ 
+{
     Texture = <g_txSkybox>;
     MipFilter = Linear;
     MinFilter = Linear;
@@ -217,4 +217,4 @@ technique RenderSkybox
         VertexShader = compile vs_2_0 VS_Skybox();
         PixelShader = compile ps_2_0 PS_Skybox();
     }
-} 
+}

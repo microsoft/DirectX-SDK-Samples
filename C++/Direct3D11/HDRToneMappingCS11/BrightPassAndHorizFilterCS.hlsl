@@ -1,16 +1,16 @@
 //--------------------------------------------------------------------------------------
 // File: BrightPassAndHorizFilterCS.hlsl
 //
-// The CS for bright pass and horizontal blur, used in CS path of 
+// The CS for bright pass and horizontal blur, used in CS path of
 // HDRToneMappingCS11 sample
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 static const float  MIDDLE_GRAY = 0.72f;
 static const float  LUM_WHITE = 1.5f;
 static const float  BRIGHT_THRESHOLD = 0.5f;
 
-Texture2D Input : register( t0 ); 
+Texture2D Input : register( t0 );
 StructuredBuffer<float> lum : register( t1 );
 RWStructuredBuffer<float4> Result : register( u0 );
 
@@ -47,12 +47,12 @@ void CSMain( uint3 Gid : SV_GroupID, uint GI : SV_GroupIndex )
     GroupMemoryBarrierWithGroupSync();
 
     // Horizontal blur
-    if ( GI >= kernelhalf && 
-         GI < (groupthreads - kernelhalf) && 
+    if ( GI >= kernelhalf &&
+         GI < (groupthreads - kernelhalf) &&
          ( (Gid.x * (groupthreads - 2 * kernelhalf) + GI - kernelhalf) < g_outputwidth) )
     {
         float4 vOut = 0;
-        
+
         [unroll]
         for ( int i = -kernelhalf; i <= kernelhalf; ++i )
             vOut += temp[GI + i] * g_avSampleWeights[i + kernelhalf];

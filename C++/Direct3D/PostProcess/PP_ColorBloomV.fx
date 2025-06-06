@@ -131,7 +131,7 @@ float2 TexelKernel[g_cKernelSize]
 
 
 
-static const float BlurWeights[g_cKernelSize] = 
+static const float BlurWeights[g_cKernelSize] =
 {
     0.002216,
     0.008764,
@@ -165,7 +165,7 @@ float4 PostProcessPS( float2 Tex : TEXCOORD0 ) : COLOR0
     float4 Color = 0;
 
     for (int i = 0; i < g_cKernelSize; i++)
-    {    
+    {
         Color += tex2D( g_samSrcColor, Tex + TexelKernel[i].xy ) * BlurWeights[i];
     }
 

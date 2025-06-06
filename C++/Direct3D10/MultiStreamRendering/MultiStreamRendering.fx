@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: SimpleSample.fx
 //
-// The effect file for the SimpleSample sample.  
-// 
+// The effect file for the SimpleSample sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -45,25 +45,25 @@ Buffer<float4> g_normBuffer;
 //--------------------------------------------------------------------------------------
 struct VS_INPUT_SI
 {
-    float4 Position   : POSITION;   // vertex position 
+    float4 Position   : POSITION;   // vertex position
     float3 Normal     : NORMAL;		// this normal comes in per-vertex
-    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
+    float2 TextureUV  : TEXCOORD0;  // vertex texture coords
 };
 
 #ifdef D3D10
 struct VS_INPUT_MI
 {
-    uint PositionIndex: POSINDEX;   // this is the index of the vertex position in g_posBuffer 
-    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
+    uint PositionIndex: POSINDEX;   // this is the index of the vertex position in g_posBuffer
+    float2 TextureUV  : TEXCOORD0;  // vertex texture coords
     uint vertID  : SV_VertexID; // use this to lookup our normal in g_normBuffer
 };
 #endif
 
 struct VS_OUTPUT
 {
-    float4 Position   : POSITION;   // vertex position 
+    float4 Position   : POSITION;   // vertex position
     float4 Diffuse    : COLOR0;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
-    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
+    float2 TextureUV  : TEXCOORD0;  // vertex texture coords
 };
 
 
@@ -74,22 +74,22 @@ VS_OUTPUT RenderSceneSI_VS( VS_INPUT_SI input )
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-    
+
     // Transform the position from object space to homogeneous projection space
     Output.Position = mul( input.Position, g_mWorldViewProjection);
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     vNormalWorldSpace = normalize(mul(input.Normal, (float3x3)g_mWorld)); // normal (world space)
 
-    // Calc diffuse color    
-    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) + 
-                         g_MaterialAmbientColor;   
-    Output.Diffuse.a = 1.0f; 
-    
+    // Calc diffuse color
+    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) +
+                         g_MaterialAmbientColor;
+    Output.Diffuse.a = 1.0f;
+
     // Just copy the texture coordinate through
-    Output.TextureUV = input.TextureUV; 
-    
-    return Output;    
+    Output.TextureUV = input.TextureUV;
+
+    return Output;
 }
 
 //--------------------------------------------------------------------------------------
@@ -100,26 +100,26 @@ VS_OUTPUT RenderSceneMI_VS( VS_INPUT_MI input )
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-    
+
     // Load position from a buffer
     float4 Pos = g_posBuffer.Load( input.PositionIndex );
     float4 Norm = g_normBuffer.Load( input.vertID/3 );
-    
+
     // Transform the position from object space to homogeneous projection space
     Output.Position = mul( Pos, g_mWorldViewProjection);
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     vNormalWorldSpace = normalize(mul(Norm.xyz, (float3x3)g_mWorld)); // normal (world space)
 
-    // Calc diffuse color    
-    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) + 
-                         g_MaterialAmbientColor;   
-    Output.Diffuse.a = 1.0f; 
-    
+    // Calc diffuse color
+    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) +
+                         g_MaterialAmbientColor;
+    Output.Diffuse.a = 1.0f;
+
     // Just copy the texture coordinate through
-    Output.TextureUV = input.TextureUV; 
-    
-    return Output;    
+    Output.TextureUV = input.TextureUV;
+
+    return Output;
 }
 #endif
 
@@ -128,7 +128,7 @@ VS_OUTPUT RenderSceneMI_VS( VS_INPUT_MI input )
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
 float4 RenderScenePS( VS_OUTPUT In ) : COLOR0
-{ 
+{
     // Lookup mesh texture and modulate it with diffuse
     return tex2D( MeshTextureSampler, In.TextureUV) * In.Diffuse;
 }
@@ -140,9 +140,9 @@ float4 RenderScenePS( VS_OUTPUT In ) : COLOR0
 technique RenderScene
 {
     pass P0
-    {   
+    {
         VertexShader = compile vs_2_0 RenderSceneSI_VS();
-        PixelShader  = compile ps_2_0 RenderScenePS();     
+        PixelShader  = compile ps_2_0 RenderScenePS();
     }
 }
 
@@ -153,7 +153,7 @@ technique RenderScene
 technique10 RenderScene_SI
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneSI_VS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderScenePS() ) );
@@ -166,7 +166,7 @@ technique10 RenderScene_SI
 technique10 RenderScene_MI
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneMI_VS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderScenePS() ) );

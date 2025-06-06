@@ -104,7 +104,7 @@ float4 PSTerrain(PSBasicIn input, uniform bool usebump) : COLOR0
     float4 spec = float4(0,0,0,0);
     if( usebump )
         spec = pow( saturate(dot( halfAngle, normal )), 16 );
-    
+
 	return diffuse * lighting + spec;
 }
 
@@ -117,8 +117,8 @@ technique RenderTileDiff
     pass p0
     {
 		VertexShader = compile vs_2_0 VSBasic();
-        PixelShader  = compile ps_2_0 PSTerrain(false);   
-    }  
+        PixelShader  = compile ps_2_0 PSTerrain(false);
+    }
 }
 
 //-----------------------------------------------------------------------------------------
@@ -129,8 +129,8 @@ technique RenderTileBump
     pass p0
     {
 		VertexShader = compile vs_2_0 VSBasic();
-        PixelShader  = compile ps_2_0 PSTerrain(true);   
-    }  
+        PixelShader  = compile ps_2_0 PSTerrain(true);
+    }
 }
 
 //-----------------------------------------------------------------------------------------
@@ -141,10 +141,10 @@ technique RenderTileWire
     pass p0
     {
 		VertexShader = compile vs_2_0 VSBasic();
-        PixelShader  = compile ps_2_0 PSTerrain(false);   
-        
+        PixelShader  = compile ps_2_0 PSTerrain(false);
+
         FillMode = WIREFRAME;
-    }  
+    }
 }
 
 
@@ -182,12 +182,12 @@ technique10 RenderTileDiff10
     {
 		SetVertexShader( CompileShader( vs_4_0, VSBasic() ) );
 		SetGeometryShader( NULL );
-		SetPixelShader( CompileShader( ps_4_0, PSTerrain(false) ) ); 
+		SetPixelShader( CompileShader( ps_4_0, PSTerrain(false) ) );
 		
 		SetDepthStencilState( EnableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        SetRasterizerState( CullBack );  
-    }  
+        SetRasterizerState( CullBack );
+    }
 }
 
 //-----------------------------------------------------------------------------------------
@@ -199,12 +199,12 @@ technique10 RenderTileBump10
     {
 		SetVertexShader( CompileShader( vs_4_0, VSBasic() ) );
 		SetGeometryShader( NULL );
-		SetPixelShader( CompileShader( ps_4_0, PSTerrain(true) ) ); 
+		SetPixelShader( CompileShader( ps_4_0, PSTerrain(true) ) );
 		
 		SetDepthStencilState( EnableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        SetRasterizerState( CullBack );  
-    }  
+        SetRasterizerState( CullBack );
+    }
 }
 
 //-----------------------------------------------------------------------------------------
@@ -216,10 +216,10 @@ technique10 RenderTileWire10
     {
 		SetVertexShader( CompileShader( vs_4_0, VSBasic() ) );
 		SetGeometryShader( NULL );
-		SetPixelShader( CompileShader( ps_4_0, PSTerrain(false) ) ); 
+		SetPixelShader( CompileShader( ps_4_0, PSTerrain(false) ) );
 		
 		SetDepthStencilState( EnableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        SetRasterizerState( Wireframe );  
-    }  
+        SetRasterizerState( Wireframe );
+    }
 }

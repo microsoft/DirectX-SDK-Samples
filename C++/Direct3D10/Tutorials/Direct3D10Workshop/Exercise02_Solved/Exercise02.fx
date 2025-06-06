@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -111,9 +111,9 @@ float3 GetNormal( float3 A, float3 B, float3 C )
 void GSScene( triangleadj GSSceneIn input[6], inout LineStream<PSSceneIn> OutputStream )
 {	
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob NOTE:	This shader determines which edges are silhouette edges 
-	// |  (\			by computing the normal for the face of the triangle, and then computing 
-	//					the normals for the adjacent triangles.  
+	// o/__   <-- BreakdancinBob NOTE:	This shader determines which edges are silhouette edges
+	// |  (\			by computing the normal for the face of the triangle, and then computing
+	//					the normals for the adjacent triangles.
 	//
 	//					The current triangle is specified by input[0], input[2], and input[4]
 	//					The three adjacent triangles are defined as follows
@@ -200,7 +200,7 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScene() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-    }  
+    }
 }
 
 
@@ -246,8 +246,8 @@ technique10 RenderPiece
         SetVertexShader( CompileShader( vs_4_0, VSScenePiece() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenePiece() ) );
-        
+
         SetBlendState( SrcBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    }  
+    }
 }
 

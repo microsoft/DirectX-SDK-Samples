@@ -2,7 +2,7 @@
 // File: Render.hlsl
 //
 // The shaders for rendering tessellated mesh and base mesh
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 cbuffer cbPerObject : register( b0 )
@@ -27,7 +27,7 @@ float4 bary_centric(float4 v1, float4 v2, float4 v3, float2 bc)
 float4 RenderVS( uint vertid : SV_VertexID ) : SV_POSITION
 {
     TessedVertex input = g_TessedVertices[vertid];
-    
+
     // Get the positions of the three vertices of the base triangle
     float4 v[3];
     [unroll]

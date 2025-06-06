@@ -2,7 +2,7 @@
 // File: Scene.fx
 //
 // Desc: The technique PrecomputedSHLighting renders the scene with per vertex PRT
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -32,10 +32,10 @@ struct VS_OUTPUT
 VS_OUTPUT WireframeVS ( VS_INPUT Input )
 {
     VS_OUTPUT Output;
-    
+
     // Output the vetrex position in projection space
     Output.Position = mul(Input.Position, g_mWorldViewProjection);
-   
+
     return Output;
 }
 
@@ -43,21 +43,21 @@ VS_OUTPUT WireframeVS ( VS_INPUT Input )
 //-----------------------------------------------------------------------------
 // Pixel shader
 //-----------------------------------------------------------------------------
-float4 WireframePS ( VS_OUTPUT Input ) : COLOR0 
-{ 
+float4 WireframePS ( VS_OUTPUT Input ) : COLOR0
+{
     float4 Output = float4( 1.0, 1.0, 0.0, 0.0 );
     return Output;
 }
 
 
 //-----------------------------------------------------------------------------
-// Renders with per vertex PRT 
+// Renders with per vertex PRT
 //-----------------------------------------------------------------------------
 technique Wireframe
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 WireframeVS( );
-        PixelShader  = compile ps_2_0 WireframePS( ); 
+        PixelShader  = compile ps_2_0 WireframePS( );
     }
 }
