@@ -221,7 +221,5 @@ IDI_ICON                ICON                    "..\..\DXUT\Optional\directx.ico
 // Generated from the TEXTINCLUDE 3 resource.
 //
 
-
 /////////////////////////////////////////////////////////////////////////////
 #endif    // not APSTUDIO_INVOKED
-
