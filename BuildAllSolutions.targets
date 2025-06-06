@@ -10,12 +10,20 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MFCSolutionList Include="$(MSBuildThisProjectDirectory)C++\DirectSound\**\*.sln" />
+  </ItemGroup>
+
+  <ItemGroup>
     <FullSolutionList Include="$(MSBuildThisProjectDirectory)**\*2019.sln" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Platform)'=='Win32'">
     <!-- These use 'x86' instead of 'Win32' in the SLN -->
     <FullSolutionList Remove="@(X86SolutionList)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(SkipMFCProjects)'=='true'">
+    <FullSolutionList Remove="@(MFCSolutionList)" />
   </ItemGroup>
 
   <PropertyGroup>
