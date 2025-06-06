@@ -3,7 +3,7 @@
 //
 // Sample code shows off the Windows 7 Game Explorer APIs - IGameStatistics and IGameStatisticsMgr.
 // The statistics can be seen in Windows 7 version of Game Explorer
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 #define _WIN32_DCOM
@@ -13,34 +13,36 @@
 #include <shlobj.h>
 #include <shlwapi.h>
 #include <shellapi.h>
-#include <atlbase.h>
-#include <atlcom.h>
 #include <strsafe.h>
 #include <assert.h>
 #include <gameux.h>
 
+#include <wrl/client.h>
+
+using Microsoft::WRL::ComPtr;
+
 //--------------------------------------------------------------------------------------
 // Name: GetGDFBinaryPath
-// Desc: Gets the path of the GDF binary.  This sample uses Minesweeper for an example 
+// Desc: Gets the path of the GDF binary.  This sample uses Minesweeper for an example
 //       which is installed on most machines.  Change this to point to the GDF path of your title.
 //--------------------------------------------------------------------------------------
 HRESULT GetGDFBinaryPath(WCHAR* szGDFPath, int cchLength)
 {
     assert(szGDFPath);
     HRESULT hr;
-    
-    hr = SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, SHGFP_TYPE_CURRENT, szGDFPath);    
+
+    hr = SHGetFolderPath(NULL, CSIDL_PROGRAM_FILES, NULL, SHGFP_TYPE_CURRENT, szGDFPath);
     if (SUCCEEDED(hr))
     {
-        hr = StringCchCat(szGDFPath, cchLength, L"\\Microsoft Games\\Minesweeper\\Minesweeper.exe"); 
+        hr = StringCchCat(szGDFPath, cchLength, L"\\Microsoft Games\\Minesweeper\\Minesweeper.exe");
     }
-    
+
     return hr;
 }
 
 //--------------------------------------------------------------------------------------
 // Name: WriteStatistics
-// Desc: Writes statistics 
+// Desc: Writes statistics
 //--------------------------------------------------------------------------------------
 HRESULT WriteStatistics(IGameStatistics* piStats)
 {
@@ -51,26 +53,26 @@ HRESULT WriteStatistics(IGameStatistics* piStats)
     }
 
     HRESULT hr;
-    
+
     // These are example categories.  You can set up to 10 categories and name them as appropriate.
-    hr = piStats->SetCategoryTitle(0, L"Beginner");             
+    hr = piStats->SetCategoryTitle(0, L"Beginner");
     if (SUCCEEDED(hr))
     {
-        hr = piStats->SetCategoryTitle(1, L"Intermediate");                 
+        hr = piStats->SetCategoryTitle(1, L"Intermediate");
         if (SUCCEEDED(hr))
         {
-            hr = piStats->SetCategoryTitle(2, L"Advanced");                
+            hr = piStats->SetCategoryTitle(2, L"Advanced");
         }
     }
-    
+
     if (FAILED(hr))
         return hr;
 
-    // Statistic data would typically come from the game state and would be dependent on the category 
+    // Statistic data would typically come from the game state and would be dependent on the category
     // As a trivial example, we will write the same fixed data to all 3 categories
     for(WORD iCategory = 0; iCategory < 3; iCategory++)
     {
-        hr = piStats->SetStatistic(iCategory, 0, L"Best Time", L"150 second");                 
+        hr = piStats->SetStatistic(iCategory, 0, L"Best Time", L"150 second");
         if (SUCCEEDED(hr))
         {
             hr = piStats->SetStatistic(iCategory, 1, L"Games Played", L"40");
@@ -96,16 +98,16 @@ HRESULT WriteStatistics(IGameStatistics* piStats)
             }
         }
     }
-    
+
     if (SUCCEEDED(hr))
     {
-        hr = piStats->SetLastPlayedCategory(2);             
+        hr = piStats->SetLastPlayedCategory(2);
         if (SUCCEEDED(hr))
         {
-            hr = piStats->Save(TRUE);                       
+            hr = piStats->Save(TRUE);
         }
     }
-    
+
     return hr;
 }
 
@@ -124,11 +126,11 @@ HRESULT DisplayStatistics(IGameStatistics* piStats)
 
     WORD wMaxCategories = 0;
     WCHAR szStats[1024] = {0};
-    HRESULT hr = piStats->GetMaxCategories(&wMaxCategories);                        
+    HRESULT hr = piStats->GetMaxCategories(&wMaxCategories);
     for (WORD wIndex = 0; wIndex < wMaxCategories && SUCCEEDED(hr); wIndex++)
     {
         LPWSTR pCategory = NULL;
-        hr = piStats->GetCategoryTitle(wIndex, &pCategory);                         
+        hr = piStats->GetCategoryTitle(wIndex, &pCategory);
         if (SUCCEEDED(hr) && pCategory)
         {
             // If the category title is not NULL, display the statistics for this category
@@ -137,17 +139,17 @@ HRESULT DisplayStatistics(IGameStatistics* piStats)
 
             WORD wMaxStats;
             LPOLESTR pName = NULL;
-            LPOLESTR pValue = NULL;    
-            hr = piStats->GetMaxStatsPerCategory(&wMaxStats);                       
+            LPOLESTR pValue = NULL;
+            hr = piStats->GetMaxStatsPerCategory(&wMaxStats);
             for (WORD wStartIndex = 0; wStartIndex < wMaxStats && SUCCEEDED(hr); wStartIndex++)
             {
-                hr = piStats->GetStatistic(wIndex, wStartIndex, &pName, &pValue);   
+                hr = piStats->GetStatistic(wIndex, wStartIndex, &pName, &pValue);
                 if (SUCCEEDED(hr) && pName && pValue)
                 {
                     StringCchCat(szStats, ARRAYSIZE(szStats)-1, L"\t");
-                    StringCchCat(szStats, ARRAYSIZE(szStats)-1, pName);             
+                    StringCchCat(szStats, ARRAYSIZE(szStats)-1, pName);
                     StringCchCat(szStats, ARRAYSIZE(szStats)-1, L": ");
-                    StringCchCat(szStats, ARRAYSIZE(szStats)-1, pValue);            
+                    StringCchCat(szStats, ARRAYSIZE(szStats)-1, pValue);
                     StringCchCat(szStats, ARRAYSIZE(szStats)-1, L"\n");
                     CoTaskMemFree(pName);
                     CoTaskMemFree(pValue);
@@ -156,9 +158,9 @@ HRESULT DisplayStatistics(IGameStatistics* piStats)
             CoTaskMemFree(pCategory);
         }
     }
-    
-    MessageBox(NULL, szStats, L"Game Statistics", MB_OK);       
-    
+
+    MessageBox(NULL, szStats, L"Game Statistics", MB_OK);
+
     return hr;
 }
 
@@ -172,20 +174,20 @@ int __cdecl wmain()
     if (SUCCEEDED(hr))
     {
         WCHAR szGDFPath[MAX_PATH];
-        hr = GetGDFBinaryPath(szGDFPath, MAX_PATH);                                        
-        if (SUCCEEDED(hr) )       
+        hr = GetGDFBinaryPath(szGDFPath, MAX_PATH);
+        if (SUCCEEDED(hr) )
         {
             BSTR bstrGDFPath = SysAllocString(szGDFPath);
             if( bstrGDFPath )
-            {           
-                CComPtr<IGameStatisticsMgr> spiMgr;
-                hr = spiMgr.CoCreateInstance(__uuidof(GameStatistics));                 
+            {
+                ComPtr<IGameStatisticsMgr> spiMgr;
+                hr = CoCreateInstance(__uuidof(GameStatistics), nullptr, CLSCTX_ALL, IID_PPV_ARGS(spiMgr.GetAddressOf()));
                 if (SUCCEEDED(hr))
                 {
                     GAMESTATS_OPEN_TYPE ot = GAMESTATS_OPEN_OPENORCREATE;
                     GAMESTATS_OPEN_RESULT res;
-                    CComPtr<IGameStatistics> spiStats;                    
-                    hr = spiMgr->GetGameStatistics(bstrGDFPath, ot, &res, &spiStats);   
+                    ComPtr<IGameStatistics> spiStats;
+                    hr = spiMgr->GetGameStatistics(bstrGDFPath, ot, &res, spiStats.GetAddressOf());
                     if(SUCCEEDED(hr))
                     {
                         if (res == GAMESTATS_OPEN_CREATED)
@@ -193,24 +195,24 @@ int __cdecl wmain()
                             // It is a newly created statistics file
                             // In this sample we will write some example data, and display them
                             // They can then be seen in the Windows 7 Game Explorer
-                            hr = WriteStatistics(spiStats);
+                            hr = WriteStatistics(spiStats.Get());
                             if(SUCCEEDED(hr))
                             {
-                                hr = DisplayStatistics(spiStats);                       
+                                hr = DisplayStatistics(spiStats.Get());
                             }
-                            
+
                             // Uncomment this line  to remove the statistics
-                            //hr = spiMgr->RemoveGameStatistics(bstrGDFPath);     
+                            //hr = spiMgr->RemoveGameStatistics(bstrGDFPath);
                         }
                         else
                         {
-                            // If the statistics file already exists, then in this 
+                            // If the statistics file already exists, then in this
                             // sample we will just display them
-                            hr = DisplayStatistics(spiStats);                           
+                            hr = DisplayStatistics(spiStats.Get());
                         }
                     }
                 }
-                
+
                 SysFreeString(bstrGDFPath);
             }
         }
