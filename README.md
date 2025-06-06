@@ -39,7 +39,7 @@ For a full change history, see [CHANGELOG.md](https://github.com/microsoft/Direc
 
 * The XACT samples are not included in this repository because they will only build with the legacy DirectX SDK.
 
-* The legacy DirectSound samples from DirectX SDK (November 2007) are included for completeness. They require the optional "MFC" Visual Studio component be installed ("C++ v14.29 (16.11) MFC for v142 build tools (x86 & x64)").
+* The legacy DirectSound samples from DirectX SDK (November 2007) are included for completeness.
 
 * The Managed DX 1.1 C# samples are not included in this repository because they require both legacy .NET 1.1 and the legacy DirectX SDK to build.
 
