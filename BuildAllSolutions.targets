@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <MFCSolutionList Include="$(MSBuildThisProjectDirectory)C++\DirectSound\**\*.sln" />
+    <MFCSolutionList Include="$(MSBuildThisProjectDirectory)C++\Misc\Autorun\*.sln" />
   </ItemGroup>
 
   <ItemGroup>
@@ -58,4 +59,3 @@
       Targets="Clean" />
   </Target>
 </Project>
-
