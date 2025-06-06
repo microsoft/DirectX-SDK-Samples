@@ -65,7 +65,7 @@ extern DWORD g_Indices[];
 #define IDC_FIXEDFUNC           4
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat,
                                       bool bWindowed, void* pUserContext );
@@ -92,7 +92,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
                                          D3DRTYPE_TEXTURE, BackBufferFormat ) ) )
         return false;
 
-    // No fallback defined by this app, so reject any device that 
+    // No fallback defined by this app, so reject any device that
     // doesn't support at least ps2.0
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
         return false;
@@ -153,8 +153,8 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -263,7 +263,7 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
         {0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
         {1, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_NORMAL, 0},
         {2, 0, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_TEXCOORD, 0},
-        {0xFF,0,D3DDECLTYPE_UNUSED, 0,0,0}// D3DDECL_END 
+        {0xFF,0,D3DDECLTYPE_UNUSED, 0,0,0}// D3DDECL_END
     };
     pd3dDevice->CreateVertexDeclaration( declDesc, &g_pDecl );
 
@@ -381,8 +381,8 @@ void RenderProgrammable( IDirect3DDevice9* pd3dDevice, double fTime, float fElap
     D3DXVec3Normalize( &vLightDir, &vLightDir );
     D3DXVECTOR4 vLightDiffuse( 1, 1, 1, 1 );
 
-    // Update the effect's variables.  Instead of using strings, it would 
-    // be more efficient to cache a handle to the parameter by calling 
+    // Update the effect's variables.  Instead of using strings, it would
+    // be more efficient to cache a handle to the parameter by calling
     // ID3DXEffect::GetParameterByName
     V( g_pEffect9->SetMatrix( g_hmWorldViewProjection, &mWorldViewProjection ) );
     V( g_pEffect9->SetMatrix( g_hmWorld, &mWorld ) );
@@ -406,10 +406,10 @@ void RenderProgrammable( IDirect3DDevice9* pd3dDevice, double fTime, float fElap
     // Set A Multistream Vertex Decl insted of FVF
     pd3dDevice->SetVertexDeclaration( g_pDecl );
 
-    // Render the scene with this technique 
+    // Render the scene with this technique
     V( g_pEffect9->SetTechnique( g_hRenderScene ) );
 
-    // Apply the technique contained in the effect 
+    // Apply the technique contained in the effect
     UINT cPasses = 0;
     V( g_pEffect9->Begin( &cPasses, 0 ) );
 
@@ -417,8 +417,8 @@ void RenderProgrammable( IDirect3DDevice9* pd3dDevice, double fTime, float fElap
     {
         V( g_pEffect9->BeginPass( iPass ) );
 
-        // The effect interface queues up the changes and performs them 
-        // with the CommitChanges call. You do not need to call CommitChanges if 
+        // The effect interface queues up the changes and performs them
+        // with the CommitChanges call. You do not need to call CommitChanges if
         // you are not setting any parameters between the BeginPass and EndPass.
         // V( g_pEffect->CommitChanges() );
 
@@ -444,7 +444,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         return;
     }
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 160, 160, 250 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -467,7 +467,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -489,7 +489,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

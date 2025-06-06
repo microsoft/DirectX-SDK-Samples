@@ -1,13 +1,13 @@
 //--------------------------------------------------------------------------------------
 // File: AntiAlias.cpp
 //
-// Multisampling attempts to reduce aliasing by mimicking a higher resolution display; 
-// multiple sample points are used to determine each pixel's color. This sample shows 
-// how the various multisampling techniques supported by your video card affect the 
-// scene's rendering. Although multisampling effectively combats aliasing, under 
-// particular situations it can introduce visual artifacts of it's own. As illustrated 
-// by the sample, centroid sampling seeks to eliminate one common type of multisampling 
-// artifact. Support for centroid sampling is supported under Pixel Shader 2.0 in the 
+// Multisampling attempts to reduce aliasing by mimicking a higher resolution display;
+// multiple sample points are used to determine each pixel's color. This sample shows
+// how the various multisampling techniques supported by your video card affect the
+// scene's rendering. Although multisampling effectively combats aliasing, under
+// particular situations it can introduce visual artifacts of it's own. As illustrated
+// by the sample, centroid sampling seeks to eliminate one common type of multisampling
+// artifact. Support for centroid sampling is supported under Pixel Shader 2.0 in the
 // latest version of the DirectX runtime.
 //
 // Copyright (c) Microsoft Corporation.
@@ -20,8 +20,8 @@
 #include "SDKmisc.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ DXUTDeviceSettings              g_D3DDeviceSettings;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -136,7 +136,7 @@ CD3D9EnumDeviceSettingsCombo*   GetCurrentDeviceSettingsCombo();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -146,7 +146,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -176,7 +176,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -258,13 +258,13 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// Called during device initialization, this code checks the device for some 
+// Called during device initialization, this code checks the device for some
 // minimum set of capabilities, and rejects those that don't pass by returning false.
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
                                   D3DFORMAT BackBufferFormat, bool bWindowed, void* pUserContext )
 {
-    // No fallback defined by this app, so reject any device that 
+    // No fallback defined by this app, so reject any device that
     // doesn't support at least ps2.0
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
         return false;
@@ -288,8 +288,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 {
     assert( DXUT_D3D9_DEVICE == pDeviceSettings->ver );
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
     if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
     {
@@ -506,8 +506,8 @@ HRESULT CalculateViewAndProjection( D3DXMATRIX* pViewOut, D3DXMATRIX* pProjectio
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -753,7 +753,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
         D3DXMatrixRotationY( &g_mRotation, fRotate * ( D3DX_PI / 180.0f ) );
     }
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 255, 255, 255 ), 1.0f, 0 ) );
 
 
@@ -999,7 +999,7 @@ void RenderSceneSpheres( IDirect3DDevice9* pd3dDevice, double fTime, float fElap
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -1076,7 +1076,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
 {
@@ -1091,7 +1091,7 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

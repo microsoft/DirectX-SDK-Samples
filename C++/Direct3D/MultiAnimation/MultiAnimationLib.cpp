@@ -229,22 +229,22 @@ HRESULT CMultiAnim::Setup( LPDIRECT3DDEVICE9 pDevice,
     if( FAILED( hr ) )
         goto e_Exit;
 
-    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.  
-    // Debugging vertex shaders requires either REF or software vertex processing, and debugging 
-    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug 
-    // experience in the shader debugger.  It enables source level debugging, prevents instruction 
-    // reordering, prevents dead code elimination, and forces the compiler to compile against the next 
-    // higher available software target, which ensures that the unoptimized shaders do not exceed 
-    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders 
-    // will be unoptimized and forced into software.  See the DirectX documentation for more information 
+    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.
+    // Debugging vertex shaders requires either REF or software vertex processing, and debugging
+    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug
+    // experience in the shader debugger.  It enables source level debugging, prevents instruction
+    // reordering, prevents dead code elimination, and forces the compiler to compile against the next
+    // higher available software target, which ensures that the unoptimized shaders do not exceed
+    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders
+    // will be unoptimized and forced into software.  See the DirectX documentation for more information
     // about using the shader debugger.
     {
         DWORD dwShaderFlags = D3DXFX_NOT_CLONEABLE;
 
 #if defined( DEBUG ) || defined( _DEBUG )
         // Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-        // Setting this flag improves the shader debugging experience, but still allows 
-        // the shaders to be optimized and to run exactly the way they will run in 
+        // Setting this flag improves the shader debugging experience, but still allows
+        // the shaders to be optimized and to run exactly the way they will run in
         // the release configuration of this program.
         dwShaderFlags |= D3DXSHADER_DEBUG;
         #endif

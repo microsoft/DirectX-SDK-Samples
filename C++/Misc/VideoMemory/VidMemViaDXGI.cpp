@@ -2,10 +2,10 @@
 // File: VidMemViaDXGI.cpp
 //
 //
-// DXGI is only available on Windows Vista or later. This method returns the 
-// amount of dedicated video memory, the amount of dedicated system memory, 
-// and the amount of shared system memory. DXGI is more reflective of the true 
-// system configuration than the previous 4 methods. 
+// DXGI is only available on Windows Vista or later. This method returns the
+// amount of dedicated video memory, the amount of dedicated system memory,
+// and the amount of shared system memory. DXGI is more reflective of the true
+// system configuration than the previous 4 methods.
 //
 // Copyright (c) Microsoft Corp. All rights reserved.
 //-----------------------------------------------------------------------------

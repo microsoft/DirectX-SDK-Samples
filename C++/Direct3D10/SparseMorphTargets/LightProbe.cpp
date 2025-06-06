@@ -8,8 +8,8 @@
 #include "SDKmisc.h"
 #include "lightprobe.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 struct LIGHTPROBE_VERTEX
@@ -36,7 +36,7 @@ struct SHCubeProj
         fConvCoeffs[1] = 2.0f / 3.0f;
         fConvCoeffs[2] = 1.0f / 4.0f;
         fConvCoeffs[3] = fConvCoeffs[5] = 0.0f;
-        fConvCoeffs[4] = -6.0f / 144.0f; // 
+        fConvCoeffs[4] = -6.0f / 144.0f; //
     }
 
     void    Init( float* pR, float* pG, float* pB )
@@ -74,7 +74,7 @@ HRESULT CLightProbe::OnCreateDevice( ID3D10Device* pd3dDevice, const WCHAR* strC
     // Note that you should optimally read these HDR light probes on device that supports
     // floating point.  If this current device doesn't support floating point then
     // D3DX will automatically convert them to interger format which won't be optimal.
-    // If you wanted to perform this step in a machine without a good video card, then 
+    // If you wanted to perform this step in a machine without a good video card, then
     // use a D3DDEVTYPE_NULLREF device instead.
     WCHAR strPath[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( strPath, MAX_PATH, strCubeMapFile ) );
@@ -115,8 +115,8 @@ HRESULT CLightProbe::OnCreateDevice( ID3D10Device* pd3dDevice, const WCHAR* strC
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
 #endif
@@ -175,7 +175,7 @@ void CLightProbe::OnSwapChainResized( const DXGI_SURFACE_DESC* pBackBufferSurfac
     if( !pVertex )
         return;
 
-    // Map texels to pixels 
+    // Map texels to pixels
     float fHighW = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );
     float fHighH = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Height );
     float fLowW = 1.0f + ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );

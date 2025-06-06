@@ -41,10 +41,10 @@ BOOL           g_bBufferPaused;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, 
+INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
                       INT nCmdShow )
 {
     // Display the main dialog box.
@@ -64,7 +64,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_INITDIALOG:
             OnInitDialog( hDlg );
@@ -87,7 +87,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     {
                         DXTRACE_ERR_MSGBOX( TEXT("OnPlaySound"), hr );
                         MessageBox( hDlg, L"Error playing DirectSound buffer. "
-                                    L"Sample will now exit.", L"DirectSound Sample", 
+                                    L"Sample will now exit.", L"DirectSound Sample",
                                     MB_OK | MB_ICONERROR );
                         EndDialog( hDlg, IDABORT );
                     }
@@ -114,10 +114,10 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 
         case WM_DESTROY:
             // Cleanup everything
-            KillTimer( hDlg, 1 );    
+            KillTimer( hDlg, 1 );
             SAFE_DELETE( g_pSound );
             SAFE_DELETE( g_pSoundManager );
-            break; 
+            break;
 
         default:
             return FALSE; // Didn't handle message
@@ -149,8 +149,8 @@ VOID OnInitDialog( HWND hDlg )
     SendMessage( hDlg, WM_SETICON, ICON_BIG,   (LPARAM) hIcon );  // Set big icon
     SendMessage( hDlg, WM_SETICON, ICON_SMALL, (LPARAM) hIcon );  // Set small icon
 
-    // Create a static IDirectSound in the CSound class.  
-    // Set coop level to DSSCL_PRIORITY, and set primary buffer 
+    // Create a static IDirectSound in the CSound class.
+    // Set coop level to DSSCL_PRIORITY, and set primary buffer
     // format to stereo, 22kHz and 16-bit output.
     g_pSoundManager = new CSoundManager();
     if( NULL == g_pSoundManager )
@@ -163,16 +163,16 @@ VOID OnInitDialog( HWND hDlg )
     if( FAILED( hr = g_pSoundManager->Initialize( hDlg, DSSCL_PRIORITY ) ) )
     {
         DXTRACE_ERR_MSGBOX( TEXT("Initialize"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                           L"DirectSound Sample", MB_OK | MB_ICONERROR );
         EndDialog( hDlg, IDABORT );
         return;
     }
-    
+
     if( FAILED( hr = g_pSoundManager->SetPrimaryBufferFormat( 2, 22050, 16 ) ) )
     {
         DXTRACE_ERR_MSGBOX( TEXT("SetPrimaryBufferFormat"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                           L"DirectSound Sample", MB_OK | MB_ICONERROR );
         EndDialog( hDlg, IDABORT );
         return;
@@ -194,7 +194,7 @@ VOID OnInitDialog( HWND hDlg )
 // Name: OnOpenSoundFile()
 // Desc: Called when the user requests to open a sound file
 //-----------------------------------------------------------------------------
-VOID OnOpenSoundFile( HWND hDlg ) 
+VOID OnOpenSoundFile( HWND hDlg )
 {
     HRESULT hr;
 
@@ -246,7 +246,7 @@ VOID OnOpenSoundFile( HWND hDlg )
     if( hFile != NULL )
     {
         // If you try to open a 100MB wav file, you could run out of system memory with this
-        // sample cause it puts all of it into a large buffer.  If you need to do this, then 
+        // sample cause it puts all of it into a large buffer.  If you need to do this, then
         // see the "StreamData" sample to stream the data from the file into a sound buffer.
         DWORD dwFileSizeHigh = 0;
         DWORD dwFileSize = GetFileSize( hFile, &dwFileSizeHigh );
@@ -265,7 +265,7 @@ VOID OnOpenSoundFile( HWND hDlg )
         // Not a critical failure, so just update the status
         DXTRACE_ERR( TEXT("Create"), hr );
         SetDlgItemText( hDlg, IDC_FILENAME, TEXT("Could not create sound buffer.") );
-        return; 
+        return;
     }
 
     // Update the UI controls to show the sound as the file is loaded
@@ -286,7 +286,7 @@ VOID OnOpenSoundFile( HWND hDlg )
 // Name: OnPlaySound()
 // Desc: User hit the "Play" button
 //-----------------------------------------------------------------------------
-HRESULT OnPlaySound( HWND hDlg ) 
+HRESULT OnPlaySound( HWND hDlg )
 {
     HRESULT hr;
 
@@ -336,15 +336,15 @@ HRESULT OnPlaySound( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: OnTimer()
-// Desc: When we think the sound is playing this periodically checks to see if 
+// Desc: When we think the sound is playing this periodically checks to see if
 //       the sound has stopped.  If it has then updates the dialog.
 //-----------------------------------------------------------------------------
-VOID OnTimer( HWND hDlg ) 
+VOID OnTimer( HWND hDlg )
 {
     if( IsWindowEnabled( GetDlgItem( hDlg, IDC_STOP ) ) )
     {
         // We think the sound is playing, so see if it has stopped yet.
-        if( !g_pSound->IsSoundPlaying() ) 
+        if( !g_pSound->IsSoundPlaying() )
         {
             // Update the UI controls to show the sound as stopped
             EnablePlayUI( hDlg, TRUE );
@@ -357,7 +357,7 @@ VOID OnTimer( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: EnablePlayUI( hDlg,)
-// Desc: Enables or disables the Play UI controls 
+// Desc: Enables or disables the Play UI controls
 //-----------------------------------------------------------------------------
 VOID EnablePlayUI( HWND hDlg, BOOL bEnable )
 {

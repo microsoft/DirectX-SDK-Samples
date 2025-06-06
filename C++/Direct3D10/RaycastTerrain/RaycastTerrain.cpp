@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DeferredParticles.cpp
 //
-// This sample shows a simple example of the Microsoft Direct3D's High-Level 
-// Shader Language (HLSL) using the Effect interface. 
+// This sample shows a simple example of the Microsoft Direct3D's High-Level
+// Shader Language (HLSL) using the Effect interface.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -24,7 +24,7 @@ CDXUTDialogResourceManager          g_DialogResourceManager; // manager for shar
 CModelViewerCamera                  g_Camera;               // A model viewing camera
 CDXUTDirectionWidget g_LightControl[MAX_LIGHTS];
 CD3DSettingsDlg                     g_D3DSettingsDlg;       // Device settings dialog
-CDXUTDialog                         g_HUD;                  // manages the 3D   
+CDXUTDialog                         g_HUD;                  // manages the 3D
 CDXUTDialog                         g_SampleUI;             // dialog for sample specific controls
 D3DXMATRIXA16                       g_mCenterMesh;
 float                               g_fLightScale;
@@ -142,11 +142,11 @@ struct RAYCAST_TERRAIN_TILE
 
 RAYCAST_TERRAIN_TILE g_TerrainTiles[] =
 {
-    { 
-	  L"RaycastTerrain\\MSH1024.dds", 
-	  L"RaycastTerrain\\MSH1024.bmp", 
+    {
+	  L"RaycastTerrain\\MSH1024.dds",
+	  L"RaycastTerrain\\MSH1024.bmp",
 	  L"RaycastTerrain\\MSH1024_Mask.dds",		
-	  NULL, NULL, D3DXVECTOR3( -0.5f, 0, -0.5f ) 
+	  NULL, NULL, D3DXVECTOR3( -0.5f, 0, -0.5f )
 	},
 };
 int                                 g_NumTerrainTiles = 1;
@@ -179,7 +179,7 @@ int                                 g_NumTerrainTiles = 1;
 #define IDC_RENDER_WIREFRAME		51
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -204,7 +204,7 @@ HRESULT PreprocessTerrain( ID3D10Device* pd3dDevice, WCHAR* strHeightMap, WCHAR*
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -214,7 +214,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
     DXUTGetD3D10Enumeration( false, true );
 
@@ -243,7 +243,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -341,7 +341,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );	
 }
 
@@ -567,8 +567,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     //dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -1207,7 +1207,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -1216,7 +1216,7 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {

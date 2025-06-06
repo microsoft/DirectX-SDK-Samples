@@ -41,7 +41,7 @@ public:
 private:
     ScopedObject(const ScopedObject&);
     ScopedObject& operator=(const ScopedObject&);
-        
+
     T* _pointer;
 };
 
@@ -129,7 +129,7 @@ HRESULT GetImageInfoFromMemory( _In_bytecount_(wicDataSize) const BYTE* wicData,
         info.container = IMAGE_TIFF;
     else if ( memcmp( &containerID, &GUID_ContainerFormatWmp, sizeof(GUID) ) == 0 )
         info.container = IMAGE_WMP;
-    
+
     ScopedObject<IWICBitmapFrameDecode> frame;
     hr = decoder->GetFrame( 0, &frame );
     if ( FAILED(hr) )
@@ -149,7 +149,7 @@ HRESULT GetImageInfoFromMemory( _In_bytecount_(wicDataSize) const BYTE* wicData,
         return hr;
 
     memcpy( &info.pixelFormat, &pixelFormat, sizeof(GUID) );
-     
+
     ScopedObject<IWICComponentInfo> cinfo;
     if ( FAILED( pWIC->CreateComponentInfo( pixelFormat, &cinfo ) ) )
         return 0;

@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: main.cpp
 //
-// Desc: 
+// Desc:
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -71,7 +71,7 @@ int wmain( int argc, wchar_t* argv[] )
         }
     }
 
-    // Create NULLREF device 
+    // Create NULLREF device
     pd3dDevice = CreateNULLRefDevice();
     if( pd3dDevice == NULL )
     {
@@ -124,7 +124,7 @@ LCleanup:
 
 
 //--------------------------------------------------------------------------------------
-// Parses the command line for parameters.  See DXUTInit() for list 
+// Parses the command line for parameters.  See DXUTInit() for list
 //--------------------------------------------------------------------------------------
 bool ParseCommandLine( SETTINGS* pSettings )
 {
@@ -137,7 +137,7 @@ bool ParseCommandLine( SETTINGS* pSettings )
     {
         strsettings++;
 
-        // Skip over until another double-quote or a null 
+        // Skip over until another double-quote or a null
         while( *strsettings && ( *strsettings != L'"' ) )
             strsettings++;
 
@@ -531,7 +531,7 @@ HRESULT LoadMeshes( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptions,
                 mat.pTextureFilename = NULL;
             }
 
-            // handle if there's not enough SH materials specified for this mesh 
+            // handle if there's not enough SH materials specified for this mesh
             D3DXSHMATERIAL shMat;
             if( pOptions->pInputMeshes[iMesh].dwNumSHMaterials == 0 )
             {

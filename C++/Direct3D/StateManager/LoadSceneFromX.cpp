@@ -16,7 +16,7 @@
 
 
 //--------------------------------------------------------------------------------------
-// Forward declaration 
+// Forward declaration
 //--------------------------------------------------------------------------------------
 HRESULT ProcessFrame( ID3DXFileData* pFrame,
                       D3DXMATRIX* pParentMatrix,
@@ -123,7 +123,7 @@ HRESULT LoadSceneFromX( vector <FRAMENODE>& vecFrameNodes, LPWSTR wszFileName )
         if( guid == gFrame )
             ProcessFrame( pChild, NULL, vecFrameNodes );
 
-        // 
+        //
         SAFE_RELEASE( pChild );
     }
 
@@ -160,7 +160,7 @@ HRESULT ProcessFrame( ID3DXFileData* pFrame, D3DXMATRIX* pParentMatrix, vector <
 
     // For the purposes of this sample, the frame hierarchy is collapsed in-place as each frame is encountered.
     // A typical application may have a 'scene graph' arrangement of transformations, which are collapsed
-    // as-needed at *runtime*.  
+    // as-needed at *runtime*.
     // However, since the hierarchy *is* collaped in-place, it must be ensured that the frame's transform matrix
     // has been updated and collapsed BEFORE processing child frames.
     // To defer processing of child frames, they are placed into the vecChildFrames container.

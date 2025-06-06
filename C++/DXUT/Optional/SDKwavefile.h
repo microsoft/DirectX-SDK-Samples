@@ -8,7 +8,7 @@
 #define DXUTWAVEFILE_H
 
 //-----------------------------------------------------------------------------
-// Typing macros 
+// Typing macros
 //-----------------------------------------------------------------------------
 #define WAVEFILE_READ   1
 #define WAVEFILE_WRITE  2

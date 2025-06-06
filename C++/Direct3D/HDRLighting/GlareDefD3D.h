@@ -1,4 +1,4 @@
-// File provided by Masaki Kawase 
+// File provided by Masaki Kawase
 // http://www.daionet.gr.jp/~masa/rthdribl/
 
 // GlareDefD3D.h : Define glare information
@@ -211,7 +211,7 @@ typedef struct GLAREDEF
 class CGlareDef
 {
 public:
-    
+
     WCHAR           m_strGlareName[256];
 
     float m_fGlareLuminance;     // Total glare intensity (not effect to "after image")

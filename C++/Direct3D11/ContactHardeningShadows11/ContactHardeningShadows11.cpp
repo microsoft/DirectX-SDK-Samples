@@ -60,8 +60,8 @@ ID3D11VertexShader*       g_pSM_VS = NULL;
 // Constant buffer layout for transferring data to the utility HLSL functions
 struct CB_CONSTANTS
 {
-    D3DXMATRIX    f4x4WorldViewProjection;      // World * View * Projection matrix  
-    D3DXMATRIX    f4x4WorldViewProjLight;       // World * ViewLight * Projection Light matrix  
+    D3DXMATRIX    f4x4WorldViewProjection;      // World * View * Projection matrix
+    D3DXMATRIX    f4x4WorldViewProjLight;       // World * ViewLight * Projection Light matrix
     D3DXVECTOR4   vShadowMapDimensions;         // shadow map dimensions
     D3DXVECTOR4   vLightDir;                    // shadow map dimensions
     float         fSunWidth;
@@ -70,7 +70,7 @@ struct CB_CONSTANTS
 UINT                        g_iCONSTANTSCBBind = 0;
 
 // Various Constant buffers
-ID3D11Buffer*               g_pcbConstants = NULL;                 
+ID3D11Buffer*               g_pcbConstants = NULL;
 
 // SM depth stencil texture data
 static ID3D11Texture2D*             g_pRSMDepthStencilTexture = NULL;
@@ -89,7 +89,7 @@ static ID3D11DepthStencilView*      g_pDepthStencilTextureDSV = NULL;
 #define IDC_SUNWIDTH_TEXT       6
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -98,12 +98,12 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContext );
 void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext );
 
-bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo, UINT Output, 
+bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo, UINT Output,
                                        const CD3D11EnumDeviceInfo *DeviceInfo,
-                                       DXGI_FORMAT BackBufferFormat, bool bWindowed, 
+                                       DXGI_FORMAT BackBufferFormat, bool bWindowed,
                                        void* pUserContext );
-void    CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown, 
-                            bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta, 
+void    CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown, bool bMiddleButtonDown,
+                            bool bSideButton1Down, bool bSideButton2Down, int nMouseWheelDelta,
                             int xPos, int yPos, void* pUserContext );
 HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc,
                                       void* pUserContext );
@@ -120,7 +120,7 @@ void RenderText();
 //--------------------------------------------------------------------------------------
 // Find and compile the specified shader
 //--------------------------------------------------------------------------------------
-HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, 
+HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint,
                                LPCSTR szShaderModel, ID3DBlob** ppBlobOut )
 {
     HRESULT hr = S_OK;
@@ -132,14 +132,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint,
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -154,10 +154,10 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint,
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
-int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, 
+int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
                      LPWSTR lpCmdLine, int nCmdShow )
 {
     // Enable run-time memory check for debug builds.
@@ -182,7 +182,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
     DXUTSetCallbackD3D11DeviceDestroyed( OnD3D11DestroyDevice );
 
     InitApp();
-    
+
     DXUTInit( true, true );
 
     DXUTSetCursorSettings( true, true );// Show the cursor and clip when in full screen
@@ -196,9 +196,9 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance,
 //--------------------------------------------------------------------------------------
 // Handle mouse buttons
 //--------------------------------------------------------------------------------------
-void CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown, 
-                         bool bMiddleButtonDown, bool bSideButton1Down, 
-                         bool bSideButton2Down, int nMouseWheelDelta, 
+void CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown,
+                         bool bMiddleButtonDown, bool bSideButton1Down,
+                         bool bSideButton2Down, int nMouseWheelDelta,
                          int xPos, int yPos, void* pUserContext )
 {
     bool bOldLeftButtonDown = g_bLeftButtonDown;
@@ -221,7 +221,7 @@ void CALLBACK MouseProc( bool bLeftButtonDown, bool bRightButtonDown,
     if( bOldMiddleButtonDown && !g_bMiddleButtonDown )
     {
         g_LCamera.SetEnablePositionMovement( false );
-    } 
+    }
     else if( !bOldMiddleButtonDown && g_bMiddleButtonDown )
     {
         g_LCamera.SetEnablePositionMovement( true );
@@ -242,7 +242,7 @@ void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserC
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -259,26 +259,26 @@ void InitApp()
     iY += 180;
     swprintf_s( temp, L"SunWidth = %2.2f", g_fSunWidth );
     g_HUD.AddStatic( IDC_SUNWIDTH_TEXT, temp, 0, iY += 25, 100, 24 );
-    g_HUD.AddSlider( IDC_SUNWIDTH_SLIDER, 0, iY += 25, 150, 24, 0, 100, int( ( g_fSunWidth / 3.0 ) * 100 ) ); 
+    g_HUD.AddSlider( IDC_SUNWIDTH_SLIDER, 0, iY += 25, 150, 24, 0, 100, int( ( g_fSunWidth / 3.0 ) * 100 ) );
 
     g_Camera.SetRotateButtons( true, false, false );
     g_LCamera.SetButtonMasks( MOUSE_RIGHT_BUTTON, 0, 0 );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 }
 
 //--------------------------------------------------------------------------------------
-// This callback function is called immediately before a device is created to allow the 
-// application to modify the device settings. The supplied pDeviceSettings parameter 
-// contains the settings that the framework has selected for the new device, and the 
-// application can make any desired changes directly to this structure.  Note however that 
-// DXUT will not correct invalid device settings so care must be taken 
-// to return valid device settings, otherwise CreateDevice() will fail.  
+// This callback function is called immediately before a device is created to allow the
+// application to modify the device settings. The supplied pDeviceSettings parameter
+// contains the settings that the framework has selected for the new device, and the
+// application can make any desired changes directly to this structure.  Note however that
+// DXUT will not correct invalid device settings so care must be taken
+// to return valid device settings, otherwise CreateDevice() will fail.
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
     assert( pDeviceSettings->ver == DXUT_D3D11_DEVICE );
-    
+
     // Force D32 depth buffer
     pDeviceSettings->d3d11.AutoDepthStencilFormat = DXGI_FORMAT_D32_FLOAT;
 
@@ -287,7 +287,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     if( s_bFirstTime )
     {
         s_bFirstTime = false;
-        if( ( DXUT_D3D9_DEVICE == pDeviceSettings->ver && 
+        if( ( DXUT_D3D9_DEVICE == pDeviceSettings->ver &&
               pDeviceSettings->d3d9.DeviceType == D3DDEVTYPE_REF ) ||
             ( DXUT_D3D11_DEVICE == pDeviceSettings->ver &&
             pDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_REFERENCE ) )
@@ -301,13 +301,13 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
     g_LCamera.FrameMove( fElapsedTime );
 }
@@ -325,7 +325,7 @@ void RenderText()
     g_pTxtHelper->DrawTextLine( L"'G' key toggles display of GUI" );
 
     g_pTxtHelper->End();
- 
+
     if( g_pScenePS == NULL )
     {
         g_pTxtHelper1->Begin();
@@ -338,11 +338,11 @@ void RenderText()
  }
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
-LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, 
+LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam,
                           LPARAM lParam, bool* pbNoFurtherProcessing,
                           void* pUserContext )
 {
@@ -376,7 +376,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam,
 //--------------------------------------------------------------------------------------
 // Handles the GUI events
 //--------------------------------------------------------------------------------------
-void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, 
+void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl,
                           void* pUserContext )
 {
     if( g_bGuiVisible )
@@ -405,9 +405,9 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl,
 //--------------------------------------------------------------------------------------
 // Reject any D3D11 devices that aren't acceptable by returning false
 //--------------------------------------------------------------------------------------
-bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo, 
+bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo,
                                        UINT Output, const CD3D11EnumDeviceInfo *DeviceInfo,
-                                       DXGI_FORMAT BackBufferFormat, bool bWindowed, 
+                                       DXGI_FORMAT BackBufferFormat, bool bWindowed,
                                        void* pUserContext )
 {
     return true;
@@ -429,7 +429,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     // textures / rts
     D3D11_TEXTURE2D_DESC TDesc;
-      
+
     TDesc.Width  = UINT(g_fShadowMapWidth);
     TDesc.Height = UINT(g_fShadowMapHeight);
     TDesc.MipLevels = 1;
@@ -445,7 +445,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pRSMDepthStencilTexture, "RSM" );
 
     D3D11_DEPTH_STENCIL_VIEW_DESC DSVDesc;
-    
+
     DSVDesc.Format = DXGI_FORMAT_D16_UNORM;
     DSVDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
     DSVDesc.Flags = 0;
@@ -454,7 +454,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pDepthStencilTextureDSV, "RSM DSV" );
 
     D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-    
+
     SRVDesc.Format =  DXGI_FORMAT_R16_UNORM;
     SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
     SRVDesc.Texture2D.MipLevels = 1;
@@ -464,12 +464,12 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     // Setup constant buffers
     D3D11_BUFFER_DESC Desc;
-    
+
     // Utility
     Desc.Usage = D3D11_USAGE_DYNAMIC;
     Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     Desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    Desc.MiscFlags = 0;    
+    Desc.MiscFlags = 0;
     Desc.ByteWidth = sizeof( CB_CONSTANTS );
     V_RETURN( pd3dDevice->CreateBuffer( &Desc, NULL, &g_pcbConstants ) );
     DXUT_SetDebugName( g_pcbConstants, "CB_CONSTANTS"  );
@@ -482,7 +482,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, 256,  L"ColumnScene\\poles.sdkmesh" ) );
     g_Poles.Create( pd3dDevice, str, false );
 
-    // Setup the camera   
+    // Setup the camera
     D3DXVECTOR3 vecEye( 0.95f, 5.83f, -14.48f );
     D3DXVECTOR3 vecAt ( 0.90f, 5.44f, -13.56f );
     g_Camera.SetViewParams( &vecEye, &vecAt );
@@ -529,7 +529,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     hr = pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateNoBlend);
     DXUT_SetDebugName( g_pBlendStateNoBlend, "No Blend" );
-    
+
     BlendState.RenderTarget[0].RenderTargetWriteMask = 0;
     hr = pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateColorWritesOff);
     DXUT_SetDebugName( g_pBlendStateColorWritesOff, "Color Writes Off");
@@ -548,7 +548,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     V_RETURN( g_DialogResourceManager.OnD3D11ResizedSwapChain( pd3dDevice, pBackBufferSurfaceDesc ) );
     V_RETURN( g_D3DSettingsDlg.OnD3D11ResizedSwapChain( pd3dDevice, pBackBufferSurfaceDesc ) );
 
-    // Setup the camera's projection parameters    
+    // Setup the camera's projection parameters
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.5f, 100.0f );
     g_LCamera.SetProjParams( D3DX_PI / 4, fAspectRatio, 10.0f, 100.0f );
@@ -564,7 +564,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 //--------------------------------------------------------------------------------------
 // Renders the depth only shadow map
 //--------------------------------------------------------------------------------------
-void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, 
+void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext,
                       D3DXMATRIXA16& mViewProjLight, D3DXVECTOR3& vLightDir )
 {
     D3D11_RECT oldrects[1];
@@ -584,10 +584,10 @@ void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmedia
     // Set our scene render target & keep original depth buffer
     ID3D11RenderTargetView* pRTVs[2] = {0,0};
     pd3dImmediateContext->OMSetRenderTargets( 2, pRTVs, g_pDepthStencilTextureDSV );
-    
+
     // Clear the render target
-    pd3dImmediateContext->ClearDepthStencilView( g_pDepthStencilTextureDSV, 
-                                                 D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 
+    pd3dImmediateContext->ClearDepthStencilView( g_pDepthStencilTextureDSV,
+                                                 D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
                                                  1.0, 0 );
 
     // Get the projection & view matrix from the camera class
@@ -607,7 +607,7 @@ void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmedia
     vLightDir = vLightLookAt3d - vLight3d;
 
     D3DXMatrixLookAtLH( &mView, &vLight3d, &vLightLookAt3d, &up);
-    
+
     mViewProjLight = mView * mProj;
 
     // Setup the constant buffer for the scene vertex shader
@@ -616,9 +616,9 @@ void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmedia
     CB_CONSTANTS* pConstants = ( CB_CONSTANTS* )MappedResource.pData;
     D3DXMatrixTranspose( &pConstants->f4x4WorldViewProjection, &mViewProjLight );
     D3DXMatrixTranspose( &pConstants->f4x4WorldViewProjLight,  &mViewProjLight );
-    pConstants->vShadowMapDimensions =    D3DXVECTOR4(g_fShadowMapWidth, 
-                                                      g_fShadowMapHeight, 
-                                                      1.0f/g_fShadowMapWidth, 
+    pConstants->vShadowMapDimensions =    D3DXVECTOR4(g_fShadowMapWidth,
+                                                      g_fShadowMapHeight,
+                                                      1.0f/g_fShadowMapWidth,
                                                       1.0f/g_fShadowMapHeight);
     pd3dImmediateContext->Unmap( g_pcbConstants, 0 );
     pd3dImmediateContext->VSSetConstantBuffers( g_iCONSTANTSCBBind, 1, &g_pcbConstants );
@@ -642,8 +642,8 @@ void RenderShadowMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmedia
 //--------------------------------------------------------------------------------------
 // render callback
 //--------------------------------------------------------------------------------------
-void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, 
-                                  ID3D11DeviceContext* pd3dImmediateContext, 
+void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
+                                  ID3D11DeviceContext* pd3dImmediateContext,
                                   double fTime,
                                   float fElapsedTime, void* pUserContext )
 {
@@ -672,7 +672,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
         ID3DBlob* pBlob = NULL;
 
         // VS
-        hr = CompileShaderFromFile( L"ContactHardeningShadows11.hlsl", "VS_RenderScene", "vs_5_0", &pBlob ); 
+        hr = CompileShaderFromFile( L"ContactHardeningShadows11.hlsl", "VS_RenderScene", "vs_5_0", &pBlob );
         hr = pd3dDevice->CreateVertexShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pSceneVS );
         DXUT_SetDebugName( g_pSceneVS, "VS_RenderScene" );
         // Define our scene vertex data layout
@@ -687,13 +687,13 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
         SAFE_RELEASE( pBlob );
         DXUT_SetDebugName( g_pSceneVertexLayout, "SceneLayout" );
 
-        hr = CompileShaderFromFile( L"ContactHardeningShadows11.hlsl", "VS_RenderSceneSM", "vs_5_0", &pBlob ); 
+        hr = CompileShaderFromFile( L"ContactHardeningShadows11.hlsl", "VS_RenderSceneSM", "vs_5_0", &pBlob );
         hr = pd3dDevice->CreateVertexShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pSM_VS );
         SAFE_RELEASE( pBlob );
         DXUT_SetDebugName( g_pSM_VS, "VS_RenderSceneSM" );
 
         // PS
-        hr = CompileShaderFromFile( L"ContactHardeningShadows11.hlsl", "PS_RenderScene", "ps_5_0", &pBlob ); 
+        hr = CompileShaderFromFile( L"ContactHardeningShadows11.hlsl", "PS_RenderScene", "ps_5_0", &pBlob );
         hr = pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pScenePS );
         SAFE_RELEASE( pBlob );
         DXUT_SetDebugName( g_pScenePS, "PS_RenderScene" );
@@ -709,17 +709,17 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
         ID3D11SamplerState* ppSamplerStates[3] = { g_pSamplePoint, g_pSampleLinear, g_pSamplePointCmp };
 
         pd3dImmediateContext->PSSetSamplers( 0, 3, ppSamplerStates );
-                
+
             // Store off original render target, this is the back buffer of the swap chain
         ID3D11RenderTargetView* pOrigRTV = DXUTGetD3D11RenderTargetView();
         ID3D11DepthStencilView* pOrigDSV = DXUTGetD3D11DepthStencilView();
-            
+
         // Clear the render target
         float ClearColor[4] = { 0.0f, 0.25f, 0.25f, 0.55f };
-        pd3dImmediateContext->ClearRenderTargetView( DXUTGetD3D11RenderTargetView(), 
+        pd3dImmediateContext->ClearRenderTargetView( DXUTGetD3D11RenderTargetView(),
                                                      ClearColor );
-        pd3dImmediateContext->ClearDepthStencilView( DXUTGetD3D11DepthStencilView(), 
-                                                     D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 
+        pd3dImmediateContext->ClearDepthStencilView( DXUTGetD3D11DepthStencilView(),
+                                                     D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
                                                      1.0, 0 );
 
             // Get the projection & view matrix from the camera class
@@ -748,8 +748,8 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
         CB_CONSTANTS* pConstants = ( CB_CONSTANTS* )MappedResource.pData;
         D3DXMatrixTranspose( &pConstants->f4x4WorldViewProjection, &mWorldViewProjection );
         D3DXMatrixTranspose( &pConstants->f4x4WorldViewProjLight,  &mViewProjLight );
-        pConstants->vShadowMapDimensions =    D3DXVECTOR4(g_fShadowMapWidth, g_fShadowMapHeight, 
-                                                          1.0f/g_fShadowMapWidth, 
+        pConstants->vShadowMapDimensions =    D3DXVECTOR4(g_fShadowMapWidth, g_fShadowMapHeight,
+                                                          1.0f/g_fShadowMapWidth,
                                                           1.0f/g_fShadowMapHeight);
         pConstants->vLightDir            =    D3DXVECTOR4( vLightDir.x, vLightDir.y,
                                                            vLightDir.z, 0.0f );
@@ -764,7 +764,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
 
         // Set the vertex buffer format
         pd3dImmediateContext->IASetInputLayout( g_pSceneVertexLayout );
-        
+
         // Rebind to original back buffer and depth buffer
         pRTV[0] = pOrigRTV;
         pd3dImmediateContext->OMSetRenderTargets(1, pRTV, pOrigDSV );
@@ -792,7 +792,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice,
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {

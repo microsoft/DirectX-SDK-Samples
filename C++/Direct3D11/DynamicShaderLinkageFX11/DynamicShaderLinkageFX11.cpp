@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: DyanmicShaderLinkageFX11.cpp
 //
-// This sample shows a simple example of the Microsoft Direct3D's High-Level 
+// This sample shows a simple example of the Microsoft Direct3D's High-Level
 // Shader Language (HLSL) using Dynamic Shader Linkage in conjunction
 // with Effects 11.
 //
@@ -36,7 +36,7 @@ CDXUTDialogResourceManager  g_DialogResourceManager; // manager for shared resou
 CModelViewerCamera          g_Camera;               // A model viewing camera
 CDXUTDirectionWidget        g_LightControl;
 CD3DSettingsDlg             g_D3DSettingsDlg;       // Device settings dialog
-CDXUTDialog                 g_HUD;                  // manages the 3D   
+CDXUTDialog                 g_HUD;                  // manages the 3D
 CDXUTDialog                 g_SampleUI;             // dialog for sample specific controls
 XMMATRIX                    g_mCenterMesh;
 float                       g_fLightScale;
@@ -95,7 +95,7 @@ ID3DX11EffectScalarVariable*         g_pEnvironmentLightEnable = nullptr;
 
 ID3DX11EffectVectorVariable*         g_pEyeDir = nullptr;
 
-// Material Dynamic Permutation 
+// Material Dynamic Permutation
 enum E_MATERIAL_TYPES
 {
    MATERIAL_PLASTIC,
@@ -108,14 +108,14 @@ enum E_MATERIAL_TYPES
 
    MATERIAL_TYPE_COUNT
 };
-char*  g_pMaterialClassNames[ MATERIAL_TYPE_COUNT ] = 
+char*  g_pMaterialClassNames[ MATERIAL_TYPE_COUNT ] =
 {
-   "g_plasticMaterial",             // cPlasticMaterial              
-   "g_plasticTexturedMaterial",     // cPlasticTexturedMaterial      
-   "g_plasticLightingOnlyMaterial", // cPlasticLightingOnlyMaterial 
-   "g_roughMaterial",               // cRoughMaterial        
+   "g_plasticMaterial",             // cPlasticMaterial
+   "g_plasticTexturedMaterial",     // cPlasticTexturedMaterial
+   "g_plasticLightingOnlyMaterial", // cPlasticLightingOnlyMaterial
+   "g_roughMaterial",               // cRoughMaterial
    "g_roughTexturedMaterial",       // cRoughTexturedMaterial
-   "g_roughLightingOnlyMaterial"    // cRoughLightingOnlyMaterial    
+   "g_roughLightingOnlyMaterial"    // cRoughLightingOnlyMaterial
 };
 E_MATERIAL_TYPES            g_iMaterial = MATERIAL_PLASTIC_TEXTURED;
 
@@ -153,7 +153,7 @@ MaterialVars g_MaterialClasses[ MATERIAL_TYPE_COUNT ] = { nullptr };
 #define IDC_MATERIAL_ROUGH_TEXTURED       15
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -178,7 +178,7 @@ void RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
@@ -188,7 +188,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device feature level available 
+    // DXUT will create and use the best device feature level available
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -203,7 +203,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     DXUTSetCallbackD3D11FrameRender( OnD3D11FrameRender );
     DXUTSetCallbackD3D11SwapChainReleasing( OnD3D11ReleasingSwapChain );
     DXUTSetCallbackD3D11DeviceDestroyed( OnD3D11DestroyDevice );
-    
+
     InitApp();
     DXUTInit( true, true, nullptr ); // Parse the command line, show msgboxes on error, no extra command line params
     DXUTSetCursorSettings( true, true ); // Show the cursor and clip it when in full screen
@@ -216,7 +216,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -254,7 +254,7 @@ void InitApp()
     g_SampleUI.AddCheckBox( IDC_LIGHT_DIRECT, L"Direct Lighting", 0, iY += 26, 170, 22, g_bDirectLighting );
     g_SampleUI.AddCheckBox( IDC_LIGHTING_ONLY, L"Lighting Only", 0, iY += 26, 170, 22, g_bLightingOnly );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 
 }
 
@@ -273,7 +273,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -377,13 +377,13 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
     switch( nControlID )
     {
         case IDC_TOGGLEFULLSCREEN:
-            DXUTToggleFullScreen(); 
+            DXUTToggleFullScreen();
             break;
         case IDC_TOGGLEREF:
-            DXUTToggleREF(); 
+            DXUTToggleREF();
             break;
         case IDC_CHANGEDEVICE:
-            g_D3DSettingsDlg.SetActive( !g_D3DSettingsDlg.IsActive() ); 
+            g_D3DSettingsDlg.SetActive( !g_D3DSettingsDlg.IsActive() );
             break;
         case IDC_TOGGLEWIRE:
             g_bWireFrame  = !g_bWireFrame;
@@ -418,7 +418,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             break;
 
     }
- 
+
 
 }
 
@@ -463,8 +463,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -497,7 +497,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     SAFE_RELEASE( pEffectBuffer );
     if ( FAILED(hr) )
         return hr;
-    
+
 #endif
 
     // Get the light Class Interfaces for setting values
@@ -522,7 +522,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     g_pEnvironmentLightEnable = g_pEnvironmentLightClass->GetMemberByName( "m_bEnable" )->AsScalar();
 
     g_pEyeDir = g_pEffect->GetVariableByName( "g_vEyeDir" )->AsVector();
-    
+
     // Acquire the material Class Instances for all possible material settings
     for( UINT i=0; i < MATERIAL_TYPE_COUNT; i++)
     {
@@ -573,7 +573,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         default:
             return E_FAIL;
         }
-        
+
         g_pTechnique = g_pEffect->GetTechniqueByName( pTechniqueName );
     }
 
@@ -603,11 +603,11 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pVertexLayout11, "Primary" );
 
     // Load the mesh
-    V_RETURN( g_Mesh11.Create( pd3dDevice, L"Squid\\squid.sdkmesh", false ) ); 
+    V_RETURN( g_Mesh11.Create( pd3dDevice, L"Squid\\squid.sdkmesh", false ) );
 
     g_pWorldViewProjection = g_pEffect->GetVariableByName( "g_mWorldViewProjection" )->AsMatrix();
     g_pWorld = g_pEffect->GetVariableByName( "g_mWorld" )->AsMatrix();
-    
+
     // Load a HDR Environment for reflections
     V_RETURN( DXUTCreateShaderResourceViewFromFile( pd3dDevice, L"Light Probes\\uffizi_cross.dds", &g_pEnvironmentMapSRV ));
     g_pEnvironmentMapVar = g_pEffect->GetVariableByName( "g_txEnvironmentMap" )->AsShaderResource();
@@ -730,7 +730,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     Offsets[0] = 0;
     pd3dImmediateContext->IASetVertexBuffers( 0, 1, pVB, Strides, Offsets );
     pd3dImmediateContext->IASetIndexBuffer( g_Mesh11.GetIB11( 0 ), g_Mesh11.GetIBFormat11( 0 ), 0 );
- 
+
     // Set the per object constant data
     XMMATRIX mWorldViewProjection = mWorld * mView * mProj;
 
@@ -743,7 +743,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
     // Setup the Shader Linkage based on the user settings for Lighting
     ID3DX11EffectClassInstanceVariable* pLightClassVar;
-    
+
     // Ambient Lighting First - Constant or Hemi?
     if ( g_bHemiAmbientLighting )
     {
@@ -757,9 +757,9 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     {
         g_pAmbientLightIface->SetClassInstance(pLightClassVar);
     }
-    
-    // Direct Light - None or Directional 
-    if (g_bDirectLighting) 
+
+    // Direct Light - None or Directional
+    if (g_bDirectLighting)
     {
         pLightClassVar = g_pDirectionalLightClass;
     }
@@ -788,7 +788,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         break;
     case MATERIAL_ROUGH:
     case MATERIAL_ROUGH_TEXTURED:
-        // UnBind the Environment light 
+        // UnBind the Environment light
         pLightClassVar = g_pAmbientLightClass;
         if (g_bLightingOnly)
         {
@@ -863,7 +863,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     //Render
     g_Mesh11.Render( pd3dImmediateContext, 0, 1, INVALID_SAMPLER_SLOT);
 
-    // Tell the UI items to render 
+    // Tell the UI items to render
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );
     g_HUD.OnRender( fElapsedTime );
     g_SampleUI.OnRender( fElapsedTime );
@@ -873,7 +873,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -882,7 +882,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -895,7 +895,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     g_Mesh11.Destroy();
 
     SAFE_RELEASE( g_pEffect );
-    
+
     SAFE_RELEASE( g_pVertexLayout11 );
     SAFE_RELEASE( g_pVertexBuffer );
     SAFE_RELEASE( g_pIndexBuffer );

@@ -9,8 +9,8 @@
 #include "scenemesh.h"
 #include <stdio.h>
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 //--------------------------------------------------------------------------------------
 CSceneMesh::CSceneMesh( void )
@@ -105,8 +105,8 @@ HRESULT CSceneMesh::OnResetDevice()
 
 
 //--------------------------------------------------------------------------------------
-// This function loads the mesh and ensures the mesh has normals; it also optimizes the 
-// mesh for the graphics card's vertex cache, which improves performance by organizing 
+// This function loads the mesh and ensures the mesh has normals; it also optimizes the
+// mesh for the graphics card's vertex cache, which improves performance by organizing
 // the internal triangle list for less cache misses.
 //--------------------------------------------------------------------------------------
 HRESULT CSceneMesh::LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileName, WCHAR* strTextureFileName )
@@ -160,10 +160,10 @@ HRESULT CSceneMesh::LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileNa
     pVB->Unlock();
     SAFE_RELEASE( pVB );
 
-    // Optimize the mesh for this graphics card's vertex cache 
-    // so when rendering the mesh's triangle list the vertices will 
-    // cache hit more often so it won't have to re-execute the vertex shader 
-    // on those vertices so it will improve perf.     
+    // Optimize the mesh for this graphics card's vertex cache
+    // so when rendering the mesh's triangle list the vertices will
+    // cache hit more often so it won't have to re-execute the vertex shader
+    // on those vertices so it will improve perf.
     DWORD* rgdwAdjacency = NULL;
     rgdwAdjacency = new DWORD[m_pMesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
@@ -219,21 +219,21 @@ HRESULT CSceneMesh::LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* p
 
     SAFE_RELEASE( m_pEffect );
 
-    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.  
-    // Debugging vertex shaders requires either REF or software vertex processing, and debugging 
-    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug 
-    // experience in the shader debugger.  It enables source level debugging, prevents instruction 
-    // reordering, prevents dead code elimination, and forces the compiler to compile against the next 
-    // higher available software target, which ensures that the unoptimized shaders do not exceed 
-    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders 
-    // will be unoptimized and forced into software.  See the DirectX documentation for more information 
+    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.
+    // Debugging vertex shaders requires either REF or software vertex processing, and debugging
+    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug
+    // experience in the shader debugger.  It enables source level debugging, prevents instruction
+    // reordering, prevents dead code elimination, and forces the compiler to compile against the next
+    // higher available software target, which ensures that the unoptimized shaders do not exceed
+    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders
+    // will be unoptimized and forced into software.  See the DirectX documentation for more information
     // about using the shader debugger.
     DWORD dwShaderFlags = 0;
 
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DXSHADER_DEBUG;
     #endif
@@ -249,7 +249,7 @@ HRESULT CSceneMesh::LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* p
     WCHAR str[MAX_PATH];
     V( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, TEXT( "Scene.fx" ) ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     V( D3DXCreateEffectFromFile( pd3dDevice, str, NULL, NULL, dwShaderFlags, NULL, &m_pEffect, NULL ) );
 

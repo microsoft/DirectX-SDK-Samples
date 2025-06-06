@@ -40,7 +40,7 @@ private:
     // Internal methods.
     VOID GetString( UINT uID, WCHAR *szBuffer, DWORD cchBuffer );
     BOOL GetBool( UINT uID );
-    
+
     // Internal data.
     WCHAR m_szAutorunMutex[MAX_PATH];
     WCHAR m_szInstallerExe[MAX_PATH];

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL9.cpp
 //
-// This sample shows a simple example of the Microsoft Direct3D's High-Level 
-// Shader Language (HLSL) using the Effect interface. 
+// This sample shows a simple example of the Microsoft Direct3D's High-Level
+// Shader Language (HLSL) using the Effect interface.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -14,8 +14,8 @@
 #include "SDKmisc.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders
 #define MAX_LIGHTS 3
 
 #define IDC_NUM_LIGHTS          6
@@ -29,7 +29,7 @@ extern CDXUTDialogResourceManager   g_DialogResourceManager; // manager for shar
 extern CModelViewerCamera           g_Camera;               // A model viewing camera
 extern CDXUTDirectionWidget g_LightControl[MAX_LIGHTS];
 extern CD3DSettingsDlg              g_D3DSettingsDlg;       // Device settings dialog
-extern CDXUTDialog                  g_HUD;                  // manages the 3D   
+extern CDXUTDialog                  g_HUD;                  // manages the 3D
 extern CDXUTDialog                  g_SampleUI;             // dialog for sample specific controls
 extern D3DXMATRIXA16                g_mCenterMesh;
 extern bool                         g_bShowHelp;            // If true, it renders the UI control text
@@ -58,7 +58,7 @@ D3DXHANDLE                          g_hRenderSceneWithTexture2Light;
 D3DXHANDLE                          g_hRenderSceneWithTexture3Light;
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat,
                                       bool bWindowed, void* pUserContext );
@@ -96,7 +96,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 
 //--------------------------------------------------------------------------------------
 // Create any D3D9 resources that will live through a device reset (D3DPOOL_MANAGED)
-// and aren't tied to the back buffer size 
+// and aren't tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                      void* pUserContext )
@@ -191,8 +191,8 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// This function loads the mesh and ensures the mesh has normals; it also optimizes the 
-// mesh for the graphics card's vertex cache, which improves performance by organizing 
+// This function loads the mesh and ensures the mesh has normals; it also optimizes the
+// mesh for the graphics card's vertex cache, which improves performance by organizing
 // the internal triangle list for less cache misses.
 //--------------------------------------------------------------------------------------
 HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** ppMesh )
@@ -202,7 +202,7 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
     HRESULT hr;
 
     // Load the mesh with D3DX and get back a ID3DXMesh*.  For this
-    // sample we'll ignore the X file's embedded materials since we know 
+    // sample we'll ignore the X file's embedded materials since we know
     // exactly the model we're loading.  See the mesh samples such as
     // "OptimizedMesh" for a more generic mesh loading example.
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, strFileName ) );
@@ -221,10 +221,10 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
         pMesh = pTempMesh;
     }
 
-    // Optimize the mesh for this graphics card's vertex cache 
-    // so when rendering the mesh's triangle list the vertices will 
-    // cache hit more often so it won't have to re-execute the vertex shader 
-    // on those vertices so it will improve perf.     
+    // Optimize the mesh for this graphics card's vertex cache
+    // so when rendering the mesh's triangle list the vertices will
+    // cache hit more often so it won't have to re-execute the vertex shader
+    // on those vertices so it will improve perf.
     rgdwAdjacency = new DWORD[pMesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
         return E_OUTOFMEMORY;
@@ -239,8 +239,8 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -296,7 +296,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
     D3DXMATRIXA16 mView;
     D3DXMATRIXA16 mProj;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DXCOLOR( 0.0f, 0.25f, 0.25f, 0.55f ), 1.0f,
                           0 ) );
 
@@ -322,8 +322,8 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         V( g_pEffect9->SetValue( g_hLightDir, vLightDir, sizeof( D3DXVECTOR3 ) * MAX_LIGHTS ) );
         V( g_pEffect9->SetValue( g_hLightDiffuse, vLightDiffuse, sizeof( D3DXVECTOR4 ) * MAX_LIGHTS ) );
 
-        // Update the effect's variables.  Instead of using strings, it would 
-        // be more efficient to cache a handle to the parameter by calling 
+        // Update the effect's variables.  Instead of using strings, it would
+        // be more efficient to cache a handle to the parameter by calling
         // ID3DXEffect::GetParameterByName
         V( g_pEffect9->SetMatrix( g_hmWorldViewProjection, &mWorldViewProjection ) );
         V( g_pEffect9->SetMatrix( g_hmWorld, &mWorld ) );
@@ -365,7 +365,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -381,7 +381,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

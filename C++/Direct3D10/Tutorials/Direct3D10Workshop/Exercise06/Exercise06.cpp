@@ -16,7 +16,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 struct TREE_VERTEX
@@ -44,7 +44,7 @@ ID3DX10Sprite*                      g_pSprite10 = NULL;
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- HINT:  Modify these parameters to change attributes of the tree
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 UINT                                g_NumGrowthSpurts = 8;
 float                               g_fGrowth = 1.6f;
@@ -68,7 +68,7 @@ ID3D10ShaderResourceView*           g_pMeshTexRV = NULL;
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Buffer of "Random" float values to make our tree look more realistic
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 ID3D10Buffer*                       g_pRandomBuffer;
 ID3D10ShaderResourceView*           g_pRandomBufferRV;
@@ -97,7 +97,7 @@ ID3D10EffectShaderResourceVariable* g_pDiffuseTex = NULL;
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- We need a shader variable to get our random texture to the effect
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 ID3D10EffectShaderResourceVariable* g_pRandomBuf = NULL;
 
@@ -111,7 +111,7 @@ ID3D10EffectShaderResourceVariable* g_pRandomBuf = NULL;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -135,7 +135,7 @@ HRESULT LoadMesh( ID3D10Device* pd3dDevice );
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int )
@@ -145,7 +145,7 @@ INT WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -172,7 +172,7 @@ INT WINAPI WinMain( HINSTANCE, HINSTANCE, LPSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -202,7 +202,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -297,8 +297,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -508,7 +508,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     {
         //-----------------------------------------------------------------------------------------
         // o/__   <-- BreakdancinBob NOTE: Give the grow algorithm access to the random buffer
-        // |  (\    
+        // |  (\
         //-----------------------------------------------------------------------------------------
         g_pRandomBuf->SetResource( g_pRandomBufferRV );
 
@@ -562,7 +562,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -570,7 +570,7 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
@@ -596,7 +596,7 @@ void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 }
 
 //--------------------------------------------------------------------------------------
-// Helper to load a VB and IB from a mesh 
+// Helper to load a VB and IB from a mesh
 //--------------------------------------------------------------------------------------
 HRESULT LoadMesh( ID3D10Device* pd3dDevice )
 {

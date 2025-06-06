@@ -1,10 +1,10 @@
 //----------------------------------------------------------------------------
 // File: VidMemViaD3D9.cpp
 //
-// This method queries D3D9 for the amount of available texture memory. On 
-// Windows Vista, this number is typically the dedicated video memory plus 
-// the shared system memory minus the amount of memory in use by textures 
-// and render targets. 
+// This method queries D3D9 for the amount of available texture memory. On
+// Windows Vista, this number is typically the dedicated video memory plus
+// the shared system memory minus the amount of memory in use by textures
+// and render targets.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).

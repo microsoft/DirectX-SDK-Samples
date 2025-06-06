@@ -102,9 +102,9 @@ HRESULT CDxDiagInfo::Init(BOOL bAllowWHQLChecks)
     }
 
     // Fill out a DXDIAG_INIT_PARAMS struct and pass it to IDxDiagContainer::Initialize
-    // Passing in TRUE for bAllowWHQLChecks, allows dxdiag to check if drivers are 
-    // digital signed as logo'd by WHQL which may connect via internet to update 
-    // WHQL certificates.    
+    // Passing in TRUE for bAllowWHQLChecks, allows dxdiag to check if drivers are
+    // digital signed as logo'd by WHQL which may connect via internet to update
+    // WHQL certificates.
     DXDIAG_INIT_PARAMS dxDiagInitParam = {};
     dxDiagInitParam.dwSize = sizeof(DXDIAG_INIT_PARAMS);
     dxDiagInitParam.dwDxDiagHeaderVersion = DXDIAG_DX9_SDK_VERSION;
@@ -130,7 +130,7 @@ HRESULT CDxDiagInfo::QueryDxDiagViaDll()
     if (nullptr == m_pDxDiagProvider)
         return E_INVALIDARG;
 
-    // Any of these might fail, but if they do we 
+    // Any of these might fail, but if they do we
     // can still process the others
 
     GetSystemInfo(&m_pSysInfo);
@@ -311,8 +311,8 @@ HRESULT CDxDiagInfo::GetSystemInfo(SysInfo** ppSysInfo)
     if (FAILED(hr = GetStringValue(pObject, L"szTimeEnglish", EXPAND(pSysInfo->m_szTimeEnglish))))
         goto LCleanup; nCurCount++;
 
-    // Get the extended cpuid for args 0x80000008 through 0x80000018.  
-    // pSysInfo->m_ExtFuncBitmasks[0]  will contain extended cpuid info from arg 0x80000009 
+    // Get the extended cpuid for args 0x80000008 through 0x80000018.
+    // pSysInfo->m_ExtFuncBitmasks[0]  will contain extended cpuid info from arg 0x80000009
     // pSysInfo->m_ExtFuncBitmasks[15] will contain extended cpuid info from arg 0x80000018
     for (i = 0; i < 16; i++)
     {
@@ -513,7 +513,7 @@ LCleanup:
 
 //-----------------------------------------------------------------------------
 // Name: GatherSystemDeviceDriverList()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT CDxDiagInfo::GatherSystemDeviceDriverList(IDxDiagContainer* pParent, std::vector <FileNode*>& vDriverList)
 {
@@ -570,7 +570,7 @@ LCleanup:
 
 //-----------------------------------------------------------------------------
 // Name: GatherFileNodeInst()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT CDxDiagInfo::GatherFileNodeInst(FileNode* pFileNode, IDxDiagContainer* pObject)
 {
@@ -987,7 +987,7 @@ LCleanup:
 
 //-----------------------------------------------------------------------------
 // Name: GatherDXVA_DeinterlaceCaps
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT CDxDiagInfo::GatherDXVA_DeinterlaceCaps(IDxDiagContainer* pParent,
     std::vector <DxDiag_DXVA_DeinterlaceCaps*>& vDXVACaps)
@@ -2159,7 +2159,7 @@ LCleanup:
 
 //-----------------------------------------------------------------------------
 // Name: GetShowInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT CDxDiagInfo::GetShowInfo(ShowInfo** ppShowInfo)
 {
@@ -2382,7 +2382,7 @@ HRESULT CDxDiagInfo::GetInt64Value(IDxDiagContainer* pObject, WCHAR* wstrName, U
 
 //-----------------------------------------------------------------------------
 // Name: DestroySystemDevice()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID CDxDiagInfo::DestroySystemDevice(std::vector <SystemDevice*>& vSystemDevices)
 {
@@ -2399,7 +2399,7 @@ VOID CDxDiagInfo::DestroySystemDevice(std::vector <SystemDevice*>& vSystemDevice
 
 //-----------------------------------------------------------------------------
 // Name: DestroyFileList()
-// Desc: Cleanup the file list 
+// Desc: Cleanup the file list
 //-----------------------------------------------------------------------------
 VOID CDxDiagInfo::DestroyFileList(FileInfo* pFileInfo)
 {
@@ -2476,7 +2476,7 @@ VOID CDxDiagInfo::DestroyInputInfo(InputInfo* pInputInfo)
 
 //-----------------------------------------------------------------------------
 // Name: DeleteInputTree
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID CDxDiagInfo::DeleteInputTree(std::vector <InputRelatedDeviceInfo*>& vDeviceList)
 {
@@ -2501,7 +2501,7 @@ VOID CDxDiagInfo::DeleteInputTree(std::vector <InputRelatedDeviceInfo*>& vDevice
 
 //-----------------------------------------------------------------------------
 // Name: DeleteFileList()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID CDxDiagInfo::DeleteFileList(std::vector <FileNode*>& vDriverList)
 {

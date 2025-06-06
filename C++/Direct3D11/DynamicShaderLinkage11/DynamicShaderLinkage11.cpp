@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DynamicShaderLinkage11.cpp
 //
-// This sample shows a simple example of the Microsoft Direct3D's High-Level 
-// Shader Language (HLSL) using Dynamic Shader Linkage. 
+// This sample shows a simple example of the Microsoft Direct3D's High-Level
+// Shader Language (HLSL) using Dynamic Shader Linkage.
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
@@ -21,7 +21,7 @@ CDXUTDialogResourceManager  g_DialogResourceManager; // manager for shared resou
 CModelViewerCamera          g_Camera;               // A model viewing camera
 CDXUTDirectionWidget        g_LightControl;
 CD3DSettingsDlg             g_D3DSettingsDlg;       // Device settings dialog
-CDXUTDialog                 g_HUD;                  // manages the 3D   
+CDXUTDialog                 g_HUD;                  // manages the 3D
 CDXUTDialog                 g_SampleUI;             // dialog for sample specific controls
 D3DXMATRIXA16               g_mCenterMesh;
 float                       g_fLightScale;
@@ -45,7 +45,7 @@ ID3D11Buffer*               g_pVertexBuffer = NULL;
 ID3D11Buffer*               g_pIndexBuffer = NULL;
 ID3D11VertexShader*         g_pVertexShader = NULL;
 ID3D11PixelShader*          g_pPixelShader = NULL;
-ID3D11ClassLinkage*         g_pPSClassLinkage = NULL;   
+ID3D11ClassLinkage*         g_pPSClassLinkage = NULL;
 ID3D11SamplerState*         g_pSamLinear = NULL;
 
 ID3D11RasterizerState*      g_pRasterizerStateSolid = NULL;
@@ -61,7 +61,7 @@ ID3D11ClassInstance*        g_pDirectionalLightClass = NULL;
 ID3D11ClassInstance*        g_pEnvironmentLightClass = NULL;
 
 
-// Material Dynamic Permutation 
+// Material Dynamic Permutation
 enum E_MATERIAL_TYPES
 {
    MATERIAL_PLASTIC,
@@ -74,14 +74,14 @@ enum E_MATERIAL_TYPES
 
    MATERIAL_TYPE_COUNT
 };
-char*  g_pMaterialClassNames[ MATERIAL_TYPE_COUNT ] = 
+char*  g_pMaterialClassNames[ MATERIAL_TYPE_COUNT ] =
 {
-   "g_plasticMaterial",             // cPlasticMaterial              
-   "g_plasticTexturedMaterial",     // cPlasticTexturedMaterial      
-   "g_plasticLightingOnlyMaterial", // cPlasticLightingOnlyMaterial 
-   "g_roughMaterial",               // cRoughMaterial        
+   "g_plasticMaterial",             // cPlasticMaterial
+   "g_plasticTexturedMaterial",     // cPlasticTexturedMaterial
+   "g_plasticLightingOnlyMaterial", // cPlasticLightingOnlyMaterial
+   "g_roughMaterial",               // cRoughMaterial
    "g_roughTexturedMaterial",       // cRoughTexturedMaterial
-   "g_roughLightingOnlyMaterial"    // cRoughLightingOnlyMaterial    
+   "g_roughLightingOnlyMaterial"    // cRoughLightingOnlyMaterial
 };
 E_MATERIAL_TYPES            g_iMaterial = MATERIAL_PLASTIC_TEXTURED;
 
@@ -108,9 +108,9 @@ struct CB_PS_PER_FRAME
     D3DXVECTOR4 m_vAmbientLight; // AmbientLight
     D3DXVECTOR4 m_vSkyColor;     // HemiAmbientLight
     D3DXVECTOR4 m_vGroundColor;  // HemiAmbientLight
-    D3DXVECTOR4 m_vUp; 
+    D3DXVECTOR4 m_vUp;
     D3DXVECTOR4 m_vDirLightColor;// DirectionalLight
-    D3DXVECTOR4 m_vDirLightDir;     
+    D3DXVECTOR4 m_vDirLightDir;
     D3DXVECTOR4 m_vEnvLight;
     D3DXVECTOR4 m_vEyeDir;
 };
@@ -154,7 +154,7 @@ ID3D11Buffer*               g_pcbPSPerPrim = NULL;
 #define IDC_MATERIAL_ROUGH_TEXTURED       15
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -179,7 +179,7 @@ void RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -189,7 +189,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device feature level available 
+    // DXUT will create and use the best device feature level available
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -204,7 +204,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackD3D11FrameRender( OnD3D11FrameRender );
     DXUTSetCallbackD3D11SwapChainReleasing( OnD3D11ReleasingSwapChain );
     DXUTSetCallbackD3D11DeviceDestroyed( OnD3D11DestroyDevice );
-    
+
     InitApp();
     DXUTInit( true, true, NULL ); // Parse the command line, show msgboxes on error, no extra command line params
     DXUTSetCursorSettings( true, true ); // Show the cursor and clip it when in full screen
@@ -219,7 +219,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -257,7 +257,7 @@ void InitApp()
     g_SampleUI.AddCheckBox( IDC_LIGHT_DIRECT, L"Direct Lighting", 0, iY += 26, 170, 22, g_bDirectLighting );
     g_SampleUI.AddCheckBox( IDC_LIGHTING_ONLY, L"Lighting Only", 0, iY += 26, 170, 22, g_bLightingOnly );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 
 }
 
@@ -288,7 +288,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -393,13 +393,13 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
     switch( nControlID )
     {
         case IDC_TOGGLEFULLSCREEN:
-            DXUTToggleFullScreen(); 
+            DXUTToggleFullScreen();
             break;
         case IDC_TOGGLEREF:
-            DXUTToggleREF(); 
+            DXUTToggleREF();
             break;
         case IDC_CHANGEDEVICE:
-            g_D3DSettingsDlg.SetActive( !g_D3DSettingsDlg.IsActive() ); 
+            g_D3DSettingsDlg.SetActive( !g_D3DSettingsDlg.IsActive() );
             break;
         case IDC_TOGGLEWIRE:
             g_bWireFrame  = !g_bWireFrame;
@@ -434,7 +434,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             break;
 
     }
- 
+
 
 }
 
@@ -540,7 +540,7 @@ class CIncludeHandler : public ID3DInclude
 
    STDMETHOD(Close( LPCVOID pData ))
    {
-      // Defer Closure until the container destructor 
+      // Defer Closure until the container destructor
       return S_OK;
    }
 };
@@ -551,8 +551,8 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, DWORD flags, LPCSTR szEntryPoi
 
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     flags |= D3DCOMPILE_DEBUG;
 #endif
@@ -593,12 +593,12 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, DWORD flags, LPCSTR szEntryPoi
     static const D3D_SHADER_MACRO Shader_Macros[] =  { "STATIC_PERMUTE", "1", NULL, NULL };
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( szFileName, (downLevel) ? &Shader_Macros[0] : NULL, pIncludeHandler, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( szFileName, (downLevel) ? &Shader_Macros[0] : NULL, pIncludeHandler, szEntryPoint, szShaderModel,
         flags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
 
     delete pIncludeHandler;
 
-    // Restore the current working directory if we need to 
+    // Restore the current working directory if we need to
     if ( resetCurrentDir )
     {
         SetCurrentDirectory( workingPath );
@@ -646,17 +646,17 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     // Compile the shaders to a model based on the feature level we acquired
     ID3DBlob* pVertexShaderBuffer = NULL;
     ID3DBlob* pPixelShaderBuffer = NULL;
-  
+
     D3D_FEATURE_LEVEL   supportedFeatureLevel = DXUTGetD3D11DeviceFeatureLevel();
     if (supportedFeatureLevel >= D3D_FEATURE_LEVEL_11_0)
     {
-       // We are going to use Dynamic shader linkage with SM5 so we need to create some class linkage libraries 
+       // We are going to use Dynamic shader linkage with SM5 so we need to create some class linkage libraries
        V_RETURN( pd3dDevice->CreateClassLinkage( &g_pPSClassLinkage ) );
        DXUT_SetDebugName( g_pPSClassLinkage, "PS" );
 
-       V_RETURN( CompileShaderFromFile( L"DynamicShaderLinkage11_VS.hlsl", D3DCOMPILE_ENABLE_STRICTNESS, 
+       V_RETURN( CompileShaderFromFile( L"DynamicShaderLinkage11_VS.hlsl", D3DCOMPILE_ENABLE_STRICTNESS,
                                                    "VSMain", "vs_5_0" , &pVertexShaderBuffer, false ) );
-       V_RETURN( CompileShaderFromFile( L"DynamicShaderLinkage11_PS.hlsl", D3DCOMPILE_ENABLE_STRICTNESS, // | D3DCOMPILE_OPTIMIZATION_LEVEL0, 
+       V_RETURN( CompileShaderFromFile( L"DynamicShaderLinkage11_PS.hlsl", D3DCOMPILE_ENABLE_STRICTNESS, // | D3DCOMPILE_OPTIMIZATION_LEVEL0,
                                                    "PSMain", "ps_5_0" , &pPixelShaderBuffer, false ) );
 
        V_RETURN( pd3dDevice->CreateVertexShader( pVertexShaderBuffer->GetBufferPointer(),
@@ -667,12 +667,12 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
        DXUT_SetDebugName( g_pVertexShader, "VSMain" );
        DXUT_SetDebugName( g_pPixelShader, "PSMain" );
 
-       // use shader reflection to get data locations for the interface array 
-       ID3D11ShaderReflection* pReflector = NULL; 
-       V_RETURN( D3DReflect( pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(), 
+       // use shader reflection to get data locations for the interface array
+       ID3D11ShaderReflection* pReflector = NULL;
+       V_RETURN( D3DReflect( pPixelShaderBuffer->GetBufferPointer(), pPixelShaderBuffer->GetBufferSize(),
                                     IID_ID3D11ShaderReflection, (void**) &pReflector) );
 
-       g_iNumPSInterfaces = pReflector->GetNumInterfaceSlots(); 
+       g_iNumPSInterfaces = pReflector->GetNumInterfaceSlots();
        g_dynamicLinkageArray = (ID3D11ClassInstance**) malloc( sizeof(ID3D11ClassInstance*) * g_iNumPSInterfaces );
        if (g_dynamicLinkageArray == NULL)
           return E_FAIL;
@@ -699,8 +699,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
        // Acquire the material Class Instances for all possible material settings
        for( UINT i=0; i < MATERIAL_TYPE_COUNT; i++)
        {
-         g_pPSClassLinkage->GetClassInstance( g_pMaterialClassNames[i], 0, &g_pMaterialClasses[i] );     
-       }      
+         g_pPSClassLinkage->GetClassInstance( g_pMaterialClassNames[i], 0, &g_pMaterialClasses[i] );
+       }
 
        SAFE_RELEASE( pReflector );
     }
@@ -744,7 +744,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     SAFE_RELEASE( pPixelShaderBuffer );
 
     // Load the mesh
-    V_RETURN( g_Mesh11.Create( pd3dDevice, L"Squid\\squid.sdkmesh", false ) ); 
+    V_RETURN( g_Mesh11.Create( pd3dDevice, L"Squid\\squid.sdkmesh", false ) );
 
     // Create a sampler state
     D3D11_SAMPLER_DESC SamDesc;
@@ -927,7 +927,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     Offsets[0] = 0;
     pd3dImmediateContext->IASetVertexBuffers( 0, 1, pVB, Strides, Offsets );
     pd3dImmediateContext->IASetIndexBuffer( g_Mesh11.GetIB11( 0 ), g_Mesh11.GetIBFormat11( 0 ), 0 );
- 
+
     // Set the per object constant data
     mWorldViewProjection = mWorld * mView * mProj;
 
@@ -944,13 +944,13 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     {
         // Setup the Shader Linkage based on the user settings for Lighting
         // Ambient Lighting First - Constant or Hemi?
-        if ( g_bHemiAmbientLighting )    
+        if ( g_bHemiAmbientLighting )
           g_dynamicLinkageArray[g_iAmbientLightingOffset] = g_pHemiAmbientLightClass;
         else
           g_dynamicLinkageArray[g_iAmbientLightingOffset] = g_pAmbientLightClass;
-    
-        // Direct Light - None or Directional 
-        if (g_bDirectLighting) 
+
+        // Direct Light - None or Directional
+        if (g_bDirectLighting)
         {
            g_dynamicLinkageArray[g_iDirectLightingOffset] = g_pDirectionalLightClass;
 
@@ -960,13 +960,13 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
           // Disable ALL Direct Lighting
           g_dynamicLinkageArray[g_iDirectLightingOffset] = g_pAmbientLightClass;
         }
- 
+
         // Setup the selected material class instance
         switch( g_iMaterial )
         {
             case MATERIAL_PLASTIC:
             case MATERIAL_PLASTIC_TEXTURED:
-                 {       
+                 {
                      // Bind the Environment light for reflections
                      g_dynamicLinkageArray[g_iEnvironmentLightingOffset] = g_pEnvironmentLightClass;
                      if (g_bLightingOnly)
@@ -978,7 +978,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
             case MATERIAL_ROUGH:
             case MATERIAL_ROUGH_TEXTURED:
                 {
-                    // UnBind the Environment light 
+                    // UnBind the Environment light
                     g_dynamicLinkageArray[g_iEnvironmentLightingOffset] = g_pAmbientLightClass;
                     if (g_bLightingOnly)
                         g_dynamicLinkageArray[g_iMaterialOffset] = g_pMaterialClasses[ MATERIAL_ROUGH_LIGHTING_ONLY ];
@@ -995,16 +995,16 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     V( pd3dImmediateContext->Map( g_pcbPSPerPrim, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
     CB_PS_PER_PRIMITIVE* pPSPerPrim = ( CB_PS_PER_PRIMITIVE* )MappedResource.pData;
 
-    pPSPerPrim->m_vObjectColorPlastic             = D3DXVECTOR4( 1, 0, 0.5, 0 );  // Shiny Plastic 
+    pPSPerPrim->m_vObjectColorPlastic             = D3DXVECTOR4( 1, 0, 0.5, 0 );  // Shiny Plastic
     memcpy( &(pPSPerPrim->m_vObjectColorPlastic.w), &iSpecPower, sizeof(int));
-    pPSPerPrim->m_vObjectColorPlastic.w           = (int)255;             
-    pPSPerPrim->m_vObjectColorPlasticTextured     = D3DXVECTOR4( 1, 0, 0.5, 0 );  // Shiny Plastic with Textures 
+    pPSPerPrim->m_vObjectColorPlastic.w           = (int)255;
+    pPSPerPrim->m_vObjectColorPlasticTextured     = D3DXVECTOR4( 1, 0, 0.5, 0 );  // Shiny Plastic with Textures
     memcpy( &(pPSPerPrim->m_vObjectColorPlasticTextured.w), &iSpecPower, sizeof(int));
     pPSPerPrim->m_vObjectColorPlasticLightingOnly = D3DXVECTOR4( 1, 1, 1, (int)255 );    // Lighting Only Plastic
     memcpy( &(pPSPerPrim->m_vObjectColorPlasticLightingOnly.w), &iSpecPower, sizeof(int));
 
     iSpecPower = 6;
-    pPSPerPrim->m_vObjectColorRough               = D3DXVECTOR4( 0, .5, 1, 0 );     // Rough Material 
+    pPSPerPrim->m_vObjectColorRough               = D3DXVECTOR4( 0, .5, 1, 0 );     // Rough Material
     memcpy( &(pPSPerPrim->m_vObjectColorRough.w), &iSpecPower, sizeof(int));
     pPSPerPrim->m_vObjectColorRoughTextured       = D3DXVECTOR4( 0, .5, 1, 0 );     // Rough Material with Textures
     memcpy( &(pPSPerPrim->m_vObjectColorRoughTextured.w), &iSpecPower, sizeof(int));
@@ -1012,10 +1012,10 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     memcpy( &(pPSPerPrim->m_vObjectColorRoughLightingOnly.w), &iSpecPower, sizeof(int));
 
     pd3dImmediateContext->Unmap( g_pcbPSPerPrim, 0 );
-  
+
     pd3dImmediateContext->PSSetConstantBuffers( g_iCBPSPerPrimBind, 1, &g_pcbPSPerPrim );
 
-    // Set the shaders 
+    // Set the shaders
     pd3dImmediateContext->VSSetShader( g_pVertexShader, NULL, 0 );
     pd3dImmediateContext->PSSetShader( g_pPixelShader, g_dynamicLinkageArray, g_iNumPSInterfaces );
 
@@ -1031,7 +1031,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
     g_Mesh11.Render( pd3dImmediateContext, 0, 1, INVALID_SAMPLER_SLOT);
 
-    // Tell the UI items to render 
+    // Tell the UI items to render
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );
     g_HUD.OnRender( fElapsedTime );
     g_SampleUI.OnRender( fElapsedTime );
@@ -1041,7 +1041,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D10ResizedSwapChain 
+// Release D3D11 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1050,7 +1050,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D10CreateDevice 
+// Release D3D11 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1063,8 +1063,8 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 
     // Clean up shader Linkage
     SAFE_RELEASE( g_pPSClassLinkage );
-    
- 	// Release the dynamic shader interfaces 
+
+ 	// Release the dynamic shader interfaces
     SAFE_RELEASE( g_pAmbientLightClass );
     SAFE_RELEASE( g_pHemiAmbientLightClass );
     SAFE_RELEASE( g_pDirectionalLightClass );
@@ -1072,8 +1072,8 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 
     for( UINT i=0; i < MATERIAL_TYPE_COUNT; i++)
     {
-      SAFE_RELEASE( g_pMaterialClasses[i] );     
-    }      
+      SAFE_RELEASE( g_pMaterialClasses[i] );
+    }
 
     g_DialogResourceManager.OnD3D11DestroyDevice();
     g_D3DSettingsDlg.OnD3D11DestroyDevice();

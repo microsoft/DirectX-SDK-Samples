@@ -42,7 +42,7 @@ ProcessInfo* ProcessInfo::GetProcessInfo()
     bResult = LookupAccountSid( NULL, tokenUser->User.Sid, szUserName, &cchUserName,
                                 szDomain, &cchDomain, &use );
     delete [] tokenUser;
-    
+
     if( !bResult )
     {
         CloseHandle( hToken );
@@ -68,6 +68,6 @@ ProcessInfo* ProcessInfo::GetProcessInfo()
 
         processInfo->m_bElevated = ( tokenElevation.TokenIsElevated ? TRUE : FALSE );
     }
-    
+
     return processInfo;
 }

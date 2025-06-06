@@ -156,7 +156,7 @@ ID3DX11EffectTechnique*              g_pRenderGrass = nullptr;
 #define IDC_TOGGLEWARP             11
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -191,7 +191,7 @@ HRESULT CreateRandomTreeMatrices();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
@@ -229,7 +229,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -276,7 +276,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -411,8 +411,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -436,7 +436,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     SAFE_RELEASE( pEffectBuffer );
     if ( FAILED(hr) )
         return hr;
-    
+
 #endif
 
     // Obtain the technique handles
@@ -595,7 +595,7 @@ HRESULT RenderSceneGeometry( ID3D11DeviceContext* pd3dImmediateContext, CXMMATRI
     D3DX11_TECHNIQUE_DESC techDesc;
     HRESULT hr;
     V_RETURN( g_pRenderSkybox->GetDesc(&techDesc) );
-    
+
     for( UINT p = 0; p < techDesc.Passes; ++p )
     {
         for( UINT subset = 0; subset < g_MeshSkybox.GetNumSubsets( 0 ); ++subset )
@@ -807,7 +807,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     XMMATRIX mProj = g_Camera.GetProjMatrix();
     XMMATRIX mView = g_Camera.GetViewMatrix();
 
-    RenderSceneGeometry( pd3dImmediateContext, mView, mProj ); // Render the scene with texture    
+    RenderSceneGeometry( pd3dImmediateContext, mView, mProj ); // Render the scene with texture
     RenderInstancedQuads( pd3dImmediateContext, mView, mProj ); // Render the instanced leaves for each tree
     RenderGrass( pd3dImmediateContext, mView, mProj ); // Render grass
 
@@ -870,7 +870,7 @@ void UpdateLeafVertexLayout( ID3D11Device* pd3dDevice )
 }
 
 //--------------------------------------------------------------------------------------
-// Release resources created in OnD3D11ResizedSwapChain 
+// Release resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -879,7 +879,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release resources created in OnD3D11CreateDevice 
+// Release resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -925,7 +925,7 @@ HRESULT CreateQuadMesh( ID3D11Device* pd3dDevice, QUAD_MESH* pMesh, float fWidth
 
     /********************************
       leaves are quads anchored on the branch
-      
+
       |---------|
       |D       C|
       |         |
@@ -933,7 +933,7 @@ HRESULT CreateQuadMesh( ID3D11Device* pd3dDevice, QUAD_MESH* pMesh, float fWidth
       |A       B|
       |---------|
       O<-----branch
-      
+
      ********************************/
     fWidth /= 2.0f;
     QUAD_VERTEX quadVertices[] =

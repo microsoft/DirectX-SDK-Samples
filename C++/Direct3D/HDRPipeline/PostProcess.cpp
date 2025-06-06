@@ -102,7 +102,7 @@ HRESULT CreateResources( IDirect3DDevice9* pDevice, const D3DSURFACE_DESC* pDisp
     //---------------------------------
     // Bright pass texture is 1/2 the size of the original HDR render target.
     // Part of the pixel shader performs a 2x2 downsampling. The downsampling
-    // is intended to reduce the number of pixels that need to be worked on - 
+    // is intended to reduce the number of pixels that need to be worked on -
     // in general, HDR pipelines tend to be fill-rate heavy.
     V( pDevice->CreateTexture(
        pDisplayDesc->Width / 2, pDisplayDesc->Height / 2,
@@ -495,7 +495,7 @@ HRESULT PerformPostProcessing( IDirect3DDevice9* pDevice )
             dsOffsets[idx++] = D3DXVECTOR4(
                 ( static_cast< float >( i ) + 0.5f ) * ( 1.0f / static_cast< float >( destDesc.Width ) ),
                 ( static_cast< float >( j ) + 0.5f ) * ( 1.0f / static_cast< float >( destDesc.Height ) ),
-                0.0f, // unused 
+                0.0f, // unused
                 0.0f  // unused
                 );
         }
@@ -1125,13 +1125,13 @@ HRESULT RenderToTexture( IDirect3DDevice9* pDev )
 float ComputeGaussianValue( float x, float mean, float std_deviation )
 {
     // The gaussian equation is defined as such:
-    /*    
+    /*
       -(x - mean)^2
       -------------
       1.0               2*std_dev^2
       f(x,mean,std_dev) = -------------------- * e^
       sqrt(2*pi*std_dev^2)
-      
+
      */
 
     return ( 1.0f / sqrtf( 2.0f * D3DX_PI * std_deviation * std_deviation ) )

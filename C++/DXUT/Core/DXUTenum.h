@@ -15,9 +15,9 @@
 //--------------------------------------------------------------------------------------
 enum DXUT_MATCH_TYPE
 {
-    DXUTMT_IGNORE_INPUT = 0,  // Use the closest valid value to a default 
+    DXUTMT_IGNORE_INPUT = 0,  // Use the closest valid value to a default
     DXUTMT_PRESERVE_INPUT,    // Use input without change, but may cause no valid device to be found
-    DXUTMT_CLOSEST_TO_INPUT   // Use the closest valid value to the input 
+    DXUTMT_CLOSEST_TO_INPUT   // Use the closest valid value to the input
 };
 
 struct DXUTMatchOptions
@@ -82,9 +82,9 @@ void WINAPI DXUTDestroyD3D10Enumeration();
 class CD3D9Enumeration
 {
 public:
-    // These should be called before Enumerate(). 
+    // These should be called before Enumerate().
     //
-    // Use these calls and the IsDeviceAcceptable to control the contents of 
+    // Use these calls and the IsDeviceAcceptable to control the contents of
     // the enumeration object, which affects the device selection and the device settings dialog.
     void                    SetRequirePostPixelShaderBlending( bool bRequire )
     {
@@ -176,7 +176,7 @@ CD3D9Enumeration*   WINAPI DXUTGetD3D9Enumeration( bool bForceEnumerate = false 
 
 
 //--------------------------------------------------------------------------------------
-// A class describing an adapter which contains a unique adapter ordinal 
+// A class describing an adapter which contains a unique adapter ordinal
 // that is installed on the system
 //--------------------------------------------------------------------------------------
 class CD3D9EnumAdapterInfo
@@ -194,8 +194,8 @@ public:
 
 
 //--------------------------------------------------------------------------------------
-// A class describing a Direct3D device that contains a 
-//       unique supported device type 
+// A class describing a Direct3D device that contains a
+//       unique supported device type
 //--------------------------------------------------------------------------------------
 class CD3D9EnumDeviceInfo
 {
@@ -206,15 +206,15 @@ public:
     D3DDEVTYPE DeviceType;
     D3DCAPS9 Caps;
 
-    // List of CD3D9EnumDeviceSettingsCombo* with a unique set 
+    // List of CD3D9EnumDeviceSettingsCombo* with a unique set
     // of AdapterFormat, BackBufferFormat, and Windowed
     CGrowableArray <CD3D9EnumDeviceSettingsCombo*> deviceSettingsComboList;
 };
 
 
 //--------------------------------------------------------------------------------------
-// A struct describing device settings that contains a unique combination of 
-// adapter format, back buffer format, and windowed that is compatible with a 
+// A struct describing device settings that contains a unique combination of
+// adapter format, back buffer format, and windowed that is compatible with a
 // particular Direct3D device and the app.
 //--------------------------------------------------------------------------------------
 struct CD3D9EnumDeviceSettingsCombo
@@ -263,9 +263,9 @@ struct CD3D10EnumDeviceSettingsCombo;
 class CD3D10Enumeration
 {
 public:
-    // These should be called before Enumerate(). 
+    // These should be called before Enumerate().
     //
-    // Use these calls and the IsDeviceAcceptable to control the contents of 
+    // Use these calls and the IsDeviceAcceptable to control the contents of
     // the enumeration object, which affects the device selection and the device settings dialog.
     void                    SetResolutionMinMax( UINT nMinWidth, UINT nMinHeight, UINT nMaxWidth, UINT nMaxHeight );
     void                    SetRefreshMinMax( UINT nMin, UINT nMax );
@@ -340,7 +340,7 @@ CD3D10Enumeration*  WINAPI DXUTGetD3D10Enumeration( bool bForceEnumerate = false
 #define DXGI_MAX_DEVICE_IDENTIFIER_STRING 128
 
 //--------------------------------------------------------------------------------------
-// A class describing an adapter which contains a unique adapter ordinal 
+// A class describing an adapter which contains a unique adapter ordinal
 // that is installed on the system
 //--------------------------------------------------------------------------------------
 class CD3D10EnumAdapterInfo
@@ -357,7 +357,7 @@ public:
 
     CGrowableArray <CD3D10EnumOutputInfo*> outputInfoList; // Array of CD3D10EnumOutputInfo*
     CGrowableArray <CD3D10EnumDeviceInfo*> deviceInfoList; // Array of CD3D10EnumDeviceInfo*
-    // List of CD3D10EnumDeviceSettingsCombo* with a unique set 
+    // List of CD3D10EnumDeviceSettingsCombo* with a unique set
     // of BackBufferFormat, and Windowed
     CGrowableArray <CD3D10EnumDeviceSettingsCombo*> deviceSettingsComboList;
 };
@@ -380,7 +380,7 @@ public:
 
 
 //--------------------------------------------------------------------------------------
-// A class describing a Direct3D10 device that contains a 
+// A class describing a Direct3D10 device that contains a
 //       unique supported driver type
 //--------------------------------------------------------------------------------------
 class CD3D10EnumDeviceInfo
@@ -396,8 +396,8 @@ public:
 
 
 //--------------------------------------------------------------------------------------
-// A struct describing device settings that contains a unique combination of 
-// adapter format, back buffer format, and windowed that is compatible with a 
+// A struct describing device settings that contains a unique combination of
+// adapter format, back buffer format, and windowed that is compatible with a
 // particular Direct3D device and the app.
 //--------------------------------------------------------------------------------------
 struct CD3D10EnumDeviceSettingsCombo

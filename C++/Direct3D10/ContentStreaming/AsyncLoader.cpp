@@ -128,7 +128,7 @@ void CAsyncLoader::WaitForAllItems()
 // FileIOThreadProc
 //
 // This is the one IO threadproc.  This function is responsible for processing read
-// requests made by the application.  There should only be one IO thread per device.  
+// requests made by the application.  There should only be one IO thread per device.
 // This ensures that the disk is only trying to read one part of the disk at a time.
 //
 // This thread performs double-duty as the copy thread as well.  It manages the copying
@@ -221,7 +221,7 @@ unsigned int CAsyncLoader::FileIOThreadProc()
 
 //--------------------------------------------------------------------------------------
 // ProcessingThreadProc
-// 
+//
 // This is the threadproc for the processing thread.  There are multiple processing
 // threads.  The job of the processing thread is to uncompress, unpack, or otherwise
 // manipulate the data loaded by the loading thread in order to get it ready for the

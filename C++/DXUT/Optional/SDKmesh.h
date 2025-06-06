@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------
 // File: SDKMesh.h
 //
-// Disclaimer:  
-//   The SDK Mesh format (.sdkmesh) is not a recommended file format for shipping titles.  
-//   It was designed to meet the specific needs of the SDK samples.  Any real-world 
-//   applications should avoid this file format in favor of a destination format that 
+// Disclaimer:
+//   The SDK Mesh format (.sdkmesh) is not a recommended file format for shipping titles.
+//   It was designed to meet the specific needs of the SDK samples.  Any real-world
+//   applications should avoid this file format in favor of a destination format that
 //   meets the specific needs of the application.
 //
 // Copyright (c) Microsoft Corporation.
@@ -467,7 +467,7 @@ public:
                            UINT iDiffuseSlot,
                            UINT iNormalSlot,
                            UINT iSpecularSlot );
-    
+
     virtual void                    Render( ID3D10Device* pd3dDevice,
                                             ID3D10EffectTechnique* pTechnique,
                                             ID3D10EffectShaderResourceVariable* ptxDiffuse = NULL,

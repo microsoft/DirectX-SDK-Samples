@@ -23,11 +23,11 @@ static const XMVECTORF32 g_vZero = { 0.0f, 0.0f, 0.0f, 0.0f };
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the Manager.  The manager performs all the work of caculating the render 
+// Initialize the Manager.  The manager performs all the work of caculating the render
 // paramters of the shadow, creating the D3D resources, rendering the shadow, and rendering
 // the actual scene.
 //--------------------------------------------------------------------------------------
-VarianceShadowsManager::VarianceShadowsManager () 
+VarianceShadowsManager::VarianceShadowsManager ()
                           : m_pVertexLayoutMesh( NULL ),
                             m_pSamLinear( NULL ),
                             m_pSamShadowPoint( NULL ),
@@ -60,13 +60,13 @@ VarianceShadowsManager::VarianceShadowsManager ()
     sprintf_s( m_cpsModel, "ps_4_0");
     sprintf_s( m_cgsModel, "gs_4_0");
 
-    for ( int index = 0; index < MAXIMUM_BLUR_LEVELS; ++ index ) 
+    for ( int index = 0; index < MAXIMUM_BLUR_LEVELS; ++ index )
     {
         m_ppsQuadBlurXBlob[index] = NULL;
         m_ppsQuadBlurYBlob[index] = NULL;
     }
 
-    for ( int index = 0; index < MAX_CASCADES; ++ index ) 
+    for ( int index = 0; index < MAX_CASCADES; ++ index )
     {
         m_pvsRenderSceneBlob[index] = NULL;
         for (int iX = 0; iX < 2; ++iX ) {
@@ -84,7 +84,7 @@ VarianceShadowsManager::VarianceShadowsManager ()
     }
 
 
-    for( INT index=0; index < MAX_CASCADES; ++index ) 
+    for( INT index=0; index < MAX_CASCADES; ++index )
     {
         m_RenderVP[index].Height = (FLOAT)m_CopyOfCascadeConfig.m_iBufferSize;
         m_RenderVP[index].Width = (FLOAT)m_CopyOfCascadeConfig.m_iBufferSize;
@@ -98,9 +98,9 @@ VarianceShadowsManager::VarianceShadowsManager ()
 
 
 //--------------------------------------------------------------------------------------
-// Call into deallocator.  
+// Call into deallocator.
 //--------------------------------------------------------------------------------------
-VarianceShadowsManager::~VarianceShadowsManager() 
+VarianceShadowsManager::~VarianceShadowsManager()
 {
     DestroyAndDeallocateShadowResources();
 
@@ -108,18 +108,18 @@ VarianceShadowsManager::~VarianceShadowsManager()
     SAFE_RELEASE( m_pvsRenderVarianceShadowBlob );
     SAFE_RELEASE( m_ppsRenderVarianceShadowBlob );
 
-    for ( int index = 0; index < MAXIMUM_BLUR_LEVELS; ++ index ) 
+    for ( int index = 0; index < MAXIMUM_BLUR_LEVELS; ++ index )
     {
         SAFE_RELEASE( m_ppsQuadBlurXBlob[index] );
         SAFE_RELEASE( m_ppsQuadBlurYBlob[index] );
     }
 
-    for ( int index = 0; index < MAX_CASCADES; ++ index ) 
+    for ( int index = 0; index < MAX_CASCADES; ++ index )
     {
         SAFE_RELEASE( m_pvsRenderSceneBlob[index] );
-        for (int iX = 0; iX < 2; ++iX ) 
+        for (int iX = 0; iX < 2; ++iX )
         {
-            for (int iX2 = 0; iX2 < 2; ++iX2 ) 
+            for (int iX2 = 0; iX2 < 2; ++iX2 )
             {
                 SAFE_RELEASE( m_ppsRenderSceneAllShadersBlob[index][iX][iX2] );
             }
@@ -135,29 +135,29 @@ VarianceShadowsManager::~VarianceShadowsManager()
 // Create the resources, compile shaders, etc.
 // The rest of the resources are create in the allocator when the scene changes.
 //--------------------------------------------------------------------------------------
-HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice, 
-                               ID3D11DeviceContext* pd3dImmediateContext, 
-                               CDXUTSDKMesh* pMesh, 
+HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
+                               ID3D11DeviceContext* pd3dImmediateContext,
+                               CDXUTSDKMesh* pMesh,
                                CFirstPersonCamera* pViewerCamera,
                                CFirstPersonCamera* pLightCamera,
                                CascadeConfig* pCascadeConfig
-                              )  
+                              )
 {
     HRESULT hr = S_OK;
 
-    m_CopyOfCascadeConfig = *pCascadeConfig;        
-    // Initialize m_iBufferSize to 0 to trigger a reallocate on the first frame.   
+    m_CopyOfCascadeConfig = *pCascadeConfig;
+    // Initialize m_iBufferSize to 0 to trigger a reallocate on the first frame.
     m_CopyOfCascadeConfig.m_iBufferSize = 0;
     // Save a pointer to cascade config.  Each frame we check our copy against the pointer.
     m_pCascadeConfig = pCascadeConfig;
-    
+
     XMVECTOR vMeshMin;
     XMVECTOR vMeshMax;
 
-    m_vSceneAABBMin = g_vFLTMAX; 
+    m_vSceneAABBMin = g_vFLTMAX;
     m_vSceneAABBMax = g_vFLTMIN;
     // Calcaulte the AABB for the scene by iterating through all the meshes in the SDKMesh file.
-    for( UINT i =0; i < pMesh->GetNumMeshes( ); ++i ) 
+    for( UINT i =0; i < pMesh->GetNumMeshes( ); ++i )
     {
         SDKMESH_MESH* msh = pMesh->GetMesh( i );
         vMeshMin = XMVectorSet( msh->BoundingBoxCenter.x - msh->BoundingBoxExtents.x,
@@ -169,43 +169,43 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
              msh->BoundingBoxCenter.y + msh->BoundingBoxExtents.y,
              msh->BoundingBoxCenter.z + msh->BoundingBoxExtents.z,
              1.0f );
-        
+
         m_vSceneAABBMin = XMVectorMin( vMeshMin, m_vSceneAABBMin );
         m_vSceneAABBMax = XMVectorMax( vMeshMax, m_vSceneAABBMax );
     }
 
-    m_pViewerCamera = pViewerCamera;          
-    m_pLightCamera = pLightCamera;         
+    m_pViewerCamera = pViewerCamera;
+    m_pLightCamera = pLightCamera;
 
 
-    if ( m_ppsRenderVarianceShadowBlob == NULL ) 
+    if ( m_ppsRenderVarianceShadowBlob == NULL )
     {
         V_RETURN( CompileShaderFromFile( L"RenderVarianceShadow.hlsl", NULL, "VSMain", m_cvsModel, &m_pvsRenderVarianceShadowBlob ) );
     }
-    V_RETURN( pd3dDevice->CreateVertexShader(m_pvsRenderVarianceShadowBlob->GetBufferPointer(), 
-        m_pvsRenderVarianceShadowBlob->GetBufferSize(), 
+    V_RETURN( pd3dDevice->CreateVertexShader(m_pvsRenderVarianceShadowBlob->GetBufferPointer(),
+        m_pvsRenderVarianceShadowBlob->GetBufferSize(),
         NULL, &m_pvsRenderVarianceShadow) );
     DXUT_SetDebugName( m_pvsRenderVarianceShadow, "RenderVarianceShadow - VSMain" );
 
-    if ( m_ppsRenderVarianceShadowBlob == NULL ) 
+    if ( m_ppsRenderVarianceShadowBlob == NULL )
     {
         V_RETURN( CompileShaderFromFile( L"RenderVarianceShadow.hlsl", NULL, "PSMain", m_cpsModel, &m_ppsRenderVarianceShadowBlob ) );
     }
-    V_RETURN( pd3dDevice->CreatePixelShader(m_ppsRenderVarianceShadowBlob->GetBufferPointer(), 
-        m_ppsRenderVarianceShadowBlob->GetBufferSize(), 
+    V_RETURN( pd3dDevice->CreatePixelShader(m_ppsRenderVarianceShadowBlob->GetBufferPointer(),
+        m_ppsRenderVarianceShadowBlob->GetBufferSize(),
         NULL, &m_ppsRenderVarianceShadow) );
     DXUT_SetDebugName( m_ppsRenderVarianceShadow, "RenderVarianceShadow - PSMain" );
 
-    if ( m_pvsQuadBlurBlob == NULL ) 
+    if ( m_pvsQuadBlurBlob == NULL )
     {
         V_RETURN( CompileShaderFromFile( L"2DQuadShaders.hlsl", NULL, "VSMain", m_cvsModel, &m_pvsQuadBlurBlob ) );
     }
-    V_RETURN( pd3dDevice->CreateVertexShader(m_pvsQuadBlurBlob->GetBufferPointer(), m_pvsQuadBlurBlob->GetBufferSize(), 
+    V_RETURN( pd3dDevice->CreateVertexShader(m_pvsQuadBlurBlob->GetBufferPointer(), m_pvsQuadBlurBlob->GetBufferSize(),
         NULL, &m_pvsQuadBlur) );
     DXUT_SetDebugName( m_pvsQuadBlur, "2DQuadShaders - VSMain" );
 
     INT iKernelSize = 1;
-    D3D_SHADER_MACRO kernelDefines[] = 
+    D3D_SHADER_MACRO kernelDefines[] =
     {
         "SEPERABLE_BLUR_KERNEL_SIZE", "1",
         NULL, NULL
@@ -218,21 +218,21 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
         kernelDefines[0].Definition = cKernelSize;
         if ( m_ppsQuadBlurXBlob[iBlurKernelIndex] == NULL )
         {
-            V_RETURN( CompileShaderFromFile( 
+            V_RETURN( CompileShaderFromFile(
                 L"2DQuadShaders.hlsl", kernelDefines, "PSBlurX", m_cpsModel, &m_ppsQuadBlurXBlob[iBlurKernelIndex] ) );
         }
-        V_RETURN( pd3dDevice->CreatePixelShader(m_ppsQuadBlurXBlob[iBlurKernelIndex]->GetBufferPointer(), 
-            m_ppsQuadBlurXBlob[iBlurKernelIndex]->GetBufferSize(), 
+        V_RETURN( pd3dDevice->CreatePixelShader(m_ppsQuadBlurXBlob[iBlurKernelIndex]->GetBufferPointer(),
+            m_ppsQuadBlurXBlob[iBlurKernelIndex]->GetBufferSize(),
             NULL, &m_ppsQuadBlurX[iBlurKernelIndex]) );
 
-        if ( m_ppsQuadBlurYBlob[iBlurKernelIndex] == NULL ) 
+        if ( m_ppsQuadBlurYBlob[iBlurKernelIndex] == NULL )
         {
-            V_RETURN( CompileShaderFromFile( 
+            V_RETURN( CompileShaderFromFile(
                 L"2DQuadShaders.hlsl", kernelDefines, "PSBlurY", m_cpsModel, &m_ppsQuadBlurYBlob[iBlurKernelIndex] ) );
         }
         V_RETURN( pd3dDevice->CreatePixelShader(
-            m_ppsQuadBlurYBlob[iBlurKernelIndex]->GetBufferPointer(), 
-            m_ppsQuadBlurYBlob[iBlurKernelIndex]->GetBufferSize(), 
+            m_ppsQuadBlurYBlob[iBlurKernelIndex]->GetBufferPointer(),
+            m_ppsQuadBlurYBlob[iBlurKernelIndex]->GetBufferSize(),
             NULL, &m_ppsQuadBlurY[iBlurKernelIndex]) );
 
 #if defined(DEBUG) || defined(PROFILE)
@@ -246,10 +246,10 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
     }
 
 
-    // In order to compile optimal versions of each shaders,compile out 64 versions of the same file.  
+    // In order to compile optimal versions of each shaders,compile out 64 versions of the same file.
     // The if statments are dependent upon these macros.  This enables the compiler to optimize out code that can never be reached.
     // D3D11 Dynamic shader linkage would have this same effect without the need to compile 64 versions of the shader.
-    D3D_SHADER_MACRO defines[] = 
+    D3D_SHADER_MACRO defines[] =
     {
         "CASCADE_COUNT_FLAG", "1",
         "BLEND_BETWEEN_CASCADE_LAYERS_FLAG", "0",
@@ -261,20 +261,20 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
     char cBlendDefinition[32];
     char cIntervalDefinition[32];
 
-    for( INT iCascadeIndex=0; iCascadeIndex < MAX_CASCADES; ++iCascadeIndex ) 
+    for( INT iCascadeIndex=0; iCascadeIndex < MAX_CASCADES; ++iCascadeIndex )
     {
-        // There is just one vertex shader for the scene.                
+        // There is just one vertex shader for the scene.
         sprintf_s( cCascadeDefinition, "%d", iCascadeIndex + 1 );
         defines[0].Definition = cCascadeDefinition;
         defines[1].Definition = "0";
         defines[2].Definition = "0";
-        // We don't want to release the last pVertexShaderBuffer until we create the input layout. 
-        if ( m_pvsRenderSceneBlob[iCascadeIndex] == NULL ) 
+        // We don't want to release the last pVertexShaderBuffer until we create the input layout.
+        if ( m_pvsRenderSceneBlob[iCascadeIndex] == NULL )
         {
-            V_RETURN( CompileShaderFromFile( L"RenderVarianceScene.hlsl", defines, "VSMain", 
+            V_RETURN( CompileShaderFromFile( L"RenderVarianceScene.hlsl", defines, "VSMain",
                 m_cvsModel, &m_pvsRenderSceneBlob[iCascadeIndex] ) );
         }
-        V_RETURN( pd3dDevice->CreateVertexShader( m_pvsRenderSceneBlob[iCascadeIndex]->GetBufferPointer(), 
+        V_RETURN( pd3dDevice->CreateVertexShader( m_pvsRenderSceneBlob[iCascadeIndex]->GetBufferPointer(),
             m_pvsRenderSceneBlob[iCascadeIndex]->GetBufferSize(), NULL, &m_pvsRenderScene[iCascadeIndex]) );
 
 #if defined(DEBUG) || defined(PROFILE)
@@ -283,9 +283,9 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
         DXUT_SetDebugName( m_pvsRenderScene[iCascadeIndex], str );
 #endif
 
-        for( INT iBlendIndex=0; iBlendIndex < 2; ++iBlendIndex ) 
+        for( INT iBlendIndex=0; iBlendIndex < 2; ++iBlendIndex )
         {
-            for( INT iIntervalIndex=0; iIntervalIndex < 2; ++iIntervalIndex ) 
+            for( INT iIntervalIndex=0; iIntervalIndex < 2; ++iIntervalIndex )
             {
                 sprintf_s( cCascadeDefinition, "%d", iCascadeIndex + 1 );
                 sprintf_s( cBlendDefinition, "%d", iBlendIndex );
@@ -295,16 +295,16 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
                 defines[1].Definition = cBlendDefinition;
                 defines[2].Definition = cIntervalDefinition;
 
-                if ( m_ppsRenderSceneAllShadersBlob[iCascadeIndex][iBlendIndex][iIntervalIndex] == NULL ) 
+                if ( m_ppsRenderSceneAllShadersBlob[iCascadeIndex][iBlendIndex][iIntervalIndex] == NULL )
                 {
-                    V_RETURN( CompileShaderFromFile( L"RenderVarianceScene.hlsl", defines, "PSMain", 
-                        m_cpsModel, 
+                    V_RETURN( CompileShaderFromFile( L"RenderVarianceScene.hlsl", defines, "PSMain",
+                        m_cpsModel,
                         &m_ppsRenderSceneAllShadersBlob[iCascadeIndex][iBlendIndex][iIntervalIndex] ) );
                 }
-                V_RETURN( pd3dDevice->CreatePixelShader( 
+                V_RETURN( pd3dDevice->CreatePixelShader(
                     m_ppsRenderSceneAllShadersBlob[iCascadeIndex][iBlendIndex][iIntervalIndex]->GetBufferPointer(),
-                    m_ppsRenderSceneAllShadersBlob[iCascadeIndex][iBlendIndex][iIntervalIndex]->GetBufferSize(), 
-                    NULL, 
+                    m_ppsRenderSceneAllShadersBlob[iCascadeIndex][iBlendIndex][iIntervalIndex]->GetBufferSize(),
+                    NULL,
                     &m_ppsRenderSceneAllShaders[iCascadeIndex][iBlendIndex][iIntervalIndex] ) );
 
 #if defined(DEBUG) || defined(PROFILE)
@@ -322,15 +322,15 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
         { "NORMAL",    0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    
-    V_RETURN( pd3dDevice->CreateInputLayout( 
-        layout_mesh, ARRAYSIZE( layout_mesh ), 
+
+    V_RETURN( pd3dDevice->CreateInputLayout(
+        layout_mesh, ARRAYSIZE( layout_mesh ),
         m_pvsRenderSceneBlob[0]->GetBufferPointer(),
-        m_pvsRenderSceneBlob[0]->GetBufferSize(), 
+        m_pvsRenderSceneBlob[0]->GetBufferSize(),
         &m_pVertexLayoutMesh ) );
     DXUT_SetDebugName( m_pVertexLayoutMesh, "Vertices" );
 
-    D3D11_RASTERIZER_DESC drd = 
+    D3D11_RASTERIZER_DESC drd =
     {
         D3D11_FILL_SOLID,//D3D11_FILL_MODE FillMode;
         D3D11_CULL_NONE,//D3D11_CULL_MODE CullMode;
@@ -341,17 +341,17 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
         TRUE,//BOOL DepthClipEnable;
         FALSE,//BOOL ScissorEnable;
         TRUE,//BOOL MultisampleEnable;
-        FALSE//BOOL AntialiasedLineEnable;   
+        FALSE//BOOL AntialiasedLineEnable;
     };
 
     pd3dDevice->CreateRasterizerState( &drd, &m_prsScene );
     DXUT_SetDebugName( m_prsScene, "VSM Scene" );
-    
+
     // Setting the slope scale depth biase greatly decreases surface acne and incorrect self shadowing.
     drd.SlopeScaledDepthBias = 1.0;
     pd3dDevice->CreateRasterizerState( &drd, &m_prsShadow );
     DXUT_SetDebugName( m_prsShadow, "VSM Shadow" );
-    
+
     D3D11_BUFFER_DESC Desc;
     Desc.Usage = D3D11_USAGE_DYNAMIC;
     Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
@@ -360,7 +360,7 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
 
     Desc.ByteWidth = sizeof( CB_ALL_SHADOW_DATA );
     V_RETURN( pd3dDevice->CreateBuffer( &Desc, NULL, &m_pcbGlobalConstantBuffer ) );
-    DXUT_SetDebugName( m_pcbGlobalConstantBuffer, "VSM CB_ALL_SHADOW_DATA" ); 
+    DXUT_SetDebugName( m_pcbGlobalConstantBuffer, "VSM CB_ALL_SHADOW_DATA" );
 
     return hr;
 }
@@ -369,7 +369,7 @@ HRESULT VarianceShadowsManager::Init ( ID3D11Device* pd3dDevice,
 //--------------------------------------------------------------------------------------
 // These resources must be reallocated based on GUI control settings change.
 //--------------------------------------------------------------------------------------
-HRESULT VarianceShadowsManager::DestroyAndDeallocateShadowResources() 
+HRESULT VarianceShadowsManager::DestroyAndDeallocateShadowResources()
 {
 
     SAFE_RELEASE( m_pVertexLayoutMesh );
@@ -410,12 +410,12 @@ HRESULT VarianceShadowsManager::DestroyAndDeallocateShadowResources()
     SAFE_RELEASE( m_pvsRenderVarianceShadow );
     SAFE_RELEASE( m_ppsRenderVarianceShadow );
 
-    for( INT iCascadeIndex=0; iCascadeIndex < MAX_CASCADES; ++iCascadeIndex ) 
-    { 
+    for( INT iCascadeIndex=0; iCascadeIndex < MAX_CASCADES; ++iCascadeIndex )
+    {
         SAFE_RELEASE( m_pvsRenderScene[iCascadeIndex] );
-        for( INT iBlendIndex=0; iBlendIndex < 2; ++iBlendIndex ) 
+        for( INT iBlendIndex=0; iBlendIndex < 2; ++iBlendIndex )
         {
-            for( INT iIntervalIndex=0; iIntervalIndex < 2; ++iIntervalIndex ) 
+            for( INT iIntervalIndex=0; iIntervalIndex < 2; ++iIntervalIndex )
             {
                 SAFE_RELEASE( m_ppsRenderSceneAllShaders[iCascadeIndex][iBlendIndex][iIntervalIndex] );
             }
@@ -428,16 +428,16 @@ HRESULT VarianceShadowsManager::DestroyAndDeallocateShadowResources()
 //--------------------------------------------------------------------------------------
 // These settings must be recreated based on GUI control.
 //--------------------------------------------------------------------------------------
-HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Device* pd3dDevice ) 
+HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Device* pd3dDevice )
 {
     HRESULT hr = S_OK;
     // If any of these 3 paramaters was changed, we must reallocate the D3D resources.
-    if( m_CopyOfCascadeConfig.m_nCascadeLevels != m_pCascadeConfig->m_nCascadeLevels 
-        || m_CopyOfCascadeConfig.m_ShadowBufferFormat != m_pCascadeConfig->m_ShadowBufferFormat 
+    if( m_CopyOfCascadeConfig.m_nCascadeLevels != m_pCascadeConfig->m_nCascadeLevels
+        || m_CopyOfCascadeConfig.m_ShadowBufferFormat != m_pCascadeConfig->m_ShadowBufferFormat
         || m_CopyOfCascadeConfig.m_iBufferSize != m_pCascadeConfig->m_iBufferSize )
     {
 
-        m_CopyOfCascadeConfig = *m_pCascadeConfig;        
+        m_CopyOfCascadeConfig = *m_pCascadeConfig;
 
         SAFE_RELEASE( m_pSamLinear );
         SAFE_RELEASE( m_pSamShadowPoint );
@@ -446,7 +446,7 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
         SAFE_RELEASE( m_pSamShadowAnisotropic8 );
         SAFE_RELEASE( m_pSamShadowAnisotropic4 );
         SAFE_RELEASE( m_pSamShadowAnisotropic2 );
-        
+
         D3D11_SAMPLER_DESC SamDesc;
         SamDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
         SamDesc.AddressU = D3D11_TEXTURE_ADDRESS_WRAP;
@@ -461,7 +461,7 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
         V_RETURN( pd3dDevice->CreateSamplerState( &SamDesc, &m_pSamLinear ) );
         DXUT_SetDebugName( m_pSamLinear, "VSM Linear" );
 
-        D3D11_SAMPLER_DESC SamDescShad = 
+        D3D11_SAMPLER_DESC SamDescShad =
         {
             D3D11_FILTER_ANISOTROPIC,// D3D11_FILTER Filter;
             D3D11_TEXTURE_ADDRESS_CLAMP, //D3D11_TEXTURE_ADDRESS_MODE AddressU;
@@ -472,7 +472,7 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
             D3D11_COMPARISON_NEVER , //D3D11_COMPARISON_FUNC ComparisonFunc;
             0.0,0.0,0.0,0.0,//FLOAT BorderColor[ 4 ];
             0,//FLOAT MinLOD;
-            0//FLOAT MaxLOD;   
+            0//FLOAT MaxLOD;
         };
 
         V_RETURN( pd3dDevice->CreateSamplerState( &SamDescShad, &m_pSamShadowAnisotropic16 ) );
@@ -499,8 +499,8 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
         V_RETURN( pd3dDevice->CreateSamplerState( &SamDescShad, &m_pSamShadowPoint ) );
         DXUT_SetDebugName( m_pSamShadowPoint, "VSM Shadow Point" );
 
-        for (INT index=0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index ) 
-        { 
+        for (INT index=0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index )
+        {
             m_RenderVP[index].Height = (FLOAT)m_CopyOfCascadeConfig.m_iBufferSize;
             m_RenderVP[index].Width = (FLOAT)m_CopyOfCascadeConfig.m_iBufferSize;
             m_RenderVP[index].MaxDepth = 1.0f;
@@ -541,7 +541,7 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
             D3D11_USAGE_DEFAULT,//D3D11_USAGE Usage;
             D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE,//UINT BindFlags;
             0,//UINT CPUAccessFlags;
-            0//UINT MiscFlags;    
+            0//UINT MiscFlags;
         };
 
         V_RETURN( pd3dDevice->CreateTexture2D( &dtd, NULL, &m_pCascadedShadowMapVarianceTextureArray  ) );
@@ -572,7 +572,7 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
 
         drtvd.Texture2DArray.MipSlice = 0;
 
-        for( int index = 0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index ) 
+        for( int index = 0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index )
         {
             drtvd.Texture2DArray.FirstArraySlice = index;
             drtvd.Texture2DArray.ArraySize = 1;
@@ -597,23 +597,23 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
             m_CopyOfCascadeConfig.m_ShadowBufferFormat,
             D3D11_SRV_DIMENSION_TEXTURE2DARRAY,
         };
-        
+
         dsrvd.Texture2DArray.ArraySize = m_CopyOfCascadeConfig.m_nCascadeLevels;
         dsrvd.Texture2DArray.FirstArraySlice = 0;
         dsrvd.Texture2DArray.MipLevels = 1;
         dsrvd.Texture2DArray.MostDetailedMip = 0;
 
-        V_RETURN( pd3dDevice->CreateShaderResourceView( m_pCascadedShadowMapVarianceTextureArray, 
+        V_RETURN( pd3dDevice->CreateShaderResourceView( m_pCascadedShadowMapVarianceTextureArray,
             &dsrvd, &m_pCascadedShadowMapVarianceSRVArraySingle ) );
         DXUT_SetDebugName( m_pCascadedShadowMapVarianceSRVArraySingle, "VSM Cascaded SM Var Array SRV" );
 
-        for( int index = 0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index ) 
+        for( int index = 0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index )
         {
             dsrvd.Texture2DArray.ArraySize = 1;
             dsrvd.Texture2DArray.FirstArraySlice = index;
             dsrvd.Texture2DArray.MipLevels = 1;
             dsrvd.Texture2DArray.MostDetailedMip = 0;
-            V_RETURN( pd3dDevice->CreateShaderResourceView( m_pCascadedShadowMapVarianceTextureArray, 
+            V_RETURN( pd3dDevice->CreateShaderResourceView( m_pCascadedShadowMapVarianceTextureArray,
                 &dsrvd, &m_pCascadedShadowMapVarianceSRVArrayAll[index] ) );
 
 #if defined(DEBUG) || defined(PROFILE)
@@ -630,7 +630,7 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
         dsrvd.Texture2DArray.FirstArraySlice = 0;
         dsrvd.Texture2DArray.MipLevels = 1;
         dsrvd.Texture2DArray.MostDetailedMip = 0;
-        V_RETURN( pd3dDevice->CreateShaderResourceView( m_pCascadedShadowMapTempBlurTexture, 
+        V_RETURN( pd3dDevice->CreateShaderResourceView( m_pCascadedShadowMapTempBlurTexture,
             &dsrvd, &m_pCascadedShadowMapTempBlurSRV ) );
         DXUT_SetDebugName( m_pCascadedShadowMapTempBlurSRV, "VSM Cascaded SM Temp Blur SRV" );
     }
@@ -643,10 +643,10 @@ HRESULT VarianceShadowsManager::ReleaseAndAllocateNewShadowResources( ID3D11Devi
 // points that make up a view frustum.
 // The frustum is scaled to fit within the Begin and End interval paramaters.
 //--------------------------------------------------------------------------------------
-void VarianceShadowsManager::CreateFrustumPointsFromCascadeInterval( float fCascadeIntervalBegin, 
-                                                        FLOAT fCascadeIntervalEnd, 
+void VarianceShadowsManager::CreateFrustumPointsFromCascadeInterval( float fCascadeIntervalBegin,
+                                                        FLOAT fCascadeIntervalEnd,
                                                         XMMATRIX &vProjection,
-                                                        XMVECTOR* pvCornerPointsWorld ) 
+                                                        XMVECTOR* pvCornerPointsWorld )
 {
 
     XNA::Frustum vViewFrust;
@@ -681,7 +681,7 @@ void VarianceShadowsManager::CreateFrustumPointsFromCascadeInterval( float fCasc
 //--------------------------------------------------------------------------------------
 // Used to compute an intersection of the orthographic projection and the Scene AABB
 //--------------------------------------------------------------------------------------
-struct Triangle 
+struct Triangle
 {
     XMVECTOR pt[3];
     BOOL culled;
@@ -696,17 +696,17 @@ struct Triangle
 // correct near and far planes becomes even more important.
 // This concept is not complicated, but the intersection code is.
 //--------------------------------------------------------------------------------------
-void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane, 
-                                        FLOAT& fFarPlane, 
-                                        FXMVECTOR vLightCameraOrthographicMin, 
-                                        FXMVECTOR vLightCameraOrthographicMax, 
-                                        XMVECTOR* pvPointsInCameraView ) 
+void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
+                                        FLOAT& fFarPlane,
+                                        FXMVECTOR vLightCameraOrthographicMin,
+                                        FXMVECTOR vLightCameraOrthographicMax,
+                                        XMVECTOR* pvPointsInCameraView )
 {
 
     // Initialize the near and far planes
     fNearPlane = FLT_MAX;
     fFarPlane = -FLT_MAX;
-    
+
     Triangle triangleList[16];
     INT iTriangleCnt = 1;
 
@@ -716,31 +716,31 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
     triangleList[0].culled = false;
 
     // These are the indices used to tesselate an AABB into a list of triangles.
-    static const INT iAABBTriIndexes[] = 
+    static const INT iAABBTriIndexes[] =
     {
         0,1,2,  1,2,3,
         4,5,6,  5,6,7,
         0,2,4,  2,4,6,
         1,3,5,  3,5,7,
         0,1,4,  1,4,5,
-        2,3,6,  3,6,7 
+        2,3,6,  3,6,7
     };
 
     INT iPointPassesCollision[3];
 
-    // At a high level: 
-    // 1. Iterate over all 12 triangles of the AABB.  
+    // At a high level:
+    // 1. Iterate over all 12 triangles of the AABB.
     // 2. Clip the triangles against each plane. Create new triangles as needed.
     // 3. Find the min and max z values as the near and far plane.
-    
+
     //This is easier because the triangles are in camera spacing making the collisions tests simple comparisions.
-    
+
     float fLightCameraOrthographicMinX = XMVectorGetX( vLightCameraOrthographicMin );
-    float fLightCameraOrthographicMaxX = XMVectorGetX( vLightCameraOrthographicMax ); 
+    float fLightCameraOrthographicMaxX = XMVectorGetX( vLightCameraOrthographicMax );
     float fLightCameraOrthographicMinY = XMVectorGetY( vLightCameraOrthographicMin );
     float fLightCameraOrthographicMaxY = XMVectorGetY( vLightCameraOrthographicMax );
-    
-    for( INT AABBTriIter = 0; AABBTriIter < 12; ++AABBTriIter ) 
+
+    for( INT AABBTriIter = 0; AABBTriIter < 12; ++AABBTriIter )
     {
 
         triangleList[0].pt[0] = pvPointsInCameraView[ iAABBTriIndexes[ AABBTriIter*3 + 0 ] ];
@@ -749,103 +749,103 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
         iTriangleCnt = 1;
         triangleList[0].culled = FALSE;
 
-        // Clip each invidual triangle against the 4 frustums.  When ever a triangle is clipped into new triangles, 
+        // Clip each invidual triangle against the 4 frustums.  When ever a triangle is clipped into new triangles,
         //add them to the list.
-        for( INT frustumPlaneIter = 0; frustumPlaneIter < 4; ++frustumPlaneIter ) 
+        for( INT frustumPlaneIter = 0; frustumPlaneIter < 4; ++frustumPlaneIter )
         {
 
             FLOAT fEdge;
             INT iComponent;
-            
-            if( frustumPlaneIter == 0 ) 
+
+            if( frustumPlaneIter == 0 )
             {
                 fEdge = fLightCameraOrthographicMinX; // todo make float temp
                 iComponent = 0;
-            } 
-            else if( frustumPlaneIter == 1 ) 
+            }
+            else if( frustumPlaneIter == 1 )
             {
                 fEdge = fLightCameraOrthographicMaxX;
                 iComponent = 0;
-            } 
-            else if( frustumPlaneIter == 2 ) 
+            }
+            else if( frustumPlaneIter == 2 )
             {
                 fEdge = fLightCameraOrthographicMinY;
                 iComponent = 1;
-            } 
-            else 
+            }
+            else
             {
                 fEdge = fLightCameraOrthographicMaxY;
                 iComponent = 1;
             }
 
-            for( INT triIter=0; triIter < iTriangleCnt; ++triIter ) 
+            for( INT triIter=0; triIter < iTriangleCnt; ++triIter )
             {
                 // We don't delete triangles, so we skip those that have been culled.
-                if( !triangleList[triIter].culled ) 
+                if( !triangleList[triIter].culled )
                 {
                     INT iInsideVertCount = 0;
                     XMVECTOR tempOrder;
                     // Test against the correct frustum plane.
                     // This could be written more compactly, but it would be harder to understand.
-                    
-                    if( frustumPlaneIter == 0 ) 
+
+                    if( frustumPlaneIter == 0 )
                     {
-                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter )
                         {
                             if( XMVectorGetX( triangleList[triIter].pt[triPtIter] ) >
-                                XMVectorGetX( vLightCameraOrthographicMin ) ) 
-                            { 
+                                XMVectorGetX( vLightCameraOrthographicMin ) )
+                            {
                                 iPointPassesCollision[triPtIter] = 1;
                             }
-                            else 
+                            else
                             {
                                 iPointPassesCollision[triPtIter] = 0;
                             }
                             iInsideVertCount += iPointPassesCollision[triPtIter];
                         }
                     }
-                    else if( frustumPlaneIter == 1 ) 
+                    else if( frustumPlaneIter == 1 )
                     {
-                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter )
                         {
-                            if( XMVectorGetX( triangleList[triIter].pt[triPtIter] ) < 
+                            if( XMVectorGetX( triangleList[triIter].pt[triPtIter] ) <
                                 XMVectorGetX( vLightCameraOrthographicMax ) )
                             {
                                 iPointPassesCollision[triPtIter] = 1;
                             }
                             else
-                            { 
-                                iPointPassesCollision[triPtIter] = 0;
-                            }
-                            iInsideVertCount += iPointPassesCollision[triPtIter];
-                        }
-                    }
-                    else if( frustumPlaneIter == 2 ) 
-                    {
-                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
-                        {
-                            if( XMVectorGetY( triangleList[triIter].pt[triPtIter] ) > 
-                                XMVectorGetY( vLightCameraOrthographicMin ) ) 
-                            {
-                                iPointPassesCollision[triPtIter] = 1;
-                            }
-                            else 
                             {
                                 iPointPassesCollision[triPtIter] = 0;
                             }
                             iInsideVertCount += iPointPassesCollision[triPtIter];
                         }
                     }
-                    else 
+                    else if( frustumPlaneIter == 2 )
                     {
-                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter ) 
+                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter )
                         {
-                            if( XMVectorGetY( triangleList[triIter].pt[triPtIter] ) < 
-                                XMVectorGetY( vLightCameraOrthographicMax ) ) 
+                            if( XMVectorGetY( triangleList[triIter].pt[triPtIter] ) >
+                                XMVectorGetY( vLightCameraOrthographicMin ) )
                             {
                                 iPointPassesCollision[triPtIter] = 1;
                             }
-                            else 
+                            else
+                            {
+                                iPointPassesCollision[triPtIter] = 0;
+                            }
+                            iInsideVertCount += iPointPassesCollision[triPtIter];
+                        }
+                    }
+                    else
+                    {
+                        for( INT triPtIter=0; triPtIter < 3; ++triPtIter )
+                        {
+                            if( XMVectorGetY( triangleList[triIter].pt[triPtIter] ) <
+                                XMVectorGetY( vLightCameraOrthographicMax ) )
+                            {
+                                iPointPassesCollision[triPtIter] = 1;
+                            }
+                            else
                             {
                                 iPointPassesCollision[triPtIter] = 0;
                             }
@@ -854,43 +854,43 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
                     }
 
                     // Move the points that pass the frustum test to the begining of the array.
-                    if( iPointPassesCollision[1] && !iPointPassesCollision[0] ) 
+                    if( iPointPassesCollision[1] && !iPointPassesCollision[0] )
                     {
-                        tempOrder =  triangleList[triIter].pt[0];   
+                        tempOrder =  triangleList[triIter].pt[0];
                         triangleList[triIter].pt[0] = triangleList[triIter].pt[1];
                         triangleList[triIter].pt[1] = tempOrder;
-                        iPointPassesCollision[0] = TRUE;            
-                        iPointPassesCollision[1] = FALSE;            
+                        iPointPassesCollision[0] = TRUE;
+                        iPointPassesCollision[1] = FALSE;
                     }
-                    if( iPointPassesCollision[2] && !iPointPassesCollision[1] ) 
+                    if( iPointPassesCollision[2] && !iPointPassesCollision[1] )
                     {
-                        tempOrder =  triangleList[triIter].pt[1];   
+                        tempOrder =  triangleList[triIter].pt[1];
                         triangleList[triIter].pt[1] = triangleList[triIter].pt[2];
                         triangleList[triIter].pt[2] = tempOrder;
-                        iPointPassesCollision[1] = TRUE;            
-                        iPointPassesCollision[2] = FALSE;                        
+                        iPointPassesCollision[1] = TRUE;
+                        iPointPassesCollision[2] = FALSE;
                     }
-                    if( iPointPassesCollision[1] && !iPointPassesCollision[0] ) 
+                    if( iPointPassesCollision[1] && !iPointPassesCollision[0] )
                     {
-                        tempOrder =  triangleList[triIter].pt[0];   
+                        tempOrder =  triangleList[triIter].pt[0];
                         triangleList[triIter].pt[0] = triangleList[triIter].pt[1];
                         triangleList[triIter].pt[1] = tempOrder;
-                        iPointPassesCollision[0] = TRUE;            
-                        iPointPassesCollision[1] = FALSE;            
+                        iPointPassesCollision[0] = TRUE;
+                        iPointPassesCollision[1] = FALSE;
                     }
-                    
-                    if( iInsideVertCount == 0 ) 
-                    { // All points failed. We're done,  
+
+                    if( iInsideVertCount == 0 )
+                    { // All points failed. We're done,
                         triangleList[triIter].culled = true;
                     }
-                    else if( iInsideVertCount == 1 ) 
+                    else if( iInsideVertCount == 1 )
                     {// One point passed. Clip the triangle against the Frustum plane
                         triangleList[triIter].culled = false;
-                        
-                        // 
+
+                        //
                         XMVECTOR vVert0ToVert1 = triangleList[triIter].pt[1] - triangleList[triIter].pt[0];
                         XMVECTOR vVert0ToVert2 = triangleList[triIter].pt[2] - triangleList[triIter].pt[0];
-                        
+
                         // Find the collision ratio.
                         FLOAT fHitPointTimeRatio = fEdge - XMVectorGetByIndex( triangleList[triIter].pt[0], iComponent ) ;
                         // Calculate the distance along the vector as ratio of the hit ratio to the component.
@@ -906,9 +906,9 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
                         triangleList[triIter].pt[2] = vVert0ToVert1;
 
                     }
-                    else if( iInsideVertCount == 2 ) 
+                    else if( iInsideVertCount == 2 )
                     { // 2 in  // tesselate into 2 triangles
-                        
+
 
                         // Copy the triangle\(if it exists) after the current triangle out of
                         // the way so we can override it with the new triangle we're inserting.
@@ -916,23 +916,23 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
 
                         triangleList[triIter].culled = false;
                         triangleList[triIter+1].culled = false;
-                        
+
                         // Get the vector from the outside point into the 2 inside points.
                         XMVECTOR vVert2ToVert0 = triangleList[triIter].pt[0] - triangleList[triIter].pt[2];
                         XMVECTOR vVert2ToVert1 = triangleList[triIter].pt[1] - triangleList[triIter].pt[2];
-                        
+
                         // Get the hit point ratio.
                         FLOAT fHitPointTime_2_0 =  fEdge - XMVectorGetByIndex( triangleList[triIter].pt[2], iComponent );
                         FLOAT fDistanceAlongVector_2_0 = fHitPointTime_2_0 / XMVectorGetByIndex( vVert2ToVert0, iComponent );
                         // Calcaulte the new vert by adding the percentage of the vector plus point 2.
                         vVert2ToVert0 *= fDistanceAlongVector_2_0;
                         vVert2ToVert0 += triangleList[triIter].pt[2];
-                        
+
                         // Add a new triangle.
                         triangleList[triIter+1].pt[0] = triangleList[triIter].pt[0];
                         triangleList[triIter+1].pt[1] = triangleList[triIter].pt[1];
                         triangleList[triIter+1].pt[2] = vVert2ToVert0;
-                        
+
                         //Get the hit point ratio.
                         FLOAT fHitPointTime_2_1 =  fEdge - XMVectorGetByIndex( triangleList[triIter].pt[2], iComponent ) ;
                         FLOAT fDistanceAlongVector_2_1 = fHitPointTime_2_1 / XMVectorGetByIndex( vVert2ToVert1, iComponent );
@@ -945,36 +945,36 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
                         ++iTriangleCnt;
                         ++triIter;
 
-                    
+
                     }
-                    else 
+                    else
                     { // all in
                         triangleList[triIter].culled = false;
 
                     }
-                }// end if !culled loop            
+                }// end if !culled loop
             }
         }
-        for( INT index=0; index < iTriangleCnt; ++index ) 
+        for( INT index=0; index < iTriangleCnt; ++index )
         {
-            if( !triangleList[index].culled ) 
+            if( !triangleList[index].culled )
             {
                 // Set the near and far plan and the min and max z values respectivly.
-                for( int vertind = 0; vertind < 3; ++ vertind ) 
+                for( int vertind = 0; vertind < 3; ++ vertind )
                 {
                     float fTriangleCoordZ = XMVectorGetZ( triangleList[index].pt[vertind] );
-                    if( fNearPlane > fTriangleCoordZ ) 
+                    if( fNearPlane > fTriangleCoordZ )
                     {
                         fNearPlane = fTriangleCoordZ;
                     }
-                    if( fFarPlane  <fTriangleCoordZ ) 
+                    if( fFarPlane  <fTriangleCoordZ )
                     {
                         fFarPlane = fTriangleCoordZ;
                     }
                 }
             }
         }
-    }    
+    }
 
 }
 
@@ -985,32 +985,32 @@ void VarianceShadowsManager::ComputeNearAndFar( FLOAT& fNearPlane,
 void VarianceShadowsManager::CreateAABBPoints( XMVECTOR* vAABBPoints, FXMVECTOR vCenter, FXMVECTOR vExtents )
 {
     //This map enables us to use a for loop and do vector math.
-    static const XMVECTORF32 vExtentsMap[] = 
-    { 
-        {1.0f, 1.0f, -1.0f, 1.0f}, 
-        {-1.0f, 1.0f, -1.0f, 1.0f}, 
-        {1.0f, -1.0f, -1.0f, 1.0f}, 
-        {-1.0f, -1.0f, -1.0f, 1.0f}, 
-        {1.0f, 1.0f, 1.0f, 1.0f}, 
-        {-1.0f, 1.0f, 1.0f, 1.0f}, 
-        {1.0f, -1.0f, 1.0f, 1.0f}, 
-        {-1.0f, -1.0f, 1.0f, 1.0f} 
-    };
-    
-    for( INT index = 0; index < 8; ++index ) 
+    static const XMVECTORF32 vExtentsMap[] =
     {
-        vAABBPoints[index] = XMVectorMultiplyAdd(vExtentsMap[index], vExtents, vCenter ); 
+        {1.0f, 1.0f, -1.0f, 1.0f},
+        {-1.0f, 1.0f, -1.0f, 1.0f},
+        {1.0f, -1.0f, -1.0f, 1.0f},
+        {-1.0f, -1.0f, -1.0f, 1.0f},
+        {1.0f, 1.0f, 1.0f, 1.0f},
+        {-1.0f, 1.0f, 1.0f, 1.0f},
+        {1.0f, -1.0f, 1.0f, 1.0f},
+        {-1.0f, -1.0f, 1.0f, 1.0f}
+    };
+
+    for( INT index = 0; index < 8; ++index )
+    {
+        vAABBPoints[index] = XMVectorMultiplyAdd(vExtentsMap[index], vExtents, vCenter );
     }
 
 }
 
 //--------------------------------------------------------------------------------------
-// This function is where the real work is done. We determin the matricies and constants used in 
+// This function is where the real work is done. We determin the matricies and constants used in
 // shadow generation and scene generation.
 //--------------------------------------------------------------------------------------
-HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMesh* mesh ) 
+HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMesh* mesh )
 {
-   
+
     ReleaseAndAllocateNewShadowResources( pd3dDevice );
 
     // Copy D3DX matricies into XNA Math matricies.
@@ -1029,38 +1029,38 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
     XMVECTOR vSceneCenter = m_vSceneAABBMin + m_vSceneAABBMax;
     vSceneCenter  *= g_vHalfVector;
     XMVECTOR vSceneExtents = m_vSceneAABBMax - m_vSceneAABBMin;
-    vSceneExtents *= g_vHalfVector;    
+    vSceneExtents *= g_vHalfVector;
 
     XMVECTOR vSceneAABBPointsLightSpace[8];
     // This function simply converts the center and extents of an AABB into 8 points
     CreateAABBPoints( vSceneAABBPointsLightSpace, vSceneCenter, vSceneExtents );
     // Transform the scene AABB to Light space.
-    for( int index =0; index < 8; ++index ) 
+    for( int index =0; index < 8; ++index )
     {
-        vSceneAABBPointsLightSpace[index] = XMVector4Transform( vSceneAABBPointsLightSpace[index], matLightCameraView ); 
+        vSceneAABBPointsLightSpace[index] = XMVector4Transform( vSceneAABBPointsLightSpace[index], matLightCameraView );
     }
 
-    
+
     FLOAT fFrustumIntervalBegin, fFrustumIntervalEnd;
-    XMVECTOR vLightCameraOrthographicMin;  // light space frustrum aabb 
+    XMVECTOR vLightCameraOrthographicMin;  // light space frustrum aabb
     XMVECTOR vLightCameraOrthographicMax;
     FLOAT fCameraNearFarRange = m_pViewerCamera->GetFarClip() - m_pViewerCamera->GetNearClip();
-       
-    XMVECTOR vWorldUnitsPerTexel = g_vZero; 
+
+    XMVECTOR vWorldUnitsPerTexel = g_vZero;
 
     // We loop over the cascades to calculate the orthographic projection for each cascade.
-    for( INT iCascadeIndex=0; iCascadeIndex < m_CopyOfCascadeConfig.m_nCascadeLevels; ++iCascadeIndex ) 
+    for( INT iCascadeIndex=0; iCascadeIndex < m_CopyOfCascadeConfig.m_nCascadeLevels; ++iCascadeIndex )
     {
-        // Calculate the interval of the View Frustum that this cascade covers. We measure the interval 
+        // Calculate the interval of the View Frustum that this cascade covers. We measure the interval
         // the cascade covers as a Min and Max distance along the Z Axis.
-        if( m_eSelectedCascadesFit == FIT_TO_CASCADES ) 
+        if( m_eSelectedCascadesFit == FIT_TO_CASCADES )
         {
-            // Because we want to fit the orthogrpahic projection tightly around the Cascade, we set the Mimiumum cascade 
+            // Because we want to fit the orthogrpahic projection tightly around the Cascade, we set the Mimiumum cascade
             // value to the previous Frustum end Interval
             if( iCascadeIndex==0 ) fFrustumIntervalBegin = 0.0f;
             else fFrustumIntervalBegin = (FLOAT)m_iCascadePartitionsZeroToOne[ iCascadeIndex - 1 ];
-        } 
-        else 
+        }
+        else
         {
             // In the FIT_TO_SCENE technique the Cascades overlap eachother.  In other words, interval 1 is coverd by
             // cascades 1 to 8, interval 2 is covered by cascades 2 to 8 and so forth.
@@ -1068,7 +1068,7 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
         }
 
         // Scale the intervals between 0 and 1. They are now percentages that we can scale with.
-        fFrustumIntervalEnd = (FLOAT)m_iCascadePartitionsZeroToOne[ iCascadeIndex ];        
+        fFrustumIntervalEnd = (FLOAT)m_iCascadePartitionsZeroToOne[ iCascadeIndex ];
         fFrustumIntervalBegin/= (FLOAT)m_iCascadePartitionsMax;
         fFrustumIntervalEnd/= (FLOAT)m_iCascadePartitionsMax;
         fFrustumIntervalBegin = fFrustumIntervalBegin * fCameraNearFarRange;
@@ -1077,7 +1077,7 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
 
         // This function takes the began and end intervals along with the projection matrix and returns the 8
         // points that repreresent the cascade Interval
-        CreateFrustumPointsFromCascadeInterval( fFrustumIntervalBegin, fFrustumIntervalEnd, 
+        CreateFrustumPointsFromCascadeInterval( fFrustumIntervalBegin, fFrustumIntervalEnd,
             matViewCameraProjection, vFrustumPoints );
 
         vLightCameraOrthographicMin = g_vFLTMAX;
@@ -1085,7 +1085,7 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
 
         XMVECTOR vTempTranslatedCornerPoint;
         // This next section of code calculates the min and max values for the orthographic projection.
-        for( int icpIndex=0; icpIndex < 8; ++icpIndex ) 
+        for( int icpIndex=0; icpIndex < 8; ++icpIndex )
         {
             // Transform the frustum from camera view space to world space.
             vFrustumPoints[icpIndex] = XMVector4Transform ( vFrustumPoints[icpIndex], matInverseViewCamera );
@@ -1099,27 +1099,27 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
 
         // This code removes the shimmering effect along the edges of shadows due to
         // the light changing to fit the camera.
-        if( m_eSelectedCascadesFit == FIT_TO_SCENE ) 
+        if( m_eSelectedCascadesFit == FIT_TO_SCENE )
         {
-            // Fit the ortho projection to the cascades far plane and a near plane of zero. 
-            // Pad the projection to be the size of the diagonal of the Frustum partition. 
-            // 
-            // To do this, we pad the ortho transform so that it is always big enough to cover 
+            // Fit the ortho projection to the cascades far plane and a near plane of zero.
+            // Pad the projection to be the size of the diagonal of the Frustum partition.
+            //
+            // To do this, we pad the ortho transform so that it is always big enough to cover
             // the entire camera view frustum.
             XMVECTOR vDiagonal = vFrustumPoints[0] - vFrustumPoints[6];
             vDiagonal = XMVector3Length( vDiagonal );
-            
+
             // The bound is the length of the diagonal of the frustum interval.
             FLOAT fCascadeBound = XMVectorGetX( vDiagonal );
-            
-            // The offset calculated will pad the ortho projection so that it is always the same size 
+
+            // The offset calculated will pad the ortho projection so that it is always the same size
             // and big enough to cover the entire cascade interval.
-            XMVECTOR vBoarderOffset = ( vDiagonal - 
-                                        ( vLightCameraOrthographicMax - vLightCameraOrthographicMin ) ) 
+            XMVECTOR vBoarderOffset = ( vDiagonal -
+                                        ( vLightCameraOrthographicMax - vLightCameraOrthographicMin ) )
                                         * g_vHalfVector;
             // Set the Z and W components to zero.
             vBoarderOffset *= g_vMultiplySetzwToZero;
-            
+
             // Add the offsets to the projection.
             vLightCameraOrthographicMax += vBoarderOffset;
             vLightCameraOrthographicMin -= vBoarderOffset;
@@ -1127,20 +1127,20 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
             // The world units per texel are used to snap the shadow the orthographic projection
             // to texel sized increments.  This keeps the edges of the shadows from shimmering.
             FLOAT fWorldUnitsPerTexel = fCascadeBound / (float)m_CopyOfCascadeConfig.m_iBufferSize;
-            vWorldUnitsPerTexel = XMVectorSet( fWorldUnitsPerTexel, fWorldUnitsPerTexel, 0.0f, 0.0f ); 
+            vWorldUnitsPerTexel = XMVectorSet( fWorldUnitsPerTexel, fWorldUnitsPerTexel, 0.0f, 0.0f );
 
 
-        } 
-        else if( m_eSelectedCascadesFit == FIT_TO_CASCADES ) 
+        }
+        else if( m_eSelectedCascadesFit == FIT_TO_CASCADES )
         {
 
-            // We calculate a looser bound based on the size of the PCF blur.  This ensures us that we're 
+            // We calculate a looser bound based on the size of the PCF blur.  This ensures us that we're
             // sampling within the correct map.
-            float fScaleDuetoBlureAMT = ( (float)( m_iShadowBlurSize * 2 + 1 ) 
+            float fScaleDuetoBlureAMT = ( (float)( m_iShadowBlurSize * 2 + 1 )
                 /(float)m_CopyOfCascadeConfig.m_iBufferSize );
             XMVECTORF32 vScaleDuetoBlureAMT = { fScaleDuetoBlureAMT, fScaleDuetoBlureAMT, 0.0f, 0.0f };
 
-            
+
             float fNormalizeByBufferSize = ( 1.0f / (float)m_CopyOfCascadeConfig.m_iBufferSize );
             XMVECTOR vNormalizeByBufferSize = XMVectorSet( fNormalizeByBufferSize, fNormalizeByBufferSize, 0.0f, 0.0f );
 
@@ -1150,10 +1150,10 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
             vBoarderOffset *= vScaleDuetoBlureAMT;
             vLightCameraOrthographicMax += vBoarderOffset;
             vLightCameraOrthographicMin -= vBoarderOffset;
-           
+
             // The world units per texel are used to snap  the orthographic projection
-            // to texel sized increments.  
-            // Because we're fitting tighly to the cascades, the shimmering shadow edges will still be present when the 
+            // to texel sized increments.
+            // Because we're fitting tighly to the cascades, the shimmering shadow edges will still be present when the
             // camera rotates.  However, when zooming in or strafing the shadow edge will not shimmer.
             vWorldUnitsPerTexel = vLightCameraOrthographicMax - vLightCameraOrthographicMin;
             vWorldUnitsPerTexel *= vNormalizeByBufferSize;
@@ -1161,7 +1161,7 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
         }
 
 
-        if( m_bMoveLightTexelSize ) 
+        if( m_bMoveLightTexelSize )
         {
 
             // We snape the camera to 1 pixel increments so that moving the camera does not cause the shadows to jitter.
@@ -1169,27 +1169,27 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
             vLightCameraOrthographicMin /= vWorldUnitsPerTexel;
             vLightCameraOrthographicMin = XMVectorFloor( vLightCameraOrthographicMin );
             vLightCameraOrthographicMin *= vWorldUnitsPerTexel;
-            
+
             vLightCameraOrthographicMax /= vWorldUnitsPerTexel;
             vLightCameraOrthographicMax = XMVectorFloor( vLightCameraOrthographicMax );
             vLightCameraOrthographicMax *= vWorldUnitsPerTexel;
 
         }
- 
-        //These are the unconfigured near and far plane values.  They are purposly awful to show 
+
+        //These are the unconfigured near and far plane values.  They are purposly awful to show
         // how important calculating accurate near and far planes is.
         FLOAT fNearPlane = 0.0f;
         FLOAT fFarPlane = 10000.0f;
 
-        if( m_eSelectedNearFarFit == FIT_NEARFAR_AABB ) 
+        if( m_eSelectedNearFarFit == FIT_NEARFAR_AABB )
         {
 
-            XMVECTOR vLightSpaceSceneAABBminValue = g_vFLTMAX;  // world space scene aabb 
-            XMVECTOR vLightSpaceSceneAABBmaxValue = g_vFLTMIN;       
-            // We calculate the min and max vectors of the scene in light space. The min and max "Z" values of the  
+            XMVECTOR vLightSpaceSceneAABBminValue = g_vFLTMAX;  // world space scene aabb
+            XMVECTOR vLightSpaceSceneAABBmaxValue = g_vFLTMIN;
+            // We calculate the min and max vectors of the scene in light space. The min and max "Z" values of the
             // light space AABB can be used for the near and far plane. This is easier than intersecting the scene with the AABB
             // and in some cases provides similar results.
-            for(int index=0; index< 8; ++index) 
+            for(int index=0; index< 8; ++index)
             {
                 vLightSpaceSceneAABBminValue = XMVectorMin( vSceneAABBPointsLightSpace[index], vLightSpaceSceneAABBminValue );
                 vLightSpaceSceneAABBmaxValue = XMVectorMax( vSceneAABBPointsLightSpace[index], vLightSpaceSceneAABBmaxValue );
@@ -1198,29 +1198,29 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
             // The min and max z values are the near and far planes.
             fNearPlane = XMVectorGetZ( vLightSpaceSceneAABBminValue );
             fFarPlane = XMVectorGetZ( vLightSpaceSceneAABBmaxValue );
-        } 
-        else if( m_eSelectedNearFarFit == FIT_NEARFAR_SCENE_AABB ) 
+        }
+        else if( m_eSelectedNearFarFit == FIT_NEARFAR_SCENE_AABB )
         {
             // By intersecting the light frustum with the scene AABB we can get a tighter bound on the near and far plane.
-            ComputeNearAndFar( fNearPlane, fFarPlane, vLightCameraOrthographicMin, 
+            ComputeNearAndFar( fNearPlane, fFarPlane, vLightCameraOrthographicMin,
                 vLightCameraOrthographicMax, vSceneAABBPointsLightSpace );
-        } 
-        else 
+        }
+        else
         {
-        
+
         }
         // Craete the orthographic projection for this cascade.
-        D3DXMatrixOrthoOffCenterLH( &m_matShadowProj[ iCascadeIndex ], 
-            XMVectorGetX( vLightCameraOrthographicMin ), 
-            XMVectorGetX( vLightCameraOrthographicMax ), 
-            XMVectorGetY( vLightCameraOrthographicMin ), 
-            XMVectorGetY( vLightCameraOrthographicMax ), 
+        D3DXMatrixOrthoOffCenterLH( &m_matShadowProj[ iCascadeIndex ],
+            XMVectorGetX( vLightCameraOrthographicMin ),
+            XMVectorGetX( vLightCameraOrthographicMax ),
+            XMVectorGetY( vLightCameraOrthographicMin ),
+            XMVectorGetY( vLightCameraOrthographicMax ),
             fNearPlane, fFarPlane );
 
         m_fCascadePartitionsFrustum[ iCascadeIndex ] = fFrustumIntervalEnd;
     }
     m_matShadowView = *m_pLightCamera->GetViewMatrix();
-   
+
 
     return S_OK;
 }
@@ -1229,9 +1229,9 @@ HRESULT VarianceShadowsManager::InitFrame ( ID3D11Device* pd3dDevice, CDXUTSDKMe
 //--------------------------------------------------------------------------------------
 // Render the cascades into a texture atlas.
 //--------------------------------------------------------------------------------------
-HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3dDevice, 
-            ID3D11DeviceContext* pd3dDeviceContext, 
-            CDXUTSDKMesh* pMesh 
+HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3dDevice,
+            ID3D11DeviceContext* pd3dDeviceContext,
+            CDXUTSDKMesh* pMesh
             ) {
 
     HRESULT hr = S_OK;
@@ -1246,9 +1246,9 @@ HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3d
 
     pd3dDeviceContext->RSSetState( m_prsShadow );
 
-    for ( int iCurrentCascade=0; iCurrentCascade < m_CopyOfCascadeConfig.m_nCascadeLevels; ++iCurrentCascade ) 
+    for ( int iCurrentCascade=0; iCurrentCascade < m_CopyOfCascadeConfig.m_nCascadeLevels; ++iCurrentCascade )
     {
-        
+
         pd3dDeviceContext->ClearDepthStencilView( m_pTemporaryShadowDepthBufferDSV, D3D11_CLEAR_DEPTH, 1.0, 0 );
         pd3dDeviceContext->OMSetRenderTargets( 1, &m_pCascadedShadowMapVarianceRTVArrayAll[iCurrentCascade], m_pTemporaryShadowDepthBufferDSV );
         pd3dDeviceContext->RSSetViewports( 1, &m_RenderOneTileVP );
@@ -1256,7 +1256,7 @@ HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3d
         mProj = *m_pLightCamera->GetProjMatrix();
 
         mWorldViewProjection =  m_matShadowView * m_matShadowProj[iCurrentCascade];
-        
+
         // VS Per object
         D3D11_MAPPED_SUBRESOURCE MappedResource;
         V( pd3dDeviceContext->Map( m_pcbGlobalConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
@@ -1283,8 +1283,8 @@ HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3d
     ID3D11ShaderResourceView *srvNull = NULL;
 
     if (m_iShadowBlurSize > 1 ) {
-        INT iKernelShader = ( m_iShadowBlurSize / 2 - 1 ); //3 goes to 0, 5 goes to 1 
-        for ( int iCurrentCascade=0; iCurrentCascade < m_CopyOfCascadeConfig.m_nCascadeLevels; ++iCurrentCascade ) 
+        INT iKernelShader = ( m_iShadowBlurSize / 2 - 1 ); //3 goes to 0, 5 goes to 1
+        for ( int iCurrentCascade=0; iCurrentCascade < m_CopyOfCascadeConfig.m_nCascadeLevels; ++iCurrentCascade )
         {
             pd3dDeviceContext->PSSetShaderResources( 5, 1, &srvNull );
             pd3dDeviceContext->OMSetRenderTargets(1, &m_pCascadedShadowMapTempBlurRTV, dsNullview );
@@ -1303,7 +1303,7 @@ HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3d
     ID3D11RenderTargetView* nullView = NULL;
     pd3dDeviceContext->RSSetState( NULL );
     pd3dDeviceContext->OMSetRenderTargets(1, &nullView, NULL );
-  
+
     first = false;
 
     return hr;
@@ -1314,10 +1314,10 @@ HRESULT VarianceShadowsManager::RenderShadowsForAllCascades ( ID3D11Device* pd3d
 //--------------------------------------------------------------------------------------
 // Render the scene.
 //--------------------------------------------------------------------------------------
-HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceContext, 
-                                      ID3D11RenderTargetView* prtvBackBuffer, 
-                                      ID3D11DepthStencilView* pdsvBackBuffer, 
-                                      CDXUTSDKMesh* pMesh,  
+HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceContext,
+                                      ID3D11RenderTargetView* prtvBackBuffer,
+                                      ID3D11DepthStencilView* pdsvBackBuffer,
+                                      CDXUTSDKMesh* pMesh,
                                       CFirstPersonCamera* pActiveCamera,
                                       D3D11_VIEWPORT* dxutViewPort,
                                       BOOL bVisualize
@@ -1327,7 +1327,7 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     D3D11_MAPPED_SUBRESOURCE MappedResource;
     // We have a seperate render state for the actual rasterization because of different depth biases and Cull modes.
     pd3dDeviceContext->RSSetState( m_prsScene );
-    // 
+    //
     pd3dDeviceContext->OMSetRenderTargets( 1, &prtvBackBuffer, pdsvBackBuffer );
     pd3dDeviceContext->RSSetViewports( 1, dxutViewPort );
     pd3dDeviceContext->IASetInputLayout( m_pVertexLayoutMesh );
@@ -1336,8 +1336,8 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     D3DXMATRIX dxmatCameraView  = *pActiveCamera->GetViewMatrix();
 
     // The user has the option to view the ortho shadow cameras.
-    if( m_eSelectedCamera >= ORTHO_CAMERA1 ) 
-    { 
+    if( m_eSelectedCamera >= ORTHO_CAMERA1 )
+    {
         // In the CAMERA_SELECTION enumeration, value 0 is EYE_CAMERA
         // value 1 is LIGHT_CAMERA and 2 to 10 are the ORTHO_CAMERA values.
         // Subtract to so that we can use the enum to index.
@@ -1346,22 +1346,22 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     }
 
     D3DXMATRIX dxmatWorldViewProjection =  dxmatCameraView * dxmatCameraProj;
-    
+
     V( pd3dDeviceContext->Map( m_pcbGlobalConstantBuffer, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
     CB_ALL_SHADOW_DATA* pcbAllShadowConstants = ( CB_ALL_SHADOW_DATA* )MappedResource.pData;
     D3DXMatrixTranspose( &pcbAllShadowConstants->m_WorldViewProj, &dxmatWorldViewProjection );
-    D3DXMatrixTranspose( &pcbAllShadowConstants->m_WorldView, &dxmatCameraView ); 
-    // These are the for loop begin end values. 
-    // This is a floating point number that is used as the percentage to blur between maps.    
+    D3DXMatrixTranspose( &pcbAllShadowConstants->m_WorldView, &dxmatCameraView );
+    // These are the for loop begin end values.
+    // This is a floating point number that is used as the percentage to blur between maps.
     pcbAllShadowConstants->m_fCascadeBlendArea = m_fBlurBetweenCascadesAmount;
-    pcbAllShadowConstants->m_fTexelSize = 1.0f / (float)m_CopyOfCascadeConfig.m_iBufferSize; 
+    pcbAllShadowConstants->m_fTexelSize = 1.0f / (float)m_CopyOfCascadeConfig.m_iBufferSize;
     pcbAllShadowConstants->m_fNativeTexelSizeInX = pcbAllShadowConstants->m_fTexelSize / m_CopyOfCascadeConfig.m_nCascadeLevels;
     D3DXMATRIX dxmatIdentity;
     D3DXMatrixIdentity( &dxmatIdentity );
     D3DXMatrixTranspose( &pcbAllShadowConstants->m_World, &dxmatIdentity );
     D3DXMATRIX dxmatTextureScale;
-    D3DXMatrixScaling( &dxmatTextureScale,  
-        0.5f, 
+    D3DXMatrixScaling( &dxmatTextureScale,
+        0.5f,
         -0.5f,
         1.0f );
 
@@ -1369,10 +1369,10 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     D3DXMatrixTranslation( &dxmatTextureTranslation, .5,.5,0 );
     D3DXMATRIX scaleToTile;
     D3DXMatrixScaling( &scaleToTile, 1.0f / (float)m_pCascadeConfig->m_nCascadeLevels, 1.0, 1.0 );
- 
+
     D3DXMATRIX mShadow;
     D3DXMatrixTranspose( &pcbAllShadowConstants->m_Shadow, &m_matShadowView );
-    for(int index=0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index ) 
+    for(int index=0; index < m_CopyOfCascadeConfig.m_nCascadeLevels; ++index )
     {
 
         D3DXMATRIX mShadowTexture = m_matShadowProj[index] * dxmatTextureScale * dxmatTextureTranslation;
@@ -1388,13 +1388,13 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
 
     }
     // Copy intervals for the depth interval selection method.
-    memcpy( pcbAllShadowConstants->m_fCascadeFrustumsEyeSpaceDepths, 
+    memcpy( pcbAllShadowConstants->m_fCascadeFrustumsEyeSpaceDepths,
             m_fCascadePartitionsFrustum, MAX_CASCADES*4 );
-    
+
     // The border padding values keep the pixel shader from reading the borders during PCF filtering.
-    pcbAllShadowConstants->m_fMaxBorderPadding = (float)( m_pCascadeConfig->m_iBufferSize  - 1.0f ) / 
+    pcbAllShadowConstants->m_fMaxBorderPadding = (float)( m_pCascadeConfig->m_iBufferSize  - 1.0f ) /
         (float)m_pCascadeConfig->m_iBufferSize;
-    pcbAllShadowConstants->m_fMinBorderPadding = (float)( 1.0f ) / 
+    pcbAllShadowConstants->m_fMinBorderPadding = (float)( 1.0f ) /
         (float)m_pCascadeConfig->m_iBufferSize;
 
     D3DXVECTOR3 ep = *m_pLightCamera->GetEyePt();
@@ -1411,15 +1411,15 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     pd3dDeviceContext->PSSetSamplers( 0, 1, &m_pSamLinear );
     pd3dDeviceContext->PSSetSamplers( 1, 1, &m_pSamLinear );
 
-    switch (m_eShadowFilter) 
+    switch (m_eShadowFilter)
     {
         case ( SHADOW_FILTER_ANISOTROPIC_16 ):
             pd3dDeviceContext->PSSetSamplers( 5, 1, &m_pSamShadowAnisotropic16 );
         break;
-        case ( SHADOW_FILTER_ANISOTROPIC_8 ): 
+        case ( SHADOW_FILTER_ANISOTROPIC_8 ):
             pd3dDeviceContext->PSSetSamplers( 5, 1, &m_pSamShadowAnisotropic8 );
         break;
-        case ( SHADOW_FILTER_ANISOTROPIC_4 ): 
+        case ( SHADOW_FILTER_ANISOTROPIC_4 ):
             pd3dDeviceContext->PSSetSamplers( 5, 1, &m_pSamShadowAnisotropic4 );
         break;
         case ( SHADOW_FILTER_ANISOTROPIC_2 ) :
@@ -1432,7 +1432,7 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
             pd3dDeviceContext->PSSetSamplers( 5, 1, &m_pSamShadowPoint );
         break;
     }
-    /*if ( m_eShadowFilterType == D3D11_FILTER_ANISOTROPIC ) 
+    /*if ( m_eShadowFilterType == D3D11_FILTER_ANISOTROPIC )
     {
         pd3dDeviceContext->PSSetSamplers( 5, 1, &m_pSamShadowAniso );
     }
@@ -1447,8 +1447,8 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     */
     pd3dDeviceContext->GSSetShader( NULL, NULL, 0 );
     pd3dDeviceContext->VSSetShader( m_pvsRenderScene[m_CopyOfCascadeConfig.m_nCascadeLevels-1], NULL, 0 );
-    
-    // There are up to 8 cascades,  blur between cascades, 
+
+    // There are up to 8 cascades,  blur between cascades,
     // and two cascade selection maps.  This is a total of 32 permutations of the shader.
 
     pd3dDeviceContext->PSSetShader(
@@ -1465,7 +1465,7 @@ HRESULT VarianceShadowsManager::RenderScene ( ID3D11DeviceContext* pd3dDeviceCon
     pMesh->Render( pd3dDeviceContext, 0, 1 );
 
     ID3D11ShaderResourceView* nv[] = { NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL};
-    pd3dDeviceContext->PSSetShaderResources( 5,8, nv ); 
+    pd3dDeviceContext->PSSetShaderResources( 5,8, nv );
 
 
     return hr;

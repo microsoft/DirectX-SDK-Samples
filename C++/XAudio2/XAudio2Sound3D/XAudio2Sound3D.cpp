@@ -474,7 +474,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
                                    &pVertexShaderBuffer ) );
 
     ID3DBlob* pPixelShaderBuffer = nullptr;
-    V_RETURN( DXUTCompileFromFile( L"XAudio2Sound3D.fx", nullptr, "RenderScenePS", "ps_4_0_level_9_1", D3DCOMPILE_ENABLE_STRICTNESS, 0, 
+    V_RETURN( DXUTCompileFromFile( L"XAudio2Sound3D.fx", nullptr, "RenderScenePS", "ps_4_0_level_9_1", D3DCOMPILE_ENABLE_STRICTNESS, 0,
                                    &pPixelShaderBuffer ) );
 
     // Create the shaders
@@ -522,7 +522,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pDepthState, "DisableZ" );
 
     pd3dImmediateContext->OMSetDepthStencilState( g_pDepthState, 0 );
-  
+
     // Create constant buffers
     D3D11_BUFFER_DESC cbDesc = {};
     cbDesc.Usage = D3D11_USAGE_DYNAMIC;
@@ -543,7 +543,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     D3D11_SUBRESOURCE_DATA initData = {};
 
     // Floor
-    static const Vertex s_floor[4] = 
+    static const Vertex s_floor[4] =
     {
         { XMFLOAT3( float(XMIN), float(ZMIN), 0 ), FLOOR_COLOR },
         { XMFLOAT3( float(XMIN), float(ZMAX), 0 ), FLOOR_COLOR },
@@ -571,7 +571,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pvbSource, "Source" );
 
     // Listener
-    static const Vertex s_listener[3] = 
+    static const Vertex s_listener[3] =
     {
         { XMFLOAT3(-0.5f, -1.f, 0), LISTENER_COLOR },
         { XMFLOAT3(0, 1.f, 0 ),     LISTENER_COLOR },
@@ -639,7 +639,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         pVertices[ j * 2 + 1 ].Pos = XMFLOAT3( float(i), float(ZMAX), 0 );
         pVertices[ j * 2 + 1 ].color = GRID_COLOR;
     }
-    
+
     vbdesc.ByteWidth = sizeof( Vertex ) * lcount;
     initData.pSysMem = pVertices;
     V_RETURN( pd3dDevice->CreateBuffer( &vbdesc, &initData, &g_pvbGrid ) );
@@ -681,7 +681,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     {
         g_SettingsDlg.OnRender( fElapsedTime );
         return;
-    }       
+    }
 
     auto pRTV = DXUTGetD3D11RenderTargetView();
     pd3dImmediateContext->ClearRenderTargetView( pRTV, Colors::MidnightBlue );
@@ -728,7 +728,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         const XMMATRIX mRot = XMMatrixRotationZ( -g_audioState.fListenerAngle );
 
         const XMMATRIX mat = mRot * mTrans * mScale;
- 
+
         V( pd3dImmediateContext->Map( g_pcbVSPerObject11, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
         pVSPerObject = reinterpret_cast<CB_VS_PER_OBJECT*>( MappedResource.pData );
         XMStoreFloat4x4( &pVSPerObject->m_Transform, XMMatrixTranspose( mat ) );
@@ -763,7 +763,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         const XMMATRIX mTrans = XMMatrixTranslation( g_audioState.vEmitterPos.x, g_audioState.vEmitterPos.z, 0 );
 
         const XMMATRIX mat = mTrans * mScale;
- 
+
         V( pd3dImmediateContext->Map( g_pcbVSPerObject11, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
         pVSPerObject = reinterpret_cast<CB_VS_PER_OBJECT*>( MappedResource.pData );
         XMStoreFloat4x4( &pVSPerObject->m_Transform, XMMatrixTranspose( mat ) );
@@ -784,7 +784,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
     static ULONGLONG timefirst = GetTickCount64();
     if ( GetTickCount64() - timefirst > 5000 )
-    {    
+    {
         OutputDebugString( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
         OutputDebugString( L"\n" );
         timefirst = GetTickCount64();
@@ -793,7 +793,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -802,7 +802,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {

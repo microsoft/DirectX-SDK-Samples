@@ -28,7 +28,7 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include <d3dx9.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 
@@ -249,12 +249,12 @@ VOID Render()
 	// D3DTSS_TEXCOORDINDEX, as shown below. In this example, we are using
 	// the position of the vertex in camera space (D3DTSS_TCI_CAMERASPACEPOSITION)
 	// to generate texture coordinates. Camera space is the vertex position
-	// multiplied by the World and View matrices.  The tex coord index (TCI)  
-	// parameters are passed into a texture transform, which is a 4x4 matrix  
+	// multiplied by the World and View matrices.  The tex coord index (TCI)
+	// parameters are passed into a texture transform, which is a 4x4 matrix
 	// which transforms the x,y,z TCI coordinates into tu, tv texture coordinates.
 
 	// In this example, the texture matrix is setup to transform the input
-	// camera space coordinates (all of R^3) to projection space (-1,+1) 
+	// camera space coordinates (all of R^3) to projection space (-1,+1)
 	// and finally to texture space (0,1).
 	//    CameraSpace.xyzw = (input vertex position) * (WorldView)
 	//    ProjSpace.xyzw = CameraSpace.xyzw * Projection           //move to -1 to 1
@@ -264,7 +264,7 @@ VOID Render()
 	// Setting D3DTSS_TEXTURETRANSFORMFLAGS to D3DTTFF_COUNT4 | D3DTTFF_PROJECTED
 	// tells D3D to divide the input texture coordinates by the 4th (w) component.
 	// This divide is necessary when performing a perspective projection since
-	// the TexSpace.xy coordinates prior to the homogeneous divide are not actually 
+	// the TexSpace.xy coordinates prior to the homogeneous divide are not actually
 	// in the 0 to 1 range.
 	D3DXMATRIXA16 mTextureTransform;
 	D3DXMATRIXA16 mProj;

@@ -33,7 +33,7 @@ UINT                                g_iHeight;                  //  height of th
 DXGI_FORMAT                         g_ColorFormat;              //  format of the backbuffer
 
 #define NUM_MICROSCOPE_INSTANCES 6
-ID3DX10Font*                        g_pFont10                   = NULL;       
+ID3DX10Font*                        g_pFont10                   = NULL;
 ID3DX10Sprite*                      g_pSprite10                 = NULL;
 CDXUTTextHelper*                    g_pTxtHelper                = NULL;
 ID3D10Effect*                       g_pEffect10                 = NULL;
@@ -101,16 +101,16 @@ typedef struct _FSVertex {
 #define IDC_FOCALPLANE_LABEL                                   8
 #define IDC_MULTISAMPLE_TYPE_LABEL                               9
 #define IDC_MULTISAMPLE_TYPE                                   10
-#define IDC_MULTISAMPLE_QUALITY_LABEL                           11 
+#define IDC_MULTISAMPLE_QUALITY_LABEL                           11
 #define IDC_MULTISAMPLE_QUALITY                                   12
 #define IDC_TOGGLEWARP                                         13
 //--------------------------------------------------------------------------------------
-//  Called right before creating a D3D9 or D3D10 device, allowing the app to modify the 
+//  Called right before creating a D3D9 or D3D10 device, allowing the app to modify the
 //  device settings as needed
 //--------------------------------------------------------------------------------------
-bool CALLBACK 
-ModifyDeviceSettings( 
-    DXUTDeviceSettings* pDeviceSettings, 
+bool CALLBACK
+ModifyDeviceSettings(
+    DXUTDeviceSettings* pDeviceSettings,
     void* pUserContext )
 {
     //
@@ -147,14 +147,14 @@ ModifyDeviceSettings(
 //--------------------------------------------------------------------------------------
 //  Handle updates to the scene.  This is called regardless of which D3D API is used
 //--------------------------------------------------------------------------------------
-void CALLBACK 
-OnFrameMove( 
-    double fTime, 
-    float fElapsedTime, 
+void CALLBACK
+OnFrameMove(
+    double fTime,
+    float fElapsedTime,
     void* pUserContext )
 {
     //
-    //  Update the camera's position based on user input 
+    //  Update the camera's position based on user input
     //
     g_Camera.FrameMove( fElapsedTime );
 }
@@ -168,13 +168,13 @@ HRESULT
 SetupFullScreenQuadVertexBuffer(
     ID3D10Device* pd3dDevice )
 {
-    
+
     D3D10_BUFFER_DESC       BufDesc;
     D3D10_SUBRESOURCE_DATA  SRData;
     FSVertex                Verticies[ 4 ];
     HRESULT                 hr;
 
-    //  
+    //
     //  setup full-screen quad vertex buffer
     //
     Verticies[ 0 ].Pos.x        = -1;
@@ -243,12 +243,12 @@ SetupMSAAOptions()
 
     //
     //  get device enumeration information.
-    //   
+    //
     pD3DEnum = DXUTGetD3D10Enumeration();
     assert( pD3DEnum != NULL );
     ds = DXUTGetDeviceSettings();
 
-    pDeviceSettingsCombo = pD3DEnum->GetDeviceSettingsCombo( 
+    pDeviceSettingsCombo = pD3DEnum->GetDeviceSettingsCombo(
         ds.d3d10.AdapterOrdinal,
         ds.d3d10.DriverType,
         ds.d3d10.Output,
@@ -273,7 +273,7 @@ SetupMSAAOptions()
             // This sample needs any MSAA settings to be supported by DXGI_FORMAT_R16_UNORM as well as the backbuffer
             continue;
         }
-        
+
         WCHAR str[50];
         swprintf_s( str, 50, L"%u", uMSAACount );
 
@@ -319,10 +319,10 @@ SetupMSAAOptions()
 //--------------------------------------------------------------------------------------
 //  Create any D3D10 resources that aren't dependant on the back buffer
 //--------------------------------------------------------------------------------------
-HRESULT CALLBACK 
-OnD3D10CreateDevice( 
-    ID3D10Device*               pd3dDevice, 
-    const DXGI_SURFACE_DESC*    pBackBufferSurfaceDesc, 
+HRESULT CALLBACK
+OnD3D10CreateDevice(
+    ID3D10Device*               pd3dDevice,
+    const DXGI_SURFACE_DESC*    pBackBufferSurfaceDesc,
     void*                       pUserContext )
 {
     D3D10_PASS_DESC             PassDesc;
@@ -331,41 +331,41 @@ OnD3D10CreateDevice(
     LPCSTR                      pszTarget;
 
     HRESULT                     hr;
-    
+
     hr = g_DialogResourceManager.OnD3D10CreateDevice( pd3dDevice );
     V_RETURN( hr );
 
     hr = g_D3DSettingsDlg.OnD3D10CreateDevice( pd3dDevice );
     V_RETURN( hr );
 
-    hr = D3DX10CreateFont( 
-        pd3dDevice, 
-        15, 
-        0, 
-        FW_BOLD, 
-        1, 
-        FALSE, 
-        DEFAULT_CHARSET, 
-        OUT_DEFAULT_PRECIS, 
-        DEFAULT_QUALITY, 
-        DEFAULT_PITCH | FF_DONTCARE, 
-        L"Arial", 
+    hr = D3DX10CreateFont(
+        pd3dDevice,
+        15,
+        0,
+        FW_BOLD,
+        1,
+        FALSE,
+        DEFAULT_CHARSET,
+        OUT_DEFAULT_PRECIS,
+        DEFAULT_QUALITY,
+        DEFAULT_PITCH | FF_DONTCARE,
+        L"Arial",
         &g_pFont10 );
 
     V_RETURN( hr );
 
-    hr = D3DX10CreateSprite( 
-        pd3dDevice, 
-        512, 
+    hr = D3DX10CreateSprite(
+        pd3dDevice,
+        512,
         &g_pSprite10);
-    
+
     V_RETURN( hr );
 
-    g_pTxtHelper = new CDXUTTextHelper( 
-        NULL, 
-        NULL, 
-        g_pFont10, 
-        g_pSprite10, 
+    g_pTxtHelper = new CDXUTTextHelper(
+        NULL,
+        NULL,
+        g_pFont10,
+        g_pSprite10,
         15 );
 
     //
@@ -374,24 +374,24 @@ OnD3D10CreateDevice(
     #if defined( DEBUG ) || defined( _DEBUG )
         //
         //  Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-        //  Setting this flag improves the shader debugging experience, but still allows 
-        //  the shaders to be optimized and to run exactly the way they will run in 
+        //  Setting this flag improves the shader debugging experience, but still allows
+        //  the shaders to be optimized and to run exactly the way they will run in
         //  the release configuration of this program.
         //
         dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
-   
-    hr = DXUTFindDXSDKMediaFileCch( 
-        str, 
-        MAX_PATH, 
+
+    hr = DXUTFindDXSDKMediaFileCch(
+        str,
+        MAX_PATH,
         L"DepthOfField10.1.fx" );
-    
+
     V_RETURN( hr );
 
     //
     //  Check to see if we are on SP1 and have a dx10.1 device.
     //
-    if( NULL == DXUTGetD3D10Device1() ) 
+    if( NULL == DXUTGetD3D10Device1() )
     {
         pszTarget = "fx_4_1";
 
@@ -404,8 +404,8 @@ OnD3D10CreateDevice(
         g_SampleUI.GetComboBox( IDC_MULTISAMPLE_QUALITY )->SetEnabled( false );
         g_SampleUI.GetComboBox( IDC_MULTISAMPLE_QUALITY )->SetVisible( false );
 
-    } 
-    else 
+    }
+    else
     {
         pszTarget = "fx_4_1";
 
@@ -419,31 +419,31 @@ OnD3D10CreateDevice(
         g_SampleUI.GetComboBox( IDC_MULTISAMPLE_QUALITY )->SetVisible( true );
     }
     ID3D10Blob* pErrorBlob;
-    hr = D3DX10CreateEffectFromFile( 
-        str, 
-        NULL, 
-        NULL, 
-        pszTarget, 
-        dwShaderFlags, 
-        0, 
-        pd3dDevice, 
-        NULL, 
-        NULL, 
-        &g_pEffect10, 
-        &pErrorBlob, 
+    hr = D3DX10CreateEffectFromFile(
+        str,
+        NULL,
+        NULL,
+        pszTarget,
+        dwShaderFlags,
+        0,
+        pd3dDevice,
+        NULL,
+        NULL,
+        &g_pEffect10,
+        &pErrorBlob,
         NULL );
 
     if( FAILED( hr ) )
     {
         OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
         SAFE_RELEASE( pErrorBlob );
-    } 
-    else 
+    }
+    else
     {
         SAFE_RELEASE( pErrorBlob );
     }
     V_RETURN( hr );
-    
+
     //
     //  Obtain the technique handles
     //
@@ -473,12 +473,12 @@ OnD3D10CreateDevice(
     };
 
     g_pRenderTextured->GetPassByIndex( 0 )->GetDesc( &PassDesc );
-    
-    hr = pd3dDevice->CreateInputLayout( 
-        layout, 
-        3, 
-        PassDesc.pIAInputSignature, 
-        PassDesc.IAInputSignatureSize, 
+
+    hr = pd3dDevice->CreateInputLayout(
+        layout,
+        3,
+        PassDesc.pIAInputSignature,
+        PassDesc.IAInputSignatureSize,
         &g_pVertexLayout );
 
     V_RETURN( hr );
@@ -486,16 +486,16 @@ OnD3D10CreateDevice(
     //
     //  Load the Meshes
     //
-    g_CityMesh.Create( 
-        pd3dDevice, 
+    g_CityMesh.Create(
+        pd3dDevice,
         L"MicroscopeCity\\occcity.sdkmesh" );
 
-    g_HeavyMesh.Create( 
-        pd3dDevice, 
+    g_HeavyMesh.Create(
+        pd3dDevice,
         L"MicroscopeCity\\scanner.sdkmesh" );
-    
-    g_ColumnMesh.Create( 
-        pd3dDevice, 
+
+    g_ColumnMesh.Create(
+        pd3dDevice,
         L"MicroscopeCity\\column.sdkmesh" );
 
     //
@@ -504,8 +504,8 @@ OnD3D10CreateDevice(
     D3DXVECTOR3 vecEye( 0.0f, 0.8f, -2.3f );
     D3DXVECTOR3 vecAt( 0.0f, 0.0f, 0.0f );
 
-    g_Camera.SetViewParams( 
-        &vecEye, 
+    g_Camera.SetViewParams(
+        &vecEye,
         &vecAt );
 
     //
@@ -527,11 +527,11 @@ OnD3D10CreateDevice(
 //--------------------------------------------------------------------------------------
 //  Create any D3D10 resources that depend on the back buffer
 //--------------------------------------------------------------------------------------
-HRESULT CALLBACK 
-OnD3D10SwapChainResized( 
-    ID3D10Device*               pd3dDevice, 
-    IDXGISwapChain*             pSwapChain, 
-    const DXGI_SURFACE_DESC*    pBackBufferSurfaceDesc, 
+HRESULT CALLBACK
+OnD3D10SwapChainResized(
+    ID3D10Device*               pd3dDevice,
+    IDXGISwapChain*             pSwapChain,
+    const DXGI_SURFACE_DESC*    pBackBufferSurfaceDesc,
     void*                       pUserContext )
 {
     ID3D10Device1*                      pd3dDevice1;
@@ -551,11 +551,11 @@ OnD3D10SwapChainResized(
     //
     pd3dDevice1 = DXUTGetD3D10Device1();
 
-    V_RETURN( g_DialogResourceManager.OnD3D10ResizedSwapChain( 
-            pd3dDevice, 
+    V_RETURN( g_DialogResourceManager.OnD3D10ResizedSwapChain(
+            pd3dDevice,
             pBackBufferSurfaceDesc ) );
-    V_RETURN( g_D3DSettingsDlg.OnD3D10ResizedSwapChain( 
-        pd3dDevice, 
+    V_RETURN( g_D3DSettingsDlg.OnD3D10ResizedSwapChain(
+        pd3dDevice,
         pBackBufferSurfaceDesc ) );
 
     g_iWidth        = pBackBufferSurfaceDesc->Width;
@@ -566,39 +566,39 @@ OnD3D10SwapChainResized(
     //  Setup the camera's projection parameters
     //
     fAspectRatio = pBackBufferSurfaceDesc->Width / (FLOAT)pBackBufferSurfaceDesc->Height;
-    
-    g_Camera.SetProjParams( 
-        D3DX_PI / 4, 
-        fAspectRatio, 
-        0.05f, 
+
+    g_Camera.SetProjParams(
+        D3DX_PI / 4,
+        fAspectRatio,
+        0.05f,
         500.0f );
 
-    g_Camera.SetWindow( 
-        pBackBufferSurfaceDesc->Width, 
+    g_Camera.SetWindow(
+        pBackBufferSurfaceDesc->Width,
         pBackBufferSurfaceDesc->Height );
 
-    g_Camera.SetButtonMasks( 
-        MOUSE_LEFT_BUTTON, 
-        MOUSE_WHEEL, 
+    g_Camera.SetButtonMasks(
+        MOUSE_LEFT_BUTTON,
+        MOUSE_WHEEL,
         MOUSE_MIDDLE_BUTTON );
 
     //
     //  Reset the ui positions based on the current swapchain size.
     //
-    g_HUD.SetLocation( 
-        pBackBufferSurfaceDesc->Width - 170, 
+    g_HUD.SetLocation(
+        pBackBufferSurfaceDesc->Width - 170,
         0 );
 
-    g_HUD.SetSize( 
-        170, 
+    g_HUD.SetSize(
+        170,
         170 );
 
-    g_SampleUI.SetLocation( 
-        pBackBufferSurfaceDesc->Width - 170, 
+    g_SampleUI.SetLocation(
+        pBackBufferSurfaceDesc->Width - 170,
         pBackBufferSurfaceDesc->Height - 400 );
 
-    g_SampleUI.SetSize( 
-        170, 
+    g_SampleUI.SetSize(
+        170,
         400 );
 
     //
@@ -625,12 +625,12 @@ OnD3D10SwapChainResized(
     V_RETURN( hr );
 
     if( 1 != g_MSAASettings.Count ) {
-        
+
         //
         //  if we are using msaa, create the msaa render target
         //
         TexDesc.MipLevels           = 1;
-        TexDesc.SampleDesc          = g_MSAASettings;    
+        TexDesc.SampleDesc          = g_MSAASettings;
         TexDesc.MiscFlags           = 0;
 
         hr = pd3dDevice->CreateTexture2D(
@@ -709,7 +709,7 @@ OnD3D10SwapChainResized(
         RTDesc.Format = DXGI_FORMAT_R16_FLOAT;
         RTDesc.ViewDimension = D3D10_RTV_DIMENSION_TEXTURE2D;
         RTDesc.Texture2D.MipSlice = 0;
-         
+
         hr = pd3dDevice->CreateRenderTargetView(
             g_pDepthColorTexture,
             &RTDesc,
@@ -726,13 +726,13 @@ OnD3D10SwapChainResized(
             g_pDepthColorTexture,
             &SRDesc,
             &g_pDepthColorSRV );
-        
+
         V_RETURN( hr );
     }
 
     //
     //  Create depth/stencil view or depth color buffer.
-    //    
+    //
     TexDesc.Width               = g_iWidth;
     TexDesc.Height              = g_iHeight;
     TexDesc.MipLevels           = 1;
@@ -743,7 +743,7 @@ OnD3D10SwapChainResized(
     TexDesc.CPUAccessFlags      = 0;
     TexDesc.MiscFlags           = 0;
 
-    if( enRenderUsingDepth == g_RenderType ) { 
+    if( enRenderUsingDepth == g_RenderType ) {
         TexDesc.BindFlags       = D3D10_BIND_DEPTH_STENCIL | D3D10_BIND_SHADER_RESOURCE;
     } else {
         TexDesc.BindFlags       = D3D10_BIND_DEPTH_STENCIL;
@@ -772,14 +772,14 @@ OnD3D10SwapChainResized(
         &g_pDepthStencilDSView );
 
     V_RETURN( hr );
- 
+
     //
     //  Create a shader view if we are using the depth buffer directly.
     //
     if( enRenderUsingDepth == g_RenderType ) {
 
-        if( 1 == g_MSAASettings.Count ) 
-        {    
+        if( 1 == g_MSAASettings.Count )
+        {
             SRDesc.Format = DXGI_FORMAT_R16_UNORM;
             SRDesc.ViewDimension = D3D10_SRV_DIMENSION_TEXTURE2D;
             SRDesc.Texture2D.MostDetailedMip = 0;
@@ -789,19 +789,19 @@ OnD3D10SwapChainResized(
                 g_pDepthStencilTexture,
                 &SRDesc,
                 &g_pDepthStencilSRView );
-            
+
             V_RETURN( hr );
 
-        } 
-        else if( NULL != pd3dDevice1 ) 
+        }
+        else if( NULL != pd3dDevice1 )
         {
             //
             //  the depth/stencil buffer is msaa so we need dx10.1 to allow
             //  us to create a shader resource view.
             //
             D3D10_SHADER_RESOURCE_VIEW_DESC1    SRDesc1;
-            ID3D10ShaderResourceView1*          pSRView1 = NULL;              
-                
+            ID3D10ShaderResourceView1*          pSRView1 = NULL;
+
             SRDesc1.Format = DXGI_FORMAT_R16_UNORM;
             SRDesc1.ViewDimension = D3D10_1_SRV_DIMENSION_TEXTURE2DMS;
 
@@ -822,8 +822,8 @@ OnD3D10SwapChainResized(
             pSRView1->Release();
 
             V_RETURN( hr );
-        } 
-        else 
+        }
+        else
         {
             //
             //  We cannot create a shader resource view in dx10.0 so we cannot
@@ -839,13 +839,13 @@ OnD3D10SwapChainResized(
 //--------------------------------------------------------------------------------------
 // Render the help and statistics text
 //--------------------------------------------------------------------------------------
-void 
+void
 RenderText()
 {
     g_pTxtHelper->Begin();
     g_pTxtHelper->SetInsertionPos( 2, 0 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
-    g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );  
+    g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
     g_pTxtHelper->End();
 }
@@ -853,18 +853,18 @@ RenderText()
 //--------------------------------------------------------------------------------------
 //  Render the scene using the D3D10 device
 //--------------------------------------------------------------------------------------
-void CALLBACK 
-OnD3D10FrameRender( 
-    ID3D10Device*   pd3dDevice, 
-    DOUBLE          fTime, 
-    FLOAT           fElapsedTime, 
+void CALLBACK
+OnD3D10FrameRender(
+    ID3D10Device*   pd3dDevice,
+    DOUBLE          fTime,
+    FLOAT           fElapsedTime,
     void*           pUserContext )
 {
     //
     // get the back-buffer target views
     ID3D10RenderTargetView*     pRTView             = DXUTGetD3D10RenderTargetView();
     ID3D10DepthStencilView*     pDSView             = DXUTGetD3D10DepthStencilView();
-    
+
     const FLOAT                 fClearColor[ 4 ]    = { 0.9569f, 0.9569f, 1.0f, 0.0f };
     const FLOAT                 fDepthInfo[ 4 ]     = { 0., (FLOAT)g_iWidth, (FLOAT)g_iHeight, g_fFocalPlaneVSDepth };
 
@@ -876,7 +876,7 @@ OnD3D10FrameRender(
     D3DXMATRIX                  mProj;
     D3DXMATRIX                  mInvProj;
     D3DXMATRIX                  mWorldViewProj;
-    
+
     //
     //  If the settings dialog is being shown, then render it instead of rendering the app's scene
     //
@@ -885,8 +885,8 @@ OnD3D10FrameRender(
         //
         //  Clear and Set the backbuffer rendertarget.
         //
-        pd3dDevice->ClearRenderTargetView( 
-            pRTView, 
+        pd3dDevice->ClearRenderTargetView(
+            pRTView,
             fClearColor );
 
         pd3dDevice->OMSetRenderTargets(
@@ -895,25 +895,25 @@ OnD3D10FrameRender(
             NULL );
 
         g_D3DSettingsDlg.OnRender( fElapsedTime );
-        
+
         return;
     }
- 
+
     //
     //  Clear and set the render targets based on the user selections
     //
-    ID3D10ShaderResourceView *pNullView = NULL; 
+    ID3D10ShaderResourceView *pNullView = NULL;
     pd3dDevice->PSSetShaderResources( 1, 1, &pNullView  );
-    if( 1 == g_MSAASettings.Count ) 
+    if( 1 == g_MSAASettings.Count )
     {
-        pd3dDevice->ClearRenderTargetView( 
-            g_pColorRTView, 
+        pd3dDevice->ClearRenderTargetView(
+            g_pColorRTView,
             fClearColor );
 
-        pd3dDevice->ClearDepthStencilView( 
-            g_pDepthStencilDSView, 
-            D3D10_CLEAR_DEPTH, 
-            1.0, 
+        pd3dDevice->ClearDepthStencilView(
+            g_pDepthStencilDSView,
+            D3D10_CLEAR_DEPTH,
+            1.0,
             0 );
 
         pd3dDevice->OMSetRenderTargets(
@@ -921,17 +921,17 @@ OnD3D10FrameRender(
             &g_pColorRTView,
             g_pDepthStencilDSView );
 
-    } 
-    else 
+    }
+    else
     {
-        pd3dDevice->ClearRenderTargetView( 
-            g_pMSAAColorRTView, 
+        pd3dDevice->ClearRenderTargetView(
+            g_pMSAAColorRTView,
             fClearColor );
 
-        pd3dDevice->ClearDepthStencilView( 
-            g_pDepthStencilDSView, 
-            D3D10_CLEAR_DEPTH, 
-            1.0, 
+        pd3dDevice->ClearDepthStencilView(
+            g_pDepthStencilDSView,
+            D3D10_CLEAR_DEPTH,
+            1.0,
             0 );
 
         pd3dDevice->OMSetRenderTargets(
@@ -957,42 +957,42 @@ OnD3D10FrameRender(
     //
     //  Render the city
     //
-    g_CityMesh.Render( 
-        pd3dDevice, 
-        g_pRenderTextured, 
+    g_CityMesh.Render(
+        pd3dDevice,
+        g_pRenderTextured,
         g_pDiffuseTex );
 
-    g_ColumnMesh.Render( 
-        pd3dDevice, 
-        g_pRenderTextured, 
+    g_ColumnMesh.Render(
+        pd3dDevice,
+        g_pRenderTextured,
         g_pDiffuseTex );
 
     //
     //  Render the microscopes themselves if the bounding volumes rendered
     //
-    for( UINT uIdx = 0; uIdx < NUM_MICROSCOPE_INSTANCES; ++uIdx ) 
+    for( UINT uIdx = 0; uIdx < NUM_MICROSCOPE_INSTANCES; ++uIdx )
     {
         D3DXMATRIX mMatRot;
         D3DXMATRIX mWVP;
-        
-        D3DXMatrixRotationY( 
-            &mMatRot, 
+
+        D3DXMatrixRotationY(
+            &mMatRot,
             uIdx * ( D3DX_PI / 3.0f ) );
-        
+
         mWVP = mMatRot*mWorldViewProj;
         g_pmWorldViewProj->SetMatrix( (float*)&mWVP );
 
-        g_HeavyMesh.Render( 
-            pd3dDevice, 
-            g_pRenderTextured, 
+        g_HeavyMesh.Render(
+            pd3dDevice,
+            g_pRenderTextured,
             g_pDiffuseTex );
     }
 
-    if( 1 != g_MSAASettings.Count ) 
+    if( 1 != g_MSAASettings.Count )
     {
-    
+
         //
-        //  Resolve the color buffer to use as the color source for the 
+        //  Resolve the color buffer to use as the color source for the
         //  final, blurred result
         //
         pd3dDevice->ResolveSubresource(
@@ -1001,23 +1001,23 @@ OnD3D10FrameRender(
             g_pMSAAColorTexture,
             0,
             g_ColorFormat );
-    } 
+    }
 
-    if( enRenderUsingNonMSAADepth == g_RenderType ) 
+    if( enRenderUsingNonMSAADepth == g_RenderType )
     {
         //
         //  Re-render the scene writing the depth value to the depth texture.
-        //  
+        //
         const FLOAT fClearColor2[ 4 ] = { 1.f, 1.f, 1.f, 1.f };
 
         pd3dDevice->ClearRenderTargetView(
             g_pDepthColorRTV,
             fClearColor2 );
 
-        pd3dDevice->ClearDepthStencilView( 
-            pDSView, 
-            D3D10_CLEAR_DEPTH, 
-            1.0, 
+        pd3dDevice->ClearDepthStencilView(
+            pDSView,
+            D3D10_CLEAR_DEPTH,
+            1.0,
             0 );
 
         pd3dDevice->OMSetRenderTargets(
@@ -1030,34 +1030,34 @@ OnD3D10FrameRender(
         //
         //  Render the city
         //
-        g_CityMesh.Render( 
-            pd3dDevice, 
-            g_pRenderDepth, 
+        g_CityMesh.Render(
+            pd3dDevice,
+            g_pRenderDepth,
             g_pDiffuseTex );
 
-        g_ColumnMesh.Render( 
-            pd3dDevice, 
-            g_pRenderDepth, 
+        g_ColumnMesh.Render(
+            pd3dDevice,
+            g_pRenderDepth,
             g_pDiffuseTex );
 
         //
         //  Render the microscopes themselves if the bounding volumes rendered
         //
-        for( UINT uIdx = 0; uIdx < NUM_MICROSCOPE_INSTANCES; ++uIdx ) 
+        for( UINT uIdx = 0; uIdx < NUM_MICROSCOPE_INSTANCES; ++uIdx )
         {
             D3DXMATRIX mMatRot;
             D3DXMATRIX mWVP;
-            
-            D3DXMatrixRotationY( 
-                &mMatRot, 
+
+            D3DXMatrixRotationY(
+                &mMatRot,
                 uIdx * ( D3DX_PI / 3.0f ) );
-            
+
             mWVP = mMatRot*mWorldViewProj;
             g_pmWorldViewProj->SetMatrix( (float*)&mWVP );
 
-            g_HeavyMesh.Render( 
-                pd3dDevice, 
-                g_pRenderDepth, 
+            g_HeavyMesh.Render(
+                pd3dDevice,
+                g_pRenderDepth,
                 g_pDiffuseTex );
         }
     }
@@ -1080,7 +1080,7 @@ OnD3D10FrameRender(
     g_pDiffuseTex->SetResource(
         g_pColorSRView );
 
-     
+
     g_pvDepthInfo->SetFloatVector( (FLOAT*)fDepthInfo );
 
     pd3dDevice->IASetVertexBuffers(
@@ -1090,21 +1090,21 @@ OnD3D10FrameRender(
         &uStride,
         &uOffset );
 
-    if( enRenderUsingNonMSAADepth == g_RenderType ) 
+    if( enRenderUsingNonMSAADepth == g_RenderType )
     {
         g_pDepthTex->SetResource( g_pDepthColorSRV );
-    } 
+    }
     else
     {
         //
-        //  Set the depth surface into the appropriate 
+        //  Set the depth surface into the appropriate
         //
         if( 1 == g_MSAASettings.Count )
             g_pDepthTex->SetResource( g_pDepthStencilSRView );
         else
             g_pDepthMSAATex->SetResource( g_pDepthStencilSRView );
     }
-   
+
     //
     //  Apply the post-processing effect
     //
@@ -1112,7 +1112,7 @@ OnD3D10FrameRender(
         g_pRenderVerticiesQuad->GetPassByIndex( 0 )->Apply( 0 );
     else
         g_pRenderVerticiesQuadMSAA->GetPassByIndex( 0 )->Apply( 0 );
-    
+
     pd3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
 
     pd3dDevice->Draw(
@@ -1128,10 +1128,10 @@ OnD3D10FrameRender(
 
 
 //--------------------------------------------------------------------------------------
-//  Release D3D10 resources created in OnD3D10ResizedSwapChain 
+//  Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
-void CALLBACK 
-OnD3D10ReleasingSwapChain( 
+void CALLBACK
+OnD3D10ReleasingSwapChain(
     void* pUserContext )
 {
     SAFE_RELEASE( g_pColorRTView );
@@ -1158,10 +1158,10 @@ OnD3D10ReleasingSwapChain(
 
 
 //--------------------------------------------------------------------------------------
-//  Release D3D10 resources created in OnD3D10CreateDevice 
+//  Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
-void CALLBACK 
-OnD3D10DestroyDevice( 
+void CALLBACK
+OnD3D10DestroyDevice(
     void* pUserContext )
 {
     g_DialogResourceManager.OnD3D10DestroyDevice();
@@ -1184,13 +1184,13 @@ OnD3D10DestroyDevice(
 //--------------------------------------------------------------------------------------
 //  Handles the GUI events
 //--------------------------------------------------------------------------------------
-void CALLBACK 
-OnGUIEvent( 
-    UINT            nEvent, 
-    INT             nControlID, 
-    CDXUTControl*   pControl, 
+void CALLBACK
+OnGUIEvent(
+    UINT            nEvent,
+    INT             nControlID,
+    CDXUTControl*   pControl,
     void*           pUserContext )
-{   
+{
     BOOL bResetDevice = FALSE;
 
     switch( nControlID )
@@ -1204,7 +1204,7 @@ OnGUIEvent(
             CDXUTSlider* pSlider = (CDXUTSlider*)pControl;
 
             g_fFocalPlaneVSDepth = (FLOAT)pSlider->GetValue() / 100.f;
-            
+
             break;
         }
         case IDC_MULTISAMPLE_TYPE: {
@@ -1231,7 +1231,7 @@ OnGUIEvent(
             bResetDevice = TRUE;
             break;
         }
-    }    
+    }
 
     //
     //  If any options affecting our render targets formats have occured, recreate them.
@@ -1241,7 +1241,7 @@ OnGUIEvent(
         SetupMSAAOptions();
 
         OnD3D10ReleasingSwapChain( NULL );
-        
+
         OnD3D10SwapChainResized(
             DXUTGetD3D10Device(),
             DXUTGetDXGISwapChain(),
@@ -1254,7 +1254,7 @@ OnGUIEvent(
 //  Initialize the app.
 //  Setup the gui call backs and add our custom sample controls.
 //--------------------------------------------------------------------------------------
-void 
+void
 InitApp()
 {
     CDXUTComboBox*  pTechniqueBox   = NULL;
@@ -1265,8 +1265,8 @@ InitApp()
     g_HUD.Init( &g_DialogResourceManager );
     g_SampleUI.Init( &g_DialogResourceManager );
 
-    g_HUD.SetCallback( OnGUIEvent ); 
-    
+    g_HUD.SetCallback( OnGUIEvent );
+
     //
     //  Add default HUD buttons.
     //
@@ -1278,72 +1278,72 @@ InitApp()
     //
     //  Create the sample ui controls to update our sample parameters.
     //
-    iY = 0;    
+    iY = 0;
 
-    g_SampleUI.AddStatic( 
-        IDC_FOCALPLANE_LABEL, 
-        L"Focal Plane Depth", 
-        35, 
-        iY += 24, 
-        125, 
+    g_SampleUI.AddStatic(
+        IDC_FOCALPLANE_LABEL,
+        L"Focal Plane Depth",
+        35,
+        iY += 24,
+        125,
         22 );
 
-    g_SampleUI.AddSlider( 
-        IDC_FOCALPLANE, 
-        35, 
-        iY += 24, 
-        125, 
-        22, 
-        0, 
-        (INT)g_fFocalPlaneVSDepth * 200, 
+    g_SampleUI.AddSlider(
+        IDC_FOCALPLANE,
+        35,
+        iY += 24,
+        125,
+        22,
+        0,
+        (INT)g_fFocalPlaneVSDepth * 200,
         (INT)g_fFocalPlaneVSDepth * 100 );
 
-    g_SampleUI.AddStatic( 
-        IDC_MULTISAMPLE_TYPE_LABEL, 
-        L"Multisample Type", 
-        35, 
-        iY += 24, 
-        125, 
+    g_SampleUI.AddStatic(
+        IDC_MULTISAMPLE_TYPE_LABEL,
+        L"Multisample Type",
+        35,
+        iY += 24,
+        125,
         22 );
 
-    g_SampleUI.AddComboBox( 
-        IDC_MULTISAMPLE_TYPE, 
-        35, 
-        iY += 24, 
-        125, 
+    g_SampleUI.AddComboBox(
+        IDC_MULTISAMPLE_TYPE,
+        35,
+        iY += 24,
+        125,
         22 );
 
-    g_SampleUI.AddStatic( 
-        IDC_MULTISAMPLE_QUALITY_LABEL, 
-        L"Multisample Quality", 
-        35, 
-        iY += 24, 
-        125, 
+    g_SampleUI.AddStatic(
+        IDC_MULTISAMPLE_QUALITY_LABEL,
+        L"Multisample Quality",
+        35,
+        iY += 24,
+        125,
         22 );
 
-    g_SampleUI.AddComboBox( 
-        IDC_MULTISAMPLE_QUALITY, 
-        35, 
-        iY += 24, 
-        125, 
+    g_SampleUI.AddComboBox(
+        IDC_MULTISAMPLE_QUALITY,
+        35,
+        iY += 24,
+        125,
         22 );
 
-    g_SampleUI.AddStatic( 
-        IDC_TECHNIQUE_LABEL, 
-        L"Render Technique", 
-        35, 
-        iY += 24, 
-        125, 
+    g_SampleUI.AddStatic(
+        IDC_TECHNIQUE_LABEL,
+        L"Render Technique",
+        35,
+        iY += 24,
+        125,
         22 );
 
-    g_SampleUI.AddComboBox( 
-        IDC_TECHNIQUE, 
-        35, 
-        iY += 24, 
-        125, 
-        22, 
-        0, 
-        false, 
+    g_SampleUI.AddComboBox(
+        IDC_TECHNIQUE,
+        35,
+        iY += 24,
+        125,
+        22,
+        0,
+        false,
         &pTechniqueBox );
 
     pTechniqueBox->AddItem(
@@ -1353,21 +1353,21 @@ InitApp()
     pTechniqueBox->AddItem(
         L"Depth Color Buffer",
         ULongToPtr( enRenderUsingNonMSAADepth ) );
-    
-    g_SampleUI.SetCallback( OnGUIEvent );  
+
+    g_SampleUI.SetCallback( OnGUIEvent );
 }
 
 
 //--------------------------------------------------------------------------------------
 //  Handle messages to the application
 //--------------------------------------------------------------------------------------
-LRESULT CALLBACK 
-MsgProc( 
-    HWND        hWnd, 
-    UINT        uMsg, 
-    WPARAM      wParam, 
-    LPARAM      lParam, 
-    bool*       pbNoFurtherProcessing, 
+LRESULT CALLBACK
+MsgProc(
+    HWND        hWnd,
+    UINT        uMsg,
+    WPARAM      wParam,
+    LPARAM      lParam,
+    bool*       pbNoFurtherProcessing,
     void*       pUserContext )
 {
     //
@@ -1381,10 +1381,10 @@ MsgProc(
     // Pass messages to settings dialog if its active
     if( g_D3DSettingsDlg.IsActive() ) {
 
-        g_D3DSettingsDlg.MsgProc( 
-            hWnd, 
-            uMsg, 
-            wParam, 
+        g_D3DSettingsDlg.MsgProc(
+            hWnd,
+            uMsg,
+            wParam,
             lParam );
 
         return 0;
@@ -1406,24 +1406,24 @@ MsgProc(
     //
     //  Pass all remaining windows messages to camera so it can respond to user input
     //
-    g_Camera.HandleMessages( 
-        hWnd, 
-        uMsg, 
-        wParam, 
+    g_Camera.HandleMessages(
+        hWnd,
+        uMsg,
+        wParam,
         lParam );
 
     return 0;
 }
 
 //--------------------------------------------------------------------------------------
-//  Entry point to the program. Initializes everything and goes into a message 
+//  Entry point to the program. Initializes everything and goes into a message
 //  processing loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
-int WINAPI 
-wWinMain( 
-    HINSTANCE   hInstance, 
-    HINSTANCE   hPrevInstance, 
-    LPWSTR      lpCmdLine, 
+int WINAPI
+wWinMain(
+    HINSTANCE   hInstance,
+    HINSTANCE   hPrevInstance,
+    LPWSTR      lpCmdLine,
     int         nCmdShow )
 {
     // Enable run-time memory check for debug builds.
@@ -1431,7 +1431,7 @@ wWinMain(
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks

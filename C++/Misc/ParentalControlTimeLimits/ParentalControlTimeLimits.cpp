@@ -153,7 +153,7 @@ bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
-    // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+    // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
     // then switch to SWVP.
     IDirect3D9* pD3D = DXUTGetD3D9Object();
     D3DCAPS9 caps;
@@ -171,7 +171,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3DPOOL_MANAGED resources here 
+// Create any D3DPOOL_MANAGED resources here
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                  void* pUserContext )
@@ -187,7 +187,7 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3DPOOL_DEFAULT resources here 
+// Create any D3DPOOL_DEFAULT resources here
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -253,7 +253,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 }
 
 //--------------------------------------------------------------------------------------
-// Render the scene 
+// Render the scene
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime, void* pUserContext )
 {
@@ -352,14 +352,14 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
         }
         miscTxt.End();
 
-        // 
+        //
         // Draw the restricted hours grid
         //
         V( g_pGridLine->Begin() );
 
         // vertical lines
         D3DXVECTOR2 gridLine[2];                        // 2 Verts per line segment
-        gridLine[0].y = ( float )( g_gridPos.y - 5 );    // - 5 allows for the vertical tick mark 
+        gridLine[0].y = ( float )( g_gridPos.y - 5 );    // - 5 allows for the vertical tick mark
         gridLine[1].y = ( float )( g_gridPos.y + g_gridSize.cy - 1 );
         for( int i = 0; i < HoursPerDay; ++i )
         {
@@ -485,7 +485,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 
 
 //--------------------------------------------------------------------------------------
-// Handle messages to the application 
+// Handle messages to the application
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
                           bool* pbNoFurtherProcessing, void* pUserContext )
@@ -523,7 +523,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 }
 
 //--------------------------------------------------------------------------------------
-// Release resources created in the OnResetDevice callback here 
+// Release resources created in the OnResetDevice callback here
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
 {

@@ -18,7 +18,7 @@
 // We special case regular patches since they are cheaper to compute and more common.
 #define NUM_REGULAR_POINTS 16
 
-// Define the patch stride in terms of float4s 
+// Define the patch stride in terms of float4s
 #define PATCH_STRIDE 16	
 
 // Maximum valence we expect to encounter for extraordinary vertices

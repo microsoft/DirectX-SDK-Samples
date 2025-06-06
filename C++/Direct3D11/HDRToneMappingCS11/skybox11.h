@@ -38,7 +38,7 @@ protected:
     struct CB_VS_PER_OBJECT
     {
         D3DXMATRIX m_WorldViewProj;
-    };    
+    };
 
     ID3D11Texture2D* m_pEnvironmentMap11;
     ID3D11ShaderResourceView* m_pEnvironmentRV11;

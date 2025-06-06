@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: Config.cpp
 //
-// Desc: 
+// Desc:
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -29,7 +29,7 @@ struct PREDEFINED_MATERIALS
 
 //--------------------------------------------------------------------------------------
 // Subsurface scattering parameters from:
-// "A Practical Model for Subsurface Light Transport", 
+// "A Practical Model for Subsurface Light Transport",
 // Henrik Wann Jensen, Steve R. Marschner, Marc Levoy, Pat Hanrahan.
 // SIGGRAPH 2001
 //--------------------------------------------------------------------------------------

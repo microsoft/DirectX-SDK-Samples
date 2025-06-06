@@ -27,7 +27,7 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include <d3dx9.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 
@@ -153,9 +153,9 @@ VOID SetupMatrices()
     // For our world matrix, we will just rotate the object about the y-axis.
     D3DXMATRIXA16 matWorld;
 
-    // Set up the rotation matrix to generate 1 full rotation (2*PI radians) 
-    // every 1000 ms. To avoid the loss of precision inherent in very high 
-    // floating point numbers, the system time is modulated by the rotation 
+    // Set up the rotation matrix to generate 1 full rotation (2*PI radians)
+    // every 1000 ms. To avoid the loss of precision inherent in very high
+    // floating point numbers, the system time is modulated by the rotation
     // period before conversion to a radian angle.
     UINT iTime = timeGetTime() % 1000;
     FLOAT fAngle = iTime * ( 2.0f * D3DX_PI ) / 1000.0f;

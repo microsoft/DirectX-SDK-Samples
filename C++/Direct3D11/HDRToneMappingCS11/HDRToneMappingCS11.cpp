@@ -45,7 +45,7 @@ ID3D11ComputeShader*        g_pHorizFilterCS = NULL;
 ID3D11PixelShader*          g_pDumpBufferPS = NULL;
 
 // Blooming effect intermediate buffers used in CS path
-ID3D11Buffer*               g_apBufBloom11[NUM_BLOOM_TEXTURES];         
+ID3D11Buffer*               g_apBufBloom11[NUM_BLOOM_TEXTURES];
 ID3D11ShaderResourceView*   g_apBufBloomRV11[NUM_BLOOM_TEXTURES];
 ID3D11UnorderedAccessView*  g_apBufBloomUAV11[NUM_BLOOM_TEXTURES];
 
@@ -53,11 +53,11 @@ ID3D11Texture2D*            g_pTexRender11 = NULL;          // Render target tex
 ID3D11Texture2D*            g_pTexRenderMS11 = NULL;        // Render target texture for the skybox when multi sampling is on
 ID3D11Texture2D*            g_pMSDS11 = NULL;
 ID3D11Texture2D*            g_pTexBlurred11 = NULL;         // Intermediate texture used in full screen blur
-ID3D11RenderTargetView*     g_pTexRenderRTV11 = NULL;       
+ID3D11RenderTargetView*     g_pTexRenderRTV11 = NULL;
 ID3D11RenderTargetView*     g_pMSRTV11 = NULL;
 ID3D11RenderTargetView*     g_pTexBlurredRTV11 = NULL;
 ID3D11DepthStencilView*     g_pMSDSV11 = NULL;
-ID3D11ShaderResourceView*   g_pTexRenderRV11 = NULL;        
+ID3D11ShaderResourceView*   g_pTexRenderRV11 = NULL;
 ID3D11ShaderResourceView*   g_pTexBlurredRV11 = NULL;
 
 // Stuff used for drawing the "full screen quad"
@@ -103,13 +103,13 @@ struct CB_filter
         struct
         {
             int outputsize[2];
-        } o;        
-        struct 
+        } o;
+        struct
         {
             UINT    outputwidth;
             float   finverse;
         } uf;
-    };    
+    };
     int     inputsize[2];
 };
 
@@ -176,7 +176,7 @@ ID3D11SamplerState*         g_pSampleStateLinear = NULL;
 #define IDC_SCREENBLUR          8
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -212,14 +212,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -234,7 +234,7 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 }
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -250,7 +250,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackDeviceChanging( ModifyDeviceSettings );
     DXUTSetCallbackMsgProc( MsgProc );
     DXUTSetCallbackFrameMove( OnFrameMove );
-    
+
     DXUTSetCallbackD3D11DeviceAcceptable( IsD3D11DeviceAcceptable );
     DXUTSetCallbackD3D11DeviceCreated( OnD3D11CreateDevice );
     DXUTSetCallbackD3D11SwapChainResized( OnD3D11ResizedSwapChain );
@@ -259,7 +259,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackD3D11DeviceDestroyed( OnD3D11DestroyDevice );
 
     InitApp();
-    
+
     DXUTInit( true, true );                 // Use this line instead to try to create a hardware device
 
     DXUTSetCursorSettings( true, true );    // Show the cursor and clip it when in full screen
@@ -271,7 +271,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -294,21 +294,21 @@ void InitApp()
     g_SampleUI.AddCheckBox( IDC_BLOOM, L"Show (B)loom", 0, 195, 140, 18, g_bBloom, 'B', false, &g_pCheckBloom );
     g_SampleUI.AddCheckBox( IDC_SCREENBLUR, L"Full (S)creen Blur", 0, 195+20, 140, 18, g_bFullScrBlur, 'S', false, &g_pCheckScrBlur );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 }
 
 //--------------------------------------------------------------------------------------
-// This callback function is called immediately before a device is created to allow the 
-// application to modify the device settings. The supplied pDeviceSettings parameter 
-// contains the settings that the framework has selected for the new device, and the 
-// application can make any desired changes directly to this structure.  Note however that 
-// DXUT will not correct invalid device settings so care must be taken 
-// to return valid device settings, otherwise CreateDevice() will fail.  
+// This callback function is called immediately before a device is created to allow the
+// application to modify the device settings. The supplied pDeviceSettings parameter
+// contains the settings that the framework has selected for the new device, and the
+// application can make any desired changes directly to this structure.  Note however that
+// DXUT will not correct invalid device settings so care must be taken
+// to return valid device settings, otherwise CreateDevice() will fail.
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
     assert( pDeviceSettings->ver == DXUT_D3D11_DEVICE );
-    
+
     // Add UAC flag to back buffer Texture2D resource, so we can create an UAV on the back buffer of the swap chain,
     // then it can be bound as the output resource of the CS
     // However, as CS4.0 cannot output to textures, this is taken out when the sample has been ported to CS4.0
@@ -332,13 +332,13 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -354,8 +354,8 @@ void RenderText()
 }
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -404,7 +404,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
         case IDC_BLOOM:
             g_bBloom = !g_bBloom; break;
         case IDC_POSTPROCESSON:
-            g_bPostProcessON = !g_bPostProcessON; 
+            g_bPostProcessON = !g_bPostProcessON;
             g_pStaticTech->SetEnabled( g_bPostProcessON );
             g_pComboBoxTech->SetEnabled( g_bPostProcessON );
             g_pCheckBloom->SetEnabled( g_bPostProcessON );
@@ -420,7 +420,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             g_ePostProcessMode = ( POSTPROCESS_MODE )( int )PtrToInt( pComboBox->GetSelectedData() );
 
             break;
-        }        
+        }
     }
 
 }
@@ -486,11 +486,11 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     }
     else
         return E_FAIL;
-    
+
     ID3DBlob* pBlob = NULL;
 
     // Create the shaders
-    V_RETURN( CompileShaderFromFile( L"ReduceTo1DCS.hlsl", "CSMain", "cs_4_0", &pBlob ) );   
+    V_RETURN( CompileShaderFromFile( L"ReduceTo1DCS.hlsl", "CSMain", "cs_4_0", &pBlob ) );
     V_RETURN( pd3dDevice->CreateComputeShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pReduceTo1DCS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pReduceTo1DCS, "CSMain" );
@@ -499,7 +499,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     V_RETURN( pd3dDevice->CreateComputeShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pReduceToSingleCS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pReduceToSingleCS, "CSMain" );
-    
+
     V_RETURN( CompileShaderFromFile( L"FinalPass.hlsl", "PSFinalPass", "ps_4_0", &pBlob ) );
     V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pFinalPassPS ) );
     SAFE_RELEASE( pBlob );
@@ -511,27 +511,27 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pFinalPassForCPUReductionPS, "PSFinalPassForCPUReduction" );
 
     V_RETURN( CompileShaderFromFile( L"PSApproach.hlsl", "DownScale2x2_Lum", "ps_4_0", &pBlob ) );
-    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pDownScale2x2LumPS ) );    
+    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pDownScale2x2LumPS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pDownScale2x2LumPS, "DownScale2x2_Lum" );
 
     V_RETURN( CompileShaderFromFile( L"PSApproach.hlsl", "DownScale3x3", "ps_4_0", &pBlob ) );
-    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pDownScale3x3PS ) );  
+    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pDownScale3x3PS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pDownScale3x3PS, "DownScale3x3" );
 
     V_RETURN( CompileShaderFromFile( L"PSApproach.hlsl", "FinalPass", "ps_4_0", &pBlob ) );
-    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pOldFinalPassPS ) );  
+    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pOldFinalPassPS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pOldFinalPassPS, "FinalPass" );
 
     V_RETURN( CompileShaderFromFile( L"PSApproach.hlsl", "DownScale3x3_BrightPass", "ps_4_0", &pBlob ) );
-    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pDownScale3x3BrightPassPS ) );  
+    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pDownScale3x3BrightPassPS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pDownScale3x3BrightPassPS, "DownScale3x3_BrightPass" );
 
     V_RETURN( CompileShaderFromFile( L"PSApproach.hlsl", "Bloom", "ps_4_0", &pBlob ) );
-    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pBloomPS ) );  
+    V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pBloomPS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pBloomPS, "Bloom" );
 
@@ -573,7 +573,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     Desc.Usage = D3D11_USAGE_DYNAMIC;
     Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     Desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    Desc.MiscFlags = 0;    
+    Desc.MiscFlags = 0;
     Desc.ByteWidth = sizeof( CB_CS );
     V_RETURN( pd3dDevice->CreateBuffer( &Desc, NULL, &g_pcbCS ) );
     DXUT_SetDebugName( g_pcbCS, "CB_CS" );
@@ -626,7 +626,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     V_RETURN( pd3dDevice->CreateBuffer( &vbdesc, &InitData, &g_pScreenQuadVB ) );
     DXUT_SetDebugName( g_pScreenQuadVB, "ScreenQuad" );
 
-    // Setup the camera   
+    // Setup the camera
     //D3DXVECTOR3 vecEye( 0.0f, 0.5f, -3.0f );
     D3DXVECTOR3 vecEye( 0.0f, -10.5f, -3.0f );
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, 0.0f );
@@ -658,7 +658,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     Desc.MipLevels = 1;
     Desc.SampleDesc.Count = 1;
     V_RETURN( pd3dDevice->CreateTexture2D( &Desc, NULL, &g_pTexRender11 ) );
-    V_RETURN( pd3dDevice->CreateTexture2D( &Desc, NULL, &g_pTexBlurred11 ) );    
+    V_RETURN( pd3dDevice->CreateTexture2D( &Desc, NULL, &g_pTexBlurred11 ) );
 
     DXUT_SetDebugName( g_pTexRender11, "Render" );
     DXUT_SetDebugName( g_pTexBlurred11, "Blurred" );
@@ -691,7 +691,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
         DXUT_SetDebugName( g_pMSRTV11, "MSAA SRV" );
 
         // Depth stencil texture for multi-sampling
-        DescMS.Format = DXGI_FORMAT_D32_FLOAT;        
+        DescMS.Format = DXGI_FORMAT_D32_FLOAT;
         DescMS.BindFlags = D3D11_BIND_DEPTH_STENCIL;
         DescMS.CPUAccessFlags = 0;
         DescMS.MiscFlags = 0;
@@ -779,7 +779,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     DescBuffer.BindFlags = 0;
     V_RETURN( pd3dDevice->CreateBuffer( &DescBuffer, NULL, &g_pBufferCPURead ) );
     DXUT_SetDebugName( g_pBufferCPURead, "CPU Read" );
-    
+
     // Create UAV on the above two buffers object
     D3D11_UNORDERED_ACCESS_VIEW_DESC DescUAV;
     ZeroMemory( &DescUAV, sizeof(D3D11_UNORDERED_ACCESS_VIEW_DESC) );
@@ -927,7 +927,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     V_RETURN( pd3dDevice->CreateShaderResourceView( g_pTexBrightPass11, &DescRV, &g_pTexBrightPassRV11 ) );
     DXUT_SetDebugName( g_pTexBrightPassRV11, "BrightPass SRV" );
 
-    // Setup the camera's projection parameters    
+    // Setup the camera's projection parameters
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.1f, 5000.0f );
     g_Camera.SetWindow( pBackBufferSurfaceDesc->Width, pBackBufferSurfaceDesc->Height );
@@ -948,7 +948,7 @@ void SWAP( T* &x, T* &y )
     y = temp;
 }
 
-void DrawFullScreenQuad11( ID3D11DeviceContext* pd3dImmediateContext, 
+void DrawFullScreenQuad11( ID3D11DeviceContext* pd3dImmediateContext,
                            ID3D11PixelShader* pPS,
                            UINT Width, UINT Height )
 {
@@ -1005,7 +1005,7 @@ HRESULT MeasureLuminancePS11( ID3D11DeviceContext* pd3dImmediateContext )
     g_apTexToneMap11[NUM_TONEMAP_TEXTURES - 1]->GetDesc( &descDest );
 
     ID3D11RenderTargetView* aRTViews[ 1 ] = { pSurfDest };
-    pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, NULL );             
+    pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, NULL );
     ID3D11ShaderResourceView* aRViews[ 1 ] = { pTexSrc };
     pd3dImmediateContext->PSSetShaderResources( 0, 1, aRViews );
 
@@ -1019,7 +1019,7 @@ HRESULT MeasureLuminancePS11( ID3D11DeviceContext* pd3dImmediateContext )
 
     //-------------------------------------------------------------------------
     // Iterate through the remaining tone map textures
-    //------------------------------------------------------------------------- 
+    //-------------------------------------------------------------------------
     for( int i = NUM_TONEMAP_TEXTURES - 1; i > 0; i-- )
     {
         // Cycle the textures
@@ -1054,7 +1054,7 @@ HRESULT BrightPassFilterPS11( ID3D11DeviceContext* pd3dImmediateContext, const D
     pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, NULL );
 
     ID3D11ShaderResourceView* aRViews[ 2 ] = { g_pTexRenderRV11, g_apTexToneMapRV11[0] };
-    pd3dImmediateContext->PSSetShaderResources( 0, 2, aRViews );  
+    pd3dImmediateContext->PSSetShaderResources( 0, 2, aRViews );
 
     ID3D11SamplerState* aSamplers[] = { g_pSampleStatePoint };
     pd3dImmediateContext->PSSetSamplers( 0, 1, aSamplers );
@@ -1154,7 +1154,7 @@ HRESULT BlurPS11( ID3D11DeviceContext* pd3dImmediateContext, DWORD dwWidth, DWOR
     int i = 0;
 
     // Horizontal Blur
-    D3D11_MAPPED_SUBRESOURCE MappedResource;            
+    D3D11_MAPPED_SUBRESOURCE MappedResource;
     V( pd3dImmediateContext->Map( g_pcbBloom, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
         CB_Bloom_PS* pcbBloom = ( CB_Bloom_PS* )MappedResource.pData;
         D3DXVECTOR4* avSampleOffsets = pcbBloom->avSampleOffsets;
@@ -1244,13 +1244,13 @@ HRESULT FullScrBlurPS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_S
 //--------------------------------------------------------------------------------------
 void RunComputeShader( ID3D11DeviceContext* pd3dImmediateContext,
                        ID3D11ComputeShader* pComputeShader,
-                       UINT nNumViews, ID3D11ShaderResourceView** pShaderResourceViews, 
+                       UINT nNumViews, ID3D11ShaderResourceView** pShaderResourceViews,
                        ID3D11Buffer* pCBCS, void* pCSData, DWORD dwNumDataBytes,
                        ID3D11UnorderedAccessView* pUnorderedAccessView,
                        UINT X, UINT Y, UINT Z )
 {
     HRESULT hr = S_OK;
-    
+
     pd3dImmediateContext->CSSetShader( pComputeShader, NULL, 0 );
     pd3dImmediateContext->CSSetShaderResources( 0, nNumViews, pShaderResourceViews );
     pd3dImmediateContext->CSSetUnorderedAccessViews( 0, 1, &pUnorderedAccessView, NULL );
@@ -1299,7 +1299,7 @@ ID3D11Buffer* CreateAndCopyToDebugBuf( ID3D11Device* pDevice, ID3D11DeviceContex
 
 // Define this to do full pixel reduction.
 // If this is on, the same flag must also be on in ReduceTo1DCS.hlsl.
-//#define CS_FULL_PIXEL_REDUCITON 
+//#define CS_FULL_PIXEL_REDUCITON
 
 //--------------------------------------------------------------------------------------
 // Measure the average luminance of the rendered skybox in CS path
@@ -1307,7 +1307,7 @@ ID3D11Buffer* CreateAndCopyToDebugBuf( ID3D11Device* pDevice, ID3D11DeviceContex
 HRESULT MeasureLuminanceCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE_DESC* pBackBufferDesc )
 {
     HRESULT hr;
-    
+
 #ifdef CS_FULL_PIXEL_REDUCITON
     int dimx = int(ceil(pBackBufferDesc->Width/8.0f));
     dimx = int(ceil(dimx/2.0f));
@@ -1322,20 +1322,20 @@ HRESULT MeasureLuminanceCS11( ID3D11DeviceContext* pd3dImmediateContext, const D
     {
         ID3D11ShaderResourceView* aRViews[ 1 ] = { g_pTexRenderRV11 };
         CB_CS cbCS = { dimx, dimy, pBackBufferDesc->Width, pBackBufferDesc->Height };
-        RunComputeShader( pd3dImmediateContext, 
-                          g_pReduceTo1DCS, 
+        RunComputeShader( pd3dImmediateContext,
+                          g_pReduceTo1DCS,
                           1, aRViews,
                           g_pcbCS, &cbCS, sizeof(cbCS),
                           g_pReductionUAView0,
-                          dimx, dimy, 1 ); 
+                          dimx, dimy, 1 );
 
         // Turn on this and set a breakpoint right after the call to Map to see what's written to g_pBufferReduction0
 #if 0
         ID3D11Buffer* pDebugBuf = CreateAndCopyToDebugBuf( DXUTGetD3D11Device(), pd3dImmediateContext, g_pBufferReduction0 );
-        D3D11_MAPPED_SUBRESOURCE MappedResource;     
+        D3D11_MAPPED_SUBRESOURCE MappedResource;
         V( pd3dImmediateContext->Map( pDebugBuf, 0, D3D11_MAP_READ, 0, &MappedResource ) );
         pd3dImmediateContext->Unmap( pDebugBuf, 0 );
-        SAFE_RELEASE( pDebugBuf );        
+        SAFE_RELEASE( pDebugBuf );
 #endif
     }
 
@@ -1356,8 +1356,8 @@ HRESULT MeasureLuminanceCS11( ID3D11DeviceContext* pd3dImmediateContext, const D
                                       g_pReduceToSingleCS,
                                       1, aRViews,
                                       g_pcbCS, &cbCS, sizeof(cbCS),
-                                      g_pReductionUAView1, 
-                                      dim, 1, 1 );                               
+                                      g_pReductionUAView1,
+                                      dim, 1, 1 );
 
                     nNumToReduce = dim;
                     dim = int( ceil(dim/128.0f) );
@@ -1386,27 +1386,27 @@ HRESULT MeasureLuminanceCS11( ID3D11DeviceContext* pd3dImmediateContext, const D
             box.front = 0;
             box.back = 1;
             pd3dImmediateContext->CopySubresourceRegion( g_pBufferCPURead, 0, 0, 0, 0, g_pBufferReduction0, 0, &box );
-            D3D11_MAPPED_SUBRESOURCE MappedResource; 
-            V( pd3dImmediateContext->Map( g_pBufferCPURead, 0, D3D11_MAP_READ, 0, &MappedResource ) );       
+            D3D11_MAPPED_SUBRESOURCE MappedResource;
+            V( pd3dImmediateContext->Map( g_pBufferCPURead, 0, D3D11_MAP_READ, 0, &MappedResource ) );
             float *pData = (float*)MappedResource.pData;
             g_fCPUReduceResult = 0;
             for ( int i = 0; i < dimx * dimy; ++i )
             {
                 g_fCPUReduceResult += pData[i];
             }
-            pd3dImmediateContext->Unmap( g_pBufferCPURead, 0 );                       
-        }        
-    }    
+            pd3dImmediateContext->Unmap( g_pBufferCPURead, 0 );
+        }
+    }
 
     // Turn on this and set a breakpoint right after the call to Map to see what is in g_pBufferReduction1 and g_pBufferReduction0
 #if 0
     ID3D11Buffer* pDebugBuf = CreateAndCopyToDebugBuf( DXUTGetD3D11Device(), pd3dImmediateContext, g_pBufferReduction1 );
-    D3D11_MAPPED_SUBRESOURCE MappedResource;     
+    D3D11_MAPPED_SUBRESOURCE MappedResource;
     V( pd3dImmediateContext->Map( pDebugBuf, 0, D3D11_MAP_READ, 0, &MappedResource ) );
     pd3dImmediateContext->Unmap( pDebugBuf, 0 );
     SAFE_RELEASE( pDebugBuf );
 
-    pDebugBuf = CreateAndCopyToDebugBuf( DXUTGetD3D11Device(), pd3dImmediateContext, g_pBufferReduction0 );    
+    pDebugBuf = CreateAndCopyToDebugBuf( DXUTGetD3D11Device(), pd3dImmediateContext, g_pBufferReduction0 );
     V( pd3dImmediateContext->Map( pDebugBuf, 0, D3D11_MAP_READ, 0, &MappedResource ) );
     pd3dImmediateContext->Unmap( pDebugBuf, 0 );
     SAFE_RELEASE( pDebugBuf );
@@ -1424,7 +1424,7 @@ HRESULT BloomCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE
     ID3D11ShaderResourceView* aRViews[ 2 ] = { g_pTexRenderRV11, g_pReductionRV1 };
     CB_filter cbFilter;
     GetSampleWeights_D3D11( cbFilter.avSampleWeights, 3.0f, 1.25f );
-    cbFilter.uf.outputwidth = pBackBufferDesc->Width / 8;    
+    cbFilter.uf.outputwidth = pBackBufferDesc->Width / 8;
 #ifdef CS_FULL_PIXEL_REDUCITON
     cbFilter.uf.finverse = 1.0f / (pBackBufferDesc->Width*pBackBufferDesc->Height);
 #else
@@ -1432,7 +1432,7 @@ HRESULT BloomCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE
 #endif
     cbFilter.inputsize[0] = pBackBufferDesc->Width;
     cbFilter.inputsize[1] = pBackBufferDesc->Height;
-    RunComputeShader( pd3dImmediateContext, 
+    RunComputeShader( pd3dImmediateContext,
                       g_pBrightPassAndHorizFilterCS,
                       2, aRViews,
                       g_pcbFilterCS, &cbFilter, sizeof(cbFilter),
@@ -1442,7 +1442,7 @@ HRESULT BloomCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE
     // Vertical blur
     aRViews[0] = g_apBufBloomRV11[1];
     cbFilter.o.outputsize[0] = pBackBufferDesc->Width / 8;
-    cbFilter.o.outputsize[1] = pBackBufferDesc->Height / 8;    
+    cbFilter.o.outputsize[1] = pBackBufferDesc->Height / 8;
     cbFilter.inputsize[0] = pBackBufferDesc->Width / 8;
     cbFilter.inputsize[1] = pBackBufferDesc->Height / 8;
     RunComputeShader( pd3dImmediateContext,
@@ -1450,7 +1450,7 @@ HRESULT BloomCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE
                       1, aRViews,
                       g_pcbFilterCS, &cbFilter, sizeof(cbFilter),
                       g_apBufBloomUAV11[0],
-                      pBackBufferDesc->Width / 8, int(ceil((float)cbFilter.o.outputsize[1] / (128 - 7 * 2))), 1 );  
+                      pBackBufferDesc->Width / 8, int(ceil((float)cbFilter.o.outputsize[1] / (128 - 7 * 2))), 1 );
 
     return S_OK;
 }
@@ -1461,7 +1461,7 @@ HRESULT BloomCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE
 HRESULT FullScrBlurCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_SURFACE_DESC* pBackBufferDesc )
 {
     HRESULT hr = S_OK;
-    
+
     ID3D11ShaderResourceView* aRViews[ 2 ] = { NULL, g_pTexRenderRV11 };
     CB_filter cbFilter;
     GetSampleWeights_D3D11( cbFilter.avSampleWeights, 3.0f, 1.25f );
@@ -1469,7 +1469,7 @@ HRESULT FullScrBlurCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_S
     cbFilter.o.outputsize[1] = pBackBufferDesc->Height;
     cbFilter.inputsize[0] = pBackBufferDesc->Width;
     cbFilter.inputsize[1] = pBackBufferDesc->Height;
-    RunComputeShader( pd3dImmediateContext, 
+    RunComputeShader( pd3dImmediateContext,
                       g_pHorizFilterCS,
                       2, aRViews,
                       g_pcbFilterCS, &cbFilter, sizeof(cbFilter),
@@ -1477,7 +1477,7 @@ HRESULT FullScrBlurCS11( ID3D11DeviceContext* pd3dImmediateContext, const DXGI_S
                       int(ceil((float)pBackBufferDesc->Width / (128 - 7 * 2))), pBackBufferDesc->Height, 1 );
 
     aRViews[ 0 ] = g_pBlurRV0;
-    RunComputeShader( pd3dImmediateContext, 
+    RunComputeShader( pd3dImmediateContext,
                       g_pVertFilterCS,
                       1, aRViews,
                       g_pcbFilterCS, &cbFilter, sizeof(cbFilter),
@@ -1494,14 +1494,14 @@ HRESULT DumpToTexture( ID3D11DeviceContext* pd3dImmediateContext, DWORD dwWidth,
                        ID3D11ShaderResourceView* pFromRV, ID3D11RenderTargetView* pToRTV )
 {
     HRESULT hr = S_OK;
-    
+
     ID3D11ShaderResourceView* aRViews[ 1 ] = { pFromRV };
     pd3dImmediateContext->PSSetShaderResources( 0, 1, aRViews );
 
     ID3D11RenderTargetView* aRTViews[ 1 ] = { pToRTV };
-    pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, NULL );          
+    pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, NULL );
 
-    D3D11_MAPPED_SUBRESOURCE MappedResource;            
+    D3D11_MAPPED_SUBRESOURCE MappedResource;
     V( pd3dImmediateContext->Map( g_pcbCS, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
     UINT* p = (UINT*)MappedResource.pData;
     p[0] = dwWidth;
@@ -1544,18 +1544,18 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
             pd3dImmediateContext->ClearRenderTargetView( g_pMSRTV11, ClearColor );
             pd3dImmediateContext->ClearDepthStencilView( g_pMSDSV11, D3D11_CLEAR_DEPTH, 1.0, 0 );
-        } 
+        }
         else
         {
             ID3D11RenderTargetView* aRTViews[ 1 ] = { g_pTexRenderRTV11 };
             pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, pOrigDSV );
 
-            pd3dImmediateContext->ClearRenderTargetView( g_pTexRenderRTV11, ClearColor );            
-        }                
-    } 
-    
+            pd3dImmediateContext->ClearRenderTargetView( g_pTexRenderRTV11, ClearColor );
+        }
+    }
+
     pd3dImmediateContext->ClearRenderTargetView( pOrigRTV, ClearColor );
-    pd3dImmediateContext->ClearDepthStencilView( pOrigDSV, D3D11_CLEAR_DEPTH, 1.0, 0 );      
+    pd3dImmediateContext->ClearDepthStencilView( pOrigDSV, D3D11_CLEAR_DEPTH, 1.0, 0 );
 
     HRESULT hr;
     D3DXMATRIXA16 mWorld;
@@ -1567,7 +1567,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     mWorld = *g_Camera.GetWorldMatrix();
     mView = *g_Camera.GetViewMatrix();
     mProj = *g_Camera.GetProjMatrix();
-    
+
     mWorldViewProjection = mWorld * mView * mProj;
 
     g_Skybox.D3D11Render( &mWorldViewProjection, pd3dImmediateContext );
@@ -1608,7 +1608,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
                                g_pBlurRV1, g_pTexRenderRTV11 );
         } else //if ( g_ePostProcessMode == PM_PIXEL_SHADER )
         {
-            MeasureLuminancePS11( pd3dImmediateContext );           
+            MeasureLuminancePS11( pd3dImmediateContext );
 
             if ( g_bBloom )
             {
@@ -1622,7 +1622,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
         // Restore original render targets
         ID3D11RenderTargetView* aRTViews[ 1 ] = { pOrigRTV };
-        pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, pOrigDSV );        
+        pd3dImmediateContext->OMSetRenderTargets( 1, aRTViews, pOrigDSV );
 
         // Tone-mapping
         if ( g_ePostProcessMode == PM_COMPUTE_SHADER )
@@ -1632,7 +1632,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
                 ID3D11ShaderResourceView* aRViews[ 3 ] = { g_pTexRenderRV11, g_pReductionRV1, g_bBloom ? g_apTexBloomRV11[0] : NULL };
                 pd3dImmediateContext->PSSetShaderResources( 0, 3, aRViews );
 
-                D3D11_MAPPED_SUBRESOURCE MappedResource;            
+                D3D11_MAPPED_SUBRESOURCE MappedResource;
                 V( pd3dImmediateContext->Map( g_pcbCS, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
                 CB_PS* pcbCS = ( CB_PS* )MappedResource.pData;
 #ifdef CS_FULL_PIXEL_REDUCITON
@@ -1653,7 +1653,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
                 ID3D11ShaderResourceView* aRViews[ 1 ] = { g_pTexRenderRV11 };
                 pd3dImmediateContext->PSSetShaderResources( 0, 1, aRViews );
 
-                D3D11_MAPPED_SUBRESOURCE MappedResource;            
+                D3D11_MAPPED_SUBRESOURCE MappedResource;
                 V( pd3dImmediateContext->Map( g_pcbCS, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
                 CB_PS* pcbCS = ( CB_PS* )MappedResource.pData;
 #ifdef CS_FULL_PIXEL_REDUCITON
@@ -1665,8 +1665,8 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
                 ID3D11Buffer* ppCB[1] = { g_pcbCS };
                 pd3dImmediateContext->PSSetConstantBuffers( g_iCBPSBind, 1, ppCB );
 
-                DrawFullScreenQuad11( pd3dImmediateContext, g_pFinalPassForCPUReductionPS, pBackBufferDesc->Width, pBackBufferDesc->Height );                
-            }            
+                DrawFullScreenQuad11( pd3dImmediateContext, g_pFinalPassForCPUReductionPS, pBackBufferDesc->Width, pBackBufferDesc->Height );
+            }
         } else //if ( g_ePostProcessMode == PM_PIXEL_SHADER )
         {
             ID3D11ShaderResourceView* aRViews[ 3 ] = { g_pTexRenderRV11, g_apTexToneMapRV11[0], g_bBloom ? g_apTexBloomRV11[0] : NULL };
@@ -1679,7 +1679,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         }
 
         ID3D11ShaderResourceView* ppSRVNULL[3] = { NULL, NULL, NULL };
-        pd3dImmediateContext->PSSetShaderResources( 0, 3, ppSRVNULL );  
+        pd3dImmediateContext->PSSetShaderResources( 0, 3, ppSRVNULL );
     }
 
     SAFE_RELEASE( pOrigRTV );
@@ -1693,7 +1693,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {

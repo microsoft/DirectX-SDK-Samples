@@ -42,7 +42,7 @@ HRESULT CreateShapeMesh( ID3D10Device* pDev10, ID3DX10Mesh** ppMesh, VERTEX* pVe
 {
     HRESULT hr = S_OK;
 
-    // Create the mesh 
+    // Create the mesh
     hr = D3DX10CreateMesh( pDev10,
                            s_ShapeLayout,
                            sizeof( s_ShapeLayout ) / sizeof( s_ShapeLayout[0] ),
@@ -236,7 +236,7 @@ HRESULT WINAPI DXUTCreateBox( ID3D10Device* pDevice, float fWidth, float fHeight
 //----------------------------------------------------------------------------
 // MakeCylinder helper
 //----------------------------------------------------------------------------
-static void MakeCylinder( VERTEX* pVertices, DWORD* pPointReps, WORD* pwIndices, float fRadius1, 
+static void MakeCylinder( VERTEX* pVertices, DWORD* pPointReps, WORD* pwIndices, float fRadius1,
                           float fRadius2, float fLength, UINT uSlices, UINT uStacks )
 {
     UINT i, j;
@@ -788,12 +788,12 @@ static void MakeTorus( VERTEX* pVertices, WORD* pwIndices, float fInnerRadius, f
     }
 
     //
-    // Compute the indices: 
+    // Compute the indices:
     // There are uRings * uSides faces
     // Each face has 2 triangles (6 indices)
     //
 
-    // Tube i has indices:  
+    // Tube i has indices:
     //        Left Edge: i*(uSides+1) -- i*(uSides+1)+uSides
     //        Right Edge: (i+1)*(uSides+1) -- (i+1)*(uSides+1)+uSides
     //
@@ -5564,7 +5564,7 @@ static WORD teapotIndices[NUMTEAPOTINDICES] =
 //----------------------------------------------------------------------------
 // MakeTeapot Helper
 //----------------------------------------------------------------------------
-static void MakeTeapot( VERTEX* pVertices, WORD* pwIndices ) 
+static void MakeTeapot( VERTEX* pVertices, WORD* pwIndices )
 {
     DWORD iVertex;
 

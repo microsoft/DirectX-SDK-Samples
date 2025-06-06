@@ -28,7 +28,7 @@ CDXUTDialogResourceManager          g_DialogResourceManager; // manager for shar
 CModelViewerCamera                  g_Camera;                   // A model viewing camera
 CDXUTDirectionWidget                g_LightControl;
 CD3DSettingsDlg                     g_D3DSettingsDlg;           // Device settings dialog
-CDXUTDialog                         g_HUD;                      // manages the 3D   
+CDXUTDialog                         g_HUD;                      // manages the 3D
 CDXUTDialog                         g_SampleUI;                 // dialog for sample specific controls
 
 // Resources
@@ -125,7 +125,7 @@ CSubDMesh g_SubDMesh;
 #define IDC_TOGGLE_MATERIALS      10
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -155,7 +155,7 @@ void FillTables( ID3D11DeviceContext* pd3dDeviceContext );
 void ParseCommandLine( const WCHAR* strCmdLine );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -167,7 +167,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
     ParseCommandLine( lpCmdLine );
 
-    // DXUT will create and use the best device (either D3D10 or D3D11) 
+    // DXUT will create and use the best device (either D3D10 or D3D11)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -183,7 +183,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackD3D11DeviceDestroyed( OnD3D11DestroyDevice );
 
     InitApp();
-    
+
     DXUTInit( true, true, NULL); // Parse the command line, show msgboxes on error, and an extra cmd line param to force REF for now
     DXUTSetCursorSettings( true, true ); // Show the cursor and clip it when in full screen
     DXUTCreateWindow( L"SubD11" );
@@ -328,7 +328,7 @@ void ParseCommandLine( const WCHAR* strCmdLine )
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -391,7 +391,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     D3DXMATRIX mWorld;
@@ -574,14 +574,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -646,7 +646,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     V_RETURN( pd3dDevice->CreatePixelShader( pBlobPSSolid->GetBufferPointer(), pBlobPSSolid->GetBufferSize(), NULL, &g_pSolidColorPS ) );
     DXUT_SetDebugName( g_pSolidColorPS, "SolidColorPS" );
-    
+
     // Create our vertex input layout - this matches the SUBD_CONTROL_POINT structure
     const D3D11_INPUT_ELEMENT_DESC patchlayout[] =
     {
@@ -679,7 +679,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     // Fill our helper/temporary tables
     FillTables( pd3dImmediateContext );
-    
+
     // Load mesh
     WCHAR strMeshFileName[MAX_PATH];
     WCHAR strAnimFileName[MAX_PATH];
@@ -977,7 +977,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     pData->fDisplacementHeight = g_fDisplacementHeight;
     pData->vSolidColor = D3DXVECTOR3( 0.3f, 0.3f, 0.3f );
     pd3dImmediateContext->Unmap( g_pcbPerFrame, 0 );
-    
+
     // Clear the render target and depth stencil
     float ClearColor[4] = { 0.01f, 0.01f, 0.02f, 0.0f };
     ID3D11RenderTargetView* pRTV = DXUTGetD3D11RenderTargetView();
@@ -1045,7 +1045,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1054,7 +1054,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1096,7 +1096,7 @@ void FillTables( ID3D11DeviceContext* pd3dDeviceContext )
     D3D11_MAPPED_SUBRESOURCE MappedResource;
     pd3dDeviceContext->Map( g_pcbTangentStencilConstants, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource );
     CB_TANGENT_STENCIL_CONSTANTS* pData = ( CB_TANGENT_STENCIL_CONSTANTS* )MappedResource.pData;
-    
+
     for( UINT v = 0; v < MAX_VALENCE; v++ )
     {
         int a = 0;

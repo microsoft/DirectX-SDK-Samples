@@ -353,7 +353,7 @@ HRESULT OnPlaySound( HWND hDlg )
     DWORD   dwLooped;
     DWORD   i;
     BOOL bLooped        = ( IsDlgButtonChecked( hDlg, IDC_CHECK_LOOP ) == BST_CHECKED );
-    
+
     if( NULL == g_lpSoundManager )
         return S_FALSE;
 

@@ -101,7 +101,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerInstall" ), MB_OK | MB_ICONINFORMATION );
             bFailure = true;
         }
-        else 
+        else
         {
             swprintf_s( szMsg, 512, L"GDF binary: %s\nGDF Install path: %s\nAll users: %d\n\n",
                              settings.strGDFBinPath, settings.strInstallPath, settings.bAllUsers );
@@ -124,7 +124,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerUpdate" ), MB_OK | MB_ICONINFORMATION );
             bFailure = true;
         }
-        else 
+        else
         {
             swprintf_s( szMsg, 256, L"Update of '%s' succeeded\n", settings.strGDFBinPath );
             if( !settings.bSilent )
@@ -142,7 +142,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 MessageBox( NULL, szMsg, TEXT( "GameExplorerUninstall" ), MB_OK | MB_ICONINFORMATION );
             bFailure = true;
         }
-        else 
+        else
         {
             swprintf_s( szMsg, 256, L"Uninstall of '%s' succeeded\n", settings.strGDFBinPath );
             if( !settings.bSilent )
@@ -214,7 +214,7 @@ HRESULT EnumAndRemoveGames()
                                                0L, NULL, NULL, &pIWbemServices );
             if( SUCCEEDED( hr ) && pIWbemServices != NULL )
             {
-                // Switch security level to IMPERSONATE. 
+                // Switch security level to IMPERSONATE.
                 CoSetProxyBlanket( pIWbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL,
                                    RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, 0 );
 
@@ -300,7 +300,7 @@ HRESULT EnumAndRemoveGames()
 
 
 //--------------------------------------------------------------------------------------
-// Parses the command line for parameters.  See DXUTInit() for list 
+// Parses the command line for parameters.  See DXUTInit() for list
 //--------------------------------------------------------------------------------------
 bool ParseCommandLine( SETTINGS* pSettings )
 {

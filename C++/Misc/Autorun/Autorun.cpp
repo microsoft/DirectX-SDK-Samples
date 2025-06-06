@@ -72,7 +72,7 @@ INT WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE, LPWSTR, int )
         ReleaseMutex( hMutex );
         CloseHandle( hMutex );
     }
-    
+
     return 0;
 }
 
@@ -106,12 +106,12 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
             {
                 bInstalled = pAutorun->IsGameInstalled();
             }
-            
+
             // Force an update of the UI.
             SendMessage( hDlg, WM_UPDATEUISTATE, 0, 0 );
         }
         return FALSE;
-        
+
         case WM_UPDATEUISTATE:
         {
             // Enable/disable buttons and adjust focus based on whether the game is installed.
@@ -132,7 +132,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
             }
         }
         return TRUE;
-        
+
         case WM_COMMAND:
         {
             switch( LOWORD( wParam ) )
@@ -141,7 +141,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
                 {
                     if( !pAutorun )
                         return FALSE;
-                
+
                     if( pAutorun->InstallGame() )
                     {
                         // Periodically check if game is installed.
@@ -159,7 +159,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
                     }
                 }
                 return TRUE;
-                
+
                 case IDC_PLAY:
                 {
                     if( !pAutorun )
@@ -185,7 +185,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
                     }
                 }
                 return TRUE;
-                
+
                 case IDCANCEL:
                 {
                     EndDialog( hDlg, 0 );
@@ -194,7 +194,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
             }
         }
         break;
-        
+
         case WM_TIMER:
         {
             if( !pAutorun )
@@ -217,7 +217,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM lParam )
                     SendMessage( hDlg, WM_COMMAND, IDC_PLAY, 0 );
                 }
             }
-        }        
+        }
         return TRUE;
     }
 
@@ -305,7 +305,7 @@ BOOL Autorun::GetGameExecutablePath( WCHAR* szExePath, DWORD cchExePath )
 BOOL Autorun::InstallGame()
 {
     WCHAR szPath[MAX_PATH];
- 
+
     if( !FindFile( m_Settings.InstallerExe(), szPath, ARRAYSIZE( szPath ) ) )
         return FALSE;
 
@@ -314,11 +314,11 @@ BOOL Autorun::InstallGame()
         // Spawn installer and wait for it to finish.
         DWORD dwExitCode = 0;
         BOOL bResult = SpawnProcessAndWait( szPath, m_Settings.InstallerArgs(), &dwExitCode );
-        
+
         // Check the exit code of the installer for indication of successful installation.
         if( bResult && ( dwExitCode == 0 ) )
             m_bIsInstalled = TRUE;
-        
+
         return bResult;
     }
     else
@@ -335,7 +335,7 @@ BOOL Autorun::InstallGame()
 BOOL Autorun::LaunchGame()
 {
     WCHAR szExePath[MAX_PATH];
-    
+
     if( !GetGameExecutablePath( szExePath, ARRAYSIZE( szExePath ) ) )
         return FALSE;
 
@@ -353,7 +353,7 @@ BOOL Autorun::FindFile( const WCHAR* szFile, WCHAR* szPath, DWORD cchPath )
 
     WCHAR szTemp[MAX_PATH];
 
-    // Try the current directory.    
+    // Try the current directory.
     GetCurrentDirectory( ARRAYSIZE( szTemp ), szTemp );
     wcscat_s( szTemp, L"\\" );
     wcscat_s( szTemp, szFile );
@@ -388,7 +388,7 @@ BOOL Autorun::SpawnProcess( const WCHAR* szExePath, const WCHAR* szExeArgs )
 
     // NOTE: szExeArgs can be NULL.
 
-    // Get working directory from executable path.    
+    // Get working directory from executable path.
     WCHAR szDirectory[MAX_PATH];
     wcscpy_s( szDirectory, szExePath );
     PathRemoveFileSpec( szDirectory );
@@ -429,7 +429,7 @@ BOOL Autorun::SpawnProcessAndWait( const WCHAR *szExePath, const WCHAR *szExeArg
     // NOTE: szExeArgs can be NULL.
     // NOTE: pExitCode can be NULL.
 
-    // Get working directory from executable path.    
+    // Get working directory from executable path.
     WCHAR szDirectory[MAX_PATH];
     wcscpy_s( szDirectory, szExePath );
     PathRemoveFileSpec( szDirectory );
@@ -447,10 +447,10 @@ BOOL Autorun::SpawnProcessAndWait( const WCHAR *szExePath, const WCHAR *szExeArg
     info.nShow = SW_SHOW;
     if( !ShellExecuteEx( &info ) )
         return FALSE;
-    
+
     // Wait for process to finish.
     WaitForSingleObject( info.hProcess, INFINITE );
-    
+
     // Return exit code from process, if requested by caller.
     if( pdwExitCode )
         GetExitCodeProcess( info.hProcess, pdwExitCode );

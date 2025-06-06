@@ -56,7 +56,7 @@ void CMeshLoader10::Destroy()
         if ( pMaterial->pTextureRV10 && !IsErrorResource(pMaterial->pTextureRV10) )
         {
             ID3D10Resource* pRes = NULL;
-            
+
             pMaterial->pTextureRV10->GetResource( &pRes );
             SAFE_RELEASE( pRes );
             SAFE_RELEASE( pRes );   // do this twice, because GetResource adds a ref
@@ -92,7 +92,7 @@ HRESULT CMeshLoader10::Create( ID3D10Device* pd3dDevice, const WCHAR* strFilenam
     // Store the device pointer
     m_pd3dDevice = pd3dDevice;
 
-    // Load the vertex buffer, index buffer, and subset information from a file. In this case, 
+    // Load the vertex buffer, index buffer, and subset information from a file. In this case,
     // an .obj file was chosen for simplicity, but it's meant to illustrate that ID3DXMesh objects
     // can be filled from any mesh file format once the necessary data is extracted from file.
     V_RETURN( LoadGeometryFromOBJ( strFilename ) );
@@ -100,19 +100,19 @@ HRESULT CMeshLoader10::Create( ID3D10Device* pd3dDevice, const WCHAR* strFilenam
     // Set the current directory based on where the mesh was found
     WCHAR wstrOldDir[MAX_PATH] = {0};
     GetCurrentDirectory( MAX_PATH, wstrOldDir );
-    SetCurrentDirectory( m_strMediaDir );    
+    SetCurrentDirectory( m_strMediaDir );
 
     // Load material textures
     for ( int iMaterial = 0; iMaterial < m_Materials.GetSize(); ++iMaterial )
     {
         Material *pMaterial = m_Materials.GetAt( iMaterial );
         if ( pMaterial->strTexture[0] )
-        {            
+        {
             pMaterial->pTextureRV10 = (ID3D10ShaderResourceView*)ERROR_RESOURCE_VALUE;
 
             if ( SUCCEEDED(DXUTFindDXSDKMediaFileCch( str, MAX_PATH, pMaterial->strTexture) ) )
             {
-                DXUTGetGlobalResourceCache().CreateTextureFromFile( pd3dDevice, str, 
+                DXUTGetGlobalResourceCache().CreateTextureFromFile( pd3dDevice, str,
                     &pMaterial->pTextureRV10, false ) ;
             }
         }
@@ -145,8 +145,8 @@ HRESULT CMeshLoader10::Create( ID3D10Device* pd3dDevice, const WCHAR* strFilenam
     pMesh->SetAttributeData( (UINT*)m_Attributes.GetData() );
     m_Attributes.RemoveAll();
 
-    // Reorder the vertices according to subset and optimize the mesh for this graphics 
-    // card's vertex cache. When rendering the mesh's triangle list the vertices will 
+    // Reorder the vertices according to subset and optimize the mesh for this graphics
+    // card's vertex cache. When rendering the mesh's triangle list the vertices will
     // cache hit more often so it won't have to re-execute the vertex shader.
     V( pMesh->GenerateAdjacencyAndPointReps( 1e-6f ) );
     V( pMesh->Optimize( D3DXMESHOPT_ATTRSORT | D3DXMESHOPT_VERTEXCACHE, NULL, NULL ) );
@@ -156,7 +156,7 @@ HRESULT CMeshLoader10::Create( ID3D10Device* pd3dDevice, const WCHAR* strFilenam
     pMesh->GetAttributeTable( m_pAttribTable, &m_NumAttribTableEntries );
 
     V( pMesh->CommitToDevice() );
-    
+
     m_pMesh = pMesh;
 
     return S_OK;

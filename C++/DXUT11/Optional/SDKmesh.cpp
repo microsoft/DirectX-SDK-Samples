@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------------------------
 // File: SDKMesh.cpp
 //
-// The SDK Mesh format (.sdkmesh) is not a recommended file format for games.  
-// It was designed to meet the specific needs of the SDK samples.  Any real-world 
-// applications should avoid this file format in favor of a destination format that 
+// The SDK Mesh format (.sdkmesh) is not a recommended file format for games.
+// It was designed to meet the specific needs of the SDK samples.  Any real-world
+// applications should avoid this file format in favor of a destination format that
 // meets the specific needs of the application.
 //
 // Copyright (c) Microsoft Corporation.
@@ -388,9 +388,9 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D11Device* pDev11,
                                         SDKMESH_CALLBACKS9* pLoaderCallbacks9 )
 {
     HRESULT hr = E_FAIL;
-    D3DXVECTOR3 lower; 
-    D3DXVECTOR3 upper; 
-    
+    D3DXVECTOR3 lower;
+    D3DXVECTOR3 upper;
+
     m_pDev9 = pDev9;
 	m_pDev11 = pDev11;
 
@@ -499,7 +499,7 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D11Device* pDev11,
     SDKMESH_SUBSET* pSubset = NULL;
     D3D11_PRIMITIVE_TOPOLOGY PrimType;
 
-    // update bounding volume 
+    // update bounding volume
     SDKMESH_MESH* currentMesh = &m_pMeshArray[0];
     int tris = 0;
     for (UINT meshi=0; meshi < m_pMeshHeader->NumMeshes; ++meshi) {
@@ -510,7 +510,7 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D11Device* pDev11,
         if (m_pIndexBufferArray[currentMesh->IndexBuffer].IndexType == IT_16BIT ) {
             indsize = 2;
         }else {
-            indsize = 4;        
+            indsize = 4;
         }
 
         for( UINT subset = 0; subset < currentMesh->NumSubsets; subset++ )
@@ -528,7 +528,7 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D11Device* pDev11,
                 IndexCount *= 2;
                 IndexStart *= 2;
             }*/
-     
+
         //BYTE* pIndices = NULL;
             //m_ppIndices[i]
             UINT *ind = ( UINT * )m_ppIndices[currentMesh->IndexBuffer];
@@ -583,8 +583,8 @@ HRESULT CDXUTSDKMesh::CreateFromMemory( ID3D11Device* pDev11,
         currentMesh->BoundingBoxExtents = half;
 
     }
-    // Update 
-        
+    // Update
+
 
 
     hr = S_OK;
@@ -844,12 +844,12 @@ void CDXUTSDKMesh::RenderFrame( UINT iFrame,
 
     // Render our children
     if( m_pFrameArray[iFrame].ChildFrame != INVALID_FRAME )
-        RenderFrame( m_pFrameArray[iFrame].ChildFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot, 
+        RenderFrame( m_pFrameArray[iFrame].ChildFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot,
                      iNormalSlot, iSpecularSlot );
 
     // Render our siblings
     if( m_pFrameArray[iFrame].SiblingFrame != INVALID_FRAME )
-        RenderFrame( m_pFrameArray[iFrame].SiblingFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot, 
+        RenderFrame( m_pFrameArray[iFrame].SiblingFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot,
                      iNormalSlot, iSpecularSlot );
 }
 
@@ -881,7 +881,7 @@ void CDXUTSDKMesh::RenderMesh( UINT iMesh,
     // Set our index buffer as well
     pd3dDevice->SetIndices( m_pIndexBufferArray[ pMesh->IndexBuffer ].pIB9 );
 
-    // Render the scene with this technique 
+    // Render the scene with this technique
     pEffect->SetTechnique( hTechnique );
 
     SDKMESH_SUBSET* pSubset = NULL;
@@ -1025,7 +1025,7 @@ HRESULT CDXUTSDKMesh::Create( ID3D11Device* pDev11, BYTE* pData, UINT DataBytes,
 HRESULT CDXUTSDKMesh::Create( IDirect3DDevice9* pDev9, BYTE* pData, UINT DataBytes, bool bCreateAdjacencyIndices,
                               bool bCopyStatic, SDKMESH_CALLBACKS9* pLoaderCallbacks )
 {
-    return CreateFromMemory( NULL, pDev9, pData, DataBytes, bCreateAdjacencyIndices, bCopyStatic, NULL, 
+    return CreateFromMemory( NULL, pDev9, pData, DataBytes, bCreateAdjacencyIndices, bCopyStatic, NULL,
                              pLoaderCallbacks );
 }
 
@@ -1314,7 +1314,7 @@ ID3D11Buffer* CDXUTSDKMesh::GetIB11( UINT iMesh )
 {
     return m_pIndexBufferArray[ m_pMeshArray[ iMesh ].IndexBuffer ].pIB11;
 }
-SDKMESH_INDEX_TYPE CDXUTSDKMesh::GetIndexType( UINT iMesh ) 
+SDKMESH_INDEX_TYPE CDXUTSDKMesh::GetIndexType( UINT iMesh )
 {
     return ( SDKMESH_INDEX_TYPE ) m_pIndexBufferArray[m_pMeshArray[ iMesh ].IndexBuffer].IndexType;
 }

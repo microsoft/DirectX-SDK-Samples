@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: DetailTessellation11.cpp
 //
-// This sample demonstrates the use of detail tessellation for improving the 
+// This sample demonstrates the use of detail tessellation for improving the
 // quality of material surfaces in real-time rendering applications.
 //
 // Developed by AMD Developer Relations team.
@@ -52,8 +52,8 @@ struct CONSTANT_BUFFER_STRUCT
     D3DXVECTOR4      vDebugColorMultiply;            // Debug colors
     D3DXVECTOR4      vDebugColorAdd;                 // Debug colors
     D3DXVECTOR4      vFrustumPlaneEquation[4];       // View frustum plane equations
-};                                                      
-                                                        
+};
+
 struct MATERIAL_CB_STRUCT
 {
     D3DXVECTOR4     g_materialAmbientColor;  // Material's ambient color
@@ -95,7 +95,7 @@ enum
 {
     TESSELLATIONMETHOD_DISABLED,
     TESSELLATIONMETHOD_DISABLED_POM,
-    TESSELLATIONMETHOD_DETAIL_TESSELLATION, 
+    TESSELLATIONMETHOD_DETAIL_TESSELLATION,
 } eTessellationMethod;
 
 //--------------------------------------------------------------------------------------
@@ -105,7 +105,7 @@ enum
 CDXUTDialogResourceManager          g_DialogResourceManager;    // Manager for shared resources of dialogs
 CFirstPersonCamera                  g_Camera;
 CD3DSettingsDlg                     g_D3DSettingsDlg;           // Device settings dialog
-CDXUTDialog                         g_HUD;                      // Manages the 3D   
+CDXUTDialog                         g_HUD;                      // Manages the 3D
 CDXUTDialog                         g_SampleUI;                 // Dialog for sample specific controls
 CDXUTTextHelper*                    g_pTxtHelper = NULL;
 
@@ -167,7 +167,7 @@ ID3D11DepthStencilState*            g_pDepthStencilState = NULL;
 D3DXVECTOR3                         g_vecEye(76.099495f, 43.191154f, -110.108971f);
 D3DXVECTOR3                         g_vecAt (75.590889f, 42.676582f, -109.418678f);
 D3DXVECTOR4                         g_LightPosition(100.0f, 30.0f, -50.0f, 1.0f);
-CDXUTDirectionWidget                g_LightControl; 
+CDXUTDirectionWidget                g_LightControl;
 D3DXVECTOR4							g_pWorldSpaceFrustumPlaneEquation[6];
 
 // Render settings
@@ -193,7 +193,7 @@ bool                                g_bDrawLightSource = TRUE;
 float                               g_fDesiredTriangleSize = 10.0f;
 
 // Frame buffer readback ( 0 means never dump to disk (frame counter starts at 1) )
-DWORD                               g_dwFrameNumberToDump = 0; 
+DWORD                               g_dwFrameNumberToDump = 0;
 
 //--------------------------------------------------------------------------------------
 // UI control IDs
@@ -209,7 +209,7 @@ DWORD                               g_dwFrameNumberToDump = 0;
 #define IDC_COMBOBOX_TEXTURE                       15
 #define IDC_CHECKBOX_WIREFRAME                     16
 #define IDC_CHECKBOX_DISPLACEMENT                  18
-#define IDC_CHECKBOX_DENSITYBASED                  19    
+#define IDC_CHECKBOX_DENSITYBASED                  19
 #define IDC_STATIC_ADAPTIVE_SCHEME                 20
 #define IDC_RADIOBUTTON_ADAPTIVESCHEME_OFF         21
 #define IDC_RADIOBUTTON_ADAPTIVESCHEME_DISTANCE    22
@@ -225,22 +225,22 @@ DWORD                               g_dwFrameNumberToDump = 0;
 #define IDC_CHECKBOX_ROTATING_CAMERA               36
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext );
 void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext );
 void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContext );
-bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo, UINT Output, const CD3D11EnumDeviceInfo *DeviceInfo, 
+bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo, UINT Output, const CD3D11EnumDeviceInfo *DeviceInfo,
                                        DXGI_FORMAT BackBufferFormat, bool bWindowed, void* pUserContext );
-HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, 
+HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc,
                                       void* pUserContext );
-HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapChain* pSwapChain, 
+HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapChain* pSwapChain,
                                           const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext );
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext );
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext );
-void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, 
+void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext,
                                   double fTime, float fElapsedTime, void* pUserContext );
 
 void ExtractPlanesFromFrustum( D3DXVECTOR4* pPlaneEquation, const D3DXMATRIX* pMatrix, bool bNormalize=TRUE );
@@ -249,47 +249,47 @@ void InitApp();
 void RenderText();
 bool IsNextArg( WCHAR*& strCmdLine, WCHAR* strArg );
 bool GetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag );
-void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext *pDeviceContext, ID3D11Texture2D* pHeightMap, 
-                                    float fDensityScale, ID3D11Texture2D** ppDensityMap, ID3D11Texture2D** ppDensityMapStaging=NULL, 
+void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext *pDeviceContext, ID3D11Texture2D* pHeightMap,
+                                    float fDensityScale, ID3D11Texture2D** ppDensityMap, ID3D11Texture2D** ppDensityMapStaging=NULL,
                                     float fMeaningfulDifference=0.0f);
-void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, D3DXVECTOR2* pTexcoord, 
-                                    DWORD dwVertexStride, void *pIndex, DWORD dwIndexSize, DWORD dwNumIndices, 
-                                    ID3D11Texture2D* pDensityMap, ID3D11Buffer** ppEdgeDensityVertexStream, 
+void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, D3DXVECTOR2* pTexcoord,
+                                    DWORD dwVertexStride, void *pIndex, DWORD dwIndexSize, DWORD dwNumIndices,
+                                    ID3D11Texture2D* pDensityMap, ID3D11Buffer** ppEdgeDensityVertexStream,
                                     float fBaseTextureRepeat);
-void CreateStagingBufferFromBuffer( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext, ID3D11Buffer* pInputBuffer, 
+void CreateStagingBufferFromBuffer( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext, ID3D11Buffer* pInputBuffer,
                                     ID3D11Buffer **ppStagingBuffer);
-HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob = NULL,
                               BOOL bDumpShader = FALSE);
-HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                     BOOL bDumpShader = FALSE);
-HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                   BOOL bDumpShader = FALSE);
-HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                     BOOL bDumpShader = FALSE);
-HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                       BOOL bDumpShader = FALSE);
-HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                    BOOL bDumpShader = FALSE);
-HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                      BOOL bDumpShader = FALSE);
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -299,7 +299,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D10 or D3D11) 
+    // DXUT will create and use the best device (either D3D10 or D3D11)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -424,7 +424,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
             {
                 if( GetCmdParam( strCmdLine, strFlag ) )
                 {
-                    wcscpy_s( g_pszCustomTextureDiffuseFilename, 
+                    wcscpy_s( g_pszCustomTextureDiffuseFilename,
                               sizeof(g_pszCustomTextureDiffuseFilename)/sizeof(WCHAR), strFlag );
                     DetailTessellationTextures[NUM_TEXTURES].DiffuseMap = g_pszCustomTextureDiffuseFilename;
                 }
@@ -435,7 +435,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
             {
                 if( GetCmdParam( strCmdLine, strFlag ) )
                 {
-                    wcscpy_s( g_pszCustomTextureNormalHeightFilename, 
+                    wcscpy_s( g_pszCustomTextureNormalHeightFilename,
                               sizeof(g_pszCustomTextureNormalHeightFilename)/sizeof(WCHAR), strFlag );
                     DetailTessellationTextures[NUM_TEXTURES].NormalHeightMap = g_pszCustomTextureNormalHeightFilename;
                 }
@@ -496,12 +496,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
     WCHAR szTemp[256];
-    
+
     // Initialize dialogs
     g_D3DSettingsDlg.Init( &g_DialogResourceManager );
     g_HUD.Init( &g_DialogResourceManager );
@@ -515,11 +515,11 @@ void InitApp()
     g_HUD.AddButton( IDC_CHANGEDEVICE, L"Change device (F2)", 35, iY += 24, 125, 22, VK_F2 );
 
     iY = 0;
-    g_SampleUI.AddRadioButton( IDC_RADIOBUTTON_DISABLED, 0, L"BUMP MAPPING", iX, iY += 25, 
+    g_SampleUI.AddRadioButton( IDC_RADIOBUTTON_DISABLED, 0, L"BUMP MAPPING", iX, iY += 25,
                                55, 24, g_nTessellationMethod==TESSELLATIONMETHOD_DISABLED ? true : false, '1');
-    g_SampleUI.AddRadioButton( IDC_RADIOBUTTON_POM, 0, L"PARALLAX OCCLUSION MAPPING", iX, iY += 25, 
+    g_SampleUI.AddRadioButton( IDC_RADIOBUTTON_POM, 0, L"PARALLAX OCCLUSION MAPPING", iX, iY += 25,
                                55, 24, g_nTessellationMethod==TESSELLATIONMETHOD_DISABLED_POM ? true : false, '2');
-    g_SampleUI.AddRadioButton( IDC_RADIOBUTTON_DETAILTESSELLATION, 0, L"DETAIL TESSELLATION", iX, iY += 25, 
+    g_SampleUI.AddRadioButton( IDC_RADIOBUTTON_DETAILTESSELLATION, 0, L"DETAIL TESSELLATION", iX, iY += 25,
                                55, 24, g_nTessellationMethod==TESSELLATIONMETHOD_DETAIL_TESSELLATION ? true : false, '3');
 
     iX += 35;
@@ -544,37 +544,37 @@ void InitApp()
     }
     iY += 90;
 
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_WIREFRAME, L"Wire(F)rame", iX, iY += 25, 140, 24, 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_WIREFRAME, L"Wire(F)rame", iX, iY += 25, 140, 24,
                             g_bEnableWireFrame, 'F');
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_DISPLACEMENT, L"Displace(M)ent", iX, iY += 25, 140, 24, 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_DISPLACEMENT, L"Displace(M)ent", iX, iY += 25, 140, 24,
                             g_bDisplacementEnabled, 'M' );
     g_SampleUI.AddStatic( IDC_STATIC_ADAPTIVE_SCHEME, L"Adaptive scheme:", iX+5, iY += 25, 108, 24 );
-    g_SampleUI.AddRadioButton(IDC_RADIOBUTTON_ADAPTIVESCHEME_OFF, 1, L"(O)ff", iX+5, iY += 25, 120, 20, 
+    g_SampleUI.AddRadioButton(IDC_RADIOBUTTON_ADAPTIVESCHEME_OFF, 1, L"(O)ff", iX+5, iY += 25, 120, 20,
                             g_bDistanceAdaptiveDetailTessellation, 'O' );
-    g_SampleUI.AddRadioButton(IDC_RADIOBUTTON_ADAPTIVESCHEME_DISTANCE, 1, L"D(I)stance", iX+5, iY += 25, 120, 20, 
+    g_SampleUI.AddRadioButton(IDC_RADIOBUTTON_ADAPTIVESCHEME_DISTANCE, 1, L"D(I)stance", iX+5, iY += 25, 120, 20,
                             g_bDistanceAdaptiveDetailTessellation, 'I' );
-    g_SampleUI.AddRadioButton(IDC_RADIOBUTTON_ADAPTIVESCHEME_SCREENSPACE, 1, L"Sc(R)een Space", iX+5, iY += 25, 120, 20, 
+    g_SampleUI.AddRadioButton(IDC_RADIOBUTTON_ADAPTIVESCHEME_SCREENSPACE, 1, L"Sc(R)een Space", iX+5, iY += 25, 120, 20,
                             g_bScreenSpaceAdaptiveDetailTessellation, 'R' );
 
     swprintf_s( szTemp, L"Desired Triangle Size %d", (int)g_fDesiredTriangleSize );
     g_SampleUI.AddStatic( IDC_STATIC_DESIRED_TRIANGLE_SIZE, szTemp, iX+5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_DESIRED_TRIANGLE_SIZE, iX, iY += 25, 140, 24, (int)(4 * 10), 
+    g_SampleUI.AddSlider( IDC_SLIDER_DESIRED_TRIANGLE_SIZE, iX, iY += 25, 140, 24, (int)(4 * 10),
                           (int)(20 * 10), (int)(g_fDesiredTriangleSize*10.0f), false );
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_DENSITYBASED, L"De(N)sity-based", iX, iY += 25, 140, 24, 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_DENSITYBASED, L"De(N)sity-based", iX, iY += 25, 140, 24,
                             g_bDensityBasedDetailTessellation, 'N' );
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_FRUSTUMCULLING, L"Frustum C(U)lling opt.", iX, iY += 25, 140, 24, 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_FRUSTUMCULLING, L"Frustum C(U)lling opt.", iX, iY += 25, 140, 24,
                             g_bUseFrustumCullingOptimization, 'U' );
-    
+
     swprintf_s( szTemp, L"Tess. Factor (edges) %.2f", g_fTessellationFactorEdges );
     g_SampleUI.AddStatic( IDC_STATIC_TESS_FACTOR_EDGES, szTemp, iX+5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR_EDGES, iX, iY += 25, 140, 24, 1, 
+    g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR_EDGES, iX, iY += 25, 140, 24, 1,
                           (int)(MAX_TESSELLATION_FACTOR * 10), (int)(g_fTessellationFactorEdges*10.0f), false );
     swprintf_s( szTemp, L"Tess. Factor (inside) %.2f", g_fTessellationFactorInside );
     g_SampleUI.AddStatic( IDC_STATIC_TESS_FACTOR_INSIDE, szTemp, iX+5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR_INSIDE, iX, iY += 25, 140, 24, 1, 
+    g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR_INSIDE, iX, iY += 25, 140, 24, 1,
                           (int)(MAX_TESSELLATION_FACTOR * 10), (int)(g_fTessellationFactorInside*10.0f), false );
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_LINK_TESS_FACTORS, L"Link Tess. Factors", iX, iY += 25, 100, 18, true );
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_ROTATING_CAMERA, L"Rotating (C)amera", iX, iY += 25, 100, 18, 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_ROTATING_CAMERA, L"Rotating (C)amera", iX, iY += 25, 100, 18,
                             g_bAnimatedCamera, 'C' );
 
     // Set default enabled/disabled
@@ -586,7 +586,7 @@ void InitApp()
     g_SampleUI.GetControl( IDC_SLIDER_TESS_FACTOR_INSIDE )->SetEnabled( g_bDistanceAdaptiveDetailTessellation );
     g_SampleUI.GetControl( IDC_CHECKBOX_LINK_TESS_FACTORS )->SetEnabled(g_bDistanceAdaptiveDetailTessellation );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 
     // Setup the camera's view parameters
     g_Camera.SetRotateButtons( true, false, false );
@@ -600,7 +600,7 @@ void InitApp()
 
     vEyeTo.x = 75.590889f;
     vEyeTo.y = 42.676582f;
-    vEyeTo.z = -109.418678f; 
+    vEyeTo.z = -109.418678f;
 
     g_Camera.SetViewParams( &vEyePt, &vEyeTo );
     // Initialize the light control
@@ -644,7 +644,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -659,7 +659,7 @@ void RenderText()
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( g_bShowFPS && DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
-    
+
     g_pTxtHelper->End();
 }
 
@@ -692,27 +692,27 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 
     switch( uMsg )
     {
-        case WM_KEYDOWN:    // Prevent the camera class to use some prefefined keys that we're already using    
+        case WM_KEYDOWN:    // Prevent the camera class to use some prefefined keys that we're already using
                             switch( (UINT)wParam )
                             {
-                                case VK_CONTROL:    
-                                case VK_LEFT:        
-                                case VK_RIGHT:         
-                                case VK_UP:            
-                                case VK_DOWN:          
-                                case VK_PRIOR:              
-                                case VK_NEXT:             
+                                case VK_CONTROL:
+                                case VK_LEFT:
+                                case VK_RIGHT:
+                                case VK_UP:
+                                case VK_DOWN:
+                                case VK_PRIOR:
+                                case VK_NEXT:
 
-                                case VK_NUMPAD4:     
-                                case VK_NUMPAD6:     
-                                case VK_NUMPAD8:     
-                                case VK_NUMPAD2:     
-                                case VK_NUMPAD9:           
-                                case VK_NUMPAD3:         
+                                case VK_NUMPAD4:
+                                case VK_NUMPAD6:
+                                case VK_NUMPAD8:
+                                case VK_NUMPAD2:
+                                case VK_NUMPAD9:
+                                case VK_NUMPAD3:
 
                                 case VK_HOME:       return 0;
 
-                                case VK_RETURN:     
+                                case VK_RETURN:
                                 {
                                     // Reset camera position
                                     g_Camera.SetViewParams( &g_vecEye, &g_vecAt );
@@ -786,16 +786,16 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
     switch( nControlID )
     {
         // Standard DXUT controls
-        case IDC_TOGGLEFULLSCREEN:  
+        case IDC_TOGGLEFULLSCREEN:
             DXUTToggleFullScreen(); break;
-        case IDC_TOGGLEREF:         
+        case IDC_TOGGLEREF:
             DXUTToggleREF();        break;
-        case IDC_CHANGEDEVICE:      
+        case IDC_CHANGEDEVICE:
             g_D3DSettingsDlg.SetActive( !g_D3DSettingsDlg.IsActive() ); break;
 
-        case IDC_RADIOBUTTON_DISABLED:              
+        case IDC_RADIOBUTTON_DISABLED:
         {
-            g_nTessellationMethod = TESSELLATIONMETHOD_DISABLED; 
+            g_nTessellationMethod = TESSELLATIONMETHOD_DISABLED;
             // Disable UI elements for tessellation controls
             g_SampleUI.GetControl( IDC_CHECKBOX_DISPLACEMENT )->SetEnabled( false );
             g_SampleUI.GetControl( IDC_CHECKBOX_DISPLACEMENT )->SetHotkey( 0 );
@@ -820,9 +820,9 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
         }
         break;
 
-        case IDC_RADIOBUTTON_POM:                   
+        case IDC_RADIOBUTTON_POM:
         {
-            g_nTessellationMethod = TESSELLATIONMETHOD_DISABLED_POM; 
+            g_nTessellationMethod = TESSELLATIONMETHOD_DISABLED_POM;
             // Disable UI elements for tessellation controls
             g_SampleUI.GetControl( IDC_CHECKBOX_DISPLACEMENT )->SetEnabled( false );
             g_SampleUI.GetControl( IDC_CHECKBOX_DISPLACEMENT )->SetHotkey( 0 );
@@ -846,10 +846,10 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             g_SampleUI.GetControl( IDC_CHECKBOX_LINK_TESS_FACTORS )->SetEnabled( false );
         }
         break;
-        
-        case IDC_RADIOBUTTON_DETAILTESSELLATION:    
+
+        case IDC_RADIOBUTTON_DETAILTESSELLATION:
         {
-            g_nTessellationMethod = TESSELLATIONMETHOD_DETAIL_TESSELLATION; 
+            g_nTessellationMethod = TESSELLATIONMETHOD_DETAIL_TESSELLATION;
             // Enable UI elements for tessellation controls
             g_SampleUI.GetControl( IDC_CHECKBOX_DISPLACEMENT )->SetEnabled( true );
             g_SampleUI.GetControl( IDC_CHECKBOX_DISPLACEMENT )->SetHotkey( 'M' );
@@ -876,25 +876,25 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
         case IDC_COMBOBOX_TEXTURE:
         {
-            g_nCurrentTexture = ((CDXUTComboBox*)pControl)->GetSelectedIndex(); 
+            g_nCurrentTexture = ((CDXUTComboBox*)pControl)->GetSelectedIndex();
         }
         break;
 
-        case IDC_CHECKBOX_WIREFRAME:                
+        case IDC_CHECKBOX_WIREFRAME:
         {
-            g_bEnableWireFrame = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+            g_bEnableWireFrame = ((CDXUTCheckBox*)pControl)->GetChecked();
         }
         break;
 
-        case IDC_CHECKBOX_DISPLACEMENT:          
+        case IDC_CHECKBOX_DISPLACEMENT:
         {
-            g_bDisplacementEnabled = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+            g_bDisplacementEnabled = ((CDXUTCheckBox*)pControl)->GetChecked();
         }
         break;
 
-        case IDC_CHECKBOX_DENSITYBASED:    
+        case IDC_CHECKBOX_DENSITYBASED:
         {
-            g_bDensityBasedDetailTessellation = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+            g_bDensityBasedDetailTessellation = ((CDXUTCheckBox*)pControl)->GetChecked();
             g_bDetailTessellationShadersNeedReloading = true;
         }
         break;
@@ -916,7 +916,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
         case IDC_RADIOBUTTON_ADAPTIVESCHEME_DISTANCE:
         {
-            g_bDistanceAdaptiveDetailTessellation = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+            g_bDistanceAdaptiveDetailTessellation = ((CDXUTCheckBox*)pControl)->GetChecked();
             g_bScreenSpaceAdaptiveDetailTessellation = !g_bDistanceAdaptiveDetailTessellation;
             g_bDetailTessellationShadersNeedReloading = true;
             g_SampleUI.GetControl( IDC_STATIC_DESIRED_TRIANGLE_SIZE )->SetEnabled( !g_bDistanceAdaptiveDetailTessellation );
@@ -931,7 +931,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
         case IDC_RADIOBUTTON_ADAPTIVESCHEME_SCREENSPACE:
         {
-            g_bScreenSpaceAdaptiveDetailTessellation = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+            g_bScreenSpaceAdaptiveDetailTessellation = ((CDXUTCheckBox*)pControl)->GetChecked();
             g_bDistanceAdaptiveDetailTessellation = !g_bScreenSpaceAdaptiveDetailTessellation;
             g_bDetailTessellationShadersNeedReloading = true;
             g_SampleUI.GetControl( IDC_STATIC_DESIRED_TRIANGLE_SIZE )->SetEnabled( g_bScreenSpaceAdaptiveDetailTessellation );
@@ -944,22 +944,22 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
         }
         break;
 
-        case IDC_SLIDER_DESIRED_TRIANGLE_SIZE:          
+        case IDC_SLIDER_DESIRED_TRIANGLE_SIZE:
         {
             g_fDesiredTriangleSize = ((CDXUTSlider*)pControl)->GetValue() / 10.0f;
             swprintf_s( szTemp, L"Desired Triangle Size %d", (int)g_fDesiredTriangleSize );
             g_SampleUI.GetStatic( IDC_STATIC_DESIRED_TRIANGLE_SIZE)->SetText( szTemp );
         }
         break;
-        
+
         case IDC_CHECKBOX_FRUSTUMCULLING:
         {
-            g_bUseFrustumCullingOptimization = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+            g_bUseFrustumCullingOptimization = ((CDXUTCheckBox*)pControl)->GetChecked();
             g_bDetailTessellationShadersNeedReloading = true;
         }
         break;
 
-        case IDC_SLIDER_TESS_FACTOR_EDGES:          
+        case IDC_SLIDER_TESS_FACTOR_EDGES:
         {
             g_fTessellationFactorEdges = ((CDXUTSlider*)pControl)->GetValue() / 10.0f;
             swprintf_s( szTemp, L"Tess. Factor (edges) %.2f", g_fTessellationFactorEdges );
@@ -988,8 +988,8 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             }
         }
         break;
-        case IDC_CHECKBOX_ROTATING_CAMERA:          
-            g_bAnimatedCamera = ((CDXUTCheckBox*)pControl)->GetChecked(); 
+        case IDC_CHECKBOX_ROTATING_CAMERA:
+            g_bAnimatedCamera = ((CDXUTCheckBox*)pControl)->GetChecked();
             break;
     }
 }
@@ -1030,8 +1030,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
@@ -1043,20 +1043,20 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     CreatePixelShaderFromFile(pd3dDevice,  wcPath, NULL, NULL, "RenderScenePS", "ps_5_0", dwShaderFlags, 0, NULL, &g_pPOMPS);
 
     // Detail tessellation shaders
-    D3D_SHADER_MACRO    pDetailTessellationDefines[] = 
-        { "DENSITY_BASED_TESSELLATION", g_bDensityBasedDetailTessellation ? "1" : "0", 
-          "DISTANCE_ADAPTIVE_TESSELLATION", g_bDistanceAdaptiveDetailTessellation ? "1" : "0", 
+    D3D_SHADER_MACRO    pDetailTessellationDefines[] =
+        { "DENSITY_BASED_TESSELLATION", g_bDensityBasedDetailTessellation ? "1" : "0",
+          "DISTANCE_ADAPTIVE_TESSELLATION", g_bDistanceAdaptiveDetailTessellation ? "1" : "0",
           NULL, NULL };
     ID3DBlob* pBlobVS_DetailTessellation = NULL;
-    
+
     DXUTFindDXSDKMediaFileCch(wcPath, 256, L"DetailTessellation11.hlsl");
-    CreateVertexShaderFromFile( pd3dDevice, wcPath, pDetailTessellationDefines, NULL, "VS_NoTessellation", 
+    CreateVertexShaderFromFile( pd3dDevice, wcPath, pDetailTessellationDefines, NULL, "VS_NoTessellation",
                                "vs_5_0", dwShaderFlags, 0, NULL, &g_pNoTessellationVS );
-    CreateVertexShaderFromFile( pd3dDevice, wcPath, pDetailTessellationDefines, NULL, "VS",                
+    CreateVertexShaderFromFile( pd3dDevice, wcPath, pDetailTessellationDefines, NULL, "VS",
                                "vs_5_0", dwShaderFlags, 0, NULL, &g_pDetailTessellationVS, &pBlobVS_DetailTessellation );
-    CreateHullShaderFromFile( pd3dDevice,   wcPath, pDetailTessellationDefines, NULL, "HS",                
+    CreateHullShaderFromFile( pd3dDevice,   wcPath, pDetailTessellationDefines, NULL, "HS",
                                "hs_5_0", dwShaderFlags, 0, NULL, &g_pDetailTessellationHS );
-    CreateDomainShaderFromFile( pd3dDevice, wcPath, pDetailTessellationDefines, NULL, "DS",                
+    CreateDomainShaderFromFile( pd3dDevice, wcPath, pDetailTessellationDefines, NULL, "DS",
                                "ds_5_0", dwShaderFlags, 0, NULL, &g_pDetailTessellationDS );
     CreatePixelShaderFromFile( pd3dDevice,  wcPath, pDetailTessellationDefines, NULL, "BumpMapPS",
                                "ps_5_0", dwShaderFlags, 0, NULL, &g_pBumpMapPS );
@@ -1065,18 +1065,18 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     ID3DBlob* pBlobVS_Particle = NULL;
 
     DXUTFindDXSDKMediaFileCch(wcPath, 256, L"Particle.hlsl");
-    CreateVertexShaderFromFile( pd3dDevice,   wcPath, NULL, NULL, "VSPassThrough",   "vs_5_0", dwShaderFlags, 0, NULL, 
+    CreateVertexShaderFromFile( pd3dDevice,   wcPath, NULL, NULL, "VSPassThrough",   "vs_5_0", dwShaderFlags, 0, NULL,
                                 &g_pParticleVS, &pBlobVS_Particle);
-    CreateGeometryShaderFromFile( pd3dDevice, wcPath, NULL, NULL, "GSPointSprite",   "gs_5_0", dwShaderFlags, 0, NULL, 
+    CreateGeometryShaderFromFile( pd3dDevice, wcPath, NULL, NULL, "GSPointSprite",   "gs_5_0", dwShaderFlags, 0, NULL,
                                 &g_pParticleGS);
-    CreatePixelShaderFromFile( pd3dDevice,    wcPath, NULL, NULL, "PSConstantColor", "ps_5_0", dwShaderFlags, 0, NULL, 
+    CreatePixelShaderFromFile( pd3dDevice,    wcPath, NULL, NULL, "PSConstantColor", "ps_5_0", dwShaderFlags, 0, NULL,
                                 &g_pParticlePS);
 
 
     //
     // Create vertex layouts
     //
-    
+
     // Tangent space vertex input layout
     const D3D11_INPUT_ELEMENT_DESC tangentspacevertexlayout[] =
     {
@@ -1086,9 +1086,9 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         { "BINORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 32, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TANGENT",  0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 44, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    V_RETURN( pd3dDevice->CreateInputLayout( tangentspacevertexlayout, ARRAYSIZE( tangentspacevertexlayout ), 
-                                             pBlobVS_DetailTessellation->GetBufferPointer(), 
-                                             pBlobVS_DetailTessellation->GetBufferSize(), 
+    V_RETURN( pd3dDevice->CreateInputLayout( tangentspacevertexlayout, ARRAYSIZE( tangentspacevertexlayout ),
+                                             pBlobVS_DetailTessellation->GetBufferPointer(),
+                                             pBlobVS_DetailTessellation->GetBufferSize(),
                                              &g_pTangentSpaceVertexLayout ) );
     DXUT_SetDebugName( g_pTangentSpaceVertexLayout, "Tangent Space" );
 
@@ -1100,15 +1100,15 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0,  D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    V_RETURN( pd3dDevice->CreateInputLayout( positiononlyvertexlayout, ARRAYSIZE( positiononlyvertexlayout ), 
-                                             pBlobVS_Particle->GetBufferPointer(), pBlobVS_Particle->GetBufferSize(), 
+    V_RETURN( pd3dDevice->CreateInputLayout( positiononlyvertexlayout, ARRAYSIZE( positiononlyvertexlayout ),
+                                             pBlobVS_Particle->GetBufferPointer(), pBlobVS_Particle->GetBufferSize(),
                                              &g_pPositionOnlyVertexLayout ) );
     DXUT_SetDebugName( g_pPositionOnlyVertexLayout, "Pos Only") ;
 
     // Release blobs
     SAFE_RELEASE( pBlobVS_Particle );
-    
-    
+
+
     // Create main constant buffer
     D3D11_BUFFER_DESC bd;
     bd.Usage = D3D11_USAGE_DYNAMIC;
@@ -1135,7 +1135,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pMaterialCB, "MATERIAL_CB_STRUCT" );
 
     // Create grid geometry
-    FillGrid_Indexed_WithTangentSpace( pd3dDevice, g_dwGridTessellation, g_dwGridTessellation, GRID_SIZE, GRID_SIZE, 
+    FillGrid_Indexed_WithTangentSpace( pd3dDevice, g_dwGridTessellation, g_dwGridTessellation, GRID_SIZE, GRID_SIZE,
                                        &g_pGridTangentSpaceVB, &g_pGridTangentSpaceIB );
 
     // Create particle VB
@@ -1155,12 +1155,12 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     //
     // Load textures
     //
-    
+
     // Determine how many textures to load
     g_dwNumTextures = NUM_TEXTURES;
 
     // Is a custom texture specified?
-    if ( ( wcslen( DetailTessellationTextures[NUM_TEXTURES].DiffuseMap )!=0 ) && 
+    if ( ( wcslen( DetailTessellationTextures[NUM_TEXTURES].DiffuseMap )!=0 ) &&
          ( wcslen( DetailTessellationTextures[NUM_TEXTURES].NormalHeightMap )!=0 ) )
     {
         // Yes, add one to number of textures and update array
@@ -1173,7 +1173,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     {
         // Load detail tessellation base texture
         DXUTFindDXSDKMediaFileCch( str, 256, DetailTessellationTextures[i].DiffuseMap );
-        hr = D3DX11CreateShaderResourceViewFromFile( pd3dDevice, str, 
+        hr = D3DX11CreateShaderResourceViewFromFile( pd3dDevice, str,
                                                      NULL, NULL, &g_pDetailTessellationBaseTextureRV[i], NULL );
         if( FAILED( hr ) )
             return hr;
@@ -1191,7 +1191,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
         // Load detail tessellation normal+height texture
         DXUTFindDXSDKMediaFileCch( str, 256, DetailTessellationTextures[i].NormalHeightMap );
-        hr = D3DX11CreateShaderResourceViewFromFile( pd3dDevice, str, 
+        hr = D3DX11CreateShaderResourceViewFromFile( pd3dDevice, str,
                                                      NULL, NULL, &g_pDetailTessellationHeightTextureRV[i], NULL );
         if( FAILED( hr ) )
             return hr;
@@ -1214,7 +1214,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         DXUTFindDXSDKMediaFileCch(pszDensityMapFilename, 256, DetailTessellationTextures[i].NormalHeightMap );
         pExtensionPointer = wcsrchr(pszDensityMapFilename, '.');
         swprintf_s(pExtensionPointer, pExtensionPointer-pszDensityMapFilename, L"_density.dds");
-        
+
         {
             // Density file for this texture doesn't exist, create it
 
@@ -1223,16 +1223,16 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
             ID3D11Texture2D* pDensityMap;
             g_pDetailTessellationHeightTextureRV[i]->GetResource( (ID3D11Resource**)&pHeightMap );
             DXUT_SetDebugName( pHeightMap, "Height Map" );
-            
+
             // Create density map from height map
-            CreateDensityMapFromHeightMap( pd3dDevice, pd3dImmediateContext, pHeightMap, 
-                                           DetailTessellationTextures[i].fDensityScale, &pDensityMap, NULL, 
+            CreateDensityMapFromHeightMap( pd3dDevice, pd3dImmediateContext, pHeightMap,
+                                           DetailTessellationTextures[i].fDensityScale, &pDensityMap, NULL,
                                            DetailTessellationTextures[i].fMeaningfulDifference );
 
             // Save density map to file
             D3DX11SaveTextureToFile( pd3dImmediateContext, pDensityMap, D3DX11_IFF_DDS, pszDensityMapFilename );
             D3D11_TEXTURE2D_DESC d2ddsc;
-            pDensityMap->GetDesc(&d2ddsc); 
+            pDensityMap->GetDesc(&d2ddsc);
             D3D11_SHADER_RESOURCE_VIEW_DESC dsrvd;
             dsrvd.Format = d2ddsc.Format;
             dsrvd.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
@@ -1241,7 +1241,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
             hr = pd3dDevice->CreateShaderResourceView( pDensityMap, &dsrvd, &g_pDetailTessellationDensityTextureRV[i] );
             DXUT_SetDebugName( g_pDetailTessellationDensityTextureRV[i], "Density SRV" );
-            
+
             if( FAILED( hr ) )
                 return hr;
 
@@ -1255,7 +1255,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         ID3D11Buffer* pGridVBSTAGING = NULL;
         CreateStagingBufferFromBuffer( pd3dDevice, pd3dImmediateContext, g_pGridTangentSpaceVB, &pGridVBSTAGING );
         DXUT_SetDebugName( pGridVBSTAGING, "Grid VB" );
-        
+
         ID3D11Buffer* pGridIBSTAGING = NULL;
         CreateStagingBufferFromBuffer( pd3dDevice, pd3dImmediateContext, g_pGridTangentSpaceIB, &pGridIBSTAGING );
         DXUT_SetDebugName( pGridIBSTAGING, "Grid IB" );
@@ -1273,8 +1273,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         D3DXVECTOR2* pTexcoord = (D3DXVECTOR2 *)( &( (float *)VBRead.pData )[3] );
 
         // Create vertex buffer containing edge density data
-        CreateEdgeDensityVertexStream( pd3dDevice, pd3dImmediateContext, pTexcoord, sizeof(TANGENTSPACEVERTEX), 
-                                       IBRead.pData, sizeof(WORD), 3*2*g_dwGridTessellation*g_dwGridTessellation, 
+        CreateEdgeDensityVertexStream( pd3dDevice, pd3dImmediateContext, pTexcoord, sizeof(TANGENTSPACEVERTEX),
+                                       IBRead.pData, sizeof(WORD), 3*2*g_dwGridTessellation*g_dwGridTessellation,
                                        pDensityMap, &g_pGridDensityVB[i], DetailTessellationTextures[i].fBaseTextureRepeat );
 
         pDensityMap->Release();
@@ -1299,10 +1299,10 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     WCHAR path[256];
 
     DXUTFindDXSDKMediaFileCch(path, 256, L"media\\Particle.dds" );
-    hr = D3DX11CreateShaderResourceViewFromFile( pd3dDevice, path, 
+    hr = D3DX11CreateShaderResourceViewFromFile( pd3dDevice, path,
                                                  NULL, NULL, &g_pLightTextureRV, NULL );
     DXUT_SetDebugName( g_pLightTextureRV, "Particles.dds" );
-    
+
     //
     // Create state objects
     //
@@ -1353,7 +1353,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     BlendState.RenderTarget[0].DestBlendAlpha =         D3D11_BLEND_ZERO;
     hr = pd3dDevice->CreateBlendState(&BlendState, &g_pBlendStateAdditiveBlending);
     DXUT_SetDebugName( g_pBlendStateAdditiveBlending, "Additive Blending") ;
-    
+
     // Create a depthstencil state
     D3D11_DEPTH_STENCIL_DESC DSDesc;
     DSDesc.DepthEnable =        TRUE;
@@ -1395,7 +1395,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 //--------------------------------------------------------------------------------------
 // Render the scene using the D3D11 device
 //--------------------------------------------------------------------------------------
-void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, 
+void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext,
                                   double fTime, float fElapsedTime, void* pUserContext )
 {
     HRESULT                     hr;
@@ -1423,25 +1423,25 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         SAFE_RELEASE(g_pNoTessellationVS);
 
         // ... and reload them
-        D3D_SHADER_MACRO    pDetailTessellationDefines[] = 
-            { "DENSITY_BASED_TESSELLATION", g_bDensityBasedDetailTessellation ? "1" : "0", 
-              "DISTANCE_ADAPTIVE_TESSELLATION", g_bDistanceAdaptiveDetailTessellation ? "1" : "0", 
-              "SCREEN_SPACE_ADAPTIVE_TESSELLATION", g_bScreenSpaceAdaptiveDetailTessellation ? "1" : "0", 
-              "FRUSTUM_CULLING_OPTIMIZATION", g_bUseFrustumCullingOptimization ? "1" : "0", 
+        D3D_SHADER_MACRO    pDetailTessellationDefines[] =
+            { "DENSITY_BASED_TESSELLATION", g_bDensityBasedDetailTessellation ? "1" : "0",
+              "DISTANCE_ADAPTIVE_TESSELLATION", g_bDistanceAdaptiveDetailTessellation ? "1" : "0",
+              "SCREEN_SPACE_ADAPTIVE_TESSELLATION", g_bScreenSpaceAdaptiveDetailTessellation ? "1" : "0",
+              "FRUSTUM_CULLING_OPTIMIZATION", g_bUseFrustumCullingOptimization ? "1" : "0",
               NULL, NULL };
         WCHAR wcPath[256];
         DXUTFindDXSDKMediaFileCch( wcPath, 256, L"DetailTessellation11.hlsl" );
-        CreateVertexShaderFromFile(pd3dDevice, wcPath, pDetailTessellationDefines, NULL, 
+        CreateVertexShaderFromFile(pd3dDevice, wcPath, pDetailTessellationDefines, NULL,
                 "VS_NoTessellation", "vs_5_0", 0, 0, NULL, &g_pNoTessellationVS);
-        CreateVertexShaderFromFile(pd3dDevice, wcPath, pDetailTessellationDefines, NULL, 
+        CreateVertexShaderFromFile(pd3dDevice, wcPath, pDetailTessellationDefines, NULL,
                 "VS","vs_5_0", 0, 0, NULL, &g_pDetailTessellationVS);
-        CreateHullShaderFromFile(pd3dDevice,   wcPath, pDetailTessellationDefines, NULL, 
+        CreateHullShaderFromFile(pd3dDevice,   wcPath, pDetailTessellationDefines, NULL,
                 "HS", "hs_5_0", 0, 0, NULL, &g_pDetailTessellationHS);
-        CreateDomainShaderFromFile(pd3dDevice, wcPath, pDetailTessellationDefines, NULL, 
+        CreateDomainShaderFromFile(pd3dDevice, wcPath, pDetailTessellationDefines, NULL,
                 "DS", "ds_5_0", 0, 0, NULL, &g_pDetailTessellationDS);
-        CreatePixelShaderFromFile(pd3dDevice,  wcPath, pDetailTessellationDefines, NULL, 
+        CreatePixelShaderFromFile(pd3dDevice,  wcPath, pDetailTessellationDefines, NULL,
                 "BumpMapPS", "ps_5_0", 0, 0, NULL, &g_pBumpMapPS);
-        
+
         g_bDetailTessellationShadersNeedReloading = false;
     }
 
@@ -1480,8 +1480,8 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     D3DXMatrixIdentity( &mWorld );
 
     // Update combined matrices
-    D3DXMATRIX mWorldViewProjection = mWorld * mView * mProj;    
-    D3DXMATRIX mViewProjection = mView * mProj;    
+    D3DXMATRIX mWorldViewProjection = mWorld * mView * mProj;
+    D3DXMATRIX mViewProjection = mView * mProj;
     D3DXMATRIX mInvView;
     D3DXMatrixInverse( &mInvView, NULL, &mView );
 
@@ -1491,8 +1491,8 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // Transpose matrices before passing to shader stages
     D3DXMatrixTranspose( &mProj, &mProj );
     D3DXMatrixTranspose( &mView, &mView );
-    D3DXMatrixTranspose( &mWorld, &mWorld );                    
-    D3DXMatrixTranspose( &mWorldViewProjection, &mWorldViewProjection ); 
+    D3DXMatrixTranspose( &mWorld, &mWorld );
+    D3DXMatrixTranspose( &mWorldViewProjection, &mWorldViewProjection );
     D3DXMatrixTranspose( &mViewProjection, &mViewProjection );
     D3DXMatrixTranspose( &mInvView, &mInvView );
 
@@ -1511,16 +1511,16 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->mWorldViewProjection = mWorldViewProjection;
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->mViewProjection =      mViewProjection;
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->mInvView =             mInvView;
-    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vScreenResolution =    
-        D3DXVECTOR4((float)DXUTGetDXGIBackBufferSurfaceDesc()->Width, (float)DXUTGetDXGIBackBufferSurfaceDesc()->Height, 
+    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vScreenResolution =
+        D3DXVECTOR4((float)DXUTGetDXGIBackBufferSurfaceDesc()->Width, (float)DXUTGetDXGIBackBufferSurfaceDesc()->Height,
                     1.0f/(float)DXUTGetDXGIBackBufferSurfaceDesc()->Width, 1.0f/(float)DXUTGetDXGIBackBufferSurfaceDesc()->Height);
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vMeshColor =           vWhite;
     // Min tessellation factor is half the selected edge tessellation factor
-    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vTessellationFactor =             
-        D3DXVECTOR4( g_fTessellationFactorEdges, g_fTessellationFactorInside, g_fTessellationFactorEdges / 2.0f, 1.0f/g_fDesiredTriangleSize );  
-    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vDetailTessellationHeightScale =  
+    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vTessellationFactor =
+        D3DXVECTOR4( g_fTessellationFactorEdges, g_fTessellationFactorInside, g_fTessellationFactorEdges / 2.0f, 1.0f/g_fDesiredTriangleSize );
+    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vDetailTessellationHeightScale =
         g_bDisplacementEnabled ? D3DXVECTOR4( DetailTessellationTextures[g_nCurrentTexture].fHeightScale, 0.0f, 0.0f, 0.0f ) : vWhite;
-    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vGridSize =                       
+    ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vGridSize =
         D3DXVECTOR4( GRID_SIZE, GRID_SIZE, 1.0f / GRID_SIZE, 1.0f / GRID_SIZE );
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vDebugColorMultiply=   D3DXVECTOR4( g_vDebugColorMultiply, 1.0f );
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vDebugColorAdd =       D3DXVECTOR4( g_vDebugColorAdd, 0.0f );
@@ -1529,9 +1529,9 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vFrustumPlaneEquation[2] = g_pWorldSpaceFrustumPlaneEquation[2];
     ((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vFrustumPlaneEquation[3] = g_pWorldSpaceFrustumPlaneEquation[3];
     // Not using front clip plane for culling
-    //((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vFrustumPlaneEquation[4] = g_pWorldSpaceFrustumPlaneEquation[4]; 
+    //((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vFrustumPlaneEquation[4] = g_pWorldSpaceFrustumPlaneEquation[4];
     // Not using far clip plane for culling
-    //((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vFrustumPlaneEquation[5] = g_pWorldSpaceFrustumPlaneEquation[5]; 
+    //((CONSTANT_BUFFER_STRUCT *)MappedSubResource.pData)->vFrustumPlaneEquation[5] = g_pWorldSpaceFrustumPlaneEquation[5];
     pd3dImmediateContext->Unmap( g_pMainCB, 0 );
 
     // Update material constant buffer
@@ -1548,10 +1548,10 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_LightDiffuse =            vWhite;
     ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_LightAmbient =            vWhite;
     ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_vEye =                    D3DXVECTOR4( vFrom, 0.0f );
-    ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_fBaseTextureRepeat =      
+    ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_fBaseTextureRepeat =
         D3DXVECTOR4( DetailTessellationTextures[g_nCurrentTexture].fBaseTextureRepeat, 0.0f, 0.0f, 0.0f );
     // POM height scale is in texcoord per world space unit thus: (heightscale * basetexturerepeat) / (texture size in world space units)
-    float fPomHeightScale = 
+    float fPomHeightScale =
         ( DetailTessellationTextures[g_nCurrentTexture].fHeightScale*DetailTessellationTextures[g_nCurrentTexture].fBaseTextureRepeat ) / GRID_SIZE;
     ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_fPOMHeightMapScale =      D3DXVECTOR4(fPomHeightScale , 0.0f, 0.0f, 0.0f );
     ((MATERIAL_CB_STRUCT *)MappedSubResource.pData)->g_fShadowSoftening =        D3DXVECTOR4( 0.58f, 0.0f, 0.0f, 0.0f );
@@ -1603,12 +1603,12 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     {
         case TESSELLATIONMETHOD_DISABLED:
         {
-            // Render grid with simple bump mapping applied            
+            // Render grid with simple bump mapping applied
             pd3dImmediateContext->VSSetShader( g_pNoTessellationVS, NULL, 0 );
             pd3dImmediateContext->HSSetShader( NULL, NULL, 0);
             pd3dImmediateContext->DSSetShader( NULL, NULL, 0);
             pd3dImmediateContext->GSSetShader( NULL, NULL, 0 );
-            pd3dImmediateContext->PSSetShader( g_pBumpMapPS, NULL, 0 ); 
+            pd3dImmediateContext->PSSetShader( g_pBumpMapPS, NULL, 0 );
 
             // Set primitive topology
             pd3dImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
@@ -1623,12 +1623,12 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
         case TESSELLATIONMETHOD_DISABLED_POM:
         {
-            // Render grid with POM applied                
+            // Render grid with POM applied
             pd3dImmediateContext->VSSetShader( g_pPOMVS, NULL, 0 );
             pd3dImmediateContext->HSSetShader( NULL, NULL, 0);
             pd3dImmediateContext->DSSetShader( NULL, NULL, 0);
             pd3dImmediateContext->GSSetShader( NULL, NULL, 0 );
-            pd3dImmediateContext->PSSetShader( g_pPOMPS, NULL, 0 ); 
+            pd3dImmediateContext->PSSetShader( g_pPOMPS, NULL, 0 );
 
             // Set primitive topology
             pd3dImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
@@ -1647,7 +1647,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
             pd3dImmediateContext->HSSetShader( g_pDetailTessellationHS, NULL, 0);
             pd3dImmediateContext->DSSetShader( g_pDetailTessellationDS, NULL, 0);
             pd3dImmediateContext->GSSetShader( NULL, NULL, 0 );
-            pd3dImmediateContext->PSSetShader( g_pBumpMapPS, NULL, 0 ); 
+            pd3dImmediateContext->PSSetShader( g_pBumpMapPS, NULL, 0 );
 
             // Set primitive topology
             pd3dImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST );
@@ -1678,7 +1678,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         pd3dImmediateContext->HSSetShader( NULL, NULL, 0);
         pd3dImmediateContext->DSSetShader( NULL, NULL, 0);
         pd3dImmediateContext->GSSetShader( g_pParticleGS, NULL, 0 );
-        pd3dImmediateContext->PSSetShader( g_pParticlePS, NULL, 0 ); 
+        pd3dImmediateContext->PSSetShader( g_pParticlePS, NULL, 0 );
 
         // Set primitive topology
         pd3dImmediateContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_POINTLIST );
@@ -1764,7 +1764,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
             // Release single-sample version of texture
             SAFE_RELEASE(pSingleSampleTexture);
-            
+
         }
         else
         {
@@ -1783,7 +1783,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1792,7 +1792,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1814,7 +1814,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pParticleVB );
     SAFE_RELEASE( g_pGridTangentSpaceIB )
     SAFE_RELEASE( g_pGridTangentSpaceVB );
-    
+
     SAFE_RELEASE( g_pPositionOnlyVertexLayout );
     SAFE_RELEASE( g_pTangentSpaceVertexLayout );
 
@@ -1850,8 +1850,8 @@ bool IsNextArg( WCHAR*& strCmdLine, WCHAR* strArg )
    int nArgLen = (int)wcslen( strArg );
    int nCmdLen = (int)wcslen( strCmdLine );
 
-   if( ( nCmdLen >= nArgLen ) && 
-       ( _wcsnicmp( strCmdLine, strArg, nArgLen ) == 0 ) && 
+   if( ( nCmdLen >= nArgLen ) &&
+       ( _wcsnicmp( strCmdLine, strArg, nArgLen ) == 0 ) &&
        ( (strCmdLine[nArgLen] == 0 || strCmdLine[nArgLen] == L':' || strCmdLine[nArgLen] == L'=' ) ) )
    {
       strCmdLine += nArgLen;
@@ -1863,14 +1863,14 @@ bool IsNextArg( WCHAR*& strCmdLine, WCHAR* strArg )
 
 
 //--------------------------------------------------------------------------------------
-// Helper function for command line retrieval.  Updates strCmdLine and strFlag 
+// Helper function for command line retrieval.  Updates strCmdLine and strFlag
 //      Example: if strCmdLine=="-width:1024 -forceref"
 // then after: strCmdLine==" -forceref" and strFlag=="1024"
 //--------------------------------------------------------------------------------------
 bool GetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag )
 {
    if( *strCmdLine == L':' || *strCmdLine == L'=' )
-   {       
+   {
       strCmdLine++; // Skip ':'
 
       // Place NULL terminator in strFlag after current token
@@ -1899,8 +1899,8 @@ bool GetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag )
 //--------------------------------------------------------------------------------------
 // Create a density texture map from a height map
 //--------------------------------------------------------------------------------------
-void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext *pDeviceContext, ID3D11Texture2D* pHeightMap, 
-                                    float fDensityScale, ID3D11Texture2D** ppDensityMap, ID3D11Texture2D** ppDensityMapStaging, 
+void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContext *pDeviceContext, ID3D11Texture2D* pHeightMap,
+                                    float fDensityScale, ID3D11Texture2D** ppDensityMap, ID3D11Texture2D** ppDensityMapStaging,
                                     float fMeaningfulDifference )
 {
 #define ReadPixelFromMappedSubResource(x, y)       ( *( (RGBQUAD *)((BYTE *)MappedSubResourceRead.pData + (y)*MappedSubResourceRead.RowPitch + (x)*sizeof(DWORD)) ) )
@@ -1908,7 +1908,7 @@ void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContex
 
     // Get description of source texture
     D3D11_TEXTURE2D_DESC Desc;
-    pHeightMap->GetDesc( &Desc );    
+    pHeightMap->GetDesc( &Desc );
 
     // Create density map with the same properties
     pd3dDevice->CreateTexture2D( &Desc, NULL, ppDensityMap );
@@ -1942,9 +1942,9 @@ void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContex
         for ( int i=0; i <= (int)Desc.Width-1; ++i )
         {
             // Edges are set to the minimum value
-            if ( ( j == 0 ) || 
-                 ( i == 0 ) || 
-                 ( j == ( (int)Desc.Height-1 ) ) || 
+            if ( ( j == 0 ) ||
+                 ( i == 0 ) ||
+                 ( j == ( (int)Desc.Height-1 ) ) ||
                  ( i == ((int)Desc.Width-1 ) ) )
             {
                 WritePixelToMappedSubResource( i, j, (DWORD)1 );
@@ -1971,10 +1971,10 @@ void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContex
 
             // Get bottom-right pixel
             RGBQUAD BottomRightPixel = ReadPixelFromMappedSubResource( i+1, j+1 );
-            
+
             // Get top-left pixel
             RGBQUAD TopLeftPixel =     ReadPixelFromMappedSubResource( i-1, j-1 );
-            
+
             // Get bottom-left pixel
             RGBQUAD BottomLeft =       ReadPixelFromMappedSubResource( i-1, j+1 );
 
@@ -1989,20 +1989,20 @@ void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContex
             float fCurrentPixelBottomLeftHeight =  ( BottomLeft.rgbReserved       / 255.0f );
 
             float fDensity = 0.0f;
-            float fHorizontalVariation = fabsf( ( fCurrentPixelRightHeight - fCurrentPixelHeight ) - 
+            float fHorizontalVariation = fabsf( ( fCurrentPixelRightHeight - fCurrentPixelHeight ) -
                                                ( fCurrentPixelHeight - fCurrentPixelLeftHeight ) );
-            float fVerticalVariation = fabsf( ( fCurrentPixelBottomHeight - fCurrentPixelHeight ) - 
+            float fVerticalVariation = fabsf( ( fCurrentPixelBottomHeight - fCurrentPixelHeight ) -
                                              ( fCurrentPixelHeight - fCurrentPixelTopHeight ) );
-            float fFirstDiagonalVariation = fabsf( ( fCurrentPixelTopRightHeight - fCurrentPixelHeight ) - 
+            float fFirstDiagonalVariation = fabsf( ( fCurrentPixelTopRightHeight - fCurrentPixelHeight ) -
                                                   ( fCurrentPixelHeight - fCurrentPixelBottomLeftHeight ) );
-            float fSecondDiagonalVariation = fabsf( ( fCurrentPixelBottomRightHeight - fCurrentPixelHeight ) - 
+            float fSecondDiagonalVariation = fabsf( ( fCurrentPixelBottomRightHeight - fCurrentPixelHeight ) -
                                                    ( fCurrentPixelHeight - fCurrentPixelTopLeftHeight ) );
             if ( fHorizontalVariation     >= fMeaningfulDifference) fDensity += 0.293f * fHorizontalVariation;
             if ( fVerticalVariation       >= fMeaningfulDifference) fDensity += 0.293f * fVerticalVariation;
             if ( fFirstDiagonalVariation  >= fMeaningfulDifference) fDensity += 0.207f * fFirstDiagonalVariation;
             if ( fSecondDiagonalVariation >= fMeaningfulDifference) fDensity += 0.207f * fSecondDiagonalVariation;
-                
-            // Scale density with supplied scale                
+
+            // Scale density with supplied scale
             fDensity *= fDensityScale;
 
             // Clamp density
@@ -2020,7 +2020,7 @@ void CreateDensityMapFromHeightMap( ID3D11Device* pd3dDevice, ID3D11DeviceContex
 
     // Copy contents of density map into DEFAULT density version
     pDeviceContext->CopyResource( *ppDensityMap, pDensityMapStaging );
-    
+
     // If a pointer to a staging density map was provided then return it with staging density map
     if ( ppDensityMapStaging )
     {
@@ -2056,7 +2056,7 @@ __inline RGBQUAD SampleTexture2D_32bit( DWORD *pTexture2D, DWORD dwWidth, DWORD 
 //--------------------------------------------------------------------------------------
 // Sample density map along specified edge and return maximum value
 //--------------------------------------------------------------------------------------
-float GetMaximumDensityAlongEdge( DWORD *pTexture2D, DWORD dwStride, DWORD dwWidth, DWORD dwHeight, 
+float GetMaximumDensityAlongEdge( DWORD *pTexture2D, DWORD dwStride, DWORD dwWidth, DWORD dwHeight,
                                   D3DXVECTOR2 fTexcoord0, D3DXVECTOR2 fTexcoord1 )
 {
 #define GETTEXEL(x, y)       ( *(RGBQUAD *)( ( (BYTE *)pTexture2D ) + ( (y)*dwStride ) + ( (x)*sizeof(DWORD) ) ) )
@@ -2092,7 +2092,7 @@ float GetMaximumDensityAlongEdge( DWORD *pTexture2D, DWORD dwStride, DWORD dwWid
         // Update max density along edge
         fMaxDensity = max( fMaxDensity, GETTEXEL( nCurrentU, nCurrentV ).rgbBlue / 255.0f );
     }
-        
+
     return fMaxDensity;
 }
 
@@ -2101,8 +2101,8 @@ float GetMaximumDensityAlongEdge( DWORD *pTexture2D, DWORD dwStride, DWORD dwWid
 // Calculate the maximum density along a triangle edge and
 // store it in the resulting vertex stream.
 //--------------------------------------------------------------------------------------
-void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, D3DXVECTOR2* pTexcoord, 
-                                    DWORD dwVertexStride, void *pIndex, DWORD dwIndexSize, DWORD dwNumIndices, 
+void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pDeviceContext, D3DXVECTOR2* pTexcoord,
+                                    DWORD dwVertexStride, void *pIndex, DWORD dwIndexSize, DWORD dwNumIndices,
                                     ID3D11Texture2D* pDensityMap, ID3D11Buffer** ppEdgeDensityVertexStream,
                                     float fBaseTextureRepeat )
 {
@@ -2117,7 +2117,7 @@ void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContex
     // Retrieve density map description
     D3D11_TEXTURE2D_DESC Tex2DDesc;
     pDensityMap->GetDesc( &Tex2DDesc );
- 
+
     // Check if provided texture can be Mapped() for reading directly
     BOOL bCanBeRead = Tex2DDesc.CPUAccessFlags & D3D11_CPU_ACCESS_READ;
     if ( !bCanBeRead )
@@ -2171,15 +2171,15 @@ void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContex
         vTexcoord2 *= fBaseTextureRepeat;
 
         // Sample density map at vertex location
-        float fEdgeDensity0 = GetMaximumDensityAlongEdge( (DWORD *)MappedSubResource.pData, MappedSubResource.RowPitch, 
+        float fEdgeDensity0 = GetMaximumDensityAlongEdge( (DWORD *)MappedSubResource.pData, MappedSubResource.RowPitch,
                                                           Tex2DDesc.Width, Tex2DDesc.Height, vTexcoord0, vTexcoord1 );
-        float fEdgeDensity1 = GetMaximumDensityAlongEdge( (DWORD *)MappedSubResource.pData, MappedSubResource.RowPitch, 
+        float fEdgeDensity1 = GetMaximumDensityAlongEdge( (DWORD *)MappedSubResource.pData, MappedSubResource.RowPitch,
                                                           Tex2DDesc.Width, Tex2DDesc.Height, vTexcoord1, vTexcoord2 );
-        float fEdgeDensity2 = GetMaximumDensityAlongEdge( (DWORD *)MappedSubResource.pData, MappedSubResource.RowPitch, 
+        float fEdgeDensity2 = GetMaximumDensityAlongEdge( (DWORD *)MappedSubResource.pData, MappedSubResource.RowPitch,
                                                           Tex2DDesc.Width, Tex2DDesc.Height, vTexcoord2, vTexcoord0 );
 
         // Store edge density in x,y,z and store maximum density in .w
-        pEdgeDensityBuffer[i] = D3DXVECTOR4( fEdgeDensity0, fEdgeDensity1, fEdgeDensity2, 
+        pEdgeDensityBuffer[i] = D3DXVECTOR4( fEdgeDensity0, fEdgeDensity1, fEdgeDensity2,
                                              max( max( fEdgeDensity0, fEdgeDensity1 ), fEdgeDensity2 ) );
     }
 
@@ -2191,7 +2191,7 @@ void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContex
     {
         SAFE_RELEASE( pDensityMapReadFrom );
     }
-    
+
     // Set source buffer for initialization data
     InitData.pSysMem = (void *)pEdgeDensityBuffer;
 
@@ -2217,7 +2217,7 @@ void CreateEdgeDensityVertexStream( ID3D11Device* pd3dDevice, ID3D11DeviceContex
 //--------------------------------------------------------------------------------------
 // Helper function to create a staging buffer from a buffer resource
 //--------------------------------------------------------------------------------------
-void CreateStagingBufferFromBuffer( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext, 
+void CreateStagingBufferFromBuffer( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pContext,
                                    ID3D11Buffer* pInputBuffer, ID3D11Buffer **ppStagingBuffer )
 {
     D3D11_BUFFER_DESC BufferDesc;
@@ -2243,19 +2243,19 @@ void CreateStagingBufferFromBuffer( ID3D11Device* pd3dDevice, ID3D11DeviceContex
 // This function is called by the shader-specific versions of this
 // function located after the body of this function.
 //--------------------------------------------------------------------------------------
-HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob,
                               BOOL bDumpShader)
 {
     HRESULT   hr = D3D_OK;
     ID3DBlob* pShaderBlob = NULL;
     ID3DBlob* pErrorBlob = NULL;
     WCHAR     wcFullPath[256];
-    
+
     DXUTFindDXSDKMediaFileCch( wcFullPath, 256, pSrcFile );
     // Compile shader into binary blob
-    hr = D3DX11CompileFromFile( wcFullPath, pDefines, pInclude, pFunctionName, pProfile, 
+    hr = D3DX11CompileFromFile( wcFullPath, pDefines, pInclude, pFunctionName, pProfile,
                                 Flags1, Flags2, pPump, &pShaderBlob, &pErrorBlob, NULL );
     if( FAILED( hr ) )
     {
@@ -2263,39 +2263,39 @@ HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST 
         SAFE_RELEASE( pErrorBlob );
         return hr;
     }
-    
+
     // Create shader from binary blob
     if ( ppShader )
     {
         hr = E_FAIL;
         if ( strstr( pProfile, "vs" ) )
         {
-            hr = pd3dDevice->CreateVertexShader( pShaderBlob->GetBufferPointer(), 
+            hr = pd3dDevice->CreateVertexShader( pShaderBlob->GetBufferPointer(),
                     pShaderBlob->GetBufferSize(), NULL, (ID3D11VertexShader**)ppShader );
         }
         else if ( strstr( pProfile, "hs" ) )
         {
-            hr = pd3dDevice->CreateHullShader( pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11HullShader**)ppShader ); 
+            hr = pd3dDevice->CreateHullShader( pShaderBlob->GetBufferPointer(),
+                    pShaderBlob->GetBufferSize(), NULL, (ID3D11HullShader**)ppShader );
         }
         else if ( strstr( pProfile, "ds" ) )
         {
-            hr = pd3dDevice->CreateDomainShader( pShaderBlob->GetBufferPointer(), 
+            hr = pd3dDevice->CreateDomainShader( pShaderBlob->GetBufferPointer(),
                     pShaderBlob->GetBufferSize(), NULL, (ID3D11DomainShader**)ppShader );
         }
         else if ( strstr( pProfile, "gs" ) )
         {
-            hr = pd3dDevice->CreateGeometryShader( pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11GeometryShader**)ppShader ); 
+            hr = pd3dDevice->CreateGeometryShader( pShaderBlob->GetBufferPointer(),
+                    pShaderBlob->GetBufferSize(), NULL, (ID3D11GeometryShader**)ppShader );
         }
         else if ( strstr( pProfile, "ps" ) )
         {
-            hr = pd3dDevice->CreatePixelShader( pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11PixelShader**)ppShader ); 
+            hr = pd3dDevice->CreatePixelShader( pShaderBlob->GetBufferPointer(),
+                    pShaderBlob->GetBufferSize(), NULL, (ID3D11PixelShader**)ppShader );
         }
         else if ( strstr( pProfile, "cs" ) )
         {
-            hr = pd3dDevice->CreateComputeShader( pShaderBlob->GetBufferPointer(), 
+            hr = pd3dDevice->CreateComputeShader( pShaderBlob->GetBufferPointer(),
                     pShaderBlob->GetBufferSize(), NULL, (ID3D11ComputeShader**)ppShader );
         }
         if ( FAILED( hr ) )
@@ -2327,13 +2327,13 @@ HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST 
 //--------------------------------------------------------------------------------------
 // Create a vertex shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob,
                                     BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -2341,25 +2341,25 @@ HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, 
 //--------------------------------------------------------------------------------------
 // Create a hull shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob,
                                   BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 //--------------------------------------------------------------------------------------
 // Create a domain shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob,
                                     BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -2367,13 +2367,13 @@ HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, 
 //--------------------------------------------------------------------------------------
 // Create a geometry shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob,
                                       BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -2381,13 +2381,13 @@ HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile
 //--------------------------------------------------------------------------------------
 // Create a pixel shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob,
                                    BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -2395,13 +2395,13 @@ HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, C
 //--------------------------------------------------------------------------------------
 // Create a compute shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob,
                                      BOOL bDumpShader)
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -2412,11 +2412,11 @@ HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile,
 void NormalizePlane( D3DXVECTOR4* pPlaneEquation )
 {
     float mag;
-    
-    mag = sqrtf( pPlaneEquation->x * pPlaneEquation->x + 
-                 pPlaneEquation->y * pPlaneEquation->y + 
+
+    mag = sqrtf( pPlaneEquation->x * pPlaneEquation->x +
+                 pPlaneEquation->y * pPlaneEquation->y +
                  pPlaneEquation->z * pPlaneEquation->z );
-    
+
     pPlaneEquation->x = pPlaneEquation->x / mag;
     pPlaneEquation->y = pPlaneEquation->y / mag;
     pPlaneEquation->z = pPlaneEquation->z / mag;
@@ -2434,37 +2434,37 @@ void ExtractPlanesFromFrustum( D3DXVECTOR4* pPlaneEquation, const D3DXMATRIX* pM
     pPlaneEquation[0].y = pMatrix->_24 + pMatrix->_21;
     pPlaneEquation[0].z = pMatrix->_34 + pMatrix->_31;
     pPlaneEquation[0].w = pMatrix->_44 + pMatrix->_41;
-    
+
     // Right clipping plane
     pPlaneEquation[1].x = pMatrix->_14 - pMatrix->_11;
     pPlaneEquation[1].y = pMatrix->_24 - pMatrix->_21;
     pPlaneEquation[1].z = pMatrix->_34 - pMatrix->_31;
     pPlaneEquation[1].w = pMatrix->_44 - pMatrix->_41;
-    
+
     // Top clipping plane
     pPlaneEquation[2].x = pMatrix->_14 - pMatrix->_12;
     pPlaneEquation[2].y = pMatrix->_24 - pMatrix->_22;
     pPlaneEquation[2].z = pMatrix->_34 - pMatrix->_32;
     pPlaneEquation[2].w = pMatrix->_44 - pMatrix->_42;
-    
+
     // Bottom clipping plane
     pPlaneEquation[3].x = pMatrix->_14 + pMatrix->_12;
     pPlaneEquation[3].y = pMatrix->_24 + pMatrix->_22;
     pPlaneEquation[3].z = pMatrix->_34 + pMatrix->_32;
     pPlaneEquation[3].w = pMatrix->_44 + pMatrix->_42;
-    
+
     // Near clipping plane
     pPlaneEquation[4].x = pMatrix->_13;
     pPlaneEquation[4].y = pMatrix->_23;
     pPlaneEquation[4].z = pMatrix->_33;
     pPlaneEquation[4].w = pMatrix->_43;
-    
+
     // Far clipping plane
     pPlaneEquation[5].x = pMatrix->_14 - pMatrix->_13;
     pPlaneEquation[5].y = pMatrix->_24 - pMatrix->_23;
     pPlaneEquation[5].z = pMatrix->_34 - pMatrix->_33;
     pPlaneEquation[5].w = pMatrix->_44 - pMatrix->_43;
-    
+
     // Normalize the plane equations, if requested
     if ( bNormalize )
     {

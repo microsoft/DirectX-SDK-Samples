@@ -18,14 +18,14 @@
 //#define SHOW_DEBUG_MSGBOXES
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LPTSTR GetPropertyFromMSI( MSIHANDLE hMSI, LPCWSTR szPropName );
 INetFwProfile* GetFirewallProfile();
 
 
 //--------------------------------------------------------------------------------------
-// This stores the install location, generates a instance GUID one hasn't been set, and 
+// This stores the install location, generates a instance GUID one hasn't been set, and
 // sets up the CustomActionData properties for the deferred custom actions
 //--------------------------------------------------------------------------------------
 UINT WINAPI SetMSIFirewallProperties( MSIHANDLE hModule )
@@ -37,7 +37,7 @@ UINT WINAPI SetMSIFirewallProperties( MSIHANDLE hModule )
     WCHAR* szRelativePath = GetPropertyFromMSI( hModule, L"RelativePathToExeForFirewall" );
     WCHAR* szProductCode = GetPropertyFromMSI( hModule, L"ProductCode" );
 
-    // See if the install location property is set.  If it is, use that.  
+    // See if the install location property is set.  If it is, use that.
     // Otherwise, get the property from TARGETDIR
     bool bGotInstallDir = false;
     if( szProductCode )
@@ -53,11 +53,11 @@ UINT WINAPI SetMSIFirewallProperties( MSIHANDLE hModule )
 
     if( szFriendlyName && szRelativePath && szInstallDir )
     {
-        // Set the ARPINSTALLLOCATION property to the install dir so that 
+        // Set the ARPINSTALLLOCATION property to the install dir so that
         // the uninstall custom action can have it when getting the INSTALLPROPERTY_INSTALLLOCATION
         MsiSetPropertyW( hModule, L"ARPINSTALLLOCATION", szInstallDir );
 
-        // Setup the CustomActionData property for the "RollBackAddToFirewall" and 
+        // Setup the CustomActionData property for the "RollBackAddToFirewall" and
         // "RemoveFromExceptionListUsingMSI" deferred custom actions.
         // This should be full path to the exe
         StringCchCopy( strFullPath, 1024, szInstallDir );

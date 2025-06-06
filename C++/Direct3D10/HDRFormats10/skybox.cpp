@@ -10,8 +10,8 @@
 #include "SDKmisc.h"
 #include "skybox.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 struct SKYBOX_VERTEX
 {
@@ -85,14 +85,14 @@ HRESULT CSkybox::OnD3D9CreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, float fSize, 
     m_fSize = fSize;
     m_pEnvironmentMap9 = pCubeTexture;
 
-    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.  
-    // Debugging vertex shaders requires either REF or software vertex processing, and debugging 
-    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug 
-    // experience in the shader debugger.  It enables source level debugging, prevents instruction 
-    // reordering, prevents dead code elimination, and forces the compiler to compile against the next 
-    // higher available software target, which ensures that the unoptimized shaders do not exceed 
-    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders 
-    // will be unoptimized and forced into software.  See the DirectX documentation for more information 
+    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.
+    // Debugging vertex shaders requires either REF or software vertex processing, and debugging
+    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug
+    // experience in the shader debugger.  It enables source level debugging, prevents instruction
+    // reordering, prevents dead code elimination, and forces the compiler to compile against the next
+    // higher available software target, which ensures that the unoptimized shaders do not exceed
+    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders
+    // will be unoptimized and forced into software.  See the DirectX documentation for more information
     // about using the shader debugger.
     DWORD dwShaderFlags = D3DXFX_NOT_CLONEABLE | D3DXFX_LARGEADDRESSAWARE;
 #ifdef DEBUG_VS
@@ -106,7 +106,7 @@ HRESULT CSkybox::OnD3D9CreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, float fSize, 
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, strEffectFileName ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     V_RETURN( D3DXCreateEffectFromFile( pd3dDevice, str, NULL, NULL,
                                         dwShaderFlags, NULL, &m_pEffect9, NULL ) );
@@ -141,7 +141,7 @@ void CSkybox::OnD3D9ResetDevice( const D3DSURFACE_DESC* pBackBufferSurfaceDesc )
     SKYBOX_VERTEX* pVertex = NULL;
     V( m_pVB9->Lock( 0, 0, ( void** )&pVertex, 0 ) );
 
-    // Map texels to pixels 
+    // Map texels to pixels
     float fHighW = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );
     float fHighH = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Height );
     float fLowW = 1.0f + ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );
@@ -158,7 +158,7 @@ void CSkybox::OnD3D9ResetDevice( const D3DSURFACE_DESC* pBackBufferSurfaceDesc )
 
 //-----------------------------------------------------------------------------
 // Name: Render
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 void CSkybox::D3D9Render( D3DXMATRIX* pmWorldViewProj )
 {
@@ -262,13 +262,13 @@ HRESULT CSkybox::OnD3D10CreateDevice( ID3D10Device* pd3dDevice, float fSize, ID3
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, strEffectFileName ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
 #endif
@@ -321,7 +321,7 @@ void CSkybox::OnD3D10ResizedSwapChain( const DXGI_SURFACE_DESC* pBackBufferSurfa
     if( !pVertex )
         return;
 
-    // Map texels to pixels 
+    // Map texels to pixels
     float fHighW = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );
     float fHighH = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Height );
     float fLowW = 1.0f + ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );
@@ -357,7 +357,7 @@ void CSkybox::OnD3D10ResizedSwapChain( const DXGI_SURFACE_DESC* pBackBufferSurfa
 
 //-----------------------------------------------------------------------------
 // Name: Render
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 void CSkybox::D3D10Render( D3DXMATRIX* pmWorldViewProj )
 {
