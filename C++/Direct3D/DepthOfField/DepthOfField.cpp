@@ -12,8 +12,8 @@
 #include "SDKmisc.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -110,7 +110,7 @@ const DWORD                 g_TechniqueCount = sizeof( g_TechniqueNames ) / size
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -136,7 +136,7 @@ HRESULT UpdateTechniqueSpecificVariables( const D3DSURFACE_DESC* pBackBufferSurf
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -146,7 +146,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -174,7 +174,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -277,7 +277,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
                             pDeviceSettings->d3d9.DeviceType,
                             &caps ) );
 
-    // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+    // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
     // then switch to SWVP.
     if( ( caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
         caps.VertexShaderVersion < D3DVS_VERSION( 1, 1 ) )
@@ -285,8 +285,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
     }
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
     if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
     {
@@ -361,8 +361,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
 
 
 //--------------------------------------------------------------------------------------
-// This function loads the mesh and ensures the mesh has normals; it also optimizes the 
-// mesh for the graphics card's vertex cache, which improves performance by organizing 
+// This function loads the mesh and ensures the mesh has normals; it also optimizes the
+// mesh for the graphics card's vertex cache, which improves performance by organizing
 // the internal triangle list for less cache misses.
 //--------------------------------------------------------------------------------------
 HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** ppMesh )
@@ -372,7 +372,7 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
     HRESULT hr;
 
     // Load the mesh with D3DX and get back a ID3DXMesh*.  For this
-    // sample we'll ignore the X file's embedded materials since we know 
+    // sample we'll ignore the X file's embedded materials since we know
     // exactly the model we're loading.  See the mesh samples such as
     // "OptimizedMesh" for a more generic mesh loading example.
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, strFileName ) );
@@ -394,10 +394,10 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
         pMesh = pTempMesh;
     }
 
-    // Optimize the mesh for this graphics card's vertex cache 
-    // so when rendering the mesh's triangle list the vertices will 
-    // cache hit more often so it won't have to re-execute the vertex shader 
-    // on those vertices so it will improve perf.     
+    // Optimize the mesh for this graphics card's vertex cache
+    // so when rendering the mesh's triangle list the vertices will
+    // cache hit more often so it won't have to re-execute the vertex shader
+    // on those vertices so it will improve perf.
     rgdwAdjacency = new DWORD[pMesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
         return E_OUTOFMEMORY;
@@ -412,8 +412,8 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -456,7 +456,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
     g_pFullScreenTexture->GetSurfaceLevel( 0, &g_pFullScreenTextureSurf );
     g_pFullScreenTextureSurf->GetDesc( &desc );
 
-    // Create a ID3DXRenderToSurface to help render to a texture on cards 
+    // Create a ID3DXRenderToSurface to help render to a texture on cards
     // that don't support render targets
     V_RETURN( D3DXCreateRenderToSurface( pd3dDevice, desc.Width, desc.Height,
                                          desc.Format, TRUE, D3DFMT_D16, &g_pRenderToSurface ) );
@@ -473,7 +473,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
     D3DXCOLOR colorBlack( 0.0f, 0.0f, 0.0f, 1.0f );
     D3DXCOLOR colorAmbient( 0.25f, 0.25f, 0.25f, 1.0f );
 
-    // Get D3DXHANDLEs to the parameters/techniques that are set every frame so 
+    // Get D3DXHANDLEs to the parameters/techniques that are set every frame so
     // D3DX doesn't spend time doing string compares.  Doing this likely won't affect
     // the perf of this simple sample but it should be done in complex engine.
     g_hFocalPlane = g_pEffect->GetParameterByName( NULL, "vFocalPlane" );
@@ -611,7 +611,7 @@ void SetupQuad( const D3DSURFACE_DESC* pBackBufferSurfaceDesc )
     FLOAT fWidthMod = 1.0f / ( FLOAT )desc.Width;
     FLOAT fHeightMod = 1.0f / ( FLOAT )desc.Height;
 
-    // Create vertex buffer.  
+    // Create vertex buffer.
     // g_Vertex[0].tex1 == full texture coverage
     // g_Vertex[0].tex2 == full texture coverage, but shifted y by -fHalf*fHeightMod
     // g_Vertex[0].tex3 == full texture coverage, but shifted x by -fOffTwo*fWidthMod & y by -fOffOne*fHeightMod
@@ -661,7 +661,7 @@ void SetupQuad( const D3DSURFACE_DESC* pBackBufferSurfaceDesc )
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -682,7 +682,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
     HRESULT hr;
     UINT iPass, cPasses;
 
-    // First render the world on the rendertarget g_pFullScreenTexture. 
+    // First render the world on the rendertarget g_pFullScreenTexture.
     if( SUCCEEDED( g_pRenderToSurface->BeginScene( g_pFullScreenTextureSurf, &g_ViewportOffscreen ) ) )
     {
         V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, g_dwBackgroundColor, 1.0f, 0 ) );
@@ -699,7 +699,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
         // Set world render technique
         V( g_pEffect->SetTechnique( g_hTechWorldWithBlurFactor ) );
 
-        // Set the mesh texture 
+        // Set the mesh texture
         LPD3DXMESH pSceneMesh;
         int nNumObjectsInScene;
         if( g_nCurrentScene == 1 )
@@ -759,7 +759,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
         V( g_pRenderToSurface->EndScene( 0 ) );
     }
 
-    // Clear the backbuffer 
+    // Clear the backbuffer
     V( pd3dDevice->Clear( 0L, NULL, D3DCLEAR_TARGET, 0x00000000, 1.0f, 0L ) );
 
     // Begin the scene, rendering to the backbuffer
@@ -802,7 +802,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -1000,7 +1000,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
 {
@@ -1018,7 +1018,7 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

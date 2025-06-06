@@ -13,8 +13,8 @@
 #include "SDKmesh.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -44,7 +44,7 @@ D3DXHANDLE                  g_hfTime;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
                           void* pUserContext );
@@ -68,7 +68,7 @@ void RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -78,7 +78,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -106,7 +106,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -124,7 +124,7 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -151,7 +151,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
                                          D3DRTYPE_TEXTURE, BackBufferFormat ) ) )
         return false;
 
-    // No fallback defined by this app, so reject any device that 
+    // No fallback defined by this app, so reject any device that
     // doesn't support at least ps2.0
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
         return false;
@@ -171,7 +171,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         D3DCAPS9 Caps;
         pD3D->GetDeviceCaps( pDeviceSettings->d3d9.AdapterOrdinal, pDeviceSettings->d3d9.DeviceType, &Caps );
 
-        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
         // then switch to SWVP.
         if( ( Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
             Caps.VertexShaderVersion < D3DVS_VERSION( 1, 1 ) )
@@ -179,8 +179,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
             pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 
-        // Debugging vertex shaders requires either REF or software vertex processing 
-        // and debugging pixel shaders requires REF.  
+        // Debugging vertex shaders requires either REF or software vertex processing
+        // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
         if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
         {
@@ -257,8 +257,8 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -293,7 +293,7 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -316,7 +316,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         return;
     }
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -329,8 +329,8 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
         mWorldViewProjection = mWorld * mView * mProj;
 
-        // Update the effect's variables.  Instead of using strings, it would 
-        // be more efficient to cache a handle to the parameter by calling 
+        // Update the effect's variables.  Instead of using strings, it would
+        // be more efficient to cache a handle to the parameter by calling
         // ID3DXEffect::GetParameterByName
         V( g_pEffect9->SetMatrix( g_hmWorldViewProjection, &mWorldViewProjection ) );
         V( g_pEffect9->SetMatrix( g_hmWorld, &mWorld ) );
@@ -406,7 +406,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -420,7 +420,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

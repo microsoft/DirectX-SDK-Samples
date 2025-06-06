@@ -255,7 +255,7 @@ HRESULT CMultiAnimAllocateHierarchy::CreateMeshContainer( THIS_
 
     // Make sure the working set is large enough for this mesh.
     // This is a bone array used for all mesh containers as a working
-    // set during drawing.  If one was created previously that isn't 
+    // set during drawing.  If one was created previously that isn't
     // large enough for this mesh, we have to reallocate.
     if( m_pMA->m_dwWorkingPaletteSize < pMC->m_dwNumPaletteEntries )
  {

@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: DXUTSettingsDlg.cpp
 //
-// Dialog for selection of device settings 
+// Dialog for selection of device settings
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -250,7 +250,7 @@ HRESULT CD3DSettingsDlg::OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice )
     if( pd3dDevice == NULL )
         return DXUT_ERR_MSGBOX( L"CD3DSettingsDlg::OnCreatedDevice", E_INVALIDARG );
 
-    // Create the fonts/textures 
+    // Create the fonts/textures
     m_Dialog.SetCallback( StaticOnEvent, ( void* )this );
     m_RevertModeDialog.SetCallback( StaticOnEvent, ( void* )this );
 
@@ -456,7 +456,7 @@ void CD3DSettingsDlg::OnRender9( float fElapsedTime )
 {
     IDirect3DDevice9* pd3dDevice = DXUTGetD3D9Device();
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, 0x00003F3F, 1.0f, 0 );
 
     // Render the scene
@@ -513,7 +513,7 @@ HRESULT CD3DSettingsDlg::OnD3D10CreateDevice( ID3D10Device* pd3dDevice )
     if( pd3dDevice == NULL )
         return DXUT_ERR_MSGBOX( L"CD3DSettingsDlg::OnCreatedDevice", E_INVALIDARG );
 
-    // Create the fonts/textures 
+    // Create the fonts/textures
     m_Dialog.SetCallback( StaticOnEvent, ( void* )this );
     m_RevertModeDialog.SetCallback( StaticOnEvent, ( void* )this );
 
@@ -2287,7 +2287,7 @@ DXGI_RATIONAL CD3DSettingsDlg::GetSelectedD3D10RefreshRate()
     return dxgiR;
     /*
       CDXUTComboBox* pComboBox = m_Dialog.GetComboBox( DXUTSETTINGSDLG_D3D10_REFRESH_RATE );
-      
+
       return *reinterpret_cast<DXGI_RATIONAL*>( pComboBox->GetSelectedData() );
      */
 }

@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-// Input and output structures 
+// Input and output structures
 //--------------------------------------------------------------------------------------
 struct VSInstIn
 {
@@ -64,7 +64,7 @@ struct PSQuadIn
 };
 
 //--------------------------------------------------------------------------------------
-// Constant buffers 
+// Constant buffers
 //--------------------------------------------------------------------------------------
 cbuffer crarely
 {
@@ -98,15 +98,15 @@ struct light_struct
 
 cbuffer cimmutable
 {
-    light_struct g_lights[4] = { 
+    light_struct g_lights[4] = {
                     { float4(0.620275,  0.683659, 0.384537, 1),  float4(0.75, 0.599, 0.405, 1) },		//sun
                     { float4(0.063288, -0.987444, 0.144735, 1),  float4(0.192, 0.273, 0.275, 1) },		//bottom
                     { float4(0.23007,   0.785579, -0.574422, 1),  float4(0.300, 0.292, 0.223, 1) },		//highlight
                     { float4(-0.620275,  -0.683659, -0.384537, 1),  float4(0.0, 0.0, 0.1, 1) }			//blue rim-light
                     };
-    
+
     float4 g_ambient = float4(0.4945,0.465,0.5,1);
-    
+
     float g_occDimHeight = 2400.0;	//scalar that tells us how much to darken the tree near the top
 };
 
@@ -118,17 +118,17 @@ cbuffer cgrassblade
         float3( -1, 2, 0 ),
         float3( 1, 0, 0 ),
         float3( 1, 2, 0 ),
-        
+
         float3( -1, 0, 0 ),
         float3( -1, 2, 0 ),
     };
-    float2 g_texcoords[6] = 
-    { 
-        float2(0,1), 
+    float2 g_texcoords[6] =
+    {
+        float2(0,1),
         float2(0,0),
         float2(1,1),
         float2(1,0),
-        
+
         float2(0,1),
         float2(0,0),
     };
@@ -193,20 +193,20 @@ BlendState NoBlending
 PSSceneIn VSSkymain(VSSceneIn input)
 {
     PSSceneIn output;
-    
+
     //
     // Transform the vert to view-space
     //
     float4 v4Position = mul(float4(input.pos, 1), g_mWorldViewProj);
     output.pos = v4Position;
-    
-    //  
+
+    //
     // Transfer the rest
     //
     output.tex = input.tex;
-    
+
     output.color = float4(1,1,1,1);
-    
+
     return output;
 }
 
@@ -217,17 +217,17 @@ PSSceneIn VSSkymain(VSSceneIn input)
 float4 CalcLighting( float3 norm, float depth )
 {
     float4 color = float4(0,0,0,0);
-    
+
     // add the contributions of 4 directional lights
     [unroll] for( int i=0; i<4; i++ )
     {
         color += saturate( dot(g_lights[i].direction,norm) )*g_lights[i].color;
     }
-    
+
     // give some attenuation due to depth
     float attenuate = depth / 10000.0;
     float4 attenColor = float4(0.15, 0.2, 0.3, 0);
-    
+
     // add it all up plus ambient
     return (1-attenuate*0.23)*(color + g_ambient) + attenColor*attenuate;
 }
@@ -239,48 +239,48 @@ float4 CalcLighting( float3 norm, float depth )
 PSSceneIn VSInstmain(VSInstIn input)
 {
     PSSceneIn output;
-    
+
     //
     // Transform by our Sceneance matrix
     //
     float4 InstancePosition = mul(float4(input.pos, 1), input.mTransform);
     float4 ViewPos = mul(InstancePosition, g_mWorldView );
-    
+
     //
     // Transform the vert to view-space
     //
     float4 v4Position = mul(InstancePosition, g_mWorldViewProj);
     output.pos = v4Position;
-    
-    //  
+
+    //
     // Transfer the rest
     //
     output.tex = input.tex;
-    
+
     //
     // dot the norm with the light dir
     //
     float3 norm = mul(input.norm,(float3x3)input.mTransform);
     output.color = CalcLighting( norm, ViewPos.z );
-    
+
     //
-    // Dim the color by how far up the tree we are.  
+    // Dim the color by how far up the tree we are.
     // This is a nice way to fake occlusion of the branches by the leaves.
     //
     output.color *= 1.0f - saturate(input.pos.y/g_occDimHeight);
-    
-    
+
+
     return output;
 }
 
 //--------------------------------------------------------------------------------------
-// Quad (leaf) vertex shader.  Instances the quad over multiple leaf positions and 
+// Quad (leaf) vertex shader.  Instances the quad over multiple leaf positions and
 // multiple trees.  This demonstrates how to do double instancing.
 //--------------------------------------------------------------------------------------
 PSQuadIn VSQuadmain(VSQuadIn input)
 {
     PSQuadIn output;
-    
+
     // base our leaf texture upon which instance id we are
     uint iLeaf = input.InstanceId/g_iNumTrees;
     uint iLeafTex = iLeaf%3;
@@ -293,15 +293,15 @@ PSQuadIn VSQuadmain(VSQuadIn input)
     float4 vInstancePos = mul( float4(input.pos, 1), input.mTransform  );
     float4 InstancePosition = mul(vInstancePos, g_mTreeMatrices[iTree] );
     float4 ViewPos = mul(InstancePosition, g_mWorldView );
-        
-    //  
+
+    //
     // Transform the Instance position to view-space
     //
     output.pos = mul(InstancePosition, g_mWorldViewProj);
-    
+
     // pack distance from the eye into the color alpha channel
     output.color = float4(input.fOcc,input.fOcc,input.fOcc,ViewPos.z);
-    
+
     return output;
 }
 
@@ -317,7 +317,7 @@ VSGrassOut VSGrassmain(VSGrassIn input)
     output.norm = mul(input.norm, (float3x3)input.mTransform);
     output.tex = input.tex;
     output.VertexID = input.VertexID;
-    
+
     return output;
 }
 
@@ -342,7 +342,7 @@ void GSQuadmain(triangle PSQuadIn input[3], inout TriangleStream<PSQuadIn> QuadS
 
     //
     // Normalize face normal
-    //  
+    //
     faceNormal = normalize(faceNormal);
 
     //
@@ -353,7 +353,7 @@ void GSQuadmain(triangle PSQuadIn input[3], inout TriangleStream<PSQuadIn> QuadS
 
     //
     // Make sure we always have an alpha of 1
-    //  
+    //
     color1.a = 1.0;
 
     //
@@ -363,7 +363,7 @@ void GSQuadmain(triangle PSQuadIn input[3], inout TriangleStream<PSQuadIn> QuadS
     {
         output.pos = input[i].pos;
         output.color = color1;
-        output.tex = input[i].tex;  
+        output.tex = input[i].tex;
         QuadStream.Append(output);
     }
     QuadStream.RestartStrip();
@@ -375,7 +375,7 @@ void GSQuadmain(triangle PSQuadIn input[3], inout TriangleStream<PSQuadIn> QuadS
 // then we would probably just use a buffer and load from that.
 //--------------------------------------------------------------------------------------
 float3 RandomDir(float fOffset)
-{   
+{
     float tCoord = (fOffset) / 300.0;
     return g_txRandom.SampleLevel( g_samPoint, tCoord, 0 );
 }
@@ -388,7 +388,7 @@ bool IsInTriangle( float3 P, float3 A, float3 B, float3 C )
     float3 crossA = cross( B-A, P-A );
     float3 crossB = cross( C-B, P-B );
     float3 crossC = cross( A-C, P-C );
-    
+
     if( dot( crossA, crossB ) > 0 &&
         dot( crossB, crossC ) > 0 )
     {
@@ -406,10 +406,10 @@ bool IsInTriangle( float3 P, float3 A, float3 B, float3 C )
 float4x4 GetRandomOrientation( float3 Pos, float3 Norm, float fRandOffset )
 {
     float3 Tangent = RandomDir(fRandOffset);
-    
+
     float3 Bitangent = normalize( cross( Tangent, Norm ) );
     Tangent = normalize( cross( Bitangent, Norm ) );
-    
+
     float4x4 matWorld = { float4( Tangent, 0 ),
                           float4( Norm, 0 ),
                           float4( Bitangent, 0 ),
@@ -423,27 +423,27 @@ float4x4 GetRandomOrientation( float3 Pos, float3 Norm, float fRandOffset )
 void OutputGrassBlade( VSGrassOut midPoint, inout TriangleStream<PSQuadIn> GrassStream, int iGrassTex )
 {
     PSQuadIn output;
-    
+
     float4x4 mWorld = GetRandomOrientation( midPoint.pos, midPoint.norm, (float)midPoint.VertexID );
     float4 ViewPos = mul( midPoint.pos, g_mWorldView );
-    
+
     float3 grassNorm = midPoint.norm;
     float4 color1 = CalcLighting( grassNorm, ViewPos.z );
-    
+
     for(int v=0; v<6; v++)
     {
         float3 pos = g_positions[v];
         pos.x *= g_GrassWidth;
         pos.y *= g_GrassHeight;
-        
+
         output.pos = mul( float4(pos,1), mWorld );
         output.pos = mul( output.pos, g_mWorldViewProj );
         output.tex = float3( g_texcoords[v], iGrassTex );
         output.color = color1;
-    
+
         GrassStream.Append( output );
     }
-    
+
     GrassStream.RestartStrip();
 }
 
@@ -453,12 +453,12 @@ void OutputGrassBlade( VSGrassOut midPoint, inout TriangleStream<PSQuadIn> Grass
 VSGrassOut CalcMidPoint( VSGrassOut A, VSGrassOut B, VSGrassOut C )
 {
     VSGrassOut MidPoint;
-    
+
     MidPoint.pos = (A.pos + B.pos + C.pos)/3.0f;
     MidPoint.norm = (A.norm + B.norm + C.norm)/3.0f;
     MidPoint.tex = (A.tex + B.tex + C.tex)/3.0f;
     MidPoint.VertexID = A.VertexID + B.VertexID + C.VertexID;
-    
+
     return MidPoint;
 }
 
@@ -471,14 +471,14 @@ VSGrassOut CalcMidPoint( VSGrassOut A, VSGrassOut B, VSGrassOut C )
 void GSGrassmain(triangle VSGrassOut input[3], inout TriangleStream<PSQuadIn> GrassStream )
 {
     VSGrassOut MidPoint = CalcMidPoint( input[0], input[1], input[2] );
-    
+
     float4 CoverageMask = g_tx2dArray.SampleLevel( g_samPoint, float3(MidPoint.tex,4), 0 );
     float cm[4];
     cm[0] = CoverageMask.r;
     cm[1] = CoverageMask.g;
     cm[2] = CoverageMask.b;
     cm[3] = CoverageMask.a;
-    
+
     for(int g=0; g<4; g++)
     {
         float MaxBlades = float(g_iGrassCoverage)*cm[g];
@@ -490,8 +490,8 @@ void GSGrassmain(triangle VSGrassOut input[3], inout TriangleStream<PSQuadIn> Gr
             float3 Shift = Len.x*g_GrassMessiness*normalize( cross( Tan, MidPoint.norm ) );
             VSGrassOut grassPoint = MidPoint;
             grassPoint.VertexID += randOffset;
-            grassPoint.pos += Shift; 
-                
+            grassPoint.pos += Shift;
+
             //uncomment this to make the grass strictly conform to the mesh
             //if( IsInTriangle( grassPoint.pos, input[0].pos, input[1].pos, input[2].pos ) )
             {
@@ -530,11 +530,11 @@ technique10 RenderInstancedVertLighting
         SetVertexShader( CompileShader( vs_4_0, VSInstmain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepthTestWrite, 0 );
         SetRasterizerState( EnableMSAA );
-    }  
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -547,11 +547,11 @@ technique10 RenderSkybox
         SetVertexShader( CompileShader( vs_4_0, VSSkymain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepthTestWrite, 0 );
         SetRasterizerState( EnableMSAA );
-    }  
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -561,15 +561,15 @@ technique10 RenderQuad
 {
     pass p0
     {
-        
+
         SetVertexShader( CompileShader( vs_4_0, VSQuadmain() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSQuadmain() ) );
         SetPixelShader( CompileShader( ps_4_0, PSQuadmain() ) );
-        
+
         SetBlendState( QuadAlphaBlendState, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepthTestWrite, 0 );
         SetRasterizerState( EnableMSAA );
-    }  
+    }
 }
 
 //--------------------------------------------------------------------------------------
@@ -579,13 +579,13 @@ technique10 RenderGrass
 {
     pass p0
     {
-        
+
         SetVertexShader( CompileShader( vs_4_0, VSGrassmain() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSGrassmain() ) );
         SetPixelShader( CompileShader( ps_4_0, PSQuadmain() ) );
-        
+
         SetBlendState( QuadAlphaBlendState, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepthTestWrite, 0 );
         SetRasterizerState( EnableMSAA );
-    }  
+    }
 }

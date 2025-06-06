@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------------------------
 // File: FinalPass.hlsl
 //
-// The PSs for doing tone-mapping based on the input luminance, used in CS path of 
+// The PSs for doing tone-mapping based on the input luminance, used in CS path of
 // HDRToneMappingCS11 sample
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 struct QuadVS_Input
@@ -14,7 +14,7 @@ struct QuadVS_Input
 
 struct QuadVS_Output
 {
-    float4 Pos : SV_POSITION;              
+    float4 Pos : SV_POSITION;
     float2 Tex : TEXCOORD0;
 };
 
@@ -39,7 +39,7 @@ static const float  LUM_WHITE = 1.5f;
 
 cbuffer cbPS : register( b0 )
 {
-    float4    g_param;   
+    float4    g_param;
 };
 
 float4 PSFinalPass( QuadVS_Output Input ) : SV_TARGET
@@ -52,7 +52,7 @@ float4 PSFinalPass( QuadVS_Output Input ) : SV_TARGET
     vColor.rgb *= MIDDLE_GRAY / (fLum + 0.001f);
     vColor.rgb *= (1.0f + vColor/LUM_WHITE);
     vColor.rgb /= (1.0f + vColor);
-    
+
     vColor.rgb += 0.6f * vBloom;
     vColor.a = 1.0f;
 
@@ -69,9 +69,9 @@ float4 PSFinalPassForCPUReduction( QuadVS_Output Input ) : SV_TARGET
     vColor.rgb *= MIDDLE_GRAY / (fLum + 0.001f);
     vColor.rgb *= (1.0f + vColor/LUM_WHITE);
     vColor.rgb /= (1.0f + vColor);
-    
+
     vColor.rgb += 0.6f * vBloom;
     vColor.a = 1.0f;
-    
+
     return vColor;
 }

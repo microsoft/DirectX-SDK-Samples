@@ -46,8 +46,8 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                     void* pUserContext )
@@ -71,7 +71,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 {
     HRESULT hr;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -83,7 +83,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
 
 //--------------------------------------------------------------------------------------
-// Handle messages to the application 
+// Handle messages to the application
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
                           bool* pbNoFurtherProcessing, void* pUserContext )
@@ -93,7 +93,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam,
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -101,7 +101,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

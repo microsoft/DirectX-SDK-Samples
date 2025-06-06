@@ -3,7 +3,7 @@
 //  Copyright (C) 2000 Microsoft Corporation.  All Rights Reserved.
 //
 //  File:       crackdecl.cpp
-//  Content:    Used to access vertex data using Declarations 
+//  Content:    Used to access vertex data using Declarations
 //  Updated Oct 16, 2001 to decode DX9 decls
 //
 //////////////////////////////////////////////////////////////////////////////

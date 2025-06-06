@@ -50,18 +50,18 @@ void WINAPI DXUTDestroyD3D9Enumeration();
 class CD3D9Enumeration
 {
 public:
-    // These should be called before Enumerate(). 
+    // These should be called before Enumerate().
     //
-    // Use these calls and the IsDeviceAcceptable to control the contents of 
+    // Use these calls and the IsDeviceAcceptable to control the contents of
     // the enumeration object, which affects the device selection and the device settings dialog.
     void SetRequirePostPixelShaderBlending( bool bRequire ) { m_bRequirePostPixelShaderBlending = bRequire; }
-    void SetResolutionMinMax( UINT nMinWidth, UINT nMinHeight, UINT nMaxWidth, UINT nMaxHeight );  
+    void SetResolutionMinMax( UINT nMinWidth, UINT nMinHeight, UINT nMaxWidth, UINT nMaxHeight );
     void SetRefreshMinMax( UINT nMin, UINT nMax );
-    void SetMultisampleQualityMax( UINT nMax );    
+    void SetMultisampleQualityMax( UINT nMax );
     void GetPossibleVertexProcessingList( bool* pbSoftwareVP, bool* pbHardwareVP, bool* pbPureHarewareVP, bool* pbMixedVP );
     void SetPossibleVertexProcessingList( bool bSoftwareVP, bool bHardwareVP, bool bPureHarewareVP, bool bMixedVP );
-    CGrowableArray<D3DFORMAT>* GetPossibleDepthStencilFormatList();   
-    CGrowableArray<D3DMULTISAMPLE_TYPE>* GetPossibleMultisampleTypeList();   
+    CGrowableArray<D3DFORMAT>* GetPossibleDepthStencilFormatList();
+    CGrowableArray<D3DMULTISAMPLE_TYPE>* GetPossibleMultisampleTypeList();
     CGrowableArray<UINT>* GetPossiblePresentIntervalList();
     void ResetPossibleDepthStencilFormats();
     void ResetPossibleMultisampleTypeList();
@@ -73,11 +73,11 @@ public:
                        void* pIsD3D9DeviceAcceptableFuncUserContext = NULL );
 
     // These should be called after Enumerate() is called
-    CGrowableArray<CD3D9EnumAdapterInfo*>*   GetAdapterInfoList();  
-    CD3D9EnumAdapterInfo*                    GetAdapterInfo( UINT AdapterOrdinal );  
-    CD3D9EnumDeviceInfo*                     GetDeviceInfo( UINT AdapterOrdinal, D3DDEVTYPE DeviceType );    
+    CGrowableArray<CD3D9EnumAdapterInfo*>*   GetAdapterInfoList();
+    CD3D9EnumAdapterInfo*                    GetAdapterInfo( UINT AdapterOrdinal );
+    CD3D9EnumDeviceInfo*                     GetDeviceInfo( UINT AdapterOrdinal, D3DDEVTYPE DeviceType );
     CD3D9EnumDeviceSettingsCombo*            GetDeviceSettingsCombo( DXUTD3D9DeviceSettings* pD3D9DeviceSettings ) { return GetDeviceSettingsCombo( pD3D9DeviceSettings->AdapterOrdinal, pD3D9DeviceSettings->DeviceType, pD3D9DeviceSettings->AdapterFormat, pD3D9DeviceSettings->pp.BackBufferFormat, pD3D9DeviceSettings->pp.Windowed ); }
-    CD3D9EnumDeviceSettingsCombo*            GetDeviceSettingsCombo( UINT AdapterOrdinal, D3DDEVTYPE DeviceType, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, BOOL Windowed );  
+    CD3D9EnumDeviceSettingsCombo*            GetDeviceSettingsCombo( UINT AdapterOrdinal, D3DDEVTYPE DeviceType, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, BOOL Windowed );
 
     ~CD3D9Enumeration();
 
@@ -88,7 +88,7 @@ private:
     CD3D9Enumeration();
 
     bool m_bHasEnumerated;
-    IDirect3D9* m_pD3D;                                    
+    IDirect3D9* m_pD3D;
     LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE m_IsD3D9DeviceAcceptableFunc;
     void* m_pIsD3D9DeviceAcceptableFuncUserContext;
     bool m_bRequirePostPixelShaderBlending;
@@ -110,7 +110,7 @@ private:
     UINT m_nMultisampleQualityMax;
 
     // Array of CD3D9EnumAdapterInfo* with unique AdapterOrdinals
-    CGrowableArray<CD3D9EnumAdapterInfo*> m_AdapterInfoList;  
+    CGrowableArray<CD3D9EnumAdapterInfo*> m_AdapterInfoList;
 
     HRESULT EnumerateDevices( CD3D9EnumAdapterInfo* pAdapterInfo, CGrowableArray<D3DFORMAT>* pAdapterFormatList );
     HRESULT EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterInfo, CD3D9EnumDeviceInfo* pDeviceInfo, CGrowableArray<D3DFORMAT>* pAdapterFormatList );
@@ -125,7 +125,7 @@ CD3D9Enumeration*   WINAPI DXUTGetD3D9Enumeration( bool bForceEnumerate = false 
 
 
 //--------------------------------------------------------------------------------------
-// A class describing an adapter which contains a unique adapter ordinal 
+// A class describing an adapter which contains a unique adapter ordinal
 // that is installed on the system
 //--------------------------------------------------------------------------------------
 class CD3D9EnumAdapterInfo
@@ -143,8 +143,8 @@ public:
 
 
 //--------------------------------------------------------------------------------------
-// A class describing a Direct3D device that contains a 
-//       unique supported device type 
+// A class describing a Direct3D device that contains a
+//       unique supported device type
 //--------------------------------------------------------------------------------------
 class CD3D9EnumDeviceInfo
 {
@@ -155,15 +155,15 @@ public:
     D3DDEVTYPE DeviceType;
     D3DCAPS9 Caps;
 
-    // List of CD3D9EnumDeviceSettingsCombo* with a unique set 
+    // List of CD3D9EnumDeviceSettingsCombo* with a unique set
     // of AdapterFormat, BackBufferFormat, and Windowed
     CGrowableArray <CD3D9EnumDeviceSettingsCombo*> deviceSettingsComboList;
 };
 
 
 //--------------------------------------------------------------------------------------
-// A struct describing device settings that contains a unique combination of 
-// adapter format, back buffer format, and windowed that is compatible with a 
+// A struct describing device settings that contains a unique combination of
+// adapter format, back buffer format, and windowed that is compatible with a
 // particular Direct3D device and the app.
 //--------------------------------------------------------------------------------------
 struct CD3D9EnumDeviceSettingsCombo
@@ -197,11 +197,11 @@ struct CD3D9EnumDSMSConflict
 
 
 
-float   DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo, 
-                                DXUTD3D9DeviceSettings* pOptimalDeviceSettings, 
-                                D3DDISPLAYMODE* pAdapterDesktopDisplayMode, 
+float   DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo,
+                                DXUTD3D9DeviceSettings* pOptimalDeviceSettings,
+                                D3DDISPLAYMODE* pAdapterDesktopDisplayMode,
                                 int &bestModeIndex,
-                                int &bestMSAAIndex                                
+                                int &bestMSAAIndex
                                 );
 
 

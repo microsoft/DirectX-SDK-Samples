@@ -43,7 +43,7 @@ PS_INPUT VS( VS_INPUT input )
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Norm = mul( input.Norm, World );
-    
+
     return output;
 }
 
@@ -54,7 +54,7 @@ PS_INPUT VS( VS_INPUT input )
 float4 PS( PS_INPUT input) : SV_Target
 {
     float4 finalColor = 0;
-    
+
     //do NdotL lighting for 2 lights
     for(int i=0; i<2; i++)
     {

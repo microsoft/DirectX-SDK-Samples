@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 // File: SkyBox.fx
 //
-// Desc: 
-// 
+// Desc:
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -57,10 +57,10 @@ struct SkyboxVS_Output
 SkyboxVS_Output SkyboxVS( SkyboxVS_Input Input )
 {
     SkyboxVS_Output Output;
-    
+
     Output.Pos = Input.Pos;
     Output.Tex = normalize( mul(Input.Pos, g_mInvWorldViewProjection) );
-    
+
     return Output;
 }
 
@@ -77,7 +77,7 @@ technique10 Skybox
         SetVertexShader( CompileShader( vs_4_0, SkyboxVS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, SkyboxPS() ) );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
     }
 }

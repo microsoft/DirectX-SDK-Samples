@@ -21,7 +21,7 @@ void CSScatterVertexTriIDIndexID( uint3 DTid : SV_DispatchThreadID )
         uint start = InputScanned[DTid.x-1].x;
         uint end = InputScanned[DTid.x].x;
 
-        for ( uint i = start; i < end; ++i ) 
+        for ( uint i = start; i < end; ++i )
         {
             TriIDIndexIDOut[i] = uint2(DTid.x, i - start);
         }
@@ -36,7 +36,7 @@ void CSScatterIndexTriIDIndexID( uint3 DTid : SV_DispatchThreadID )
         uint start = InputScanned[DTid.x-1].y;
         uint end = InputScanned[DTid.x].y;
 
-        for ( uint i = start; i < end; ++i ) 
+        for ( uint i = start; i < end; ++i )
         {
             TriIDIndexIDOut[i] = uint2(DTid.x, i - start);
         }

@@ -84,7 +84,7 @@ HRESULT CMeshLoader::Create( IDirect3DDevice9* pd3dDevice, const WCHAR* strFilen
     // Store the device pointer
     m_pd3dDevice = pd3dDevice;
 
-    // Load the vertex buffer, index buffer, and subset information from a file. In this case, 
+    // Load the vertex buffer, index buffer, and subset information from a file. In this case,
     // an .obj file was chosen for simplicity, but it's meant to illustrate that ID3DXMesh objects
     // can be filled from any mesh file format once the necessary data is extracted from file.
     V_RETURN( LoadGeometryFromOBJ( strFilename ) );
@@ -153,8 +153,8 @@ HRESULT CMeshLoader::Create( IDirect3DDevice9* pd3dDevice, const WCHAR* strFilen
     pMesh->UnlockAttributeBuffer();
     m_Attributes.RemoveAll();
 
-    // Reorder the vertices according to subset and optimize the mesh for this graphics 
-    // card's vertex cache. When rendering the mesh's triangle list the vertices will 
+    // Reorder the vertices according to subset and optimize the mesh for this graphics
+    // card's vertex cache. When rendering the mesh's triangle list the vertices will
     // cache hit more often so it won't have to re-execute the vertex shader.
     DWORD* aAdjacency = new DWORD[pMesh->GetNumFaces() * 3];
     if( aAdjacency == NULL )

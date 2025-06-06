@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: Skinning10.fx
 //
-// The effect file for the Skinning10 sample.  
-// 
+// The effect file for the Skinning10 sample.
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -10,7 +10,7 @@
 #define SEPERABLE_BLUR_KERNEL_SIZE 3
 #endif
 
-static const int BLUR_KERNEL_BEGIN = SEPERABLE_BLUR_KERNEL_SIZE / -2; 
+static const int BLUR_KERNEL_BEGIN = SEPERABLE_BLUR_KERNEL_SIZE / -2;
 static const int BLUR_KERNEL_END = SEPERABLE_BLUR_KERNEL_SIZE / 2 + 1;
 static const float FLOAT_BLUR_KERNEL_SIZE = (float)SEPERABLE_BLUR_KERNEL_SIZE;
 
@@ -93,11 +93,11 @@ float2 PSBlurX(PSIn input) : SV_Target
         store_samples[ind] = g_txShadow.Load( int3(input.ITex.x+(float)x * centerDistance.x , input.ITex.y, 0) ).r;
         ind++;
     }
-    const float c = (1.f/5.f);    
-    
+    const float c = (1.f/5.f);
+
     float accum;
-    accum = log_conv( c, store_samples[0], c, store_samples[1] );    
-    
+    accum = log_conv( c, store_samples[0], c, store_samples[1] );
+
     ind = 0;
     for (x = g_iKernelStart - 2; x < g_iKernelEnd; ++x) {
         ind++;
@@ -123,17 +123,17 @@ float2 PSBlurX(PSIn input) : SV_Target
     }
     dep /= (g_iKernelEnd - g_iKernelStart);
     return dep;
-  */  
-  
+  */
+
     float2 dep=0;
     [unroll]for ( int x = BLUR_KERNEL_BEGIN; x < BLUR_KERNEL_END; ++x ) {
         dep += g_txShadow.Sample( g_samShadow,  float3( input.Tex.x, input.Tex.y, 0 ), int2( x,0 ) ).rg;
     }
     dep /= FLOAT_BLUR_KERNEL_SIZE;
-    return dep;  
-    
+    return dep;
+
 //    return g_txShadow.Sample(g_samShadow,  float3(input.Tex.x, input.Tex.y, 0) ).rg;
-    
+
 }
 
 //--------------------------------------------------------------------------------------
@@ -156,11 +156,11 @@ float2 PSBlurY(PSIn input) : SV_Target
     for (int y = g_iKernelStart; y < g_iKernelEnd; ++y) {
         store_samples[ind] = g_txShadow.Load( int3(input.ITex.x, input.ITex.y+(float)y * centerDistance.x, 0) ).r;
     }
-    const float c = (1.f/5.f);    
-    
+    const float c = (1.f/5.f);
+
     float accum;
-    accum = log_conv( c, store_samples[0], c, store_samples[1] );    
-    
+    accum = log_conv( c, store_samples[0], c, store_samples[1] );
+
     ind = 0;
     for (y = g_iKernelStart; y < g_iKernelEnd; ++y) {
         ind++;
@@ -170,9 +170,9 @@ float2 PSBlurY(PSIn input) : SV_Target
     rt.x = accum;
     return rt;
     */
-    
-    
-    /*    
+
+
+    /*
     float2 dep = 0;
 
 	float2 centerDistance;
@@ -188,21 +188,21 @@ float2 PSBlurY(PSIn input) : SV_Target
     for (int y = g_iKernelStart; y < g_iKernelEnd; ++y) {
         dep += g_txShadow.Load( int3(input.ITex.x, input.ITex.y+(float)y * centerDistance.x, 0) ).rg;
     }
-    
-    
+
+
     dep /= (g_iKernelEnd - g_iKernelStart);
     return dep;
-    
+
     */
-    
-    
+
+
     float2 dep=0;
     [unroll]for ( int y = BLUR_KERNEL_BEGIN; y < BLUR_KERNEL_END; ++y ) {
         dep += g_txShadow.Sample( g_samShadow,  float3( input.Tex.x, input.Tex.y, 0 ), int2( 0,y ) ).rg;
     }
     dep /= FLOAT_BLUR_KERNEL_SIZE;
-    return dep;  
-    
+    return dep;
+
     //return g_txShadow.Sample(g_samShadow,  float3(input.Tex.x, input.Tex.y, 0) ).rg;
 }
 

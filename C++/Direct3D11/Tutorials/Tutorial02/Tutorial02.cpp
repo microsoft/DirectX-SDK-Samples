@@ -62,7 +62,7 @@ void Render();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
@@ -149,8 +149,8 @@ HRESULT CompileShaderFromFile( const WCHAR* szFileName, LPCSTR szEntryPoint, LPC
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -159,7 +159,7 @@ HRESULT CompileShaderFromFile( const WCHAR* szFileName, LPCSTR szEntryPoint, LPC
 #endif
 
     ID3DBlob* pErrorBlob = nullptr;
-    hr = D3DCompileFromFile( szFileName, nullptr, nullptr, szEntryPoint, szShaderModel, 
+    hr = D3DCompileFromFile( szFileName, nullptr, nullptr, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, ppBlobOut, &pErrorBlob );
     if( FAILED(hr) )
     {
@@ -454,7 +454,7 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
 //--------------------------------------------------------------------------------------
 void Render()
 {
-    // Clear the back buffer 
+    // Clear the back buffer
     g_pImmediateContext->ClearRenderTargetView( g_pRenderTargetView, Colors::MidnightBlue );
 
     // Set the input layout

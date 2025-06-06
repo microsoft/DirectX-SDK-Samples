@@ -2,7 +2,7 @@
 // File: EffectPools.fxh
 //
 // The include effect file that contains common shader variables.
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ struct VS_INPUT
 {
     float3 Position   : POSITION;
     float3 Normal     : NORMAL;
-    float2 Tex        : TEXCOORD0; 
+    float2 Tex        : TEXCOORD0;
 };
 
 struct PS_INPUT
@@ -70,7 +70,7 @@ shared sampler2D MeshTextureSampler = sampler_state
 // Simple pixel shader
 //--------------------------------------------------------------------------------------
 shared float4 ScenePS( PS_INPUT input ) : COLOR0
-{ 
+{
     float4 light = saturate( dot( input.Normal, g_LightDir ) ) * g_LightDiffuse * input.Color;
     return tex2D( MeshTextureSampler, input.Tex) * light;
 }

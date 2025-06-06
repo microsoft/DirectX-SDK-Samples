@@ -12,7 +12,7 @@
 
 
 //-----------------------------------------------------------------------------
-// Resource cache for textures, fonts, meshs, and effects.  
+// Resource cache for textures, fonts, meshs, and effects.
 // Use DXUTGetGlobalResourceCache() to access the global cache
 //-----------------------------------------------------------------------------
 
@@ -188,7 +188,7 @@ public:
 			CDXUTTextHelper( ID3D11Device* pd3d11Device, ID3D11DeviceContext* pd3dDeviceContext, CDXUTDialogResourceManager* pManager, int nLineHeight );
             ~CDXUTTextHelper();
 
-    void    Init( ID3DXFont* pFont9 = NULL, ID3DXSprite* pSprite9 = NULL, 
+    void    Init( ID3DXFont* pFont9 = NULL, ID3DXSprite* pSprite9 = NULL,
                   int nLineHeight = 15 );
 
     void    SetInsertionPos( int x, int y )
@@ -214,7 +214,7 @@ protected:
     POINT m_pt;
     int m_nLineHeight;
 
-	// D3D11 font 
+	// D3D11 font
 	ID3D11Device* m_pd3d11Device;
 	ID3D11DeviceContext* m_pd3d11DeviceContext;
 	CDXUTDialogResourceManager* m_pManager;
@@ -269,7 +269,7 @@ void WINAPI DXUTDisplaySwitchingToREFWarning( DXUTDeviceVersion ver );
 // Tries to finds a media file by searching in common locations
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTFindDXSDKMediaFileCch( __out_ecount(cchDest) WCHAR* strDestPath,
-                                          __in int cchDest, 
+                                          __in int cchDest,
                                           __in LPCWSTR strFilename );
 HRESULT WINAPI DXUTSetMediaSearchPath( LPCWSTR strPath );
 LPCWSTR WINAPI DXUTGetMediaSearchPath();

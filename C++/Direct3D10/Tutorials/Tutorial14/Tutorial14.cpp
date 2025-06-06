@@ -75,13 +75,13 @@ CDXUTSDKMesh                        g_Mesh;
 ID3D10ShaderResourceView*           g_pScreenRV[2] = { NULL };
 
 UINT                                g_eSceneDepthStencilMode = 0;
-ID3D10DepthStencilState*            g_pDepthStencilStates[MAX_DEPTH_STENCIL_MODES]; // Depth Stencil states for non-FX 
+ID3D10DepthStencilState*            g_pDepthStencilStates[MAX_DEPTH_STENCIL_MODES]; // Depth Stencil states for non-FX
 // depth stencil state managment
 UINT                                g_eSceneRasterizerMode = 0;
-ID3D10RasterizerState*              g_pRasterStates[MAX_RASTERIZER_MODES];  // Rasterizer states for non-FX 
+ID3D10RasterizerState*              g_pRasterStates[MAX_RASTERIZER_MODES];  // Rasterizer states for non-FX
 // rasterizer state management
 UINT                                g_eQuadRenderMode = 0;
-ID3D10EffectTechnique*              g_pTechniqueQuad[MAX_QUAD_TECHNIQUES]; // Quad Techniques from the FX file for 
+ID3D10EffectTechnique*              g_pTechniqueQuad[MAX_QUAD_TECHNIQUES]; // Quad Techniques from the FX file for
 // FX based alpha blend state management
 ID3D10EffectTechnique*              g_pTechniqueScene = NULL;             // FX technique for rendering the scene
 ID3D10EffectTechnique*              g_pTechniqueRenderWithStencil = NULL; // FX technique for rendering using FX based depth
@@ -118,7 +118,7 @@ struct SCREEN_VERTEX
 #define IDC_TOGGLEWARP                  8
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D10DeviceAcceptable( UINT Adapter, UINT Output, D3D10_DRIVER_TYPE DeviceType,
                                        DXGI_FORMAT BufferFormat, bool bWindowed, void* pUserContext );
@@ -144,7 +144,7 @@ void LoadDepthStencilStates( ID3D10Device* pd3dDevice );
 void LoadRasterizerStates( ID3D10Device* pd3dDevice );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -154,7 +154,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -184,7 +184,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -261,8 +261,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -562,7 +562,7 @@ void RenderText()
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -571,7 +571,7 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
@@ -614,13 +614,13 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     if( g_bSpinning )
@@ -635,8 +635,8 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,

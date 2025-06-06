@@ -176,7 +176,7 @@ int wmain( int argc, wchar_t* argv[] )
 
     DXUTGetGlobalTimer()->Start();
 
-    // Create NULLREF device 
+    // Create NULLREF device
     pd3dDevice = CreateNULLRefDevice();
     if( pd3dDevice == NULL )
     {
@@ -222,7 +222,7 @@ LCleanup:
 
 
 //--------------------------------------------------------------------------------------
-// Parses the command line for parameters.  See DXUTInit() for list 
+// Parses the command line for parameters.  See DXUTInit() for list
 //--------------------------------------------------------------------------------------
 bool ParseCommandLine( SETTINGS* pSettings )
 {
@@ -1485,7 +1485,7 @@ HRESULT ProcessFile( IDirect3DDevice9* pd3dDevice, WCHAR* strFile, SETTINGS* pSe
             goto FAIL;
         }
 
-        // Get the decl of the original mesh 
+        // Get the decl of the original mesh
         if( FAILED( hr = pMeshResult->GetDeclaration( declResamp ) ) )
             goto FAIL;
         uLen = D3DXGetDeclLength( declResamp );

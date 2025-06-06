@@ -24,12 +24,12 @@ private:
     WCHAR	m_szText[MAX_PATH];
 
 public:
-    CWaitDlg() : 
+    CWaitDlg() :
           m_hDialogWnd( NULL ),
-          m_hThread( NULL ), 
-          m_hProgressWnd( NULL ), 
-          m_iProgress( 0 ), 
-          m_bDone( FALSE ) 
+          m_hThread( NULL ),
+          m_hProgressWnd( NULL ),
+          m_iProgress( 0 ),
+          m_bDone( FALSE )
     {
     }
     ~CWaitDlg() { DestroyDialog(); }
@@ -94,7 +94,7 @@ public:
     {
         if ( !DXUTIsWindowed() )
             return;
-        
+
         m_bDone = TRUE;
         WaitForSingleObject( m_hThread, INFINITE );
 

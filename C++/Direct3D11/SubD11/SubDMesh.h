@@ -4,7 +4,7 @@
 // This class encapsulates the mesh loading and housekeeping functions for a SubDMesh.
 // The mesh loads preprocessed SDKMESH files from disk and stages them for rendering.
 //
-// To view the mesh preprocessing code, please find the ExportSubDMesh.cpp file in the 
+// To view the mesh preprocessing code, please find the ExportSubDMesh.cpp file in the
 // samples content exporter.
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.

@@ -28,14 +28,14 @@ CDXUTResourceCache& WINAPI DXUTGetGlobalResourceCache()
 //--------------------------------------------------------------------------------------
 // Internal functions forward declarations
 //--------------------------------------------------------------------------------------
-bool DXUTFindMediaSearchTypicalDirs( __out_ecount(cchSearch) WCHAR* strSearchPath, 
-                                     __in int cchSearch, 
-                                     __in LPCWSTR strLeaf, 
+bool DXUTFindMediaSearchTypicalDirs( __out_ecount(cchSearch) WCHAR* strSearchPath,
+                                     __in int cchSearch,
+                                     __in LPCWSTR strLeaf,
                                      __in WCHAR* strExePath,
                                      __in WCHAR* strExeName );
-bool DXUTFindMediaSearchParentDirs( __out_ecount(cchSearch) WCHAR* strSearchPath, 
-                                    __in int cchSearch, 
-                                    __in WCHAR* strStartAt, 
+bool DXUTFindMediaSearchParentDirs( __out_ecount(cchSearch) WCHAR* strSearchPath,
+                                    __in int cchSearch,
+                                    __in WCHAR* strStartAt,
                                     __in WCHAR* strLeafName );
 INT_PTR CALLBACK DisplaySwitchToREFWarningProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
 
@@ -65,7 +65,7 @@ void WINAPI DXUTDisplaySwitchingToREFWarning( DXUTDeviceVersion ver )
         {
             // Compact code to create a custom dialog box without using a template in a resource file.
             // If this dialog were in a .rc file, this would be a lot simpler but every sample calling this function would
-            // need a copy of the dialog in its own .rc file. Also MessageBox API could be used here instead, but 
+            // need a copy of the dialog in its own .rc file. Also MessageBox API could be used here instead, but
             // the MessageBox API is simpler to call but it can't provide a "Don't show again" checkbox
             typedef struct
             {
@@ -222,10 +222,10 @@ HRESULT WINAPI DXUTSetMediaSearchPath( LPCWSTR strPath )
 
 //--------------------------------------------------------------------------------------
 // Tries to find the location of a SDK media file
-//       cchDest is the size in WCHARs of strDestPath.  Be careful not to 
+//       cchDest is the size in WCHARs of strDestPath.  Be careful not to
 //       pass in sizeof(strDest) on UNICODE builds.
 //--------------------------------------------------------------------------------------
-HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest, 
+HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest,
                                           LPCWSTR strFilename )
 {
     bool bFound;
@@ -275,7 +275,7 @@ HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest,
     if( bFound )
         return S_OK;
 
-    // Typical directory search again, but also look in a subdir called "\media\" 
+    // Typical directory search again, but also look in a subdir called "\media\"
     swprintf_s( strSearchFor, MAX_PATH, L"media\\%s", strFilename );
     bFound = DXUTFindMediaSearchTypicalDirs( strDestPath, cchDest, strSearchFor, strExePath, strExeName );
     if( bFound )
@@ -318,7 +318,7 @@ HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest,
 //--------------------------------------------------------------------------------------
 // Search a set of typical directories
 //--------------------------------------------------------------------------------------
-bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWSTR strLeaf, 
+bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWSTR strLeaf,
                                      WCHAR* strExePath, WCHAR* strExeName )
 {
     // Typical directories:
@@ -332,37 +332,37 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
     //      %EXE_DIR%\..\..\%EXE_NAME%
     //      DXSDK media path
 
-    // Search in .\  
+    // Search in .\
     wcscpy_s( strSearchPath, cchSearch, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\  
+    // Search in ..\
     swprintf_s( strSearchPath, cchSearch, L"..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\..\ 
+    // Search in ..\..\
     swprintf_s( strSearchPath, cchSearch, L"..\\..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\..\ 
+    // Search in ..\..\
     swprintf_s( strSearchPath, cchSearch, L"..\\..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\ 
+    // Search in the %EXE_DIR%\
     swprintf_s( strSearchPath, cchSearch, L"%s\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\..\ 
+    // Search in the %EXE_DIR%\..\
     swprintf_s( strSearchPath, cchSearch, L"%s\\..\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\..\..\ 
+    // Search in the %EXE_DIR%\..\..\
     swprintf_s( strSearchPath, cchSearch, L"%s\\..\\..\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
@@ -377,7 +377,7 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in media search dir 
+    // Search in media search dir
     WCHAR* s_strSearchPath = DXUTMediaSearchPath();
     if( s_strSearchPath[0] != 0 )
     {
@@ -395,7 +395,7 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
 // Search parent directories starting at strStartAt, and appending strLeafName
 // at each parent directory.  It stops at the root directory.
 //--------------------------------------------------------------------------------------
-bool DXUTFindMediaSearchParentDirs( WCHAR* strSearchPath, int cchSearch, WCHAR* strStartAt, 
+bool DXUTFindMediaSearchParentDirs( WCHAR* strSearchPath, int cchSearch, WCHAR* strStartAt,
                                     WCHAR* strLeafName )
 {
     WCHAR strFullPath[MAX_PATH] =
@@ -555,7 +555,7 @@ HRESULT CDXUTResourceCache::CreateTextureFromFileEx( ID3D11Device* pDevice, ID3D
                                                      ID3D11ShaderResourceView** ppOutputRV, bool bSRGB )
 {
 
-    bool is10L9 = DXUTGetDeviceSettings().d3d11.DeviceFeatureLevel < D3D_FEATURE_LEVEL_10_0; 
+    bool is10L9 = DXUTGetDeviceSettings().d3d11.DeviceFeatureLevel < D3D_FEATURE_LEVEL_10_0;
     HRESULT hr = S_OK;
     D3DX11_IMAGE_LOAD_INFO ZeroInfo;	//D3DX11_IMAGE_LOAD_INFO has a default constructor
     D3DX11_IMAGE_INFO SrcInfo;
@@ -612,7 +612,7 @@ HRESULT CDXUTResourceCache::CreateTextureFromFileEx( ID3D11Device* pDevice, ID3D
     NewEntry.Height = pLoadInfo->Height;
     NewEntry.MipLevels = pLoadInfo->MipLevels;
     NewEntry.Usage11 = pLoadInfo->Usage;
-    // 10L9 can't handle typesless, so we cant make a typesless format 
+    // 10L9 can't handle typesless, so we cant make a typesless format
     if (is10L9 && bSRGB) {
         NewEntry.Format = MAKE_SRGB(pLoadInfo->Format);
     }else {
@@ -1597,7 +1597,7 @@ CDXUTTextHelper::~CDXUTTextHelper()
 }
 
 //--------------------------------------------------------------------------------------
-void CDXUTTextHelper::Init( ID3DXFont* pFont9, ID3DXSprite* pSprite9, 
+void CDXUTTextHelper::Init( ID3DXFont* pFont9, ID3DXSprite* pSprite9,
                             int nLineHeight )
 {
     m_pFont9 = pFont9;
@@ -1608,7 +1608,7 @@ void CDXUTTextHelper::Init( ID3DXFont* pFont9, ID3DXSprite* pSprite9,
     m_nLineHeight = nLineHeight;
     m_pd3d11Device = NULL;
     m_pd3d11DeviceContext = NULL;
-    m_pManager = NULL; 
+    m_pManager = NULL;
 
     // Create a blend state if a sprite is passed in
 }

@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------
 // File: MeshFromOBJ10.cpp
 //
-// This sample shows how an ID3DXMesh object can be created from mesh data stored in an 
-// .obj file. It's convenient to use .x files when working with ID3DXMesh objects since 
-// D3DX can create and fill an ID3DXMesh object directly from an .x file; however, it’s 
-// also easy to initialize an ID3DXMesh object with data gathered from any file format 
+// This sample shows how an ID3DXMesh object can be created from mesh data stored in an
+// .obj file. It's convenient to use .x files when working with ID3DXMesh objects since
+// D3DX can create and fill an ID3DXMesh object directly from an .x file; however, it’s
+// also easy to initialize an ID3DXMesh object with data gathered from any file format
 // or memory resource.
 //
 // Copyright (c) Microsoft Corporation.
@@ -65,7 +65,7 @@ WCHAR g_strFileSaveMessage[MAX_PATH] = {0}; // Text indicating file write succes
 #define IDC_TOGGLEWARP          6
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D10DeviceAcceptable( UINT Adapter, UINT Output, D3D10_DRIVER_TYPE DeviceType,
                                        DXGI_FORMAT BufferFormat, bool bWindowed, void* pUserContext );
@@ -89,7 +89,7 @@ void RenderText();
 void RenderSubset( UINT iSubset );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -99,7 +99,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Disable gamma correction on this sample
@@ -128,7 +128,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -200,8 +200,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
 
     // Obtain the technique
     g_pTechnique = g_pEffect10->GetTechniqueByName( "NoSpecular" );
-    g_ptxDiffuseVariable = g_pEffect10->GetVariableByName( "g_MeshTexture" )->AsShaderResource();    
-    
+    g_ptxDiffuseVariable = g_pEffect10->GetVariableByName( "g_MeshTexture" )->AsShaderResource();
+
     g_pAmbient = g_pEffect10->GetVariableByName( "g_vMaterialAmbient" )->AsVector();
     g_pDiffuse = g_pEffect10->GetVariableByName( "g_vMaterialDiffuse" )->AsVector();
     g_pSpecular = g_pEffect10->GetVariableByName( "g_vMaterialSpecular" )->AsVector();
@@ -244,7 +244,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     {
         Material* pMaterial = g_MeshLoader.GetSubsetMaterial( subset );
         pComboBox->AddItem( pMaterial->strName, ( void* )( INT_PTR )subset );
-    }    
+    }
 
     // Store the correct technique for each material
     for ( UINT i = 0; i < g_MeshLoader.GetNumMaterials(); ++i )
@@ -283,7 +283,7 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
 
     V_RETURN( g_DialogResourceManager.OnD3D10ResizedSwapChain( pd3dDevice, pBufferSurfaceDesc ) );
     V_RETURN( g_SettingsDlg.OnD3D10ResizedSwapChain( pd3dDevice, pBufferSurfaceDesc ) );
-    
+
     // Setup the camera's projection parameters
     float fAspectRatio = pBufferSurfaceDesc->Width / ( FLOAT )pBufferSurfaceDesc->Height;
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.1f, 1000.0f );
@@ -309,7 +309,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         g_SettingsDlg.OnRender( fElapsedTime );
         return;
     }
-    
+
     //
     // Clear the back buffer
     //
@@ -336,11 +336,11 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
 
     mWorldViewProjection = mWorld * mView * mProj;
 
-    // Update the effect's variables. 
+    // Update the effect's variables.
     V( g_pWorldViewProjection->SetMatrix( (float*)&mWorldViewProjection ) );
     V( g_pWorld->SetMatrix( (float*)&mWorld ) );
     V( g_pTime->SetFloat( (float)fTime ) );
-    V( g_pCameraPosition->SetFloatVector( (float*)g_Camera.GetEyePt() ) );   
+    V( g_pCameraPosition->SetFloatVector( (float*)g_Camera.GetEyePt() ) );
 
     //
     // Set the Vertex Layout
@@ -366,7 +366,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );
     RenderText();
     g_HUD.OnRender( fElapsedTime );
-    g_SampleUI.OnRender( fElapsedTime );    
+    g_SampleUI.OnRender( fElapsedTime );
     DXUT_EndPerfEvent();
 }
 
@@ -374,7 +374,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
 void RenderSubset( UINT iSubset )
 {
     HRESULT hr;
-    
+
     Material* pMaterial = g_MeshLoader.GetSubsetMaterial( iSubset );
 
     V( g_pAmbient->SetFloatVector( pMaterial->vAmbient ) );
@@ -397,7 +397,7 @@ void RenderSubset( UINT iSubset )
 }
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -452,12 +452,12 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
     case IDC_TOGGLEREF:
         DXUTToggleREF(); break;
     case IDC_CHANGEDEVICE:
-        g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() ); break;    
+        g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() ); break;
     }
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -465,7 +465,7 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
@@ -506,7 +506,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -535,10 +535,10 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
     *pbNoFurtherProcessing = g_SampleUI.MsgProc( hWnd, uMsg, wParam, lParam );
     if( *pbNoFurtherProcessing )
         return 0;
-    
+
     // Pass all remaining windows messages to camera so it can respond to user input
     g_Camera.HandleMessages( hWnd, uMsg, wParam, lParam );
-    
+
     return 0;
 }
 

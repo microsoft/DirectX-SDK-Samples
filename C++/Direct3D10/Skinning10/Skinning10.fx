@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: Skinning10.fx
 //
-// The effect file for the Skinning10 sample.  
-// 
+// The effect file for the Skinning10 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ matrix FetchBoneTransform( uint iBone, uniform uint iFetchType )
         float4 row2 = g_txTexBoneWorld.Load( float2(iBone + 1, 0) );
         float4 row3 = g_txTexBoneWorld.Load( float2(iBone + 2, 0) );
         float4 row4 = g_txTexBoneWorld.Load( float2(iBone + 3, 0) );
-        
+
         mret = float4x4( row1, row2, row3, row4 );
     }
     else if ( FT_BUFFER == iFetchType )
@@ -183,10 +183,10 @@ matrix FetchBoneTransform( uint iBone, uniform uint iFetchType )
         float4 row2 = g_BufferBoneWorld.Load( iBone + 1 );
         float4 row3 = g_BufferBoneWorld.Load( iBone + 2 );
         float4 row4 = g_BufferBoneWorld.Load( iBone + 3 );
-        
+
         mret = float4x4( row1, row2, row3, row4 );
     }
-    
+
     return mret;
 }
 
@@ -196,11 +196,11 @@ matrix FetchBoneTransform( uint iBone, uniform uint iFetchType )
 SkinnedInfo SkinVert( VSSkinnedIn Input, uniform uint iFetchType )
 {
     SkinnedInfo Output = (SkinnedInfo)0;
-    
+
     float4 Pos = float4(Input.Pos,1);
     float3 Norm = Input.Norm;
     float3 Tan = Input.Tan;
-    
+
     //Bone0
     uint iBone = Input.Bones.x;
     float fWeight = Input.Weights.x;
@@ -208,7 +208,7 @@ SkinnedInfo SkinVert( VSSkinnedIn Input, uniform uint iFetchType )
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, (float3x3)m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     //Bone1
     iBone = Input.Bones.y;
     fWeight = Input.Weights.y;
@@ -216,7 +216,7 @@ SkinnedInfo SkinVert( VSSkinnedIn Input, uniform uint iFetchType )
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, (float3x3)m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     //Bone2
     iBone = Input.Bones.z;
     fWeight = Input.Weights.z;
@@ -224,7 +224,7 @@ SkinnedInfo SkinVert( VSSkinnedIn Input, uniform uint iFetchType )
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, (float3x3)m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     //Bone3
     iBone = Input.Bones.w;
     fWeight = Input.Weights.w;
@@ -232,7 +232,7 @@ SkinnedInfo SkinVert( VSSkinnedIn Input, uniform uint iFetchType )
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, (float3x3)m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     return Output;
 }
 
@@ -242,14 +242,14 @@ SkinnedInfo SkinVert( VSSkinnedIn Input, uniform uint iFetchType )
 PSSkinnedIn VSSkinnedmain(VSSkinnedIn input, uniform uint iFetchType )
 {
     PSSkinnedIn output;
-    
+
     SkinnedInfo vSkinned = SkinVert( input, iFetchType );
     output.Pos = mul( vSkinned.Pos, g_mWorldViewProj );
     output.vPos = mul( vSkinned.Pos, g_mWorld );
     output.Norm = normalize( mul( vSkinned.Norm, (float3x3)g_mWorld ) );
     output.Tangent = normalize( mul( vSkinned.Tan, (float3x3)g_mWorld ) );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -259,13 +259,13 @@ PSSkinnedIn VSSkinnedmain(VSSkinnedIn input, uniform uint iFetchType )
 VSStreamOut VSSkinnedStreamOutmain(VSSkinnedIn input, uniform uint iFetchType )
 {
     VSStreamOut output = (VSStreamOut)0;
-    
+
     SkinnedInfo vSkinned = SkinVert( input, iFetchType );
     output.Pos = vSkinned.Pos;
     output.Norm = vSkinned.Norm;
     output.Tangent = normalize( vSkinned.Tan );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -275,13 +275,13 @@ VSStreamOut VSSkinnedStreamOutmain(VSSkinnedIn input, uniform uint iFetchType )
 PSSkinnedIn VSRenderPostTransformedmain(VSStreamOut input )
 {
     PSSkinnedIn output;
-    
+
     output.Pos = mul( input.Pos, g_mWorldViewProj );
     output.vPos = input.Pos;
     output.Norm = normalize( mul( input.Norm, (float3x3)g_mWorld ) );
     output.Tangent = normalize( mul( input.Tangent, (float3x3)g_mWorld ) );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -294,14 +294,14 @@ float4 PSSkinnedmain(PSSkinnedIn input) : SV_Target
     float3 Norm = g_txNormal.Sample( g_samLinear, input.Tex );
     Norm *= 2.0;
     Norm -= float3(1,1,1);
-    
+
     // Create TBN matrix
     float3 lightDir = normalize( g_vLightPos - input.vPos );
     float3 viewDir = normalize( g_vEyePt - input.vPos );
     float3 BiNorm = normalize( cross( input.Norm, input.Tangent ) );
     float3x3 BTNMatrix = float3x3( BiNorm, input.Tangent, input.Norm );
     Norm = normalize( mul( Norm, BTNMatrix ) ); //world space bump
-    
+
     //diffuse lighting
     float lightAmt = saturate( dot( lightDir, Norm ) );
     float4 lightColor = lightAmt.xxxx*g_directional + g_ambient;
@@ -309,7 +309,7 @@ float4 PSSkinnedmain(PSSkinnedIn input) : SV_Target
     // Calculate specular power
     float3 halfAngle = normalize( viewDir + lightDir );
     float4 spec = pow( saturate(dot( halfAngle, Norm )), 64 );
-        
+
     // Return combined lighting
     return lightColor*diffuse + spec*g_objectspeccolor*diffuse.a;
 }
@@ -322,11 +322,11 @@ float4 PSSkinnedmain(PSSkinnedIn input) : SV_Target
 technique10 RenderConstantBuffer
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, VSSkinnedmain( FT_CONSTANTBUFFER ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSkinnedmain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
     }
 }
@@ -337,11 +337,11 @@ technique10 RenderConstantBuffer
 technique10 RenderTextureBuffer
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, VSSkinnedmain( FT_TEXTUREBUFFER ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSkinnedmain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
     }
 }
@@ -352,11 +352,11 @@ technique10 RenderTextureBuffer
 technique10 RenderTexture
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, VSSkinnedmain( FT_TEXTURE ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSkinnedmain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
     }
 }
@@ -367,11 +367,11 @@ technique10 RenderTexture
 technique10 RenderBuffer
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, VSSkinnedmain( FT_BUFFER ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSkinnedmain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
     }
 }
@@ -390,48 +390,48 @@ GeometryShader vsTextureSO = ConstructGSWithSO( vsTexture, "POSITION.xyzw; NORMA
 
 VertexShader vsBuffer = CompileShader( vs_4_0, VSSkinnedStreamOutmain( FT_BUFFER ) );
 GeometryShader vsBufferSO = ConstructGSWithSO( vsBuffer, "POSITION.xyzw; NORMAL.xyz; TEXCOORD.xy; TANGENT.xyz" );
-    
+
 //--------------------------------------------------------------------------------------
 // Stream out the scene by fetching bone matrices from a constant buffer (StreamOut)
 //--------------------------------------------------------------------------------------
 technique10 RenderConstantBuffer_SO
-{   
+{
     pass P0
-    {       
+    {
         SetVertexShader( vsConstantBuffer );
         SetGeometryShader( vsConstantBufferSO );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
     }
 }
-    
+
 //--------------------------------------------------------------------------------------
 // Stream out the scene by fetching bone matrices from a texture buffer
 //--------------------------------------------------------------------------------------
 technique10 RenderTextureBuffer_SO
-{ 
+{
     pass P0
     {       	
         SetVertexShader( vsTextureBuffer );
         SetGeometryShader( vsTextureBufferSO );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
     }
 }
-    
+
 //--------------------------------------------------------------------------------------
 // Stream out the scene by fetching bone matrices from a texture
 //--------------------------------------------------------------------------------------
 technique10 RenderTexture_SO
-{   
+{
     pass P0
     {       		
         SetVertexShader( vsTexture );
         SetGeometryShader( vsTextureSO );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
     }
 }
@@ -440,13 +440,13 @@ technique10 RenderTexture_SO
 // Stream out the scene by fetching bone matrices from a buffer
 //--------------------------------------------------------------------------------------
 technique10 RenderBuffer_SO
-{    
+{
     pass P0
-    {      
+    {
         SetVertexShader( vsBuffer );
         SetGeometryShader( vsBufferSO );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
     }
 }
@@ -457,11 +457,11 @@ technique10 RenderBuffer_SO
 technique10 RenderPostTransformed
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, VSRenderPostTransformedmain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSkinnedmain() ) );
-        
+
         SetDepthStencilState( EnableDepth, 0 );
     }
 }

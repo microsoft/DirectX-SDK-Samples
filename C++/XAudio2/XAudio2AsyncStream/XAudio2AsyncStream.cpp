@@ -150,8 +150,8 @@ int main()
     // To see the trace output, you need to view ETW logs for this application:
     //    Go to Control Panel, Administrative Tools, Event Viewer.
     //    View->Show Analytic and Debug Logs.
-    //    Applications and Services Logs / Microsoft / Windows / XAudio2. 
-    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK 
+    //    Applications and Services Logs / Microsoft / Windows / XAudio2.
+    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK
     XAUDIO2_DEBUG_CONFIGURATION debug = {};
     debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
     debug.BreakMask = XAUDIO2_LOG_ERRORS;
@@ -238,7 +238,7 @@ int main()
             //
             // Get the info we need to play back this wave (need enough space for PCM, ADPCM, and xWMA formats)
             //
-            char formatBuff[ 64 ]; 
+            char formatBuff[ 64 ];
             WAVEFORMATEX *wfx = reinterpret_cast<WAVEFORMATEX*>(&formatBuff);
 
             if( FAILED( hr = wb.GetFormat( i, wfx, 64 ) ) )

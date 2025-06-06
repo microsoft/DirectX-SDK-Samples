@@ -385,7 +385,7 @@ public:
         m_nTotalStateChanges++;
 
         // If this dwStage is not cached, pass the value through and exit.
-        // Otherwise, update the sampler state cache and if the return value is 'true', the 
+        // Otherwise, update the sampler state cache and if the return value is 'true', the
         // command must be forwarded to the D3D Runtime.
         if( dwStage >= CACHED_STAGES || vecCacheSamplerStates[dwStage].set_val( d3dSamplerState, dwValue ) )
             return m_pDevice->SetSamplerState( dwStage, d3dSamplerState, dwValue );
@@ -400,7 +400,7 @@ public:
         m_nTotalStateChanges++;
 
         // If this dwStage is not cached, pass the value through and exit.
-        // Otherwise, update the texture stage state cache and if the return value is 'true', the 
+        // Otherwise, update the texture stage state cache and if the return value is 'true', the
         // command must be forwarded to the D3D Runtime.
         if( dwStage >= CACHED_STAGES || vecCacheTextureStates[dwStage].set_val( d3dTextureStageState, dwValue ) )
             return m_pDevice->SetTextureStageState( dwStage, d3dTextureStageState, dwValue );

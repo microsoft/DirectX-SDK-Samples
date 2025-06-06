@@ -35,7 +35,7 @@ static const uint4 candidateModePrec[14] = { uint4(10,5,5,5), uint4(7,6,6,6),
     uint4(8,6,5,5), uint4(8,5,6,5), uint4(8,5,5,6), uint4(6,6,6,6),
     uint4(10,10,10,10), uint4(11,9,9,9), uint4(12,8,8,8), uint4(16,4,4,4) };
 
-static const uint candidateSectionBit[32] = 
+static const uint candidateSectionBit[32] =
 {
     0xCCCC, 0x8888, 0xEEEE, 0xECC8,
     0xC880, 0xFEEC, 0xFEC8, 0xEC80,
@@ -79,7 +79,7 @@ void main( uint3 groupID : SV_GroupID, uint GI : SV_GroupIndex )
     uint blockInGroup = GI / BLOCK_SIZE;
     uint blockID = g_start_block_id + groupID.x * BLOCK_IN_GROUP + blockInGroup;
     uint threadInBlock = GI - blockInGroup * BLOCK_SIZE;
-    
+
     if (4 == threadInBlock)
     {
         shared_temp[GI] = asint(g_InBuff[blockID]);
@@ -165,7 +165,7 @@ void main( uint3 groupID : SV_GroupID, uint GI : SV_GroupIndex )
 
     uint y = threadInBlock / BLOCK_SIZE_X;
     uint x = threadInBlock - y * BLOCK_SIZE_X;
-    
+
     uint block_y = blockID / g_num_block_x;
     uint block_x = blockID - block_y * g_num_block_x;
     uint addr = (block_y * BLOCK_SIZE_Y + y) * g_tex_width + block_x * BLOCK_SIZE_X + x;
@@ -183,10 +183,10 @@ void main( uint3 groupID : SV_GroupID, uint GI : SV_GroupIndex )
         else
         {
             uint partition_index = ( bc_data.z & 0x0003E000 ) >> 13;
-            
+
             uint bit = (candidateSectionBit[partition_index] >> (y * 4 + x)) & 1;
             ep_index += bit * 2;
-            
+
             static const int aWeight3[] = {0, 9, 18, 27, 37, 46, 55, 64};
             uint index = extract_index_TWO( x, y, partition_index, bc_data );
             weight = aWeight3[index];
@@ -194,7 +194,7 @@ void main( uint3 groupID : SV_GroupID, uint GI : SV_GroupIndex )
         int3 low = shared_temp[ep_index + 0].xyz;
         int3 high = shared_temp[ep_index + 1].xyz;
         palette = finish_unquantize(((low << 6) + (high - low) * weight + 32 ) >> 6);
-        
+
         g_OutBuff[addr] = uint4( palette, 0x3C00 );
     }
 }
@@ -205,7 +205,7 @@ static const uint candidateModeMemory[14] = { 0x00, 0x01,
 int extract_mode_index( uint4 block )
 {
     int mode_index;
-    
+
     uint type = block.r & candidateModeMask[0];
     if ( type == candidateModeMemory[0] )
     {
@@ -398,7 +398,7 @@ uint extract_index_ONE( uint x, uint y, uint4 block )
 
 //void extract_partition( out Partition partition, uint4 block )
 //{
-    /*static const uint4x4 candidateSection[32] = 
+    /*static const uint4x4 candidateSection[32] =
     {
         {0,0,1,1, 0,0,1,1, 0,0,1,1, 0,0,1,1}, {0,0,0,1, 0,0,0,1, 0,0,0,1, 0,0,0,1}, {0,1,1,1, 0,1,1,1, 0,1,1,1, 0,1,1,1}, {0,0,0,1, 0,0,1,1, 0,0,1,1, 0,1,1,1},
         {0,0,0,0, 0,0,0,1, 0,0,0,1, 0,0,1,1}, {0,0,1,1, 0,1,1,1, 0,1,1,1, 1,1,1,1}, {0,0,0,1, 0,0,1,1, 0,1,1,1, 1,1,1,1}, {0,0,0,0, 0,0,0,1, 0,0,1,1, 0,1,1,1},
@@ -817,7 +817,7 @@ void extract_compressed_endpoints23( out int3 endPoint, uint mode_type, uint4 bl
     }	
 }
 
-/*const uint2 candidateFixUpIndex[32] = 
+/*const uint2 candidateFixUpIndex[32] =
 {
     {3,3},{3,3},{3,3},{3,3},
     {3,3},{3,3},{3,3},{3,3},
@@ -830,7 +830,7 @@ void extract_compressed_endpoints23( out int3 endPoint, uint mode_type, uint4 bl
 };*/
 uint extract_index_TWO( uint x, uint y, uint partition_index, uint4 block )
 {
-    static const uint candidateFixUpIndex1D[32] = 
+    static const uint candidateFixUpIndex1D[32] =
     {
         15,15,15,15,
         15,15,15,15,
@@ -841,7 +841,7 @@ uint extract_index_TWO( uint x, uint y, uint partition_index, uint4 block )
         2,8,2,2,
         8,8,2,2
     };
-    
+
     if ( x == 0 && y == 0 )
         return ( block.z >> 18 ) & 0x00000003;
     uint index = y * 4 + x;
@@ -901,7 +901,7 @@ uint3 finish_unquantize( int3 color )
 void generate_palette_unquantized8( out uint3 palette, int3 low, int3 high, uint prec, int i )
 {
     static const int aWeight3[] = {0, 9, 18, 27, 37, 46, 55, 64};
-    
+
     int3 tmp = ( low * ( 64 - aWeight3[i] ) + high * aWeight3[i] + 32 ) >> 6;
     palette = finish_unquantize( tmp );
 }
@@ -909,7 +909,7 @@ void generate_palette_unquantized8( out uint3 palette, int3 low, int3 high, uint
 void generate_palette_unquantized16( out uint3 palette, int3 low, int3 high, uint prec, int i )
 {
     static const int aWeight4[] = {0, 4, 9, 13, 17, 21, 26, 30, 34, 38, 43, 47, 51, 55, 60, 64};
-    
+
     int3 tmp = ( low * ( 64 - aWeight4[i] ) + high * aWeight4[i] + 32 ) >> 6;
     palette = finish_unquantize( tmp );
 }

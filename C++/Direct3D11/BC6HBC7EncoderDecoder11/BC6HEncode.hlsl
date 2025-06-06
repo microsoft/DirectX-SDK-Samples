@@ -36,7 +36,7 @@ static const uint4 candidateModePrec[14] = { uint4(10,5,5,5), uint4(7,6,6,6),
     uint4(8,6,5,5), uint4(8,5,6,5), uint4(8,5,5,6), uint4(6,6,6,6),
     uint4(10,10,10,10), uint4(11,9,9,9), uint4(12,8,8,8), uint4(16,4,4,4) };
 
-/*static const uint4x4 candidateSection[32] = 
+/*static const uint4x4 candidateSection[32] =
 {
     {0,0,1,1, 0,0,1,1, 0,0,1,1, 0,0,1,1}, {0,0,0,1, 0,0,0,1, 0,0,0,1, 0,0,0,1}, {0,1,1,1, 0,1,1,1, 0,1,1,1, 0,1,1,1}, {0,0,0,1, 0,0,1,1, 0,0,1,1, 0,1,1,1},
     {0,0,0,0, 0,0,0,1, 0,0,0,1, 0,0,1,1}, {0,0,1,1, 0,1,1,1, 0,1,1,1, 1,1,1,1}, {0,0,0,1, 0,0,1,1, 0,1,1,1, 1,1,1,1}, {0,0,0,0, 0,0,0,1, 0,0,1,1, 0,1,1,1},
@@ -48,7 +48,7 @@ static const uint4 candidateModePrec[14] = { uint4(10,5,5,5), uint4(7,6,6,6),
     {0,0,0,1, 0,1,1,1, 1,1,1,0, 1,0,0,0}, {0,0,0,0, 1,1,1,1, 1,1,1,1, 0,0,0,0}, {0,1,1,1, 0,0,0,1, 1,0,0,0, 1,1,1,0}, {0,0,1,1, 1,0,0,1, 1,0,0,1, 1,1,0,0}
 };*/
 
-static const uint candidateSectionBit[32] = 
+static const uint candidateSectionBit[32] =
 {
     0xCCCC, 0x8888, 0xEEEE, 0xECC8,
     0xC880, 0xFEEC, 0xFEC8, 0xEC80,
@@ -60,7 +60,7 @@ static const uint candidateSectionBit[32] =
     0x17E8, 0x0FF0, 0x718E, 0x399C
 };
 
-static const uint candidateFixUpIndex1D[32] = 
+static const uint candidateFixUpIndex1D[32] =
 {
     15,15,15,15,
     15,15,15,15,
@@ -81,7 +81,7 @@ static const uint aStep1[64] = {0,0,0,0,0,1,1,1,
                               4,4,5,5,5,5,5,5,
                               5,5,5,6,6,6,6,6,
                               6,6,6,6,7,7,7,7};
-                                  
+
 //0, 4, 9, 13, 17, 21, 26, 30, 34, 38, 43, 47, 51, 55, 60, 64
 static const uint aStep2[64] = { 0, 0, 0, 1, 1, 1, 1, 2,
                                2, 2, 2, 2, 3, 3, 3, 3,
@@ -124,7 +124,7 @@ void swap(inout int3 lhs, inout int3 rhs)
     rhs = tmp;
 }
 
-Texture2D<float4> g_Input : register( t0 ); 
+Texture2D<float4> g_Input : register( t0 );
 StructuredBuffer<uint4> g_InBuff : register( t1 );
 
 RWStructuredBuffer<uint4> g_OutBuff : register( u0 );
@@ -159,26 +159,26 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         return;
     }
 #endif
-    
+
     uint block_y = blockID / g_num_block_x;
     uint block_x = blockID - block_y * g_num_block_x;
     uint base_x = block_x * BLOCK_SIZE_X;
     uint base_y = block_y * BLOCK_SIZE_Y;
-    
+
     if (threadInBlock < 16)
     {
         shared_temp[GI].pixel = g_Input.Load( uint3( base_x + threadInBlock % 4, base_y + threadInBlock / 4, 0 ) ).rgb;
         uint3 pixel_h = float2half( shared_temp[GI].pixel );
         shared_temp[GI].pixel_hr = half2float(pixel_h);
         shared_temp[GI].pixel_ph = start_quantize( pixel_h );
-        
+
         shared_temp[GI].endPoint_low = shared_temp[GI].pixel_ph;
         shared_temp[GI].endPoint_high = shared_temp[GI].pixel_ph;
     }
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     if (threadInBlock < 8)
     {
         shared_temp[GI].endPoint_low = min(shared_temp[GI].endPoint_low, shared_temp[GI + 8].endPoint_low);
@@ -219,7 +219,7 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         // find_axis
         endPoint[0] = shared_temp[threadBase + 0].endPoint_low;
         endPoint[1] = shared_temp[threadBase + 0].endPoint_high;
-        
+
         //compute_index
         float3 span = endPoint[1] - endPoint[0];// fixed a bug in v0.2
         float span_norm_sqr = dot( span, span );// fixed a bug in v0.2
@@ -227,7 +227,7 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         if ( span_norm_sqr > 0 && dotProduct >= 0 && uint( dotProduct * 63.49999 / span_norm_sqr ) > 32 )
         {
             swap(endPoint[0], endPoint[1]);
-            
+
             shared_temp[GI].endPoint_low = endPoint[0];
             shared_temp[GI].endPoint_high = endPoint[1];
         }
@@ -241,10 +241,10 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         int2x3 endPoint;
         endPoint[0] = shared_temp[threadBase + 0].endPoint_low;
         endPoint[1] = shared_temp[threadBase + 0].endPoint_high;
-        
+
         float3 span = endPoint[1] - endPoint[0];
         float span_norm_sqr = dot( span, span );
-            
+
         uint4 prec = candidateModePrec[threadInBlock + 10];
         int2x3 endPoint_q = endPoint;
         quantize( endPoint_q, prec.x );
@@ -254,21 +254,21 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         {
             endPoint_q[1] -= endPoint_q[0];
         }
-        
+
         bool bBadQuantize;
         finish_quantize( bBadQuantize, endPoint_q, prec, transformed );
-        
+
         start_unquantize( endPoint_q, prec, transformed );
-        
+
         unquantize( endPoint_q, prec.x );
-        
+
         float error = 0;
         [loop]for ( uint j = 0; j < 16; j ++ )
         {
             float dotProduct = dot( span, shared_temp[threadBase + j].pixel_ph - endPoint[0] );// fixed a bug in v0.2
             uint index = ( span_norm_sqr <= 0 || dotProduct <= 0 ) ? 0
                 : ( ( dotProduct < span_norm_sqr ) ? aStep2[ uint( dotProduct * 63.49999 / span_norm_sqr ) ] : aStep2[63] );
-                
+
             uint3 pixel_rh;
             generate_palette_unquantized16( pixel_rh, endPoint_q[0], endPoint_q[1], index );
             float3 pixel_r = half2float( pixel_rh );
@@ -284,7 +284,7 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     if (threadInBlock < 2)
     {
         if ( shared_temp[GI].error > shared_temp[GI + 2].error )
@@ -303,7 +303,7 @@ void TryModeG10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
             shared_temp[GI].error = shared_temp[GI + 1].error;
             shared_temp[GI].best_mode = shared_temp[GI + 1].best_mode;
         }
-        
+
         g_OutBuff[blockID] = uint4(asuint(shared_temp[GI].error), shared_temp[GI].best_mode, 0, 0);
     }
 }
@@ -330,12 +330,12 @@ void TryModeLE10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         return;
     }
 #endif
-    
+
     uint block_y = blockID / g_num_block_x;
     uint block_x = blockID - block_y * g_num_block_x;
     uint base_x = block_x * BLOCK_SIZE_X;
     uint base_y = block_y * BLOCK_SIZE_Y;
-    
+
     if (threadInBlock < 16)
     {
         shared_temp[GI].pixel = g_Input.Load( uint3( base_x + threadInBlock % 4, base_y + threadInBlock / 4, 0 ) ).rgb;
@@ -346,7 +346,7 @@ void TryModeLE10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     //ergod mode_type 1:10
     if (threadInBlock < 32)
     {
@@ -372,7 +372,7 @@ void TryModeLE10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
                 endPoint[0][1] = max( endPoint[0][1], pixel_ph );
             }
         }
-        
+
         //compute_index
         float3 span[2];// fixed a bug in v0.2
         float span_norm_sqr[2];// fixed a bug in v0.2
@@ -406,12 +406,12 @@ void TryModeLE10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
         bool bBadQuantize = false;
         finish_quantize_0( bBadQuantize, endPoint_q[0], prec, transformed );
         finish_quantize_1( bBadQuantize, endPoint_q[1], prec, transformed );
-        
+
         start_unquantize( endPoint_q, prec, transformed );
-        
+
         unquantize( endPoint_q[0], prec.x );
         unquantize( endPoint_q[1], prec.x );
-        
+
         float error = 0;
         for ( uint j = 0; j < 16; j ++ )
         {
@@ -445,7 +445,7 @@ void TryModeLE10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     if (threadInBlock < 16)
     {
         if ( shared_temp[GI].error > shared_temp[GI + 16].error )
@@ -502,7 +502,7 @@ void TryModeLE10CS( uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID )
             shared_temp[GI].best_mode = shared_temp[GI + 1].best_mode;
             shared_temp[GI].best_partition = shared_temp[GI + 1].best_partition;
         }
-        
+
         if (asfloat(g_InBuff[blockID].x) > shared_temp[GI].error)
         {
             g_OutBuff[blockID] = uint4(asuint(shared_temp[GI].error), shared_temp[GI].best_mode, shared_temp[GI].best_partition, 0);
@@ -535,7 +535,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
     uint block_x = blockID - block_y * g_num_block_x;
     uint base_x = block_x * BLOCK_SIZE_X;
     uint base_y = block_y * BLOCK_SIZE_Y;
-    
+
     if (threadInBlock < 16)
     {
         shared_temp[GI].pixel = g_Input.Load( uint3( base_x + threadInBlock % 4, base_y + threadInBlock / 4, 0 ) ).rgb;
@@ -545,10 +545,10 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     uint best_mode = g_InBuff[blockID].y;
     uint best_partition = g_InBuff[blockID].z;
-    
+
     uint4 block = 0;
 
     if (threadInBlock < 32)
@@ -584,7 +584,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
                 }
             }
         }
-        
+
         shared_temp[GI].endPoint_low = endPoint[0];
         shared_temp[GI].endPoint_high = endPoint[1];
     }
@@ -636,7 +636,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
         {
             fixup = candidateFixUpIndex1D[best_partition];
         }
-        
+
         float3 span = endPoint[1] - endPoint[0];
         float span_norm_sqr = dot( span, span );
         float dotProduct = dot( span, shared_temp[threadBase + fixup].pixel_ph - endPoint[0] );
@@ -651,7 +651,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     if (threadInBlock < 16)
     {
         uint bits;
@@ -732,7 +732,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
                 block.w |= index << (11 + (threadInBlock - 9) * 3 + offset.y);
             }
         }
-        
+
         shared_temp[GI].pixel_hr.xy = asfloat(block.zw);
     }
 #ifdef REF_DEVICE
@@ -762,7 +762,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
     if (threadInBlock < 1)
     {
         shared_temp[GI].pixel_hr.xy = asfloat(asuint(shared_temp[GI].pixel_hr.xy) | asuint(shared_temp[GI + 1].pixel_hr.xy));
-        
+
         block.zw = asuint(shared_temp[GI].pixel_hr.xy);
     }
 #ifdef REF_DEVICE
@@ -845,7 +845,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
 #ifdef REF_DEVICE
     GroupMemoryBarrierWithGroupSync();
 #endif
-    
+
     if ( threadInBlock == 0 )
     {
         int2x3 endPoint_q[2];
@@ -862,7 +862,7 @@ void EncodeBlockCS(uint GI : SV_GroupIndex, uint3 groupID : SV_GroupID)
         {
             block_package( block, endPoint_q, best_mode, best_partition );
         }
-        
+
         g_OutBuff[blockID] = block;
     }
 }
@@ -872,8 +872,8 @@ uint3 float2half( float3 endPoint_f )
     uint3 sign = asuint(endPoint_f) & 0x80000000;
     uint3 expo = asuint(endPoint_f) & 0x7F800000;
     uint3 base = asuint(endPoint_f) & 0x007FFFFF;
-    return ( expo < 0x33800000 ) ? 0 
-                        //0x33800000 indicating 2^-24, which is minimal denormalized number that half can present 
+    return ( expo < 0x33800000 ) ? 0
+                        //0x33800000 indicating 2^-24, which is minimal denormalized number that half can present
         : ( ( expo < 0x38800000 ) ? ( sign >> 16 ) | ( ( base + 0x00800000 ) >> ( 23 - ( ( expo - 0x33800000 ) >> 23 ) ) )//fixed a bug in v0.2
                         //0x38800000 indicating 2^-14, which is minimal normalized number that half can present, so need to use denormalized half presentation
         : ( ( expo == 0x7F800000 || expo > 0x47000000 ) ? ( ( sign >> 16 ) | 0x7bff )
@@ -905,7 +905,7 @@ void quantize( inout int2x3 endPoint, uint prec )
     else
     {
         endPoint = ( ( iprec >= 16 ) | ( endPoint == 0 ) ) ? endPoint
-            : ( ( endPoint >= 0 ) ? ( ( endPoint == asint(0x7FFF) ) ? ( ( 1 << ( iprec - 1 ) ) - 1 ) : ( ( ( endPoint << ( iprec - 1 ) ) + asint(0x0000) ) >> 15 ) ) 
+            : ( ( endPoint >= 0 ) ? ( ( endPoint == asint(0x7FFF) ) ? ( ( 1 << ( iprec - 1 ) ) - 1 ) : ( ( ( endPoint << ( iprec - 1 ) ) + asint(0x0000) ) >> 15 ) )
             : ( ( -endPoint == asint(0x7FFF) ) ? -( ( 1 << ( iprec - 1 ) ) - 1 ) : -( ( ( -endPoint << ( iprec - 1 ) ) + asint(0x0000) ) >> 15 ) ) );
     }
 }
@@ -958,12 +958,12 @@ void finish_quantize( out bool bBadQuantize, inout int2x3 endPoint, uint4 prec, 
 
         endPoint[0] = endPoint[0] & ( ( 1 << prec.x ) - 1 );
         endPoint[1] = ( endPoint[1] >= 0 ) ? ( ( endPoint[1] >= ( 1 << ( prec.yzw - 1 ) ) ) ? ( ( 1 << ( prec.yzw - 1 ) ) - 1 ) : endPoint[1] )
-            : ( ( -endPoint[1] > ( 1 << ( prec.yzw - 1 ) ) ) ? ( 1 << ( prec.yzw - 1 ) ) : ( endPoint[1] & ( ( 1 << prec.yzw ) - 1 ) ) );            
+            : ( ( -endPoint[1] > ( 1 << ( prec.yzw - 1 ) ) ) ? ( 1 << ( prec.yzw - 1 ) ) : ( endPoint[1] & ( ( 1 << prec.yzw ) - 1 ) ) );
     }
     else
     {
         endPoint &= ( ( 1 << prec.x ) - 1 );
-        
+
         bBadQuantize = false;
     }
 }
@@ -1044,14 +1044,14 @@ uint3 finish_unquantize( int3 color )
 void generate_palette_unquantized8( out uint3 palette, int3 low, int3 high, int i )
 {
     static const int aWeight3[] = {0, 9, 18, 27, 37, 46, 55, 64};
-    
+
     int3 tmp = ( low * ( 64 - aWeight3[i] ) + high * aWeight3[i] + 32 ) >> 6;
     palette = finish_unquantize( tmp );
 }
 void generate_palette_unquantized16( out uint3 palette, int3 low, int3 high, int i )
 {
     static const int aWeight4[] = {0, 4, 9, 13, 17, 21, 26, 30, 34, 38, 43, 47, 51, 55, 60, 64};
-    
+
     int3 tmp = ( low * ( 64 - aWeight4[i] ) + high * aWeight4[i] + 32 ) >> 6;
     palette = finish_unquantize( tmp );
 }
@@ -1067,7 +1067,7 @@ float3 half2float(uint3 color_h )
 void block_package( inout uint4 block, int2x3 endPoint[2], uint mode_type, uint partition_index )
 {
     block.z |= partition_index << 13;
-    
+
     if ( mode_type == candidateModeFlag[0])
     {
         block.x = candidateModeMemory[0];

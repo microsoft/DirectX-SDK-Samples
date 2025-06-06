@@ -70,7 +70,7 @@ int AStitchRegular(bool bTrapezoid, int diagonals,
     {
         if (i < 2)
         {
-            pt = outsideInsideEdgePointBaseOffset.x - 1 + i; 
+            pt = outsideInsideEdgePointBaseOffset.x - 1 + i;
         }
         else if (i == 2)
         {
@@ -91,7 +91,7 @@ int AStitchRegular(bool bTrapezoid, int diagonals,
     if (index >= 0)
     {
         uint uindex = (uint)index;
-        
+
         switch( diagonals )
         {
         case DIAGONALS_INSIDE_TO_OUTSIDE:
@@ -281,12 +281,12 @@ int AStitchRegular(bool bTrapezoid, int diagonals,
     return pt;
 }
 
-int AStitchTransition(int2 outsideInsideEdgePointBaseOffset, int2 outsideInsideNumHalfTessFactorPoints, 
+int AStitchTransition(int2 outsideInsideEdgePointBaseOffset, int2 outsideInsideNumHalfTessFactorPoints,
                                     int2 outsideInsideEdgeTessFactorParity,
                                     uint i)
 {
     outsideInsideNumHalfTessFactorPoints -= (TESSELLATOR_PARITY_ODD == outsideInsideEdgeTessFactorParity);
-    
+
     uint2 out_in_first_half = uint2(outsidePointIndex[outsideInsideNumHalfTessFactorPoints.x][MAX_FACTOR / 2 + 1].y, insidePointIndex[outsideInsideNumHalfTessFactorPoints.y][MAX_FACTOR / 2 + 1].y) * 4;
 
     uint3 out_in_middle = 0;
@@ -334,7 +334,7 @@ int AStitchTransition(int2 outsideInsideEdgePointBaseOffset, int2 outsideInsideN
     else
     {
         i -= out_in_first_half.y;
-        
+
         if (i < out_in_first_half.x)
         {
             // Advance outside
@@ -358,7 +358,7 @@ int AStitchTransition(int2 outsideInsideEdgePointBaseOffset, int2 outsideInsideN
         else
         {
             i -= out_in_first_half.x;
-            
+
             if (i < out_in_middle.z)
             {
                 uint r = i;
@@ -402,7 +402,7 @@ int AStitchTransition(int2 outsideInsideEdgePointBaseOffset, int2 outsideInsideN
             else
             {
                 i -= out_in_middle.z;
-                
+
                 if (i < out_in_first_half.x)
                 {
                     // Advance outside
@@ -422,7 +422,7 @@ int AStitchTransition(int2 outsideInsideEdgePointBaseOffset, int2 outsideInsideN
                 else
                 {
                     // Advance inside
-                    
+
                     i -= out_in_first_half.x;
 
                     uint p = i / 4;
@@ -455,15 +455,15 @@ void CSTessellationIndices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gro
 {
     uint id = DTid.x;
     //uint id = Gid.x * 128 + GI; // Workaround for some CS4x preview drivers
-    
+
     if ( id < g_param.x )
     {
         uint tri_id = InputTriIDIndexID[id].x;
         uint index_id = InputTriIDIndexID[id].y;
         uint base_vertex = InputScanned[tri_id-1].x;
-        
+
         float4 outside_inside_factor = InputEdgeFactor[tri_id];
-        
+
         PROCESSED_TESS_FACTORS_TRI processedTessFactors;
         int num_points = TriProcessTessFactors(outside_inside_factor, processedTessFactors, g_partitioning);
 
@@ -534,7 +534,7 @@ void CSTessellationIndices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gro
                 IndexPatchContext.insidePointIndexBadValue            = numPointsForInsideEdge - 1;
                 IndexPatchContext.insidePointIndexReplacementValue    = processedTessFactors.insideEdgePointBaseOffset;
                 IndexPatchContext.outsidePointIndexPatchBase          = IndexPatchContext.insidePointIndexBadValue+1; // past inside patched index range
-                IndexPatchContext.outsidePointIndexDeltaToRealValue   = processedTessFactors.numPointsForOutsideInside.x + processedTessFactors.numPointsForOutsideInside.y - 2 
+                IndexPatchContext.outsidePointIndexDeltaToRealValue   = processedTessFactors.numPointsForOutsideInside.x + processedTessFactors.numPointsForOutsideInside.y - 2
                                                                                     - IndexPatchContext.outsidePointIndexPatchBase;
                 IndexPatchContext.outsidePointIndexBadValue           = IndexPatchContext.outsidePointIndexPatchBase
                                                                                     + processedTessFactors.numPointsForOutsideInside.z - 1;
@@ -600,7 +600,7 @@ void CSTessellationIndices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gro
                         IndexPatchContext.insidePointIndexBadValue            = numPointsForInsideEdge - 1;
                         IndexPatchContext.insidePointIndexReplacementValue    = outsideInsideEdgePointBaseOffset.y;
                         IndexPatchContext.outsidePointIndexPatchBase          = IndexPatchContext.insidePointIndexBadValue+1; // past inside patched index range
-                        IndexPatchContext.outsidePointIndexDeltaToRealValue   = outsideInsideEdgePointBaseOffset.x + (numLastPointsForInsideEdge - 1) * 2 
+                        IndexPatchContext.outsidePointIndexDeltaToRealValue   = outsideInsideEdgePointBaseOffset.x + (numLastPointsForInsideEdge - 1) * 2
                                                                                     - IndexPatchContext.outsidePointIndexPatchBase;
                         IndexPatchContext.outsidePointIndexBadValue           = IndexPatchContext.outsidePointIndexPatchBase
                                                                                     + numLastPointsForInsideEdge - 1;
@@ -622,5 +622,5 @@ void CSTessellationIndices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gro
         }
 
         TessedIndicesOut.Store(id*4, tessed_indices);
-    }       
+    }
 }

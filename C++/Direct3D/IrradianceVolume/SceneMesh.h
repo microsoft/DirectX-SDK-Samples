@@ -21,7 +21,7 @@ public :
     // General
     HRESULT LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* pDeviceCaps );
 
-    // Mesh 
+    // Mesh
     HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileName, WCHAR* strTextureFileName );
     HRESULT SetMesh( IDirect3DDevice9* pd3dDevice, ID3DXMesh* pMesh );
     DWORD   GetNumVertices()

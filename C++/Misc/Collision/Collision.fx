@@ -2,7 +2,7 @@
 // File: Collision.fx
 //
 // The effect file for the Collision sample
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -30,13 +30,13 @@ float4 ps_ConstantColor() : COLOR
 }
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique RenderScene
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 vs_PositionOnly();
-        PixelShader  = compile ps_2_0 ps_ConstantColor(); 
+        PixelShader  = compile ps_2_0 ps_ConstantColor();
     }
 }

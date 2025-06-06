@@ -1,10 +1,10 @@
 //--------------------------------------------------------------------------------------
 // File: SDKMesh.h
 //
-// Disclaimer:  
-//   The SDK Mesh format (.sdkmesh) is not a recommended file format for shipping titles.  
-//   It was designed to meet the specific needs of the SDK samples.  Any real-world 
-//   applications should avoid this file format in favor of a destination format that 
+// Disclaimer:
+//   The SDK Mesh format (.sdkmesh) is not a recommended file format for shipping titles.
+//   It was designed to meet the specific needs of the SDK samples.  Any real-world
+//   applications should avoid this file format in favor of a destination format that
 //   meets the specific needs of the application.
 //
 // Copyright (c) Microsoft Corporation.
@@ -456,7 +456,7 @@ public:
     DXGI_FORMAT                     GetIBFormat11( UINT iMesh );
     ID3D11Buffer* GetVB11( UINT iMesh, UINT iVB );
     ID3D11Buffer* GetIB11( UINT iMesh );
-    SDKMESH_INDEX_TYPE GetIndexType( UINT iMesh ); 
+    SDKMESH_INDEX_TYPE GetIndexType( UINT iMesh );
 
     ID3D11Buffer* GetAdjIB11( UINT iMesh );
 

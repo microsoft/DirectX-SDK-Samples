@@ -11,8 +11,8 @@
 #include "resource.h"
 #include <crtdbg.h>
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 // SCROLL_TIME dictates the time one scroll op takes, in seconds.
 #define SCROLL_TIME 0.5f
@@ -280,7 +280,7 @@ float                           g_fAngleLeftToScroll = 0.0f;// Angle left to scr
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -465,7 +465,7 @@ HRESULT CEffectMesh::Create( LPCWSTR wszFileName, IDirect3DDevice9* pd3dDevice )
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -475,7 +475,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -508,7 +508,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -585,7 +585,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     pDeviceSettings->d3d9.pp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
     g_SettingsDlg.GetDialogControl()->GetComboBox( DXUTSETTINGSDLG_PRESENT_INTERVAL )->SetEnabled( false );
 
-    // If device doesn't support HW T&L or doesn't support 2.0 vertex shaders in HW 
+    // If device doesn't support HW T&L or doesn't support 2.0 vertex shaders in HW
     // then switch to SWVP.
     if( ( caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
         caps.VertexShaderVersion < D3DVS_VERSION( 2, 0 ) )
@@ -607,8 +607,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     DXUTGetD3D9Enumeration()->GetPossibleVertexProcessingList( &bSvp, &bHvp, &bPHvp, &bMvp );
     DXUTGetD3D9Enumeration()->SetPossibleVertexProcessingList( bSvp, false, false, true );
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
     if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
     {
@@ -687,7 +687,7 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
     // Read the D3DX effect file
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"EffectParam.fx" ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     V_RETURN( DXUTGetGlobalResourceCache().CreateEffectFromFile( pd3dDevice, str, NULL, NULL, g_dwShaderFlags,
                                                                  g_pEffectPool, &g_pEffect, NULL ) );
@@ -743,8 +743,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -791,7 +791,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     D3DXMATRIXA16 m;
     D3DXMatrixRotationY( &m, fFrameAngleToScroll );
     g_mScroll *= m;
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -814,7 +814,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
     D3DXMATRIXA16 mViewProj;
     D3DXMATRIXA16 mWorldViewProjection;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 66, 75, 121 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -823,8 +823,8 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
         // Get the projection & view matrix from the camera class
         mViewProj = *g_Camera.GetViewMatrix() * *g_Camera.GetProjMatrix();
 
-        // Update the effect's variables.  Instead of using strings, it would 
-        // be more efficient to cache a handle to the parameter by calling 
+        // Update the effect's variables.  Instead of using strings, it would
+        // be more efficient to cache a handle to the parameter by calling
         // ID3DXEffect::GetParameterByName
         D3DXVECTOR4 vLightView( 0.0f, 0.0f, -10.0f, 1.0f );
         V( g_pEffect->SetVector( "g_vLight", &vLightView ) );
@@ -862,14 +862,14 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
 {
     // The helper object simply helps keep track of text position, and color
     // and then it calls pFont->DrawText( m_pSprite, strMsg, -1, &rc, DT_NOCLIP, m_clr );
-    // If NULL is passed in as the sprite object, then it will work however the 
+    // If NULL is passed in as the sprite object, then it will work however the
     // pFont->DrawText() will not be batched together.  Batching calls will improves performance.
     CDXUTTextHelper txtHelper( g_pFont, g_pTextSprite, 15 );
 
@@ -1055,7 +1055,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
 {
@@ -1071,7 +1071,7 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

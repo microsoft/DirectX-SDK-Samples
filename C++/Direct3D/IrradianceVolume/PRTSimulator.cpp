@@ -57,7 +57,7 @@ HRESULT CPRTSimulator::RunInWorkerThread( IDirect3DDevice9* pd3dDevice, SIMULATO
     m_bCompressInWorkerThread = false;
     m_fPercentDone = 0.0f;
 
-    // Launch the PRT simulator on another thread cause it'll 
+    // Launch the PRT simulator on another thread cause it'll
     // likely take a while and the UI would be unresponsive otherwise
     m_hThreadId = CreateThread( NULL, 0, StaticPRTSimulationThreadProc,
                                 this, 0, &m_dwThreadId );
@@ -86,7 +86,7 @@ HRESULT CPRTSimulator::CompressInWorkerThread( IDirect3DDevice9* pd3dDevice, SIM
     m_nNumPasses = 1;
     wcscpy_s( m_strCurPass, 256, L"Compressing Buffer" );
 
-    // Launch the PRT simulator on another thread cause it'll 
+    // Launch the PRT simulator on another thread cause it'll
     // likely take a while and the UI would be unresponsive otherwise
     m_hThreadId = CreateThread( NULL, 0, StaticPRTCompressThreadProc,
                                 this, 0, &m_dwThreadId );
@@ -155,12 +155,12 @@ DWORD CPRTSimulator::PRTCompressThreadProc()
         return 1;
 
     // Quickly compress data to preview results
-    // For release quality, use use D3DXSHCQUAL_SLOWHIGHQUALITY and compress with 4 or 8 PCA 
+    // For release quality, use use D3DXSHCQUAL_SLOWHIGHQUALITY and compress with 4 or 8 PCA
     // to keep per vertex data low and and use some number of clusters
     hr = m_pPRTMesh->CompressPRTBuffer( D3DXSHCQUAL_SLOWHIGHQUALITY, m_Options.dwNumClusters, m_Options.dwNumPCA,
                                         StaticPRTSimulatorCB, NULL );
     if( FAILED( hr ) )
-        goto LEarlyExit; // handle user aborting simulator via callback 
+        goto LEarlyExit; // handle user aborting simulator via callback
 
     m_pPRTMesh->ExtractCompressedDataForPRTShader();
 
@@ -252,7 +252,7 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
                                             m_Options.dwNumChannels, NULL ) );
     }
 
-    // Note that the alpha value is ignored for the Diffuse, Absorption, 
+    // Note that the alpha value is ignored for the Diffuse, Absorption,
     // and ReducedScattering parameters of the material.
     D3DXSHMATERIAL shMat[1];
     ZeroMemory( &shMat[0], sizeof( D3DXSHMATERIAL ) );
@@ -266,7 +266,7 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
     DWORD dwNumMeshes = 0;
     V( pMesh->GetAttributeTable( NULL, &dwNumMeshes ) );
 
-    // This sample treats all subsets as having the same 
+    // This sample treats all subsets as having the same
     // material properties but they don't have too
     D3DXMATERIAL* pd3dxMaterial = m_pPRTMesh->GetMaterials();
     pMatPtr = new D3DXSHMATERIAL[dwNumMeshes];
@@ -329,13 +329,13 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
                                                                 m_Options.dwAdaptiveDLMaxSubdiv,
                                                                 pDataTotal );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
         else
         {
             hr = m_pPRTEngine->ComputeDirectLightingSH( m_Options.dwOrder, pDataTotal );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
 
         if( m_Options.dwNumBounces > 1 )
@@ -361,7 +361,7 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
                 hr = m_pPRTEngine->ComputeBounce( pBufferA, pBufferB, pDataTotal );
 
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
 
             // Swap pBufferA and pBufferB
             ID3DXPRTBuffer* pPRTBufferTemp = NULL;
@@ -418,20 +418,20 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
                                                                 m_Options.dwAdaptiveDLMaxSubdiv,
                                                                 pBufferA );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
         else
         {
             hr = m_pPRTEngine->ComputeDirectLightingSH( m_Options.dwOrder, pBufferA );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
 
         m_nCurPass++;
         wcscpy_s( m_strCurPass, 256, L"Computing Subsurface Direct Lighting" );
         hr = m_pPRTEngine->ComputeSS( pBufferA, pBufferB, pDataTotal );
         if( FAILED( hr ) )
-            goto LEarlyExit; // handle user aborting simulator via callback 
+            goto LEarlyExit; // handle user aborting simulator via callback
 
         for( UINT iBounce = 1; iBounce < m_Options.dwNumBounces; ++iBounce )
         {
@@ -446,13 +446,13 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
                 hr = m_pPRTEngine->ComputeBounce( pBufferB, pBufferA, NULL );
 
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
 
             m_nCurPass++;
             swprintf_s( m_strCurPass, 256, L"Computing Subsurface Bounce %d Lighting", iBounce + 1 );
             hr = m_pPRTEngine->ComputeSS( pBufferA, pBufferB, pDataTotal );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
 
         if( m_Options.bAdaptive )
@@ -493,20 +493,20 @@ DWORD CPRTSimulator::PRTSimulationThreadProc()
     SAFE_RELEASE( pDataTotal );
 
     // Quickly compress data to preview results
-    // For release quality, use use D3DXSHCQUAL_SLOWHIGHQUALITY and compress with 4 or 8 PCA 
+    // For release quality, use use D3DXSHCQUAL_SLOWHIGHQUALITY and compress with 4 or 8 PCA
     // to keep per vertex data low and and use some number of clusters
     // Also limit the max number of PCA vectors to # channels * # coeffs
     DWORD dwNumPCA = ( min( 24, m_Options.dwNumChannels * m_Options.dwOrder * m_Options.dwOrder ) / 4 ) * 4;
     hr = m_pPRTMesh->CompressPRTBuffer( D3DXSHCQUAL_FASTLOWQUALITY, 1, dwNumPCA, StaticPRTSimulatorCB, NULL );
     if( FAILED( hr ) )
-        goto LEarlyExit; // handle user aborting simulator via callback 
+        goto LEarlyExit; // handle user aborting simulator via callback
 
     // Save the PRT buffer results for future sessions so you can skip the simulator step
-    // You can also use D3DXSavePRTCompBufferToFile to save the compressed PRT buffer to 
-    // skip the PRT compression step upon load.  
+    // You can also use D3DXSavePRTCompBufferToFile to save the compressed PRT buffer to
+    // skip the PRT compression step upon load.
     V( m_pPRTMesh->SavePRTBufferToFile( m_Options.strResultsFile ) );
 
-    // Save the LDPRT data & shading normals for future sessions.  
+    // Save the LDPRT data & shading normals for future sessions.
     // This is only needed if your rendering with LDPRT data as this sample does
     WCHAR szBaseFile[MAX_PATH];
     WCHAR szLDPRTFile[MAX_PATH];

@@ -2,7 +2,7 @@
 // File: PRT.fx
 //
 // Desc: The technique PrecomputedSHLighting renders the scene with per vertex PRT
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -20,14 +20,14 @@ texture AlbedoTexture;
 
 float4 aPRTConstants[NUM_CLUSTERS*(1+NUM_CHANNELS*(NUM_PCA/4))];
 
-float4 MaterialDiffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };    
+float4 MaterialDiffuseColor = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 
 //-----------------------------------------------------------------------------
 sampler AlbedoSampler = sampler_state
-{ 
+{
     Texture = (AlbedoTexture);
-    MipFilter = LINEAR; 
+    MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
 };
@@ -51,39 +51,39 @@ float4 GetPRTDiffuse( int iClusterOffset, float4 vPCAWeights[NUM_PCA/4] )
     //       R[p] = (M[k] dot L') + sum( w[p][j] * (B[k][j] dot L');
     // where the sum runs j between 0 and # of PCA vectors
     //       R[p] = exit radiance at point p
-    //       M[k] = mean of cluster k 
+    //       M[k] = mean of cluster k
     //       L' = source radiance coefficients
     //       w[p][j] = the j'th PCA weight for point p
     //       B[k][j] = the j'th PCA basis vector for cluster k
     //
-    // Note: since both (M[k] dot L') and (B[k][j] dot L') can be computed on the CPU, 
-    // these values are passed in as the array aPRTConstants.   
-           
+    // Note: since both (M[k] dot L') and (B[k][j] dot L') can be computed on the CPU,
+    // these values are passed in as the array aPRTConstants.
+
     float4 vAccumR = float4(0,0,0,0);
     float4 vAccumG = float4(0,0,0,0);
     float4 vAccumB = float4(0,0,0,0);
-    
-    // For each channel, multiply and sum all the vPCAWeights[j] by aPRTConstants[x] 
+
+    // For each channel, multiply and sum all the vPCAWeights[j] by aPRTConstants[x]
     // where: vPCAWeights[j] is w[p][j]
     //		  aPRTConstants[x] is the value of (B[k][j] dot L') that was
     //		  calculated on the CPU and passed in as a shader constant
-    // Note this code is multipled and added 4 floats at a time since each 
+    // Note this code is multipled and added 4 floats at a time since each
     // register is a 4-D vector, and is the reason for using (NUM_PCA/4)
-    for (int j=0; j < (NUM_PCA/4); j++) 
+    for (int j=0; j < (NUM_PCA/4); j++)
     {
         vAccumR += vPCAWeights[j] * aPRTConstants[iClusterOffset+1+(NUM_PCA/4)*0+j];
         vAccumG += vPCAWeights[j] * aPRTConstants[iClusterOffset+1+(NUM_PCA/4)*1+j];
         vAccumB += vPCAWeights[j] * aPRTConstants[iClusterOffset+1+(NUM_PCA/4)*2+j];
-    }    
+    }
 
-	// Now for each channel, sum the 4D vector and add aPRTConstants[x] 
+	// Now for each channel, sum the 4D vector and add aPRTConstants[x]
 	// where: aPRTConstants[x] which is the value of (M[k] dot L') and
 	//		  was calculated on the CPU and passed in as a shader constant.
     float4 vDiffuse = aPRTConstants[iClusterOffset];
     vDiffuse.r += dot(vAccumR,1);
     vDiffuse.g += dot(vAccumG,1);
     vDiffuse.b += dot(vAccumB,1);
-    
+
     return vDiffuse;
 }
 
@@ -98,20 +98,20 @@ VS_OUTPUT PRTDiffuseVS( float4 vPos : POSITION,
                         uniform bool bUseTexture )
 {
     VS_OUTPUT Output;
-    
+
     // Output the vetrex position in projection space
     Output.Position = mul(vPos, g_mWorldViewProjection);
     if( bUseTexture )
         Output.TexCoord = TexCoord;
     else
         Output.TexCoord = 0;
-    
+
     // For spectral simulations the material properity is baked into the transfer coefficients.
     // If using nonspectral, then you can modulate by the diffuse material properity here.
     Output.Diffuse = GetPRTDiffuse( iClusterOffset, vPCAWeights );
-    
+
     Output.Diffuse *= MaterialDiffuseColor;
-    
+
     return Output;
 }
 
@@ -120,8 +120,8 @@ VS_OUTPUT PRTDiffuseVS( float4 vPos : POSITION,
 // Pixel shader output structure
 //-----------------------------------------------------------------------------
 struct PS_OUTPUT
-{   
-    float4 RGBColor : COLOR0;  // Pixel color    
+{
+    float4 RGBColor : COLOR0;  // Pixel color
 };
 
 
@@ -130,13 +130,13 @@ struct PS_OUTPUT
 // Type: Pixel shader
 // Desc: Trival pixel shader
 //-----------------------------------------------------------------------------
-PS_OUTPUT StandardPS( VS_OUTPUT In, uniform bool bUseTexture ) 
-{ 
+PS_OUTPUT StandardPS( VS_OUTPUT In, uniform bool bUseTexture )
+{
     PS_OUTPUT Output;
-    
+
     if( bUseTexture )
     {
-        float4 Albedo = tex2D(AlbedoSampler, In.TexCoord);    
+        float4 Albedo = tex2D(AlbedoSampler, In.TexCoord);
         Output.RGBColor = In.Diffuse * Albedo;
     }
     else
@@ -149,14 +149,14 @@ PS_OUTPUT StandardPS( VS_OUTPUT In, uniform bool bUseTexture )
 
 
 //-----------------------------------------------------------------------------
-// Renders with per vertex PRT 
+// Renders with per vertex PRT
 //-----------------------------------------------------------------------------
 technique RenderWithPRTColorLights
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 PRTDiffuseVS( true );
-        PixelShader  = compile ps_2_0 StandardPS( true ); // trival pixel shader 
+        PixelShader  = compile ps_2_0 StandardPS( true ); // trival pixel shader
     }
 }
 
@@ -166,8 +166,8 @@ technique RenderWithPRTColorLights
 technique RenderWithPRTColorLightsNoAlbedo
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 PRTDiffuseVS( false );
-        PixelShader  = compile ps_2_0 StandardPS( false ); // trival pixel shader 
+        PixelShader  = compile ps_2_0 StandardPS( false ); // trival pixel shader
     }
 }

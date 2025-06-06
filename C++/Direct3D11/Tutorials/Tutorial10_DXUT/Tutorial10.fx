@@ -52,10 +52,10 @@ PS_INPUT VS( VS_INPUT input )
 
     float fLighting = saturate( dot( vNormalWorldSpace, vLightDir ) );
     output.Diffuse.rgb = fLighting;
-    output.Diffuse.a = 1.0f; 
+    output.Diffuse.a = 1.0f;
 
     output.Tex = input.Tex;
-    
+
     return output;
 }
 

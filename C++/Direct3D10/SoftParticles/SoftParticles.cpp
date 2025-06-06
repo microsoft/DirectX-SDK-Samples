@@ -36,7 +36,7 @@ float*					g_pParticleDepthArray = NULL;
 CDXUTSDKMesh			g_ObjectMesh;
 CDXUTSDKMesh			g_SkyMesh;
 
-ID3DX10Font*            g_pFont10 = NULL;       
+ID3DX10Font*            g_pFont10 = NULL;
 ID3DX10Sprite*          g_pSprite10 = NULL;
 CDXUTTextHelper*        g_pTxtHelper = NULL;
 ID3D10Effect*           g_pEffect10 = NULL;
@@ -129,7 +129,7 @@ D3DXVECTOR3 g_vLightDir2 = D3DXVECTOR3(-5.947f,-5.342f,-5.733f);
 #define IDC_TOGGLEWARP          6
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool    CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void    CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -154,7 +154,7 @@ void AdvanceParticles( ID3D10Device* pd3dDevice, double fTime, float fTimeDelta 
 void UpdateParticleBuffers( ID3D10Device* pd3dDevice );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -167,7 +167,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 	// Disable gamma correction on this sample
     DXUTSetIsInGammaCorrectMode( false );
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -192,7 +192,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -200,12 +200,12 @@ void InitApp()
     g_HUD.Init( &g_DialogResourceManager );
     g_SampleUI.Init( &g_DialogResourceManager );
 
-    g_HUD.SetCallback( OnGUIEvent ); int iY = 10; 
+    g_HUD.SetCallback( OnGUIEvent ); int iY = 10;
     g_HUD.AddButton( IDC_TOGGLEFULLSCREEN, L"Toggle full screen", 35, iY, 125, 22 );
     g_HUD.AddButton( IDC_CHANGEDEVICE, L"Change device (F2)", 35, iY += 24, 125, 22, VK_F2 );
     g_HUD.AddButton( IDC_TOGGLEREF, L"Toggle REF (F3)", 35, iY += 24, 125, 22, VK_F3 );
     g_HUD.AddButton( IDC_TOGGLEWARP, L"Toggle WARP (F4)", 35, iY += 24, 125, 22, VK_F4 );
-    g_SampleUI.SetCallback( OnGUIEvent ); iY = 10; 
+    g_SampleUI.SetCallback( OnGUIEvent ); iY = 10;
 
     CDXUTComboBox* pComboBox = NULL;
 
@@ -249,7 +249,7 @@ static int iFrame = 0;
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     D3DXVECTOR3 vEye = *g_Camera.GetEyePt();
@@ -318,7 +318,7 @@ void CALLBACK KeyboardProc( UINT nChar, bool bKeyDown, bool bAltDown, void* pUse
 // Handles the GUI events
 //--------------------------------------------------------------------------------------
 void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContext )
-{    
+{
     switch( nControlID )
     {
         case IDC_TOGGLEFULLSCREEN: DXUTToggleFullScreen(); break;
@@ -332,7 +332,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             g_ParticleTechnique = (PARTICLE_TECHNIQUE)(int)PtrToInt(pComboBox->GetSelectedData());
         }
         break;
-    }    
+    }
 }
 
 
@@ -356,8 +356,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
 
     V_RETURN( g_DialogResourceManager.OnD3D10CreateDevice( pd3dDevice ) );
     V_RETURN( g_D3DSettingsDlg.OnD3D10CreateDevice( pd3dDevice ) );
-    V_RETURN( D3DX10CreateFont( pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, 
-                                OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, 
+    V_RETURN( D3DX10CreateFont( pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
+                                OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                                 L"Arial", &g_pFont10 ) );
     V_RETURN( D3DX10CreateSprite( pd3dDevice, 512, &g_pSprite10 ) );
     g_pTxtHelper = new CDXUTTextHelper( NULL, NULL, g_pFont10, g_pSprite10, 15 );
@@ -368,8 +368,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
     #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -393,7 +393,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     g_pRenderVolumeParticlesHardMSAA = g_pEffect10->GetTechniqueByName( "RenderVolumeParticles_Hard_MSAA" );
     g_pRenderBillboardParticlesSoftMSAA = g_pEffect10->GetTechniqueByName( "RenderBillboardParticles_Soft_MSAA" );
     g_pRenderBillboardParticlesODepthSoftMSAA = g_pEffect10->GetTechniqueByName( "RenderBillboardParticles_ODepthSoft_MSAA" );
-  
+
 
         // Obtain the parameter handles
     g_pmWorldViewProj = g_pEffect10->GetVariableByName( "g_mWorldViewProj" )->AsMatrix();
@@ -466,7 +466,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
 
     g_pfFadeDistance->SetFloat( g_fFadeDistance );
 
-    // Enable/Disable MSAA settings from the settings dialog based on whether we have dx10.1 
+    // Enable/Disable MSAA settings from the settings dialog based on whether we have dx10.1
     // support or not.
     g_D3DSettingsDlg.GetDialogControl()->GetComboBox( DXUTSETTINGSDLG_D3D10_MULTISAMPLE_COUNT )->SetEnabled( NULL != pd3dDevice1 );
     g_D3DSettingsDlg.GetDialogControl()->GetComboBox( DXUTSETTINGSDLG_D3D10_MULTISAMPLE_QUALITY )->SetEnabled( NULL != pd3dDevice1 );
@@ -547,8 +547,8 @@ HRESULT CALLBACK OnD3D10SwapChainResized( ID3D10Device* pd3dDevice, IDXGISwapCha
     if( NULL != pd3dDevice1 ) {
 
         D3D10_SHADER_RESOURCE_VIEW_DESC1    descSRV1;
-        ID3D10ShaderResourceView1*          pSRView1 = NULL;              
-            
+        ID3D10ShaderResourceView1*          pSRView1 = NULL;
+
         descSRV1.Format = DXGI_FORMAT_R32_FLOAT;
         descSRV1.ViewDimension = D3D10_1_SRV_DIMENSION_TEXTURE2DMS;
 
@@ -562,7 +562,7 @@ HRESULT CALLBACK OnD3D10SwapChainResized( ID3D10Device* pd3dDevice, IDXGISwapCha
     } else {
 
         // Inconsistent state, we are trying to use MSAA with a device that does not support dx10.1
-        V_RETURN( E_FAIL ); 
+        V_RETURN( E_FAIL );
     }
 
     g_iWidth = pBackBufferSurfaceDesc->Width;
@@ -709,14 +709,14 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     pd3dDevice->IASetVertexBuffers( 0, 1, pBuffers, stride, offset );
     pd3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_POINTLIST );
     pd3dDevice->IASetIndexBuffer( g_pParticleIB, DXGI_FORMAT_R32_UINT, 0 );
-    
+
     if( PT_VOLUME_HARD == g_ParticleTechnique ||
         PT_VOLUME_SOFT == g_ParticleTechnique )
     {
         g_pVolumeDiffTex->SetResource( g_pNoiseVolumeRV );
         g_pVolumeNormTex->SetResource( NULL );
     }
-    else 
+    else
     {
         g_pVolumeDiffTex->SetResource( g_pParticleTexRV );
     }
@@ -730,15 +730,15 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         pParticleTech->GetPassByIndex( p )->Apply(0);
         pd3dDevice->DrawIndexed( MAX_PARTICLES, 0, 0 );
     }
-   
+
     // unbind the depth from the resource so we can set it as depth next time around
     ID3D10ShaderResourceView* Nulls[2] = {NULL,NULL};
     pd3dDevice->PSSetShaderResources( 0, 2, Nulls );
 
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );
     RenderText();
-    g_HUD.OnRender( fElapsedTime ); 
-    g_SampleUI.OnRender( fElapsedTime );  
+    g_HUD.OnRender( fElapsedTime );
+    g_SampleUI.OnRender( fElapsedTime );
     DXUT_EndPerfEvent();
 }
 
@@ -751,14 +751,14 @@ void RenderText()
     g_pTxtHelper->Begin();
     g_pTxtHelper->SetInsertionPos( 2, 0 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
-    g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );  
+    g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
     g_pTxtHelper->End();
 }
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10SwapChainReleasing( void* pUserContext )
 {
@@ -771,7 +771,7 @@ void CALLBACK OnD3D10SwapChainReleasing( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
@@ -854,7 +854,7 @@ HRESULT CreateParticleBuffers( ID3D10Device* pd3dDevice )
     g_pCPUParticleIndices = new DWORD[ MAX_PARTICLES ];
     if( !g_pCPUParticleIndices )
         return E_OUTOFMEMORY;
-    g_pParticleDepthArray = new float[ MAX_PARTICLES ]; 
+    g_pParticleDepthArray = new float[ MAX_PARTICLES ];
     if( !g_pParticleDepthArray )
         return E_OUTOFMEMORY;
 
@@ -961,7 +961,7 @@ HRESULT CreateNoiseVolume( ID3D10Device* pd3dDevice, UINT VolumeSize )
     SRVDesc.Texture3D.MipLevels = desc.MipLevels;
     SRVDesc.Texture3D.MostDetailedMip = 0;
     V_RETURN(pd3dDevice->CreateShaderResourceView( g_pNoiseVolume, &SRVDesc, &g_pNoiseVolumeRV ));
-    
+
     SAFE_DELETE_ARRAY( InitData.pSysMem );
     return hr;
 }
@@ -980,8 +980,8 @@ void QuickDepthSort(DWORD* indices, float* depths, int lo, int hi)
 
     //  partition
     do
-    {    
-        while (depths[i] > x) i++; 
+    {
+        while (depths[i] > x) i++;
         while (depths[j] < x) j--;
         if (i<=j)
         {

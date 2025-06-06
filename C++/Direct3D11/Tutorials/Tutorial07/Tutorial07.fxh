@@ -52,7 +52,7 @@ PS_INPUT VS( VS_INPUT input )
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 

@@ -16,7 +16,7 @@
 #include "resource.h"
 #include "skybox.h"
 
-#define NUM_TONEMAP_TEXTURES  5       // Number of stages in the 3x3 down-scaling 
+#define NUM_TONEMAP_TEXTURES  5       // Number of stages in the 3x3 down-scaling
 // of average luminance textures
 #define NUM_BLOOM_TEXTURES    2
 #define RGB16_MAX             100
@@ -110,7 +110,7 @@ D3DXHANDLE                          g_havSampleOffsets;
 D3DXHANDLE                          g_hBloom;
 D3DXHANDLE                          g_havSampleWeights;
 
-ID3DXFont*                          g_pFont9 = NULL;              // Font for drawing text   
+ID3DXFont*                          g_pFont9 = NULL;              // Font for drawing text
 ID3DXSprite*                        g_pSprite9 = NULL;       // Sprite for batching draw text calls
 LPD3DXEFFECT                        g_pEffect9 = NULL;
 PDIRECT3DSURFACE9                   g_pMSRT9 = NULL;       // Multi-Sample float render target
@@ -130,7 +130,7 @@ DWORD                               g_dwMultiSampleQuality9 = 0; // Used when we
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 //d3d9 callbacks
 bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat,
@@ -212,7 +212,7 @@ HRESULT GetSampleOffsets_DownScale3x3( DWORD dwWidth, DWORD dwHeight, D3DXVECTOR
     float tU = 1.0f / dwWidth;
     float tV = 1.0f / dwHeight;
 
-    // Sample from the 9 surrounding points. 
+    // Sample from the 9 surrounding points.
     int index = 0;
     for( int y = -1; y <= 1; y++ )
     {
@@ -245,7 +245,7 @@ HRESULT GetSampleOffsets_DownScale2x2_Lum( DWORD dwSrcWidth, DWORD dwSrcHeight, 
     float deltaU = ( float )dwSrcWidth / dwDestWidth / 2.0f;
     float deltaV = ( float )dwSrcHeight / dwDestHeight / 2.0f;
 
-    // Sample from 4 surrounding points. 
+    // Sample from 4 surrounding points.
     int index = 0;
     for( int y = 0; y < 2; y++ )
     {
@@ -264,7 +264,7 @@ HRESULT GetSampleOffsets_DownScale2x2_Lum( DWORD dwSrcWidth, DWORD dwSrcHeight, 
 
 //-----------------------------------------------------------------------------
 // Name: GetSampleOffsets_Bloom()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT GetSampleOffsets_Bloom( DWORD dwD3DTexSize,
                                 float afTexCoordOffset[15],
@@ -300,7 +300,7 @@ HRESULT GetSampleOffsets_Bloom( DWORD dwD3DTexSize,
 }
 
 //--------------------------------------------------------------------------------------
-// Called during device initialization, this code checks the device for some 
+// Called during device initialization, this code checks the device for some
 // minimum set of capabilities, and rejects those that don't pass by returning false.
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
@@ -308,7 +308,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 {
     UNREFERENCED_PARAMETER( bWindowed );
 
-    // No fallback defined by this app, so reject any device that 
+    // No fallback defined by this app, so reject any device that
     // doesn't support at least ps2.0
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
         return false;
@@ -325,11 +325,11 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// created, which will happen during application initialization and windowed/full screen 
-// toggles. This is the best location to create D3DPOOL_MANAGED resources since these 
-// resources need to be reloaded whenever the device is destroyed. Resources created  
-// here should be released in the OnDestroyDevice callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// created, which will happen during application initialization and windowed/full screen
+// toggles. This is the best location to create D3DPOOL_MANAGED resources since these
+// resources need to be reloaded whenever the device is destroyed. Resources created
+// here should be released in the OnDestroyDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                      void* pUserContext )
@@ -351,14 +351,14 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
                                      TEXT( "Arial" ), &g_pFont9 ) ) )
         return hr;
 
-    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.  
-    // Debugging vertex shaders requires either REF or software vertex processing, and debugging 
-    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug 
-    // experience in the shader debugger.  It enables source level debugging, prevents instruction 
-    // reordering, prevents dead code elimination, and forces the compiler to compile against the next 
-    // higher available software target, which ensures that the unoptimized shaders do not exceed 
-    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders 
-    // will be unoptimized and forced into software.  See the DirectX documentation for more information 
+    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.
+    // Debugging vertex shaders requires either REF or software vertex processing, and debugging
+    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug
+    // experience in the shader debugger.  It enables source level debugging, prevents instruction
+    // reordering, prevents dead code elimination, and forces the compiler to compile against the next
+    // higher available software target, which ensures that the unoptimized shaders do not exceed
+    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders
+    // will be unoptimized and forced into software.  See the DirectX documentation for more information
     // about using the shader debugger.
     DWORD dwShaderFlags = D3DXFX_NOT_CLONEABLE | D3DXFX_LARGEADDRESSAWARE;
 #ifdef DEBUG_VS
@@ -430,7 +430,7 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     // FP16
     if( g_bSupportsR16F && bSupports128FCube )
     {
-        // Device supports floating-point textures. 
+        // Device supports floating-point textures.
         V_RETURN( D3DXCreateCubeTextureFromFileEx( pd3dDevice, strPath, D3DX_DEFAULT, 1, 0, D3DFMT_A16B16G16R16F,
                                                    D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_FILTER_NONE, 0, NULL,
                                                    NULL, &pCubeTexture ) );
@@ -443,7 +443,7 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
     // FP32
     if( g_bSupportsR32F && bSupports128FCube )
     {
-        // Device supports floating-point textures. 
+        // Device supports floating-point textures.
         V_RETURN( D3DXCreateCubeTextureFromFileEx( pd3dDevice, strPath, D3DX_DEFAULT, 1, 0, D3DFMT_A16B16G16R16F,
                                                    D3DPOOL_MANAGED, D3DX_FILTER_NONE, D3DX_FILTER_NONE, 0, NULL,
                                                    NULL, &pCubeTexture ) );
@@ -505,11 +505,11 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// reset, which will happen after a lost device scenario. This is the best location to 
-// create D3DPOOL_DEFAULT resources since these resources need to be reloaded whenever 
-// the device is lost. Resources created here should be released in the OnLostDevice 
-// callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// reset, which will happen after a lost device scenario. This is the best location to
+// create D3DPOOL_DEFAULT resources since these resources need to be reloaded whenever
+// the device is lost. Resources created here should be released in the OnLostDevice
+// callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -727,9 +727,9 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
 }
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called at the end of every frame to perform all the 
-// rendering calls for the scene, and it will also be called if the window needs to be 
-// repainted. After this function has returned, DXUT will call 
+// This callback function will be called at the end of every frame to perform all the
+// rendering calls for the scene, and it will also be called if the window needs to be
+// repainted. After this function has returned, DXUT will call
 // IDirect3DDevice9::Present to display the contents of the next buffer in the swap chain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime, void* pUserContext )
@@ -851,7 +851,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderD3D9Text( double fTime )
@@ -927,10 +927,10 @@ void RenderD3D9Text( double fTime )
 }
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
+// This callback function will be called immediately after the Direct3D device has
 // entered a lost state and before IDirect3DDevice9::Reset is called. Resources created
-// in the OnResetDevice callback should be released here, which generally includes all 
-// D3DPOOL_DEFAULT resources. See the "Lost Devices" section of the documentation for 
+// in the OnResetDevice callback should be released here, which generally includes all
+// D3DPOOL_DEFAULT resources. See the "Lost Devices" section of the documentation for
 // information about lost devices.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
@@ -974,10 +974,10 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
-// been destroyed, which generally happens as a result of application termination or 
-// windowed/full screen toggles. Resources created in the OnCreateDevice callback 
-// should be released here, which generally includes all D3DPOOL_MANAGED resources. 
+// This callback function will be called immediately after the Direct3D device has
+// been destroyed, which generally happens as a result of application termination or
+// windowed/full screen toggles. Resources created in the OnCreateDevice callback
+// should be released here, which generally includes all D3DPOOL_MANAGED resources.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {
@@ -995,7 +995,7 @@ void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 
 //-----------------------------------------------------------------------------
 // Name: RetrieveD3D9TechHandles()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT RetrieveD3D9TechHandles()
 {
@@ -1084,7 +1084,7 @@ HRESULT MeasureLuminance9()
 
     //-------------------------------------------------------------------------
     // Iterate through the remaining tone map textures
-    //------------------------------------------------------------------------- 
+    //-------------------------------------------------------------------------
     for( int i = NUM_TONEMAP_TEXTURES - 1; i > 0; i-- )
     {
         // Cycle the textures
@@ -1360,7 +1360,7 @@ void DrawFullScreenQuad( float fLeftU, float fTopV, float fRightU, float fBottom
 
 //-----------------------------------------------------------------------------
 // Name: CreateEncodedTexture
-// Desc: Create a copy of the input floating-point texture with RGBE8 or RGB16 
+// Desc: Create a copy of the input floating-point texture with RGBE8 or RGB16
 //       encoding
 //-----------------------------------------------------------------------------
 HRESULT CreateEncodedTexture( IDirect3DCubeTexture9* pTexSrc, IDirect3DCubeTexture9** ppTexDest,
@@ -1433,7 +1433,7 @@ HRESULT CreateEncodedTexture( IDirect3DCubeTexture9* pTexSrc, IDirect3DCubeTextu
 
 //-----------------------------------------------------------------------------
 // Name: LoadMesh()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT LoadMesh( WCHAR* strFileName, LPD3DXMESH* ppMesh )
 {

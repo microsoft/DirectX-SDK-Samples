@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DynamicShaderLinkage11_VS.hlsl
 //
-// The vertex shader file for the DynamicShaderLinkage11 sample.  
-// 
+// The vertex shader file for the DynamicShaderLinkage11 sample.
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ struct VS_OUTPUT
 //--------------------------------------------------------------------------------------
 // Vertex Shader
 //--------------------------------------------------------------------------------------
-// We aliased signed vectors as a unsigned format. 
+// We aliased signed vectors as a unsigned format.
 // Need to recover signed values.  The values 1.0 and 2.0
 // are slightly inaccurate here.
 float3 R10G10B10A2_UNORM_TO_R32G32B32_FLOAT( in float3 vVec )

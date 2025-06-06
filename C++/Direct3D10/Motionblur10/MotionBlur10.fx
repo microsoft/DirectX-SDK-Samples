@@ -26,7 +26,7 @@ cbuffer cbTimeMatrices
 {
     matrix g_mBlurViewProj[MAX_TIME_STEPS];
     matrix g_mBlurWorld[MAX_TIME_STEPS];
-    
+
     matrix g_mBoneWorld[MAX_TIME_STEPS*MAX_BONE_MATRICES];
 };
 
@@ -190,37 +190,37 @@ float4 ComputeLighting( float3 normal )
 VSSceneOut VSSceneMain( VSSceneIn Input )
 {
     VSSceneOut Output = (VSSceneOut)0;
-    
+
     // Normal transformation and lighting for the middle position
     matrix mWorldNow = g_mBlurWorld[ MID_TIME_STEP ];
     matrix mViewProjNow = g_mBlurViewProj[ MID_TIME_STEP ];
-    
+
     Output.Pos = mul( float4(Input.Pos,1), mWorldNow );
     Output.Pos = mul( Output.Pos, mViewProjNow );
     float3 wNormal = mul( Input.Normal, (float3x3)mWorldNow );
     Output.Color = ComputeLighting( wNormal );
     Output.Tex = Input.Tex;
-    
+
     // Find our direction of motion in clip space
     float4 nextPos = mul( float4(Input.Pos,1), g_mBlurWorld[ MID_TIME_STEP+1 ] );
     float4 prevPos = mul( float4(Input.Pos,1), g_mBlurWorld[ MID_TIME_STEP-1 ] );
     nextPos = mul( nextPos, g_mBlurViewProj[ MID_TIME_STEP+1 ] );
     prevPos = mul( prevPos, g_mBlurViewProj[ MID_TIME_STEP-1 ] );
     Output.Color.a = ComputeMotionAlpha( nextPos.xyz/nextPos.w, prevPos.xyz/prevPos.w, MIN_FADEANISO );
-    
+
     float3 clipMotionDir = nextPos.xyz/nextPos.w - prevPos.xyz/prevPos.w;
-    
+
     // Find our tangent, and bitangent in clip space
     float3 clipBiTangent = cross( Input.Tan, Input.Normal );
     clipBiTangent = mul( clipBiTangent, (float3x3)mWorldNow );
     clipBiTangent = normalize( mul( clipBiTangent, (float3x3)mViewProjNow ) );
     float3 clipTangent = mul( Input.Tan, (float3x3)mWorldNow );
     clipTangent = normalize( mul( clipTangent, (float3x3)mViewProjNow ) );
-    
+
     // Find the projection of our motion into our tangent/texture space
     Output.Aniso.y = max( 0.0001, abs( g_fTextureSmear*dot( clipTangent, clipMotionDir ) ) );
     Output.Aniso.x = max( 0.0001, abs( g_fTextureSmear*dot( clipBiTangent, clipMotionDir ) ) );
-    
+
     return Output;
 }
 
@@ -228,7 +228,7 @@ float4 PSSceneMain( VSSceneOut Input ) : SV_TARGET
 {
     float2 ddx = Input.Aniso;
     float2 ddy = Input.Aniso;
-    
+
     float4 diff = g_txDiffuse.SampleGrad( g_samLinear, Input.Tex, ddx, ddy);
     diff.a = 1;
     return diff*Input.Color;
@@ -263,23 +263,23 @@ struct GSMotionBlurOut
 VSMotionBlurOut VSMotionBlurMain( VSMotionBlurIn Input )
 {
     VSMotionBlurOut Output = (VSMotionBlurOut)0;
-    
+
     Output.Pos = float4(Input.Pos,1);
     Output.viewPos = mul( float4( Input.Pos, 1 ), g_mWorldView );
     Output.Norm = Input.Normal;
     Output.Tex = Input.Tex;
-    
+
     float4 nextPos = mul( float4(Input.Pos,1), g_mBlurWorld[ MID_TIME_STEP+1 ] );
     float4 prevPos = mul( float4(Input.Pos,1), g_mBlurWorld[ MID_TIME_STEP-1 ] );
     nextPos = mul( nextPos, g_mBlurViewProj[ MID_TIME_STEP+1 ] );
     prevPos = mul( prevPos, g_mBlurViewProj[ MID_TIME_STEP-1 ] );
     Output.Color.a = ComputeMotionAlpha( nextPos.xyz/nextPos.w, prevPos.xyz/prevPos.w, MIN_FADEGEOM );
-    
+
     return Output;
 }
 
-void ExtrudeEdge( VSMotionBlurOut v1, 
-                  VSMotionBlurOut v2, 
+void ExtrudeEdge( VSMotionBlurOut v1,
+                  VSMotionBlurOut v2,
                   uniform uint iStep,
                   inout TriangleStream<GSMotionBlurOut> SceneTriangleStream )
 {
@@ -289,7 +289,7 @@ void ExtrudeEdge( VSMotionBlurOut v1,
     oV2.Tex = v2.Tex;
     float4 Pos1 = v1.Pos;
     float4 Pos2 = v2.Pos;
-    
+
     float3 Norm1 = v1.Norm;
 	float3 Norm2 = v2.Norm;
 	float fA1 = v1.Color.a;
@@ -297,15 +297,15 @@ void ExtrudeEdge( VSMotionBlurOut v1,
 	float3 wNorm;
 	uint iStep2 = g_iNumSteps;
 	float fAlpha = ((float)iStep - MID_TIME_STEP)/(float)MID_TIME_STEP;
-    
+
 	matrix mWorld = g_mBlurWorld[ iStep ];
 	matrix mViewProj = g_mBlurViewProj[ iStep ];
-    
+
 	wNorm = mul( Norm1, (float3x3)mWorld );
 	oV1.Color = ComputeLighting( wNorm );
 	wNorm = mul( Norm2, (float3x3)mWorld );
 	oV2.Color = ComputeLighting( wNorm );
-    
+
 	oV1.Pos = mul( Pos1, mWorld );
 	oV1.Pos = mul( oV1.Pos, mViewProj );
 	oV2.Pos = mul( Pos2, mWorld );
@@ -320,12 +320,12 @@ void ExtrudeBlurEdges( VSMotionBlurOut v1,
                       VSMotionBlurOut v2,
                       inout TriangleStream<GSMotionBlurOut> SceneTriangleStream,
                       uniform bool FrontSide )
-{           
+{
     uint iStart = 0;
     uint iEnd = MAX_TIME_STEPS;
-    
+
     [unroll] for(uint i=iStart; i<iEnd; i++)
-    {       
+    {
         ExtrudeEdge( v1, v2, i, SceneTriangleStream );
     }
 
@@ -334,13 +334,13 @@ void ExtrudeBlurEdges( VSMotionBlurOut v1,
 
 //output 2*3*MAX_TIME_STEPS
 [maxvertexcount(30)]
-void GSMotionBlurMain( triangle VSMotionBlurOut In[3], 
-                       inout TriangleStream<GSMotionBlurOut> SceneTriangleStream, 
+void GSMotionBlurMain( triangle VSMotionBlurOut In[3],
+                       inout TriangleStream<GSMotionBlurOut> SceneTriangleStream,
                        uniform bool bFrontSide )
 {
     // find the triangle normal in view space
     float3 viewNorm = cross( In[1].viewPos - In[0].viewPos, In[2].viewPos - In[0].viewPos );
-    
+
     // only extrude any of our edges if we're facing the camera
     if( dot( viewNorm, float3(0,0,-1) ) > 0.0 )
     {
@@ -380,17 +380,17 @@ struct SkinnedInfo
 SkinnedInfo SkinVert( VSSkinnedSceneIn Input, uint iTimeShift )
 {
     SkinnedInfo Output = (SkinnedInfo)0;
-    
+
     float4 pos = float4(Input.Pos,1);
     float3 norm = Input.Normal;
-    
+
     uint iBone = Input.Bones.x;
     float fWeight = Input.Weights.x;
     //fWeight = 1.0f;
     matrix m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     iBone = Input.Bones.y;
     fWeight = Input.Weights.y;
     m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
@@ -402,54 +402,54 @@ SkinnedInfo SkinVert( VSSkinnedSceneIn Input, uint iTimeShift )
     m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     iBone = Input.Bones.w;
     fWeight = Input.Weights.w;
     m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     return Output;
 }
 
 VSSceneOut VSSkinnedSceneMain( VSSkinnedSceneIn Input )
 {
     VSSceneOut Output = (VSSceneOut)0;
-    
+
     // Skin the vetex
     SkinnedInfo vSkinned = SkinVert( Input, MID_TIME_STEP );
-    
+
     // ViewProj transform
     Output.Pos = mul( vSkinned.Pos, g_mBlurViewProj[ MID_TIME_STEP ] );
-    
+
     // Lighting
     float3 blendNorm = vSkinned.Norm;
     Output.Color = ComputeLighting( blendNorm );
     Output.Tex = Input.Tex;
-    
+
     matrix mWorldNow = g_mBlurWorld[ MID_TIME_STEP ];
     matrix mViewProjNow = g_mBlurViewProj[ MID_TIME_STEP ];
-    
+
     // Find our direction of motion in clip space
     SkinnedInfo vNext = SkinVert( Input, MID_TIME_STEP+1 );
     SkinnedInfo vPrev = SkinVert( Input, MID_TIME_STEP-1 );
     float4 nextPos = mul( vNext.Pos, g_mBlurViewProj[ MID_TIME_STEP+1 ] );
     float4 prevPos = mul( vPrev.Pos, g_mBlurViewProj[ MID_TIME_STEP-1 ] );
     Output.Color.a = ComputeMotionAlpha( nextPos.xyz/nextPos.w, prevPos.xyz/prevPos.w, MIN_FADEANISO );
-    
+
     float3 clipMotionDir = nextPos.xyz/nextPos.w - prevPos.xyz/prevPos.w;
-    
+
     // Find our tangent, and bitangent in clip space
     float3 clipBiTangent = cross( Input.Tan, Input.Normal );
     clipBiTangent = mul( clipBiTangent, (float3x3)mWorldNow );
     clipBiTangent = normalize( mul( clipBiTangent, (float3x3)mViewProjNow ) );
     float3 clipTangent = mul( Input.Tan, (float3x3)mWorldNow );
     clipTangent = normalize( mul( clipTangent, (float3x3)mViewProjNow ) );
-    
+
     // Find the projection of our motion into our tangent/texture space
     Output.Aniso.y = max( 0.0001, abs( g_fTextureSmear*dot( clipTangent, clipMotionDir ) ) );
     Output.Aniso.x = max( 0.0001, abs( g_fTextureSmear*dot( clipBiTangent, clipMotionDir ) ) );
-    
+
     return Output;
 }
 
@@ -478,59 +478,59 @@ struct GSSkinnedMotionBlurOut
 SkinnedInfo SkinVertBlur( VSSkinnedMotionBlurOut Input, uint iTimeShift )
 {
     SkinnedInfo Output = (SkinnedInfo)0;
-    
+
     float4 pos = Input.Pos;
     float3 norm = Input.Norm;
-    
+
     uint iBone = Input.Bones.x;
     float fWeight = Input.Weights.x;
     matrix m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     iBone = Input.Bones.y;
     fWeight = Input.Weights.y;
     m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     iBone = Input.Bones.z;
     fWeight = Input.Weights.z;
     m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     iBone = Input.Bones.w;
     fWeight = Input.Weights.w;
     m = g_mBoneWorld[ iTimeShift*MAX_BONE_MATRICES + iBone ];
     Output.Pos += fWeight * mul( pos, m );
     Output.Norm += fWeight * mul( norm, m );
-    
+
     return Output;
 }
 
 VSSkinnedMotionBlurOut VSSkinnedMotionBlurMain( VSSkinnedSceneIn Input )
 {
     VSSkinnedMotionBlurOut Output = (VSSkinnedMotionBlurOut)0;
-    
+
     Output.Pos = float4(Input.Pos,1);
     Output.viewPos = mul( float4( Input.Pos, 1 ), g_mWorldView );
     Output.Norm = Input.Normal;
     Output.Tex = Input.Tex;
     Output.Bones = Input.Bones;
     Output.Weights = Input.Weights;
-    
+
     SkinnedInfo vNext = SkinVertBlur( Output, MID_TIME_STEP+1 );
     SkinnedInfo vPrev = SkinVertBlur( Output, MID_TIME_STEP-1 );
     float4 nextPos = mul( vNext.Pos, g_mBlurViewProj[ MID_TIME_STEP+1 ] );
     float4 prevPos = mul( vPrev.Pos, g_mBlurViewProj[ MID_TIME_STEP-1 ] );
     Output.Color.a = ComputeMotionAlpha( nextPos.xyz/nextPos.w, prevPos.xyz/prevPos.w, MIN_FADEGEOM );
-    
+
     return Output;
 }
 
-void ExtrudeSkinnedEdge( VSSkinnedMotionBlurOut v1, 
-                  VSSkinnedMotionBlurOut v2, 
+void ExtrudeSkinnedEdge( VSSkinnedMotionBlurOut v1,
+                  VSSkinnedMotionBlurOut v2,
                   uniform uint iStep,
                   inout TriangleStream<GSSkinnedMotionBlurOut> SceneTriangleStream )
 {
@@ -542,15 +542,15 @@ void ExtrudeSkinnedEdge( VSSkinnedMotionBlurOut v1,
     float fAlpha = ((float)iStep - MID_TIME_STEP)/(float)MID_TIME_STEP;
     float fA1 = v1.Color.a;
     float fA2 = v2.Color.a;
-    
+
     SkinnedInfo one = SkinVertBlur( v1, iStep );
     oV1.Pos = mul( one.Pos, mViewProj );
     oV1.Color = ComputeLighting( one.Norm );
-    
+
     SkinnedInfo two = SkinVertBlur( v2, iStep );
     oV2.Pos = mul( two.Pos, mViewProj );
     oV2.Color = ComputeLighting( two.Norm );
-    
+
     oV1.Color.a = (1.0 - abs( fAlpha ) )*fA1;
     oV2.Color.a = (1.0 - abs( fAlpha ) )*fA2;
     SceneTriangleStream.Append( oV2 );
@@ -565,9 +565,9 @@ void ExtrudeSkinnedBlurEdges( VSSkinnedMotionBlurOut v1,
 {
     uint iStart = 0;
     uint iEnd = MAX_TIME_STEPS;
-    
+
     for(uint i=iStart; i<iEnd; i++)
-    {       
+    {
         ExtrudeSkinnedEdge( v1, v2, i, SceneTriangleStream );
     }
 
@@ -576,13 +576,13 @@ void ExtrudeSkinnedBlurEdges( VSSkinnedMotionBlurOut v1,
 
 //output 2*3*MAX_TIME_STEPS
 [maxvertexcount(18)]
-void GSSkinnedMotionBlurMain( triangle VSSkinnedMotionBlurOut In[3], 
-                       inout TriangleStream<GSSkinnedMotionBlurOut> SceneTriangleStream, 
+void GSSkinnedMotionBlurMain( triangle VSSkinnedMotionBlurOut In[3],
+                       inout TriangleStream<GSSkinnedMotionBlurOut> SceneTriangleStream,
                        uniform bool bFrontSide )
 {
     // find the triangle normal in view space
     float3 viewNorm = cross( In[1].viewPos - In[0].viewPos, In[2].viewPos - In[0].viewPos );
-    
+
     // only extrude any of our edges if we're facing the camera
     if( dot( viewNorm, float3(0,0,-1) ) > 0.0 )
     {
@@ -611,7 +611,7 @@ technique10 RenderScene
         SetVertexShader( CompileShader( vs_4_0, VSSceneMain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSceneMain() ) );
-        
+
         SetRasterizerState( RasMultiSampleBack );
         SetDepthStencilState( DepthTestNormal, 0 );
         SetBlendState( SrcAlphaBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
@@ -625,7 +625,7 @@ technique10 RenderSkinnedScene
         SetVertexShader( CompileShader( vs_4_0, VSSkinnedSceneMain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSceneMain() ) );
-        
+
         SetRasterizerState( RasMultiSampleBack );
         SetDepthStencilState( DepthTestNormal, 0 );
         SetBlendState( SrcAlphaBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );

@@ -2,7 +2,7 @@
 // File: OITPS.hlsl
 //
 // Desc: Pixel shaders used in the Order Independent Transparency sample.
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 //TODO: Use structured buffers

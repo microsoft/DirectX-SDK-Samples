@@ -53,7 +53,7 @@ HRESULT FindBestHDRFormat( D3DFORMAT* pBestFormat )
     DXUTDeviceSettings info = DXUTGetDeviceSettings();
 
     IDirect3D9* pD3D = DXUTGetD3D9Object();
-    assert( pD3D != NULL );    
+    assert( pD3D != NULL );
 
     if( FAILED( pD3D->CheckDeviceFormat( info.d3d9.AdapterOrdinal, info.d3d9.DeviceType,
                                                         info.d3d9.AdapterFormat,
@@ -139,7 +139,7 @@ HRESULT FindBestHDRFormat( D3DFORMAT* pBestFormat )
 //          The luminance calculations store a single intensity and maximum brightness, and
 //          as such don't need to use textures with the full 128 or 64 bit sizes. D3D
 //          offers two formats, G32R32F and G16R16F for this sort of purpose - and this
-//          function will return the best supported format. The following function will 
+//          function will return the best supported format. The following function will
 //          enumerate supported formats in the following order:
 //
 //              1. Single Precision (32 bit) with support for linear texture filtering

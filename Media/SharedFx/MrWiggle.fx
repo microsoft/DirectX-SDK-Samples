@@ -25,7 +25,7 @@ Comments:
 
 #include <sas\sas.fxh>
 
-int GlobalParameter : SasGlobal                                                             
+int GlobalParameter : SasGlobal
 <
     int3 SasVersion = {1, 1, 0};
     bool SasUiVisible = false;
@@ -36,37 +36,37 @@ int GlobalParameter : SasGlobal
 /************* TWEAKABLES **************/
 float4x4 World : World
 <
-	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]"; 
-	bool SasUiVisible = false;
->;         
-
-float4x4 View 
-<
-	string SasBindAddress = "Sas.Camera.WorldToView"; 
+	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";
 	bool SasUiVisible = false;
 >;
 
-float4x4 Projection 
+float4x4 View
 <
-	string SasBindAddress = "Sas.Camera.Projection"; 
+	string SasBindAddress = "Sas.Camera.WorldToView";
 	bool SasUiVisible = false;
 >;
 
-SasPointLight PointLight 
+float4x4 Projection
 <
-	string SasBindAddress = "Sas.PointLight[0]"; 
+	string SasBindAddress = "Sas.Camera.Projection";
+	bool SasUiVisible = false;
+>;
+
+SasPointLight PointLight
+<
+	string SasBindAddress = "Sas.PointLight[0]";
 	bool SasUiVisible = false;
 >;
 
 float3 CameraPos
 <
-	string SasBindAddress = "Sas.Camera.Position"; 
+	string SasBindAddress = "Sas.Camera.Position";
 	bool SasUiVisible = false;
 >;
 
-float Timer 
-< 
-	string SasBindAddress = "Sas.Time.Now"; 
+float Timer
+<
+	string SasBindAddress = "Sas.Time.Now";
 >;
 
 float TimeScale <
@@ -103,10 +103,10 @@ float3 SurfColor : DIFFUSE <
 > = {0.9f, 0.9f, 0.9f};
 
 float SpecExpon : SpecularPower <
-	string SasUiControl = "Slider"; 
-	float SasUiMin = 1.0f; 
-	float SasUiMax = 32.0f; 
-	int SasUiSteps = 31; 
+	string SasUiControl = "Slider";
+	float SasUiMin = 1.0f;
+	float SasUiMax = 32.0f;
+	int SasUiSteps = 31;
         string SasUiLabel =  "Specular Power";
 > = 5.0;
 
@@ -142,10 +142,10 @@ struct vertexOutput {
 
 vertexOutput MrWiggleVS(appdata IN) {
     vertexOutput OUT;
-    
+
     float4x4 WorldIT = transpose(inverse(World));
     float4x4 WorldViewProj = mul( World, mul( View, Projection ) );
- 
+
     float3 Nn = normalize(mul(IN.Normal, WorldIT).xyz);
     float timeNow = Timer*TimeScale;
     float4 Po = float4(IN.Position.xyz,1);
@@ -179,9 +179,9 @@ float4 MrWigglePS_t(vertexOutput IN) : COLOR {
 
 /*************/
 
-technique Untextured 
+technique Untextured
 {
-    pass p0 
+    pass p0
     {		
 		VertexShader = compile vs_1_1 MrWiggleVS();
 		ZEnable = true;
@@ -197,9 +197,9 @@ technique Untextured
     }
 }
 
-technique Textured 
+technique Textured
 {
-    pass p0 
+    pass p0
     {		
 		VertexShader = compile vs_1_1 MrWiggleVS();
 		ZEnable = true;

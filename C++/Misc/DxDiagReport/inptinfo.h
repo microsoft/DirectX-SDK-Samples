@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: inptinfo.h
 //
-// Desc: 
+// Desc:
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT)

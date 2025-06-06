@@ -6,7 +6,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 #include "dxut.h"
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 #include <process.h>

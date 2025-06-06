@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: SimpleSample.fx
 //
-// The effect file for the SimpleSample sample.  
-// 
+// The effect file for the SimpleSample sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -40,7 +40,7 @@ struct VS_INPUT
 
 struct PS_INPUT
 {
-    float4 Position   : SV_Position;   // vertex position 
+    float4 Position   : SV_Position;   // vertex position
     float3 Normal     : NORMAL;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
 };
 
@@ -51,11 +51,11 @@ struct PS_INPUT
 PS_INPUT RenderVS( VS_INPUT input )
 {
     PS_INPUT output;
-    
-    output.Position = mul( float4(input.Position,1), g_mWorldViewProjection);   
+
+    output.Position = mul( float4(input.Position,1), g_mWorldViewProjection);
     output.Normal = mul(input.Normal, (float3x3)g_mWorld);
-    
-    return output;    
+
+    return output;
 }
 
 //--------------------------------------------------------------------------------------
@@ -63,22 +63,22 @@ PS_INPUT RenderVS( VS_INPUT input )
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
 float4 RenderPS( PS_INPUT input ) : SV_Target
-{ 
+{
     return g_vColor * saturate( dot( normalize(input.Normal), g_vLightDir ) );
 }
 
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique10 Render
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderVS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderPS() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }

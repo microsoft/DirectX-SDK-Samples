@@ -94,7 +94,7 @@ enum APP_STATE
 extern APP_STATE                    g_AppState;
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat,
                                       bool bWindowed, void* pUserContext );
@@ -179,7 +179,7 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
         {0,  0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
         {0, 12, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_NORMAL, 0},
         {0, 24, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
-        {0xFF,0,D3DDECLTYPE_UNUSED, 0,0,0}// D3DDECL_END 
+        {0xFF,0,D3DDECLTYPE_UNUSED, 0,0,0}// D3DDECL_END
     };
     pd3dDevice->CreateVertexDeclaration( declDesc, &g_pDeclTile );
 
@@ -249,7 +249,7 @@ UINT32 GetAdapterRAMFromWMI( IDirect3DDevice9* pd3dDevice )
                 pfnCoSetProxyBlanket = ( PfnCoSetProxyBlanket )GetProcAddress( hinstOle32, "CoSetProxyBlanket" );
                 if( pfnCoSetProxyBlanket != NULL )
                 {
-                    // Switch security level to IMPERSONATE. 
+                    // Switch security level to IMPERSONATE.
                     pfnCoSetProxyBlanket( pIWbemServices,               // proxy
                                           RPC_C_AUTHN_WINNT,            // authentication service
                                           RPC_C_AUTHZ_NONE,             // authorization service
@@ -326,8 +326,8 @@ UINT32 GetAdapterRAMFromWMI( IDirect3DDevice9* pd3dDevice )
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -444,7 +444,7 @@ void RenderScene( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime
             if( !bCanRenderDiff && !bCanRenderNorm )
                 continue;
 
-            // Render the scene with this technique 
+            // Render the scene with this technique
             if( g_bWireframe )
             {
                 g_pEffect9->SetTechnique( g_hRenderTileWire );
@@ -464,7 +464,7 @@ void RenderScene( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime
                 g_pEffect9->SetTexture( g_htxDiffuse, pItem->Diffuse.pTexture9 );
             }
 
-            // Apply the technique contained in the effect 
+            // Apply the technique contained in the effect
             UINT cPasses = 0;
             V( g_pEffect9->Begin( &cPasses, 0 ) );
 
@@ -497,7 +497,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 {
     HRESULT hr = S_OK;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 160, 160, 250 ), 1.0f, 0 ) );
 
     // If the settings dialog is being shown, then render it instead of rendering the app's scene
@@ -543,7 +543,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -561,7 +561,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

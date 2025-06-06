@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: PRTSim.cpp
 //
-// Desc: 
+// Desc:
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -149,7 +149,7 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
 
     //    if( pOptions->bEnableTessellation && pPRTMesh->materialArray.GetAt(1).->GetAlbedoTexture() )
     {
-        //      V( pPRTEngine->SetPerTexelAlbedo( m_pPRTMesh->GetAlbedoTexture(), 
+        //      V( pPRTEngine->SetPerTexelAlbedo( m_pPRTMesh->GetAlbedoTexture(),
         //                                        pOptions->dwNumChannels, NULL ) );
     }
 
@@ -205,13 +205,13 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
                                                               pOptions->dwAdaptiveDLMaxSubdiv,
                                                               pDataTotal );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
         else
         {
             hr = pPRTEngine->ComputeDirectLightingSH( pOptions->dwOrder, pDataTotal );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
 
         if( pOptions->dwNumBounces > 1 )
@@ -242,7 +242,7 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
                 hr = pPRTEngine->ComputeBounce( pBufferA, pBufferB, pDataTotal );
 
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
 
             // Swap pBufferA and pBufferB
             ID3DXPRTBuffer* pPRTBufferTemp = NULL;
@@ -282,13 +282,13 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
                                                               pOptions->dwAdaptiveDLMaxSubdiv,
                                                               pBufferA );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
         else
         {
             hr = pPRTEngine->ComputeDirectLightingSH( pOptions->dwOrder, pBufferA );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
 
         EnterCriticalSection( &prtState.cs );
@@ -300,7 +300,7 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
 
         hr = pPRTEngine->ComputeSS( pBufferA, pBufferB, pDataTotal );
         if( FAILED( hr ) )
-            goto LEarlyExit; // handle user aborting simulator via callback 
+            goto LEarlyExit; // handle user aborting simulator via callback
 
         for( UINT iBounce = 1; iBounce < pOptions->dwNumBounces; ++iBounce )
         {
@@ -320,7 +320,7 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
                 hr = pPRTEngine->ComputeBounce( pBufferB, pBufferA, NULL );
 
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
 
             EnterCriticalSection( &prtState.cs );
             prtState.nCurPass++;
@@ -331,7 +331,7 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
 
             hr = pPRTEngine->ComputeSS( pBufferA, pBufferB, pDataTotal );
             if( FAILED( hr ) )
-                goto LEarlyExit; // handle user aborting simulator via callback 
+                goto LEarlyExit; // handle user aborting simulator via callback
         }
 
     }
@@ -387,8 +387,8 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
     LeaveCriticalSection( &prtState.cs );
 
     // Save the PRT buffer results for future sessions so you can skip the simulator step
-    // You can also use D3DXSavePRTCompBufferToFile to save the compressed PRT buffer to 
-    // skip the PRT compression step upon load.  
+    // You can also use D3DXSavePRTCompBufferToFile to save the compressed PRT buffer to
+    // skip the PRT compression step upon load.
     if( FAILED( hr = D3DXSavePRTBufferToFile( pOptions->strOutputPRTBuffer, pDataTotal ) ) )
     {
         WCHAR sz[256];
@@ -412,7 +412,7 @@ HRESULT RunPRTSimulator( IDirect3DDevice9* pd3dDevice, SIMULATOR_OPTIONS* pOptio
         hr = D3DXCreatePRTCompBuffer( pOptions->Quality, pOptions->dwNumClusters, pOptions->dwNumPCA,
                                       StaticPRTSimulatorCB, &prtState, pDataTotal, &pPRTCompBuffer );
         if( FAILED( hr ) )
-            goto LEarlyExit; // handle user aborting simulator via callback 
+            goto LEarlyExit; // handle user aborting simulator via callback
 
         EnterCriticalSection( &prtState.cs );
         prtState.bProgressMode = false;

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: AntiAlias.fx
 //
-// The effect file for the AntiAlias sample.  
-// 
+// The effect file for the AntiAlias sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -37,7 +37,7 @@ sampler_state
     Texture = <g_tDiffuse>;
     MinFilter = Anisotropic;
     MagFilter = Linear;
-    
+
     MaxAnisotropy = 4;
 };
 
@@ -55,11 +55,11 @@ VS_OUTPUT ColorVS( float3 Position : POSITION,
                    float4 Diffuse : COLOR0 )
 {
     VS_OUTPUT Output;
-    
+
     Output.Position = mul( float4(Position, 1), g_mWorldViewProjection );
     Output.Diffuse = Diffuse;
     Output.TexCoords = 0;
-    
+
     return Output;
 }
 
@@ -67,11 +67,11 @@ VS_OUTPUT TextureVS( float3 Position : POSITION,
                      float2 TexCoords : TEXCOORD0 )
 {
     VS_OUTPUT Output;
-    
+
     Output.Position = mul( float4(Position, 1), g_mWorldViewProjection );
     Output.Diffuse = 0;
     Output.TexCoords = TexCoords;
-    
+
     return Output;
 }
 
@@ -90,9 +90,9 @@ technique Color
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 ColorVS();
-        PixelShader = compile ps_2_0 ColorPS();          
+        PixelShader = compile ps_2_0 ColorPS();
     }
 }
 
@@ -111,9 +111,9 @@ technique TexturePoint
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 TextureVS();
-        PixelShader = compile ps_2_0 TexturePointPS();          
+        PixelShader = compile ps_2_0 TexturePointPS();
     }
 }
 
@@ -132,9 +132,9 @@ technique TexturePointCentroid
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 TextureVS();
-        PixelShader = compile ps_2_0 TexturePointCentroidPS();          
+        PixelShader = compile ps_2_0 TexturePointCentroidPS();
     }
 }
 
@@ -153,9 +153,9 @@ technique TextureLinear
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 TextureVS();
-        PixelShader = compile ps_2_0 TextureLinearPS();          
+        PixelShader = compile ps_2_0 TextureLinearPS();
     }
 }
 
@@ -174,9 +174,9 @@ technique TextureLinearCentroid
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 TextureVS();
-        PixelShader = compile ps_2_0 TextureLinearCentroidPS();          
+        PixelShader = compile ps_2_0 TextureLinearCentroidPS();
     }
 }
 
@@ -195,9 +195,9 @@ technique TextureAnisotropic
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 TextureVS();
-        PixelShader = compile ps_2_0 TextureAnisotropicPS();          
+        PixelShader = compile ps_2_0 TextureAnisotropicPS();
     }
 }
 
@@ -216,8 +216,8 @@ technique TextureAnisotropicCentroid
     pass P0
     {
         CullMode = NONE;
-        
+
         VertexShader = compile vs_2_0 TextureVS();
-        PixelShader = compile ps_2_0 TextureAnisotropicCentroidPS();          
+        PixelShader = compile ps_2_0 TextureAnisotropicCentroidPS();
     }
 }

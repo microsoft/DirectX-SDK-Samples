@@ -2,7 +2,7 @@
 // File: SceneVS.hlsl
 //
 // Desc: Vertex shader for the scene.
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
@@ -27,9 +27,9 @@ struct SceneVS_Output
 SceneVS_Output SceneVS( SceneVS_Input input )
 {
     SceneVS_Output output;
-    
+
     output.color = input.color;
     output.pos   = mul(input.pos, g_mWorldViewProjection );
-    
+
     return output;
 }

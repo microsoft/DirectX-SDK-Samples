@@ -124,7 +124,7 @@ UINT                                g_iNullUINT = 0;         // Helper to Clear 
 
 CDXUTDialogResourceManager          g_DialogResourceManager; // manager for shared resources of dialogs
 CD3DSettingsDlg                     g_D3DSettingsDlg;        // Device settings dialog
-CDXUTDialog                         g_HUD;                   // manages the 3D   
+CDXUTDialog                         g_HUD;                   // manages the 3D
 CDXUTDialog                         g_SampleUI;              // dialog for sample specific controls
 
 // Resources
@@ -193,7 +193,7 @@ _DECLSPEC_ALIGN_16_ struct CBSimulationConstants
     FLOAT fGradPressureCoef;
     FLOAT fLapViscosityCoef;
     FLOAT fWallStiffness;
-    
+
     XMFLOAT2A vGravity;
     XMFLOAT4A vGridDim;
 
@@ -236,7 +236,7 @@ ID3D11Buffer*                       g_pSortCB = NULL;
 #define IDC_SIMGRID               11
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -259,7 +259,7 @@ void InitApp();
 void RenderText();
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -269,7 +269,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D10 or D3D11) 
+    // DXUT will create and use the best device (either D3D10 or D3D11)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -295,7 +295,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -312,7 +312,7 @@ void InitApp()
     g_SampleUI.SetCallback( OnGUIEvent ); iY = 0;
 
     g_SampleUI.AddButton( IDC_RESETSIM, L"Reset Particles", 0, iY += 26, 170, 22 );
-    
+
     g_SampleUI.AddComboBox( IDC_NUMPARTICLES, 0, iY += 26, 170, 22 );
     g_SampleUI.GetComboBox( IDC_NUMPARTICLES )->AddItem( L"8K Particles", UIntToPtr(NUM_PARTICLES_8K) );
     g_SampleUI.GetComboBox( IDC_NUMPARTICLES )->AddItem( L"16K Particles", UIntToPtr(NUM_PARTICLES_16K) );
@@ -459,8 +459,8 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
@@ -477,7 +477,7 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     }
     SAFE_RELEASE( pErrorBlob );
 
-    return S_OK;   
+    return S_OK;
 }
 
 
@@ -554,7 +554,7 @@ HRESULT CreateSimulationBuffers( ID3D11Device* pd3dDevice )
     SAFE_RELEASE( g_pParticles );
     SAFE_RELEASE( g_pParticlesSRV );
     SAFE_RELEASE( g_pParticlesUAV );
-    
+
     SAFE_RELEASE( g_pSortedParticles );
     SAFE_RELEASE( g_pSortedParticlesSRV );
     SAFE_RELEASE( g_pSortedParticlesUAV );
@@ -562,7 +562,7 @@ HRESULT CreateSimulationBuffers( ID3D11Device* pd3dDevice )
     SAFE_RELEASE( g_pParticleForces );
     SAFE_RELEASE( g_pParticleForcesSRV );
     SAFE_RELEASE( g_pParticleForcesUAV );
-    
+
     SAFE_RELEASE( g_pParticleDensity );
     SAFE_RELEASE( g_pParticleDensitySRV );
     SAFE_RELEASE( g_pParticleDensityUAV );
@@ -668,7 +668,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     // Compute Shaders
     const char* CSTarget = (pd3dDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0)? "cs_5_0" : "cs_4_0";
-    
+
     CWaitDlg CompilingShadersDlg;
     CompilingShadersDlg.ShowDialog( L"Compiling Shaders..." );
 
@@ -1001,7 +1001,7 @@ void SimulateFluid( ID3D11DeviceContext* pd3dImmediateContext, float fElapsedTim
     pData.fLapViscosityCoef = g_fParticleMass * g_fViscosity * 45.0f / (XM_PI * pow(g_fSmoothlen, 6));
 
     pData.vGravity = g_vGravity;
-    
+
     // Cells are spaced the size of the smoothing length search radius
     // That way we only need to search the 8 adjacent cells + current cell
     pData.vGridDim.x = 1.0f / g_fSmoothlen;
@@ -1122,7 +1122,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D10ResizedSwapChain 
+// Release D3D11 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1131,7 +1131,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D10CreateDevice 
+// Release D3D11 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1165,7 +1165,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pParticles );
     SAFE_RELEASE( g_pParticlesSRV );
     SAFE_RELEASE( g_pParticlesUAV );
-    
+
     SAFE_RELEASE( g_pSortedParticles );
     SAFE_RELEASE( g_pSortedParticlesSRV );
     SAFE_RELEASE( g_pSortedParticlesUAV );
@@ -1173,7 +1173,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pParticleForces );
     SAFE_RELEASE( g_pParticleForcesSRV );
     SAFE_RELEASE( g_pParticleForcesUAV );
-    
+
     SAFE_RELEASE( g_pParticleDensity );
     SAFE_RELEASE( g_pParticleDensitySRV );
     SAFE_RELEASE( g_pParticleDensityUAV );

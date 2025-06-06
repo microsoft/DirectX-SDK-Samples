@@ -355,14 +355,14 @@ void GetSurfaceInfo( UINT width, UINT height, D3DFORMAT fmt, UINT* pNumBytes, UI
 
     // From the DXSDK docs:
     //
-    //     When computing DXTn compressed sizes for non-square textures, the 
+    //     When computing DXTn compressed sizes for non-square textures, the
     //     following formula should be used at each mipmap level:
     //
     //         max(1, width ÷ 4) x max(1, height ÷ 4) x 8(DXT1) or 16(DXT2-5)
     //
-    //     The pitch for DXTn formats is different from what was returned in 
-    //     Microsoft DirectX 7.0. It now refers the pitch of a row of blocks. 
-    //     For example, if you have a width of 16, then you will have a pitch 
+    //     The pitch for DXTn formats is different from what was returned in
+    //     Microsoft DirectX 7.0. It now refers the pitch of a row of blocks.
+    //     For example, if you have a width of 16, then you will have a pitch
     //     of four blocks (4*8 for DXT1, 4*16 for DXT2-5.)"
 
     if( fmt == D3DFMT_DXT1 || fmt == D3DFMT_DXT2 || fmt == D3DFMT_DXT3 || fmt == D3DFMT_DXT4 || fmt == D3DFMT_DXT5 )

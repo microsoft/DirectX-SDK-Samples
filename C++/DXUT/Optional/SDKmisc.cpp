@@ -26,14 +26,14 @@ CDXUTResourceCache& WINAPI DXUTGetGlobalResourceCache()
 //--------------------------------------------------------------------------------------
 // Internal functions forward declarations
 //--------------------------------------------------------------------------------------
-bool DXUTFindMediaSearchTypicalDirs( __out_ecount(cchSearch) WCHAR* strSearchPath, 
-                                     __in int cchSearch, 
-                                     __in LPCWSTR strLeaf, 
+bool DXUTFindMediaSearchTypicalDirs( __out_ecount(cchSearch) WCHAR* strSearchPath,
+                                     __in int cchSearch,
+                                     __in LPCWSTR strLeaf,
                                      __in WCHAR* strExePath,
                                      __in WCHAR* strExeName );
-bool DXUTFindMediaSearchParentDirs( __out_ecount(cchSearch) WCHAR* strSearchPath, 
-                                    __in int cchSearch, 
-                                    __in WCHAR* strStartAt, 
+bool DXUTFindMediaSearchParentDirs( __out_ecount(cchSearch) WCHAR* strSearchPath,
+                                    __in int cchSearch,
+                                    __in WCHAR* strStartAt,
                                     __in WCHAR* strLeafName );
 
 INT_PTR CALLBACK DisplaySwitchToREFWarningProc( HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam );
@@ -64,7 +64,7 @@ void WINAPI DXUTDisplaySwitchingToREFWarning( DXUTDeviceVersion ver )
         {
             // Compact code to create a custom dialog box without using a template in a resource file.
             // If this dialog were in a .rc file, this would be a lot simpler but every sample calling this function would
-            // need a copy of the dialog in its own .rc file. Also MessageBox API could be used here instead, but 
+            // need a copy of the dialog in its own .rc file. Also MessageBox API could be used here instead, but
             // the MessageBox API is simpler to call but it can't provide a "Don't show again" checkbox
             typedef struct
             {
@@ -214,10 +214,10 @@ HRESULT WINAPI DXUTSetMediaSearchPath( LPCWSTR strPath )
 
 //--------------------------------------------------------------------------------------
 // Tries to find the location of a SDK media file
-//       cchDest is the size in WCHARs of strDestPath.  Be careful not to 
+//       cchDest is the size in WCHARs of strDestPath.  Be careful not to
 //       pass in sizeof(strDest) on UNICODE builds.
 //--------------------------------------------------------------------------------------
-HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest, 
+HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest,
                                           LPCWSTR strFilename )
 {
     bool bFound;
@@ -261,7 +261,7 @@ HRESULT WINAPI DXUTFindDXSDKMediaFileCch( WCHAR* strDestPath, int cchDest,
     if( bFound )
         return S_OK;
 
-    // Typical directory search again, but also look in a subdir called "\media\" 
+    // Typical directory search again, but also look in a subdir called "\media\"
     swprintf_s( strSearchFor, MAX_PATH, L"media\\%s", strFilename );
     bFound = DXUTFindMediaSearchTypicalDirs( strDestPath, cchDest, strSearchFor, strExePath, strExeName );
     if( bFound )
@@ -315,37 +315,37 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
     //      %EXE_DIR%\..\..\%EXE_NAME%
     //      DXSDK media path
 
-    // Search in .\  
+    // Search in .\
     wcscpy_s( strSearchPath, cchSearch, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\  
+    // Search in ..\
     swprintf_s( strSearchPath, cchSearch, L"..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\..\ 
+    // Search in ..\..\
     swprintf_s( strSearchPath, cchSearch, L"..\\..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\..\ 
+    // Search in ..\..\
     swprintf_s( strSearchPath, cchSearch, L"..\\..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\ 
+    // Search in the %EXE_DIR%\
     swprintf_s( strSearchPath, cchSearch, L"%s\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\..\ 
+    // Search in the %EXE_DIR%\..\
     swprintf_s( strSearchPath, cchSearch, L"%s\\..\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\..\..\ 
+    // Search in the %EXE_DIR%\..\..\
     swprintf_s( strSearchPath, cchSearch, L"%s\\..\\..\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
@@ -360,7 +360,7 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in media search dir 
+    // Search in media search dir
     WCHAR* s_strSearchPath = DXUTMediaSearchPath();
     if( s_strSearchPath[0] != 0 )
     {

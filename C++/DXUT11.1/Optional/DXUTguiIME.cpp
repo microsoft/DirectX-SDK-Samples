@@ -172,7 +172,7 @@ void CDXUTIMEEditBox::UpdateRects()
 
 //--------------------------------------------------------------------------------------
 //  GetImeId( UINT uIndex )
-//      returns 
+//      returns
 //  returned value:
 //  0: In the following cases
 //      - Non Chinese IME input locale
@@ -188,7 +188,7 @@ void CDXUTIMEEditBox::UpdateRects()
 //          pVerFixedInfo->dwFileVersionLS
 //
 //  Use IMEID_VER and IMEID_LANG macro to extract version and language information.
-//  
+//
 
 // We define the locale-invariant ID ourselves since it doesn't exist prior to WinXP
 // For more information, see the CompareString() reference.
@@ -481,7 +481,7 @@ bool CDXUTIMEEditBox::MsgProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 #if defined(DEBUG) || defined(_DEBUG)
     // DXUT.cpp used to call CDXUTIMEEditBox::StaticMsgProc() so that, but now
-    // this is the application's responsiblity.  To do this, call 
+    // this is the application's responsiblity.  To do this, call
     // CDXUTDialogResourceManager::MsgProc() before calling this function.
     assert( m_bIMEStaticMsgProcCalled && L"To fix, call CDXUTDialogResourceManager::MsgProc() first" );
 #endif

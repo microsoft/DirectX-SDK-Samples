@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DynamicShaderLinkageFX11.psh
 //
-// The pixel shader header file for the DynamicShaderLinkageFX11 sample.  
-// 
+// The pixel shader header file for the DynamicShaderLinkageFX11 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -20,7 +20,7 @@ struct PS_INPUT
     float4 vPosition    : SV_POSITION;
     float3 vNormal      : NORMAL;
     float2 vTexcoord    : TEXCOORD0;
-    float4 vMatrix      : TEXCOORD1;    
+    float4 vMatrix      : TEXCOORD1;
 };
 
 //--------------------------------------------------------------------------------------
@@ -40,21 +40,21 @@ float4 PSMainWorker( iBaseLight ambientLighting,
                      iBaseLight environmentLighting,
                      iBaseMaterial material,
                      PS_INPUT Input )
-{   
+{
    // Compute the Ambient term
-   float3   Ambient = (float3)0.0f; 
+   float3   Ambient = (float3)0.0f;
    Ambient = material.GetAmbientColor( Input.vTexcoord ) * ambientLighting.IlluminateAmbient( Input.vNormal );
 
-   // Accumulate the Diffuse contribution  
-   float3   Diffuse = (float3)0.0f;  
-   
+   // Accumulate the Diffuse contribution
+   float3   Diffuse = (float3)0.0f;
+
    Diffuse += material.GetDiffuseColor( Input.vTexcoord ) * directLighting.IlluminateDiffuse( Input.vNormal );
 
    // Compute the Specular contribution
-   float3   Specular = (float3)0.0f;   
+   float3   Specular = (float3)0.0f;
    Specular += directLighting.IlluminateSpecular( Input.vNormal, material.GetSpecularPower() );
    Specular += environmentLighting.IlluminateSpecular( Input.vNormal, material.GetSpecularPower() );
-     
+
    // Accumulate the lighting with saturation
    float3 Lighting = saturate( Ambient + Diffuse + Specular);
 

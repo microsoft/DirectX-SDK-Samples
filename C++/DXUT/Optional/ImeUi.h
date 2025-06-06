@@ -53,14 +53,14 @@ typedef struct
 
 typedef struct	// D3DTLVERTEX compatible
 {
-	float sx; 
-	float sy; 
-	float sz; 
+	float sx;
+	float sy;
+	float sz;
 	float rhw;
-	DWORD color; 
-	DWORD specular; 
-	float tu; 
-	float tv; 
+	DWORD color;
+	DWORD specular;
+	float tu;
+	float tv;
 } IMEUI_VERTEX;
 
 // IME States

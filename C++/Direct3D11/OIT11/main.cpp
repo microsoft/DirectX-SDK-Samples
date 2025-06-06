@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: OIT.cpp
 //
-// Demonstrates an Order Independent Transparency algorithm in D3D11 using Compute 
+// Demonstrates an Order Independent Transparency algorithm in D3D11 using Compute
 // Shaders and scattered writes.
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
@@ -37,7 +37,7 @@ UINT g_nFrameHeight = 240;
 #define IDC_CHANGEDEVICE        4
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -73,14 +73,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -96,7 +96,7 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -112,7 +112,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackDeviceChanging( ModifyDeviceSettings );
     DXUTSetCallbackMsgProc( MsgProc );
     DXUTSetCallbackFrameMove( OnFrameMove );
-    
+
     DXUTSetCallbackD3D11DeviceAcceptable( IsD3D11DeviceAcceptable );
     DXUTSetCallbackD3D11DeviceCreated( OnD3D11CreateDevice );
     DXUTSetCallbackD3D11SwapChainResized( OnD3D11ResizedSwapChain );
@@ -133,7 +133,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -146,7 +146,7 @@ void InitApp()
     g_HUD.AddButton( IDC_TOGGLEREF, L"Toggle REF (F3)", 0, iY += 26, 170, 23, VK_F3 );
     g_HUD.AddButton( IDC_CHANGEDEVICE, L"Change device (F2)", 0, iY += 26, 170, 23, VK_F2 );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 }
 
 //--------------------------------------------------------------------------------------
@@ -155,7 +155,7 @@ void InitApp()
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
     assert( pDeviceSettings->ver == DXUT_D3D11_DEVICE );
-    
+
     // Allow unordered access on the back buffer so that it can be used in the compute shaders
     pDeviceSettings->d3d11.sd.BufferUsage |= DXGI_USAGE_UNORDERED_ACCESS;
 
@@ -180,7 +180,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -271,7 +271,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     V_RETURN( g_Scene.OnD3D11CreateDevice( pd3dDevice ) );
 
-    // Setup the camera   
+    // Setup the camera
     D3DXVECTOR3 vecEye( 0.0f, 0.5f, -3.0f );
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, 0.0f );
     g_Camera.SetViewParams( &vecEye, &vecAt );
@@ -294,7 +294,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     g_nFrameWidth = pBackBufferSurfaceDesc->Width;
     g_nFrameHeight = pBackBufferSurfaceDesc->Height;
 
-    // Setup the camera's projection parameters    
+    // Setup the camera's projection parameters
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
     g_Camera.SetProjParams( D3DX_PI / 4, fAspectRatio, 0.1f, 5000.0f );
     g_Camera.SetWindow( pBackBufferSurfaceDesc->Width, pBackBufferSurfaceDesc->Height );
@@ -353,7 +353,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -368,7 +368,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {

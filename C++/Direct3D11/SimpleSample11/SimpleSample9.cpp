@@ -15,8 +15,8 @@
 #include "SDKmesh.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ D3DXHANDLE                          g_hmWorld;
 D3DXHANDLE                          g_hfTime;
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 extern LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
                                  void* pUserContext );
@@ -73,7 +73,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
                                          D3DRTYPE_TEXTURE, BackBufferFormat ) ) )
         return false;
 
-    // No fallback defined by this app, so reject any device that 
+    // No fallback defined by this app, so reject any device that
     // doesn't support at least ps2.0
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
         return false;
@@ -125,8 +125,8 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -174,7 +174,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
         return;
     }
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -187,8 +187,8 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
         mWorldViewProjection = mWorld * mView * mProj;
 
-        // Update the effect's variables.  Instead of using strings, it would 
-        // be more efficient to cache a handle to the parameter by calling 
+        // Update the effect's variables.  Instead of using strings, it would
+        // be more efficient to cache a handle to the parameter by calling
         // ID3DXEffect::GetParameterByName
         V( g_pEffect9->SetMatrix( g_hmWorldViewProjection, &mWorldViewProjection ) );
         V( g_pEffect9->SetMatrix( g_hmWorld, &mWorld ) );
@@ -206,7 +206,7 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -220,7 +220,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

@@ -30,7 +30,7 @@ CDXUTDialogResourceManager          g_DialogResourceManager; // manager for shar
 CModelViewerCamera                  g_Camera;                   // A model viewing camera
 CDXUTDirectionWidget                g_LightControl;
 CD3DSettingsDlg                     g_D3DSettingsDlg;           // Device settings dialog
-CDXUTDialog                         g_HUD;                      // manages the 3D   
+CDXUTDialog                         g_HUD;                      // manages the 3D
 CDXUTDialog                         g_SampleUI;                 // dialog for sample specific controls
 
 // Resources
@@ -164,7 +164,7 @@ UINT                                g_iNumSubDMeshes = ARRAYSIZE( g_MeshDesc );
 #define IDC_SKIN                  15
 #define IDC_TOGGLEWARP            16
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -189,7 +189,7 @@ void FillTables();
 HRESULT CreatePatchVBsIBs( ID3D10Device* pd3dDevice );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -199,7 +199,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -225,7 +225,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -306,7 +306,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     // Randomly animate the skinned meshes
@@ -487,8 +487,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -760,9 +760,9 @@ void ConvertFromSubDToBezier( ID3D10Device* pd3dDevice, CSubDMesh* pMesh )
     D3D10_TECHNIQUE_DESC Desc;
 
     // Do regular and extraordinary patches in separate passes if g_bSeparatePasses is true.
-    // Rendering them in separate passes is actually faster than doing it all at once.  
+    // Rendering them in separate passes is actually faster than doing it all at once.
     // The reasoning is that regular patches make up the majority of the meshes patches.
-    // Because of the fixed valences of regular patches, the regular patch path can be 
+    // Because of the fixed valences of regular patches, the regular patch path can be
     // optimized well beyond the extraordinary patch path.  When g_bSeparatePasses is true
     // the regular patches go through the fast path and only the extraordinary patches
     // go through the full (and slow) path.
@@ -1075,7 +1075,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -1084,7 +1084,7 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {

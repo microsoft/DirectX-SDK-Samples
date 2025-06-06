@@ -2,7 +2,7 @@
 // File: MagnifyTool.cpp
 //
 // MagnifyTool class implementation. This class implements a user interface based upon the DXUT framework,
-// for the Magnify class. It exposes all of the functionality. 
+// for the Magnify class. It exposes all of the functionality.
 //
 // Contributed by AMD Corporation
 //
@@ -52,8 +52,8 @@ MagnifyTool::~MagnifyTool()
 //
 //===============================================================================================================================//
 
-void MagnifyTool::SetSourceResources( ID3D10Resource* pSourceRTResource, DXGI_FORMAT RTFormat, 
-        ID3D10Resource* pSourceDepthResource, DXGI_FORMAT DepthFormat, int nWidth, 
+void MagnifyTool::SetSourceResources( ID3D10Resource* pSourceRTResource, DXGI_FORMAT RTFormat,
+        ID3D10Resource* pSourceDepthResource, DXGI_FORMAT DepthFormat, int nWidth,
         int nHeight, int nSamples )
 {
     assert( ( NULL != pSourceRTResource ) || ( NULL != pSourceDepthResource ) );
@@ -166,8 +166,8 @@ HRESULT MagnifyTool::OnCreateDevice( ID3D10Device* pd3dDevice )
     return hr;
 }
 
-void MagnifyTool::OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain, 
-                                        const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext, 
+void MagnifyTool::OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain,
+                                        const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext,
                                         int nPositionX, int nPositionY )
 {
     CreateDepthStencil( pd3dDevice, pSwapChain, pBackBufferSurfaceDesc, pUserContext );
@@ -245,7 +245,7 @@ void MagnifyTool::OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain *
 }
 
 void MagnifyTool::Render()
-{ 
+{
     if( m_MagnifyUI.GetCheckBox( IDC_MAGNIFY_CHECKBOX_ENABLE )->GetEnabled() &&
         m_MagnifyUI.GetCheckBox( IDC_MAGNIFY_CHECKBOX_ENABLE )->GetChecked() )
     {
@@ -400,7 +400,7 @@ void MagnifyTool::OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pContro
 //
 //===============================================================================================================================//
 
-void MagnifyTool::CreateDepthStencil( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain, 
+void MagnifyTool::CreateDepthStencil( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain,
 		const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
 {
     DXGI_FORMAT DepthFormat;
@@ -451,7 +451,7 @@ void MagnifyTool::CreateDepthStencil( ID3D10Device* pd3dDevice, IDXGISwapChain *
     descDepth.MiscFlags = 0;
     hr = pd3dDevice->CreateTexture2D( &descDepth, NULL, &m_pDepthStencil );
     assert( D3D_OK == hr );
-       
+
     // Create the depth stencil view
     D3D10_DEPTH_STENCIL_VIEW_DESC descDSV;
     descDSV.Format = DXUTGetDeviceSettings().d3d10.AutoDepthStencilFormat;
@@ -467,7 +467,7 @@ void MagnifyTool::CreateDepthStencil( ID3D10Device* pd3dDevice, IDXGISwapChain *
 
     hr = pd3dDevice->CreateDepthStencilView( m_pDepthStencil, &descDSV, &m_pDSV );
     assert( D3D_OK == hr );
-      
+
     // Create a default rasterizer state that enables MSAA
     D3D10_RASTERIZER_DESC RSDesc;
     RSDesc.FillMode = D3D10_FILL_SOLID;

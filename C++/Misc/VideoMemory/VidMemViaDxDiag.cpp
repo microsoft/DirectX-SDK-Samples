@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 // File: VidMemViaDXDiag.cpp
 //
-// DxDiag internally uses both DirectDraw 7 and WMI and returns the rounded WMI 
-// value if WMI is available. Otherwise, it returns a rounded DirectDraw 7 value. 
+// DxDiag internally uses both DirectDraw 7 and WMI and returns the rounded WMI
+// value if WMI is available. Otherwise, it returns a rounded DirectDraw 7 value.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).

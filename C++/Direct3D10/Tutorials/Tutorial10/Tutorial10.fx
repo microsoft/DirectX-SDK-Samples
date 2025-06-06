@@ -71,15 +71,15 @@ BlendState NoBlending
 PS_INPUT VS( VS_INPUT input )
 {
     PS_INPUT output = (PS_INPUT)0;
-    
+
     input.Pos += input.Norm*Puffiness;
-    
+
     output.Pos = mul( float4(input.Pos,1), World );
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Norm = mul( input.Norm, World );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -106,7 +106,7 @@ technique10 Render
     {
         SetVertexShader( CompileShader( vs_4_0, VS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, PS() ) );        
+        SetPixelShader( CompileShader( ps_4_0, PS() ) );
 
         SetDepthStencilState( EnableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );

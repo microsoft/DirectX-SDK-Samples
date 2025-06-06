@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL11.cpp
 //
-// This sample shows a simple example of the Microsoft Direct3D's High-Level 
-// Shader Language (HLSL) using the Effect interface. 
+// This sample shows a simple example of the Microsoft Direct3D's High-Level
+// Shader Language (HLSL) using the Effect interface.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -22,7 +22,7 @@ CDXUTDialogResourceManager  g_DialogResourceManager; // manager for shared resou
 CModelViewerCamera          g_Camera;               // A model viewing camera
 CDXUTDirectionWidget        g_LightControl;
 CD3DSettingsDlg             g_D3DSettingsDlg;       // Device settings dialog
-CDXUTDialog                 g_HUD;                  // manages the 3D   
+CDXUTDialog                 g_HUD;                  // manages the 3D
 CDXUTDialog                 g_SampleUI;             // dialog for sample specific controls
 D3DXMATRIXA16               g_mCenterMesh;
 float                       g_fLightScale;
@@ -73,7 +73,7 @@ ID3D11Buffer*               g_pcbPSPerFrame = NULL;
 #define IDC_CHANGEDEVICE        4
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -109,7 +109,7 @@ void RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -119,7 +119,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D11) 
+    // DXUT will create and use the best device (either D3D9 or D3D11)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -157,7 +157,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -208,7 +208,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -346,14 +346,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -554,14 +554,14 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // Set the shaders
     pd3dImmediateContext->VSSetShader( g_pVertexShader, NULL, 0 );
     pd3dImmediateContext->PSSetShader( g_pPixelShader, NULL, 0 );
-    
+
     // Set the per object constant data
     mWorld = g_mCenterMesh * *g_Camera.GetWorldMatrix();
     mProj = *g_Camera.GetProjMatrix();
     mView = *g_Camera.GetViewMatrix();
 
     mWorldViewProjection = mWorld * mView * mProj;
-        
+
     // VS Per object
     V( pd3dImmediateContext->Map( g_pcbVSPerObject, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
     CB_VS_PER_OBJECT* pVSPerObject = ( CB_VS_PER_OBJECT* )MappedResource.pData;
@@ -609,7 +609,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -618,7 +618,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -629,7 +629,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     SAFE_DELETE( g_pTxtHelper );
 
     g_Mesh11.Destroy();
-                
+
     SAFE_RELEASE( g_pVertexLayout11 );
     SAFE_RELEASE( g_pVertexBuffer );
     SAFE_RELEASE( g_pIndexBuffer );

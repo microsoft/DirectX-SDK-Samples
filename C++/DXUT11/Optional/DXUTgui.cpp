@@ -166,7 +166,7 @@ const UINT              g_uUIEffectFileSize = sizeof( g_strUIEffectFile );
 
 // DXUT_MAX_EDITBOXLENGTH is the maximum string length allowed in edit boxes,
 // including the NULL terminator.
-// 
+//
 // Uniscribe does not support strings having bigger-than-16-bits length.
 // This means that the string must be less than 65536 characters long,
 // including the NULL terminator.
@@ -322,8 +322,8 @@ void CDXUTDialog::Init( CDXUTDialogResourceManager* pManager, bool bRegisterDial
 void CDXUTDialog::SetCallback( PCALLBACKDXUTGUIEVENT pCallback, void* pUserContext )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -544,11 +544,11 @@ HRESULT CDXUTDialogResourceManager::OnD3D11CreateDevice( ID3D11Device* pd3dDevic
     ID3DBlob* pVSBlob = NULL;
     ID3DBlob* pPSBlob = NULL;
     ID3DBlob* pPSUntexBlob = NULL;
-    V_RETURN( D3DCompile( g_strUIEffectFile, g_uUIEffectFileSize, "none", NULL, NULL, "VS", "vs_4_0_level_9_1", 
+    V_RETURN( D3DCompile( g_strUIEffectFile, g_uUIEffectFileSize, "none", NULL, NULL, "VS", "vs_4_0_level_9_1",
          D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY, 0, &pVSBlob, NULL ) );
-    V_RETURN( D3DCompile( g_strUIEffectFile, g_uUIEffectFileSize, "none", NULL, NULL, "PS", "ps_4_0_level_9_1", 
+    V_RETURN( D3DCompile( g_strUIEffectFile, g_uUIEffectFileSize, "none", NULL, NULL, "PS", "ps_4_0_level_9_1",
          D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY, 0, &pPSBlob, NULL ) );
-    V_RETURN( D3DCompile( g_strUIEffectFile, g_uUIEffectFileSize, "none", NULL, NULL, "PSUntex", "ps_4_0_level_9_1", 
+    V_RETURN( D3DCompile( g_strUIEffectFile, g_uUIEffectFileSize, "none", NULL, NULL, "PSUntex", "ps_4_0_level_9_1",
          D3D10_SHADER_ENABLE_BACKWARDS_COMPATIBILITY, 0, &pPSUntexBlob, NULL ) );
 
     // Create Shaders
@@ -560,7 +560,7 @@ HRESULT CDXUTDialogResourceManager::OnD3D11CreateDevice( ID3D11Device* pd3dDevic
 
     V_RETURN( pd3dDevice->CreatePixelShader( pPSUntexBlob->GetBufferPointer(), pPSUntexBlob->GetBufferSize(), NULL, &m_pPSRenderUIUntex11 ) );
     DXUT_SetDebugName( m_pPSRenderUIUntex11, "CDXUTDialogResourceManager" );
-    
+
     // States
     D3D11_DEPTH_STENCIL_DESC DSDesc;
     ZeroMemory( &DSDesc, sizeof( D3D11_DEPTH_STENCIL_DESC ) );
@@ -587,7 +587,7 @@ HRESULT CDXUTDialogResourceManager::OnD3D11CreateDevice( ID3D11Device* pd3dDevic
 
     D3D11_BLEND_DESC BSDesc;
     ZeroMemory( &BSDesc, sizeof( D3D11_BLEND_DESC ) );
-    
+
     BSDesc.RenderTarget[0].BlendEnable = TRUE;
     BSDesc.RenderTarget[0].SrcBlend = D3D11_BLEND_SRC_ALPHA;
     BSDesc.RenderTarget[0].DestBlend = D3D11_BLEND_INV_SRC_ALPHA;
@@ -821,7 +821,7 @@ void CDXUTDialogResourceManager::EndSprites11( ID3D11Device* pd3dDevice, ID3D11D
     destRegion.front = 0;
     destRegion.back = 1;
     D3D11_MAPPED_SUBRESOURCE MappedResource;
-    if ( S_OK == pd3dImmediateContext->Map( m_pSpriteBuffer11, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) ) { 
+    if ( S_OK == pd3dImmediateContext->Map( m_pSpriteBuffer11, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) ) {
         CopyMemory( MappedResource.pData, (void*)m_SpriteVertices.GetData(), SpriteDataBytes );
         pd3dImmediateContext->Unmap(m_pSpriteBuffer11, 0);
     }
@@ -957,7 +957,7 @@ HRESULT CDXUTDialog::OnRender9( float fElapsedTime )
 
     //pd3dDevice->SetSamplerState(0, D3DSAMP_SRGBTEXTURE, TRUE);
     //pd3dDevice->SetRenderState( D3DRS_SRGBWRITEENABLE, TRUE );
-   
+
     pd3dDevice->SetRenderState( D3DRS_ALPHABLENDENABLE, TRUE );
     pd3dDevice->SetRenderState( D3DRS_SRCBLEND, D3DBLEND_SRCALPHA );
     pd3dDevice->SetRenderState( D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA );
@@ -1201,7 +1201,7 @@ VOID CDXUTDialog::SendEvent( UINT nEvent, bool bTriggeredByUser, CDXUTControl* p
 
 
 //--------------------------------------------------------------------------------------
-int CDXUTDialogResourceManager::AddFont( LPCWSTR strFaceName, LONG height, LONG weight ) 
+int CDXUTDialogResourceManager::AddFont( LPCWSTR strFaceName, LONG height, LONG weight )
 {
     // See if this font already exists
     for( int i = 0; i < m_FontCache.GetSize(); i++ )
@@ -1242,8 +1242,8 @@ int CDXUTDialogResourceManager::AddFont( LPCWSTR strFaceName, LONG height, LONG 
 HRESULT CDXUTDialog::SetFont( UINT index, LPCWSTR strFaceName, LONG height, LONG weight )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1367,8 +1367,8 @@ int CDXUTDialogResourceManager::AddTexture( LPCWSTR strResourceName, HMODULE hRe
 HRESULT CDXUTDialog::SetTexture( UINT index, LPCWSTR strFilename )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix this, call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1389,8 +1389,8 @@ HRESULT CDXUTDialog::SetTexture( UINT index, LPCWSTR strFilename )
 HRESULT CDXUTDialog::SetTexture( UINT index, LPCWSTR strResourceName, HMODULE hResourceModule )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix this, call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1603,7 +1603,7 @@ bool CDXUTDialog::MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
         case WM_XBUTTONDBLCLK:
         case WM_MOUSEWHEEL:
             {
-                // If not accepting mouse input, return false to indicate the message should still 
+                // If not accepting mouse input, return false to indicate the message should still
                 // be handled by the application (usually to move the camera).
                 if( !m_bMouseInput )
                     return false;
@@ -2413,7 +2413,7 @@ HRESULT CDXUTDialog::DrawSprite11( CDXUTElement* pElement, RECT* prcDest, float 
     fRectTop = fRectTop * 2.0f - 1.0f;
     fRectRight = fRectRight * 2.0f - 1.0f;
     fRectBottom = fRectBottom * 2.0f - 1.0f;
-    
+
     float fTexLeft = rcTexture.left / fTexWidth;
     float fTexTop = rcTexture.top / fTexHeight;
     float fTexRight = rcTexture.right / fTexWidth;
@@ -2544,7 +2544,7 @@ HRESULT InitFont11( ID3D11Device* pd3d11Device, ID3D11InputLayout* pInputLayout 
     HRESULT hr = S_OK;
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"UI\\Font.dds" ) );
-    
+
     if (pd3d11Device->GetFeatureLevel() < D3D_FEATURE_LEVEL_10_0 ) {
 
         D3DX11_IMAGE_INFO dii;
@@ -2579,7 +2579,7 @@ HRESULT InitFont11( ID3D11Device* pd3d11Device, ID3D11InputLayout* pInputLayout 
         g_pFont11->GetResource( &pRes );
         DXUT_SetDebugName( pRes, "DXUT Text11" );
         SAFE_RELEASE( pRes );
-    }    
+    }
 
     DXUT_SetDebugName( g_pFont11, "DXUT Text11" );
 #endif
@@ -2625,7 +2625,7 @@ void DrawText11DXUT( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3d11Device
         fRectBottom = fRectBottom * 2.0f - 1.0f;
         float fcenterx = ((fRectRight - fRectLeft) - (float)NumChars*fGlyphSizeX) *0.5f;
         float fcentery = ((fRectTop - fRectBottom) - (float)1*fGlyphSizeY) *0.5f;
-        fRectLeft += fcenterx ;    
+        fRectLeft += fcenterx ;
         fRectTop -= fcentery;
     }
     float fOriginalLeft = fRectLeft;
@@ -2724,7 +2724,7 @@ void EndText11( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3d11DeviceConte
     destRegion.front = 0;
     destRegion.back = 1;
     D3D11_MAPPED_SUBRESOURCE MappedResource;
-    if ( S_OK == pd3d11DeviceContext->Map( g_pFontBuffer11, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) ) { 
+    if ( S_OK == pd3d11DeviceContext->Map( g_pFontBuffer11, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) ) {
         CopyMemory( MappedResource.pData, (void*)g_FontVertices.GetData(), FontDataBytes );
         pd3d11DeviceContext->Unmap(g_pFontBuffer11, 0);
     }
@@ -3592,7 +3592,7 @@ void CDXUTStatic::Render( float fElapsedTime )
 
 
 //--------------------------------------------------------------------------------------
-HRESULT CDXUTStatic::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest, 
+HRESULT CDXUTStatic::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest,
                                   UINT bufferCount )
 {
     // Validate incoming parameters
@@ -6180,7 +6180,7 @@ void CDXUTEditBox::SetText( LPCWSTR wszText, bool bSelected )
 
 
 //--------------------------------------------------------------------------------------
-HRESULT CDXUTEditBox::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest, 
+HRESULT CDXUTEditBox::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest,
                                    UINT bufferCount  )
 {
     assert( strDest );
@@ -6492,7 +6492,7 @@ bool CDXUTEditBox::MsgProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
     switch( uMsg )
     {
-            // Make sure that while editing, the keyup and keydown messages associated with 
+            // Make sure that while editing, the keyup and keydown messages associated with
             // WM_CHAR messages don't go to any non-focused controls or cameras
         case WM_KEYUP:
         case WM_KEYDOWN:
@@ -6584,7 +6584,7 @@ bool CDXUTEditBox::MsgProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
                 case 16:  // Ctrl P
                 case 27:  // Ctrl [
                 case 29:  // Ctrl ]
-                case 28:  // Ctrl \ 
+                case 28:  // Ctrl \
                     break;
 
                 default:
@@ -6895,7 +6895,7 @@ HRESULT CUniBuffer::Analyse()
     if( !m_pFontNode )
         return E_FAIL;
 
-    HDC hDC = 
+    HDC hDC =
         ( m_pFontNode->pFont9 ? m_pFontNode->pFont9->GetDC() : NULL );
     HRESULT hr = _ScriptStringAnalyse( hDC,
                                        m_pwszBuffer,

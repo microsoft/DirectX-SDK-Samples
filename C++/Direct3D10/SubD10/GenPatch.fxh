@@ -3,7 +3,7 @@
 //
 // This effect file contains functions to convert from a Catmull-Clark subdivision
 // representation to a bicubic patch representation.
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -34,7 +34,7 @@
 // The 1-ring neighborhood of the quad is represented by vertices 4 through 17.  The counter-
 // clockwise winding of this 1-ring neighborhood is important, especially when it comes to compute
 // the corner vertices of the bicubic patch that we will use to approximate the subd quad (0,1,2,3).
-// 
+//
 // The resulting bicubic patch fits within the subd quad (0,1,2,3) and has the following control
 // point layout:
 //
@@ -48,11 +48,11 @@
 // a much more complex weighting of the subd patch and the 1-ring neighborhood.  In the example above
 // the bicubic control point 0 is actually a weighted combination of subd points 0,1,2,3 and 1-ring
 // neighborhood points 17, 4, 5, 6, 7, 8, and 9.  We can see that the 1-ring neighbor hood is simply
-// walked from the prefix value from the previous corner (corner 3 in this case) to the prefix 
+// walked from the prefix value from the previous corner (corner 3 in this case) to the prefix
 // prefix value for the current corner.  We add one more vertex on either side of the prefix values
 // and we have all the data necessary to calculate the value for the corner points.
 //
-// The edge control points of the bicubic patch (1,2,13,14,4,8,7,11) are also combinations of their 
+// The edge control points of the bicubic patch (1,2,13,14,4,8,7,11) are also combinations of their
 // neighbors, but fortunately each one is only a combination of 6 values and no walk is required.
 //--------------------------------------------------------------------------------------
 
@@ -95,17 +95,17 @@ void ComputeInteriorVertices( out float4 Interior[4], in float4 Vert[MAX_POINTS]
 // the coefficient of that corner.  The walk goes from the prefix value of the previous
 // corner to the prefix value of the current corner.
 //--------------------------------------------------------------------------------------
-void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out float4 CornersV[4], 
+void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out float4 CornersV[4],
                             in float4 Vert[MAX_POINTS], in uint Val[4], in uint Pref[4] )
 {
     const uint mod4[8] = {0,1,2,3,0,1,2,3};
     const uint cCorners[4] = {0,3,15,12};
     const float fOWt = 1;
     const float fEWt = 4;
-    
+
     // Loop through all four corners
-    for(int i=0;i<4;i++) 
-    { 
+    for(int i=0;i<4;i++)
+    {
         // Figure out where to start the walk by using the previous corner's prefix value
         uint PrefIm1 = 0;
         uint uStart = 4;
@@ -114,7 +114,7 @@ void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out 
             PrefIm1 = Pref[i-1];
             uStart = PrefIm1;
         }
-        
+
         // Setup the walk indices
         uint uTIndexStart = 2 - (i&1);
         uint uTIndex = uTIndexStart;
@@ -125,7 +125,7 @@ void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out 
         // Zero out the corners
         CornersU[i] = float4(0,0,0,0);
         CornersV[i] = float4(0,0,0,0);
-            
+
         // Start the walk with the uStart prefix (the prefix of the corner before us)
         const uint uV = Val[i]  + ( ( i & 1 ) ? 1 : -1 );
         CornersB[i] += Vert[uStart] * fEWt;
@@ -134,7 +134,7 @@ void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out 
 
         // Gather all vertices between the previous corner's prefix and our own prefix
         // We'll do two at a time, since they always come in twos
-        while(uStart < Pref[i]-1) 
+        while(uStart < Pref[i]-1)
         {
             ++uStart;
             CornersB[i] += Vert[uStart] * fOWt;
@@ -151,7 +151,7 @@ void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out 
 
         // Add in the last guy and make sure to wrap to the beginning if we're the last corner
         if (i == 3)
-            uStart = 4; 
+            uStart = 4;
         CornersB[i] += Vert[uStart] * fOWt;
         CornersU[i] += Vert[uStart] * TANM( ( uTIndex % Val[i] ) * 2 + 1, i );
         CornersV[i] += Vert[uStart] * TANM( ( ( uTIndex + uV ) % Val[i] ) * 2 + 1, i );
@@ -171,12 +171,12 @@ void ComputeCornerVertices( out float4 CornersB[4], out float4 CornersU[4], out 
         CornersB[i] += Vert[mod4[i+1]] * fEWt;
         CornersB[i] += Vert[mod4[i+2]] * fOWt;
         CornersB[i] += Vert[mod4[i+3]] * fEWt;
-        
+
         uTIndex = 0 + (i&1)*(Val[i]-1);
         uStart = mod4[i+1];
         CornersU[i] += Vert[uStart] * TANM( ( uTIndex % Val[i] ) * 2, i );
         CornersV[i] += Vert[uStart] * TANM( ( ( uTIndex + uV ) % Val[i] ) * 2, i );
-        
+
         uStart = mod4[i+2];
         CornersU[i] += Vert[uStart] * TANM( ( uTIndex % Val[i] ) * 2 + 1, i );
         CornersV[i] += Vert[uStart] * TANM( ( ( uTIndex + uV ) % Val[i] ) * 2 + 1, i );
@@ -215,7 +215,7 @@ void ComputeEdgeVertices( out float4 Edges[8], in float4 Vert[MAX_POINTS], in ui
     float val8 = val13;
     float val7 = val2;
     float val11 = val14;
-    
+
     // compute edge points - horizontal
     Edges[0] = (Val[0]*2*Vert[0] + 4*Vert[1] + Vert[2] + Vert[3]*2 +
               2*Vert[Pref[0]-1] + Vert[Pref[0]])/(val1);
@@ -248,12 +248,12 @@ void ConcatenateBezierPatch( in float4 Interior[4], in float4 Corners[4], in flo
     Bez[6] = Interior[1];
     Bez[10] = Interior[2];
     Bez[9] = Interior[3];
-    
+
     Bez[0] = Corners[0];
     Bez[3] = Corners[1];
     Bez[15] = Corners[2];
     Bez[12] = Corners[3];
-    
+
     Bez[1] = Edges[0];
     Bez[2] = Edges[1];
     Bez[13] = Edges[2];
@@ -273,7 +273,7 @@ void GenPatchB( in float4 Vert[MAX_POINTS], in uint Val[4], in uint Pref[4],
     // compute interior vertices and put them in the Bez array
     float4 Interior[4];
     ComputeInteriorVertices( Interior, Vert, Val );
-    
+
     // Compute corner vertices.
     // We will ignore the corners for the tangent patches since they are handled
     // in a separate pass.
@@ -281,11 +281,11 @@ void GenPatchB( in float4 Vert[MAX_POINTS], in uint Val[4], in uint Pref[4],
     float4 IgnoreCornersU[4];
     float4 IgnoreCornersV[4];
     ComputeCornerVertices( CornersB, IgnoreCornersU, IgnoreCornersV, Vert, Val, Pref );
-    
+
     // Compute edge vertices
     float4 Edges[8];
     ComputeEdgeVertices( Edges, Vert, Val, Pref );
-    
+
     // Add interiors, corners, and edges
     ConcatenateBezierPatch( Interior, CornersB, Edges, Bez );
 }
@@ -295,7 +295,7 @@ void GenPatchB( in float4 Vert[MAX_POINTS], in uint Val[4], in uint Pref[4],
 //--------------------------------------------------------------------------------------
 void GenPatchTanCompact( in float4 Vert[MAX_POINTS], in uint Val[4], in uint Pref[4],
                          out float4 TanUV[9] )
-{   
+{
     // Compute corner vertices for the UV tangent patches.
     // We will ignore the bicubic patch coefficients because they don't matter for calculating
     // the tangent patches.
@@ -303,7 +303,7 @@ void GenPatchTanCompact( in float4 Vert[MAX_POINTS], in uint Val[4], in uint Pre
     float4 CornersU[4];
     float4 CornersV[4];
     ComputeCornerVertices( IgnoreCornersB, CornersU, CornersV, Vert, Val, Pref );
-    
+
     // Store the corner vertices and some helper variables so that we can reconstruct.
     // the entire UV tangent patch when we reconstruct the bicubic surface
     float fCWts[4];

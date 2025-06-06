@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: ShadowVolume.fx
 //
-// The effect file for the ShadowVolume sample.  
-// 
+// The effect file for the ShadowVolume sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

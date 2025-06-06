@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // File: Joystick.cpp
 //
-// Desc: Demonstrates an application which receives immediate 
+// Desc: Demonstrates an application which receives immediate
 //       joystick data in exclusive mode via a dialog timer.
 //
 // Copyright (c) Microsoft Corporation.
@@ -84,7 +84,7 @@ using Microsoft::WRL::ComPtr;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
@@ -184,7 +184,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
         return TRUE;
     }
 
-    return FALSE; // Message not handled 
+    return FALSE; // Message not handled
 }
 
 
@@ -243,7 +243,7 @@ HRESULT InitDirectInput(HWND hDlg) noexcept
         return S_OK;
     }
 
-    // Set the data format to "simple joystick" - a predefined data format 
+    // Set the data format to "simple joystick" - a predefined data format
     //
     // A data format specifies which controls on a device we are interested in,
     // and how they should be reported. This tells DInput that we will be
@@ -269,13 +269,13 @@ HRESULT InitDirectInput(HWND hDlg) noexcept
 
 
 //-----------------------------------------------------------------------------
-// Enum each PNP device using WMI and check each device ID to see if it contains 
+// Enum each PNP device using WMI and check each device ID to see if it contains
 // "IG_" (ex. "VID_045E&PID_028E&IG_00").  If it does, then it's an XInput device
 // Unfortunately this information can not be found by just using DirectInput.
-// Checking against a VID/PID of 0x028E/0x045E won't find 3rd party or future 
+// Checking against a VID/PID of 0x028E/0x045E won't find 3rd party or future
 // XInput devices.
 //
-// This function stores the list of xinput devices in a linked list 
+// This function stores the list of xinput devices in a linked list
 // at g_pXInputDeviceList, and IsXInputDevice() searchs that linked list
 //-----------------------------------------------------------------------------
 namespace
@@ -309,7 +309,7 @@ HRESULT SetupForIsXInputDevice() noexcept
     if (!bstrNamespace || !bstrClassName || !bstrDeviceID)
         return E_OUTOFMEMORY;
 
-    // Connect to WMI 
+    // Connect to WMI
     ComPtr<IWbemServices> pIWbemServices;
     hr = pIWbemLocator->ConnectServer(bstrNamespace.get(), nullptr, nullptr, 0L,
         0L, nullptr, nullptr, &pIWbemServices);
@@ -355,7 +355,7 @@ HRESULT SetupForIsXInputDevice() noexcept
             if (SUCCEEDED(hr) && var.vt == VT_BSTR && var.bstrVal != nullptr)
             {
                 // Check if the device ID contains "IG_".  If it does, then it's an XInput device
-                // Unfortunately this information can not be found by just using DirectInput 
+                // Unfortunately this information can not be found by just using DirectInput
                 if (wcsstr(var.bstrVal, L"IG_"))
                 {
                     // If it does, then get the VID/PID from var.bstrVal
@@ -443,7 +443,7 @@ BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance,
     if (g_bFilterOutXinputDevices && IsXInputDevice(&pdidInstance->guidProduct))
         return DIENUM_CONTINUE;
 
-    // Skip anything other than the perferred joystick device as defined by the control panel.  
+    // Skip anything other than the perferred joystick device as defined by the control panel.
     // Instead you could store all the enumerated joysticks and let the user pick.
     if (pEnumContext->bPreferredJoyCfgValid &&
         !IsEqualGUID(pdidInstance->guidInstance, pEnumContext->pPreferredJoyCfg->guidInstance))
@@ -467,7 +467,7 @@ BOOL CALLBACK EnumJoysticksCallback(const DIDEVICEINSTANCE* pdidInstance,
 
 //-----------------------------------------------------------------------------
 // Name: EnumObjectsCallback()
-// Desc: Callback function for enumerating objects (axes, buttons, POVs) on a 
+// Desc: Callback function for enumerating objects (axes, buttons, POVs) on a
 //       joystick. This function enables user interface elements for objects
 //       that are found to exist, and scales axes min/max values.
 //-----------------------------------------------------------------------------
@@ -598,8 +598,8 @@ HRESULT UpdateInputState(HWND hDlg) noexcept
             hr = g_pJoystick->Acquire();
 
         // hr may be DIERR_OTHERAPPHASPRIO or other errors.  This
-        // may occur when the app is minimized or in the process of 
-        // switching, so just try again later 
+        // may occur when the app is minimized or in the process of
+        // switching, so just try again later
         return S_OK;
     }
 
@@ -668,7 +668,7 @@ HRESULT UpdateInputState(HWND hDlg) noexcept
 //-----------------------------------------------------------------------------
 VOID FreeDirectInput() noexcept
 {
-    // Unacquire the device one last time just in case 
+    // Unacquire the device one last time just in case
     // the app tried to exit while the device is still acquired.
     if (g_pJoystick)
         g_pJoystick->Unacquire();

@@ -22,7 +22,7 @@ protected:
     struct VS_CB
     {
         D3DXMATRIX mWorldViewProj;
-    };    
+    };
 
     ID3D11VertexShader* m_pVertexShader;
     ID3D11InputLayout*  m_pVertexLayout;

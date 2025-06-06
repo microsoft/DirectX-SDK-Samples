@@ -21,7 +21,7 @@ Comments:
 
 #include <sas\sas.fxh>
 
-int GlobalParameter : SasGlobal                                                             
+int GlobalParameter : SasGlobal
 <
     int3 SasVersion = {1, 1, 0};
     bool SasUiVisible = false;
@@ -31,31 +31,31 @@ int GlobalParameter : SasGlobal
 /************* TWEAKABLES **************/
 float4x4 World : World
 <
-	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]"; 
-	bool SasUiVisible = false;
->;         
-
-float4x4 View 
-<
-	string SasBindAddress = "Sas.Camera.WorldToView"; 
+	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";
 	bool SasUiVisible = false;
 >;
 
-float4x4 Projection 
+float4x4 View
 <
-	string SasBindAddress = "Sas.Camera.Projection"; 
+	string SasBindAddress = "Sas.Camera.WorldToView";
 	bool SasUiVisible = false;
 >;
 
-SasDirectionalLight DirectionalLight 
+float4x4 Projection
 <
-	string SasBindAddress = "Sas.DirectionalLight[0]"; 
+	string SasBindAddress = "Sas.Camera.Projection";
+	bool SasUiVisible = false;
+>;
+
+SasDirectionalLight DirectionalLight
+<
+	string SasBindAddress = "Sas.DirectionalLight[0]";
 	bool SasUiVisible = false;
 >;
 
 float3 CameraPos
 <
-	string SasBindAddress = "Sas.Camera.Position"; 
+	string SasBindAddress = "Sas.Camera.Position";
 	bool SasUiVisible = false;
 >;
 
@@ -81,7 +81,7 @@ float3 CoolColor <
 
 float3 SpecColor : Specular <
     string SasUiLabel =  "Hilight color";
-    string SasUiControl = "ColorPicker"; 
+    string SasUiControl = "ColorPicker";
 > = {0.7f, 0.7f, 1.0f};
 
 float SpecExpon : SpecularPower <
@@ -120,7 +120,7 @@ float GlossDrop
 
 texture ColorMap : DIFFUSE <
 	string SasUiLabel = "Color Map";
-	string SasUiControl = "FilePicker"; 
+	string SasUiControl = "FilePicker";
 >;
 
 sampler2D ColorSampler = sampler_state
@@ -157,7 +157,7 @@ struct vertexOutput {
 vertexOutput mainVS(appdata IN)
 {
     vertexOutput OUT;
-    
+
     float4x4 WorldIT = transpose(inverse(World));
     float4x4 WorldViewProj = mul( World, mul( View, Projection ) );
     OUT.WorldNormal = mul(IN.Normal, WorldIT).xyz;
@@ -212,9 +212,9 @@ float4 goochT_PS(vertexOutput IN) :COLOR
 
 /*************/
 
-technique Untextured 
+technique Untextured
 {
-	pass p0 
+	pass p0
 	{		
         VertexShader = compile vs_2_0 mainVS();
 		ZEnable = true;
@@ -224,9 +224,9 @@ technique Untextured
 	}
 }
 
-technique Textured 
+technique Textured
 {
-	pass p0 
+	pass p0
 	{		
         VertexShader = compile vs_2_0 mainVS();
 		ZEnable = true;

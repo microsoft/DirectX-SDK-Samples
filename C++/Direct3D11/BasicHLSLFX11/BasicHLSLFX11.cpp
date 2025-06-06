@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSLFX11.cpp
 //
-// This sample shows a simple example of the Microsoft Direct3D 11's High-Level 
-// Shader Language (HLSL) using the Effect interface. 
+// This sample shows a simple example of the Microsoft Direct3D 11's High-Level
+// Shader Language (HLSL) using the Effect interface.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -30,7 +30,7 @@ CDXUTDialogResourceManager          g_DialogResourceManager; // manager for shar
 CModelViewerCamera                  g_Camera;               // A model viewing camera
 CDXUTDirectionWidget                g_LightControl[MAX_LIGHTS];
 CD3DSettingsDlg                     g_D3DSettingsDlg;       // Device settings dialog
-CDXUTDialog                         g_HUD;                  // manages the 3D   
+CDXUTDialog                         g_HUD;                  // manages the 3D
 CDXUTDialog                         g_SampleUI;             // dialog for sample specific controls
 XMMATRIX                            g_mCenterMesh;
 float                               g_fLightScale;
@@ -72,7 +72,7 @@ ID3DX11EffectScalarVariable*        g_pnNumLights = nullptr;
 #define IDC_TOGGLEWARP          11
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -97,7 +97,7 @@ void RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
@@ -107,7 +107,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device 
+    // DXUT will create and use the best device
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -135,7 +135,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -192,7 +192,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -378,8 +378,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -515,7 +515,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     XMMATRIX mView = g_Camera.GetViewMatrix();
 
     XMMATRIX mWorldViewProjection = mWorld * mView * mProj;
-    
+
     // Render the light arrow so the user can visually see the light dir
     XMFLOAT3 vLightDir[MAX_LIGHTS];
     XMFLOAT4 vLightDiffuse[MAX_LIGHTS];
@@ -601,7 +601,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -610,7 +610,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -620,7 +620,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     SAFE_DELETE( g_pTxtHelper );
 
     SAFE_RELEASE( g_pEffect );
-    
+
     SAFE_RELEASE( g_pVertexLayout );
     g_Mesh11.Destroy();
 

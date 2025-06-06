@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 // File: SkyBox11.hlsl
 //
-// Desc: 
-// 
+// Desc:
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
@@ -28,10 +28,10 @@ struct SkyboxVS_Output
 SkyboxVS_Output SkyboxVS( SkyboxVS_Input Input )
 {
     SkyboxVS_Output Output;
-    
+
     Output.Pos = Input.Pos;
     Output.Tex = normalize( mul(Input.Pos, g_mWorldViewProjection) );
-    
+
     return Output;
 }
 

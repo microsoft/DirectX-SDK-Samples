@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ struct VSSceneIn
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Note:	New structure for the GeometryShader input
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 struct GSSceneIn
 {
@@ -98,8 +98,8 @@ GSSceneIn VSScene(VSSceneIn input)
 void GSScene( triangleadj GSSceneIn input[6], inout TriangleStream<PSSceneIn> OutputStream )
 {	
 	//-----------------------------------------------------------------------------------------
-	// o/__   <-- BreakdancinBob Note:	We are taking in 6 input vertices for one triangle.  
-	// |  (\			Only the Even Vertices are needed.  The odd ones represent edge-adjacent 
+	// o/__   <-- BreakdancinBob Note:	We are taking in 6 input vertices for one triangle.
+	// |  (\			Only the Even Vertices are needed.  The odd ones represent edge-adjacent
 	//					vertices  which we'll use in later exercises.
 	//-----------------------------------------------------------------------------------------
 
@@ -110,8 +110,8 @@ void GSScene( triangleadj GSSceneIn input[6], inout TriangleStream<PSSceneIn> Ou
 		output.Pos = input[i].Pos;
 		
 		//-----------------------------------------------------------------------------------------
-		// o/__   <-- BreakdancinBob TODO:	We're just outputting the position now.  Output the 
-		// |  (\			normal and texture coordinates as well.  If it doesn't get appended to 
+		// o/__   <-- BreakdancinBob TODO:	We're just outputting the position now.  Output the
+		// |  (\			normal and texture coordinates as well.  If it doesn't get appended to
 		//					the stream, it doesn't make it to the pixel shader.
 		//-----------------------------------------------------------------------------------------
 		output.Norm = input[i].Norm;
@@ -144,6 +144,6 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScene() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-    }  
+    }
 }
 

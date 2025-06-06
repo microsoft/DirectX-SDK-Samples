@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------------------
 // File: main.cpp
 //
-// This sample demonstrates how use D3DXSHPRTSimulation(), a per vertex  
-// precomputed radiance transfer (PRT) simulator that uses low-order 
-// spherical harmonics (SH) and records the results to a file. The sample 
-// then demonstrates how compress the results with clustered principal 
-// component analysis (CPCA) and view the compressed results with arbitrary 
+// This sample demonstrates how use D3DXSHPRTSimulation(), a per vertex
+// precomputed radiance transfer (PRT) simulator that uses low-order
+// spherical harmonics (SH) and records the results to a file. The sample
+// then demonstrates how compress the results with clustered principal
+// component analysis (CPCA) and view the compressed results with arbitrary
 // lighting in real time with a vs_1_1 vertex shader
 //
 // Copyright (c) Microsoft Corporation.
@@ -30,8 +30,8 @@
 #define D3D_DEBUG_INFO
 #endif
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -97,7 +97,7 @@ LPCWSTR g_LightProbeFiles[] =
 
 WCHAR g_szAppFolder[] = L"\\PRT Demo\\";
 
-// Directional lights 
+// Directional lights
 #define MAX_LIGHTS 10
 CDXUTDirectionWidget g_LightControl[MAX_LIGHTS];
 int                         g_nNumActiveLights;
@@ -115,7 +115,7 @@ enum APP_TECHNIQUE
 
 APP_TECHNIQUE               g_AppTechnique = APP_TECH_PRT; // Current technique of app
 
-// App state 
+// App state
 enum APP_STATE
 {
     APP_STATE_STARTUP = 0,
@@ -189,7 +189,7 @@ APP_STATE                   g_AppState = APP_STATE_STARTUP; // Current state of 
 #define IDC_SCENE_5              50
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -220,7 +220,7 @@ void GetSupportedTextureFormat( IDirect3D9* pD3D, D3DCAPS9* pCaps, D3DFORMAT Ada
 HRESULT FindPRTMediaFile( WCHAR* strDestPath, int cchDest, LPCWSTR strFilename, bool bCreatePath=false );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -231,12 +231,12 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 #endif
 
     // Set the callback functions. These functions allow DXUT to notify
-    // the application about device changes, user input, and windows messages.  The 
-    // callbacks are optional so you need only set callbacks for events you're interested 
-    // in. However, if you don't handle the device reset/lost callbacks then the sample 
-    // framework won't be able to reset your device since the application must first 
-    // release all device resources before resetting.  Likewise, if you don't handle the 
-    // device created/destroyed callbacks then DXUT won't be able to 
+    // the application about device changes, user input, and windows messages.  The
+    // callbacks are optional so you need only set callbacks for events you're interested
+    // in. However, if you don't handle the device reset/lost callbacks then the sample
+    // framework won't be able to reset your device since the application must first
+    // release all device resources before resetting.  Likewise, if you don't handle the
+    // device created/destroyed callbacks then DXUT won't be able to
     // recreate your device resources.
     DXUTSetCallbackD3D9DeviceAcceptable( IsDeviceAcceptable );
     DXUTSetCallbackD3D9DeviceCreated( OnCreateDevice );
@@ -254,7 +254,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
     InitApp();
 
-    // Initialize DXUT and create the desired Win32 window and Direct3D 
+    // Initialize DXUT and create the desired Win32 window and Direct3D
     // device for the application. Calling each of these functions is optional, but they
     // allow you to set several options which control the behavior of the framework.
     DXUTInit( true, true ); // Parse the command line and show msgboxes
@@ -262,8 +262,8 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     DXUTCreateWindow( L"PRTDemo" );
     DXUTCreateDevice( true, 800, 600 );
 
-    // Pass control to DXUT for handling the message pump and 
-    // dispatching render calls. DXUT will call your FrameMove 
+    // Pass control to DXUT for handling the message pump and
+    // dispatching render calls. DXUT will call your FrameMove
     // and FrameRender callback when there is idle time between handling window messages.
     DXUTMainLoop();
 
@@ -275,7 +275,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -502,7 +502,7 @@ void InitApp()
 }
 
 //--------------------------------------------------------------------------------------
-// Called during device initialization, this code checks the device for some 
+// Called during device initialization, this code checks the device for some
 // minimum set of capabilities, and rejects those that don't pass by returning false.
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
@@ -515,13 +515,13 @@ bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
                                          D3DRTYPE_TEXTURE, BackBufferFormat ) ) )
         return false;
 
-    // Determine texture support.  Fail if not good enough 
+    // Determine texture support.  Fail if not good enough
     D3DFORMAT fmtTexture, fmtCubeMap;
     GetSupportedTextureFormat( pD3D, pCaps, AdapterFormat, &fmtTexture, &fmtCubeMap );
     if( D3DFMT_UNKNOWN == fmtTexture || D3DFMT_UNKNOWN == fmtCubeMap )
         return false;
 
-    // This sample requires pixel shader 2.0, but does showcase techniques which will 
+    // This sample requires pixel shader 2.0, but does showcase techniques which will
     // perform well on shader model 1.1 hardware.
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
         return false;
@@ -613,12 +613,12 @@ void GetSupportedTextureFormat( IDirect3D9* pD3D, D3DCAPS9* pCaps, D3DFORMAT Ada
 
 
 //--------------------------------------------------------------------------------------
-// This callback function is called immediately before a device is created to allow the 
-// application to modify the device settings. The supplied pDeviceSettings parameter 
-// contains the settings that the framework has selected for the new device, and the 
-// application can make any desired changes directly to this structure.  Note however that 
-// DXUT will not correct invalid device settings so care must be taken 
-// to return valid device settings, otherwise IDirect3D9::CreateDevice() will fail.  
+// This callback function is called immediately before a device is created to allow the
+// application to modify the device settings. The supplied pDeviceSettings parameter
+// contains the settings that the framework has selected for the new device, and the
+// application can make any desired changes directly to this structure.  Note however that
+// DXUT will not correct invalid device settings so care must be taken
+// to return valid device settings, otherwise IDirect3D9::CreateDevice() will fail.
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
@@ -636,7 +636,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
                             pDeviceSettings->d3d9.DeviceType,
                             &caps ) );
 
-    // If device doesn't support HW T&L or doesn't support 2.0 vertex shaders in HW 
+    // If device doesn't support HW T&L or doesn't support 2.0 vertex shaders in HW
     // then switch to SWVP.
     if( ( caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
         caps.VertexShaderVersion < D3DVS_VERSION( 2, 0 ) )
@@ -644,12 +644,12 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
     }
 
-    // The PRT simulator runs on a seperate thread.  If you are just 
+    // The PRT simulator runs on a seperate thread.  If you are just
     // loading simulator results, then this isn't needed
     pDeviceSettings->d3d9.BehaviorFlags |= D3DCREATE_MULTITHREADED;
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
     if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
     {
@@ -676,11 +676,11 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// created, which will happen during application initialization and windowed/full screen 
-// toggles. This is the best location to create D3DPOOL_MANAGED resources since these 
-// resources need to be reloaded whenever the device is destroyed. Resources created  
-// here should be released in the OnDestroyDevice callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// created, which will happen during application initialization and windowed/full screen
+// toggles. This is the best location to create D3DPOOL_MANAGED resources since these
+// resources need to be reloaded whenever the device is destroyed. Resources created
+// here should be released in the OnDestroyDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                  void* pUserContext )
@@ -732,11 +732,11 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// reset, which will happen after a lost device scenario. This is the best location to 
-// create D3DPOOL_DEFAULT resources since these resources need to be reloaded whenever 
-// the device is lost. Resources created here should be released in the OnLostDevice 
-// callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// reset, which will happen after a lost device scenario. This is the best location to
+// create D3DPOOL_DEFAULT resources since these resources need to be reloaded whenever
+// the device is lost. Resources created here should be released in the OnLostDevice
+// callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -809,13 +809,13 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -825,7 +825,7 @@ void RenderStartup( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTi
 {
     HRESULT hr;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -859,7 +859,7 @@ void RenderSimulatorRunning( IDirect3DDevice9* pd3dDevice, double fTime, float f
 {
     HRESULT hr;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 170 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -885,7 +885,7 @@ void RenderPRT( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime )
 
     pd3dDevice->SetRenderState( D3DRS_FILLMODE, ( g_bRenderWireframe ) ? D3DFILL_WIREFRAME : D3DFILL_SOLID );
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 0, 0, 0 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -923,7 +923,7 @@ void RenderPRT( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime )
         float fLightScale = ( float )( g_RenderingUI2.GetSlider( IDC_LIGHT_SCALE )->GetValue() * 0.01f );
         if( g_bRenderArrows && fLightScale > 0.0f )
         {
-            // Render the light spheres so the user can 
+            // Render the light spheres so the user can
             // visually see the light dir
             for( int i = 0; i < g_nNumActiveLights; i++ )
             {
@@ -986,9 +986,9 @@ void RenderPRT( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime )
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called at the end of every frame to perform all the 
-// rendering calls for the scene, and it will also be called if the window needs to be 
-// repainted. After this function has returned, DXUT will call 
+// This callback function will be called at the end of every frame to perform all the
+// rendering calls for the scene, and it will also be called if the window needs to be
+// repainted. After this function has returned, DXUT will call
 // IDirect3DDevice9::Present to display the contents of the next buffer in the swap chain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime, void* pUserContext )
@@ -1134,7 +1134,7 @@ void UpdateLightingEnvironment()
     DWORD dwOrder = g_PRTMesh.GetPRTOrder();
 
     // Pass in the light direction, the intensity of each channel, and it returns
-    // the source radiance as an array of order^2 SH coefficients for each color channel.  
+    // the source radiance as an array of order^2 SH coefficients for each color channel.
     D3DXVECTOR3 lightDirObjectSpace;
     D3DXMATRIX mWorldInv;
     D3DXMatrixInverse( &mWorldInv, NULL, g_Camera.GetWorldMatrix() );
@@ -1145,18 +1145,18 @@ void UpdateLightingEnvironment()
         // Transform the world space light dir into object space
         // Note that if there's multiple objects using PRT in the scene, then
         // for each object you need to either evaulate the lights in object space
-        // evaulate the lights in world and rotate the light coefficients 
+        // evaulate the lights in world and rotate the light coefficients
         // into object space.
         D3DXVECTOR3 vLight = g_LightControl[i].GetLightDirection();
         D3DXVec3TransformNormal( &lightDirObjectSpace, &vLight, &mWorldInv );
 
-        // This sample uses D3DXSHEvalDirectionalLight(), but there's other 
-        // types of lights provided by D3DXSHEval*.  Pass in the 
-        // order of SH, color of the light, and the direction of the light 
+        // This sample uses D3DXSHEvalDirectionalLight(), but there's other
+        // types of lights provided by D3DXSHEval*.  Pass in the
+        // order of SH, color of the light, and the direction of the light
         // in object space.
-        // The output is the source radiance coefficients for the SH basis functions.  
-        // There are 3 outputs, one for each channel (R,G,B). 
-        // Each output is an array of m_dwOrder^2 floats.  
+        // The output is the source radiance coefficients for the SH basis functions.
+        // There are 3 outputs, one for each channel (R,G,B).
+        // Each output is an array of m_dwOrder^2 floats.
         V( D3DXSHEvalConeLight( dwOrder, &lightDirObjectSpace, fConeRadius,
                                 lightColor.r, lightColor.g, lightColor.b,
                                 fLight[i][0], fLight[i][1], fLight[i][2] ) );
@@ -1168,7 +1168,7 @@ void UpdateLightingEnvironment()
     // For multiple lights, just them sum up using D3DXSHAdd().
     for( i = 0; i < g_nNumActiveLights; i++ )
     {
-        // D3DXSHAdd will add Order^2 floats.  There are 3 color channels, 
+        // D3DXSHAdd will add Order^2 floats.  There are 3 color channels,
         // so call it 3 times.
         D3DXSHAdd( fSum[0], dwOrder, fSum[0], fLight[i][0] );
         D3DXSHAdd( fSum[1], dwOrder, fSum[1], fLight[i][1] );
@@ -1211,7 +1211,7 @@ void UpdateLightingEnvironment()
 }
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -1221,7 +1221,7 @@ void RenderText()
 
     // The helper object simply helps keep track of text position, and color
     // and then it calls pFont->DrawText( g_pSprite, strMsg, -1, &rc, DT_NOCLIP, g_clr );
-    // If NULL is passed in as the sprite object, then it will work however the 
+    // If NULL is passed in as the sprite object, then it will work however the
     // pFont->DrawText() will not be batched together.  Batching calls will improves performance.
     CDXUTTextHelper txtHelper( g_pFont, g_pTextSprite, 15 );
 
@@ -1265,8 +1265,8 @@ void RenderText()
 
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -1379,7 +1379,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 //--------------------------------------------------------------------------------------
 // As a convenience, DXUT inspects the incoming windows messages for
 // keystroke messages and decodes the message parameters to pass relevant keyboard
-// messages to the application.  The framework does not remove the underlying keystroke 
+// messages to the application.  The framework does not remove the underlying keystroke
 // messages, which are still passed to the application's MsgProc callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK KeyboardProc( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext )
@@ -1975,10 +1975,10 @@ void ResetUI()
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
+// This callback function will be called immediately after the Direct3D device has
 // entered a lost state and before IDirect3DDevice9::Reset is called. Resources created
-// in the OnResetDevice callback should be released here, which generally includes all 
-// D3DPOOL_DEFAULT resources. See the "Lost Devices" section of the documentation for 
+// in the OnResetDevice callback should be released here, which generally includes all
+// D3DPOOL_DEFAULT resources. See the "Lost Devices" section of the documentation for
 // information about lost devices.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
@@ -1997,10 +1997,10 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
-// been destroyed, which generally happens as a result of application termination or 
-// windowed/full screen toggles. Resources created in the OnCreateDevice callback 
-// should be released here, which generally includes all D3DPOOL_MANAGED resources. 
+// This callback function will be called immediately after the Direct3D device has
+// been destroyed, which generally happens as a result of application termination or
+// windowed/full screen toggles. Resources created in the OnCreateDevice callback
+// should be released here, which generally includes all D3DPOOL_MANAGED resources.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

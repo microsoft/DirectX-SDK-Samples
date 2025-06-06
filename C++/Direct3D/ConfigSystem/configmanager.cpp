@@ -51,9 +51,9 @@ static DWORD GetNumber( const char* value )
 {
     int result;
 #ifdef _CRT_INSECURE_DEPRECATE
-    int nRet = sscanf_s( value, "%d", &result );   
+    int nRet = sscanf_s( value, "%d", &result );
 #else
-    int nRet = sscanf( value, "%d", &result );   
+    int nRet = sscanf( value, "%d", &result );
 #endif
     if( nRet == 0 || nRet == EOF )
         result = 0;
@@ -192,7 +192,7 @@ void CConfigManager::InitConfigInformation( D3DCAPS9 &d3dCaps )
                 pfnCoSetProxyBlanket = (PfnCoSetProxyBlanket)GetProcAddress( hinstOle32, "CoSetProxyBlanket" );
                 if( pfnCoSetProxyBlanket != NULL )
                 {
-                    // Switch security level to IMPERSONATE. 
+                    // Switch security level to IMPERSONATE.
                     pfnCoSetProxyBlanket( pIWbemServices,               // proxy
                                           RPC_C_AUTHN_WINNT,            // authentication service
                                           RPC_C_AUTHZ_NONE,             // authorization service
@@ -234,7 +234,7 @@ void CConfigManager::InitConfigInformation( D3DCAPS9 &d3dCaps )
                     OSVERSIONINFO OSVersionInfo = { sizeof(OSVersionInfo) };
 #pragma warning(suppress : 4996)
                     GetVersionEx( &OSVersionInfo );
-                    if( ( OSVersionInfo.dwPlatformId   == VER_PLATFORM_WIN32_NT && 
+                    if( ( OSVersionInfo.dwPlatformId   == VER_PLATFORM_WIN32_NT &&
                         OSVersionInfo.dwMajorVersion == 5 &&
                         OSVersionInfo.dwMinorVersion == 0 ) ||
                         ( OSVersionInfo.dwPlatformId == VER_PLATFORM_WIN32_WINDOWS ) )
@@ -390,10 +390,10 @@ void CConfigManager::InitConfigInformation( D3DCAPS9 &d3dCaps )
     HINSTANCE ddrawLib = LoadLibraryW( L"ddraw.dll" );
     if( ddrawLib )
     {
-        HRESULT (WINAPI* _DirectDrawCreateEx)( GUID* lpGUID, void** lplpDD, REFIID iid, IUnknown* pUnkOuter ) = (HRESULT (WINAPI*)( GUID* lpGUID, void** lplpDD, REFIID iid, IUnknown* pUnkOuter ))GetProcAddress( ddrawLib, "DirectDrawCreateEx" ); 
+        HRESULT (WINAPI* _DirectDrawCreateEx)( GUID* lpGUID, void** lplpDD, REFIID iid, IUnknown* pUnkOuter ) = (HRESULT (WINAPI*)( GUID* lpGUID, void** lplpDD, REFIID iid, IUnknown* pUnkOuter ))GetProcAddress( ddrawLib, "DirectDrawCreateEx" );
         if( _DirectDrawCreateEx )
         {
-            HRESULT (WINAPI* _DirectDrawEnumerateEx)( LPDDENUMCALLBACKEXA, LPVOID, DWORD ) = (HRESULT (WINAPI*)( LPDDENUMCALLBACKEXA, LPVOID, DWORD )) GetProcAddress( ddrawLib, "DirectDrawEnumerateExA" ); 
+            HRESULT (WINAPI* _DirectDrawEnumerateEx)( LPDDENUMCALLBACKEXA, LPVOID, DWORD ) = (HRESULT (WINAPI*)( LPDDENUMCALLBACKEXA, LPVOID, DWORD )) GetProcAddress( ddrawLib, "DirectDrawEnumerateExA" );
             if( _DirectDrawEnumerateEx )
             {
                 //
@@ -572,7 +572,7 @@ HRESULT CConfigManager::Initialize( WCHAR* FileName, D3DADAPTER_IDENTIFIER9 &Ada
             } else
             if( !_stricmp( "VideoMemory", Property ) )
             {
-#ifdef _CRT_INSECURE_DEPRECATE 
+#ifdef _CRT_INSECURE_DEPRECATE
                 nRet = sscanf_s( Value, "%d",&req_VideoMemory );
 #else
                 nRet = sscanf( Value, "%d",&req_VideoMemory );

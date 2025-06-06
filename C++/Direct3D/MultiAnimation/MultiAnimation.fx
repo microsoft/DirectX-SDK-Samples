@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: ShadowVolume.fx
 //
-// The effect file for the MultiAnimation sample.  
-// 
+// The effect file for the MultiAnimation sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -58,7 +58,7 @@ VS_OUTPUT VertScene( float4 Pos : POSITION,
                      float2 Tex0 : TEXCOORD0 )
 {
     VS_OUTPUT o;
-    
+
     o.Pos = mul( Pos, g_mWorld );
     o.Pos = mul( o.Pos, g_mViewProj );
     o.Tex0 = Tex0;
@@ -66,7 +66,7 @@ VS_OUTPUT VertScene( float4 Pos : POSITION,
 
     // Always fully lit the floor
     o.Diffuse = 1.0f;
-    
+
     return o;
 }
 
@@ -83,7 +83,7 @@ VS_OUTPUT VertSkinning( VS_INPUT i, uniform int iNumBones )
     float3      Pos = 0.0f;
     float3      Normal = 0.0f;
     float       LastWeight = 0.0f;
-    
+
     // skin VB inputs
     VS_SKIN_INPUT vsi = { i.Pos, i.BlendWeights, i.BlendIndices, i.Normal };
     VS_SKIN_OUTPUT vso = VS_Skin( vsi, iNumBones );

@@ -28,8 +28,8 @@ public:
     void Cleanup();
 
     //--------------------------------------------------------------------------------------
-    // Encode the pSourceTexture to BC6H format using CS acceleration and save it as file 
-    // fmtEncode specifies the target texture format to encode to, 
+    // Encode the pSourceTexture to BC6H format using CS acceleration and save it as file
+    // fmtEncode specifies the target texture format to encode to,
     // must be either DXGI_FORMAT_BC6H_SF16 or DXGI_FORMAT_BC6H_UF16
     //--------------------------------------------------------------------------------------
     HRESULT GPU_BC6HEncodeAndSave( ID3D11Texture2D* pSourceTexture,
@@ -43,10 +43,10 @@ protected:
     ID3D11ComputeShader* m_pTryModeG10CS;
     ID3D11ComputeShader* m_pTryModeLE10CS;
     ID3D11ComputeShader* m_pEncodeBlockCS;
-    ID3D11Buffer* m_pEncodedTextureAsBuf;    
+    ID3D11Buffer* m_pEncodedTextureAsBuf;
 
     HRESULT GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
-                            ID3D11Texture2D* pSrcTexture, 
+                            ID3D11Texture2D* pSrcTexture,
                             DXGI_FORMAT dstFormat, ID3D11Buffer** ppDstTextureAsBufOut );
     HRESULT GPU_SaveToFile( ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
                             ID3D11Texture2D* pSrcTexture,
@@ -66,9 +66,9 @@ public:
 
     HRESULT Initialize( ID3D11Device* pDevice, ID3D11DeviceContext* pContext );
     void Cleanup();
-    
+
     //--------------------------------------------------------------------------------------
-    // Decode the pSourceTexture from BC6H format using CS acceleration and save it as file    
+    // Decode the pSourceTexture from BC6H format using CS acceleration and save it as file
     //--------------------------------------------------------------------------------------
     HRESULT GPU_BC6HDecodeAndSave( ID3D11Texture2D* pSourceTexture, WCHAR* strDstFilename );
     HRESULT GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextureAsBuf, UINT uWidth, UINT uHeight, DXGI_FORMAT fmtSrc, WCHAR* strDstFilename );
@@ -79,7 +79,7 @@ protected:
     ID3D11Device* m_pDevice;
     ID3D11DeviceContext* m_pContext;
     ID3D11ComputeShader* m_pCS;
-    ID3D11Texture2D* m_pRestoredTexture;    
+    ID3D11Texture2D* m_pRestoredTexture;
 };
 
 #endif

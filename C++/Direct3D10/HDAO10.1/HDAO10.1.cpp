@@ -2,7 +2,7 @@
 // File: HDAO10.1.cpp
 //
 // This code sample demonstrates the use of the DX10.1 Gather instruction to accelerate the
-// HDAO technique  
+// HDAO technique
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -21,8 +21,8 @@
 #include "Magnify.h"
 #include "MagnifyTool.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders
 
 //--------------------------------------------------------------------------------------
 // Structures
@@ -203,7 +203,7 @@ static MagnifyTool g_MagnifyTool;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
                           void* pUserContext );
@@ -230,7 +230,7 @@ HRESULT CreateSurface( ID3D10Texture2D** ppTexture, ID3D10ShaderResourceView** p
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -240,7 +240,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -268,7 +268,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -283,7 +283,7 @@ void InitApp()
     g_SettingsDlg.GetDialogControl()->GetComboBox( DXUTSETTINGSDLG_D3D10_MULTISAMPLE_QUALITY )->SetEnabled( false );
 
     // D3D UI
-    g_HUD.SetCallback( OnGUIEvent ); int iY = 0; 
+    g_HUD.SetCallback( OnGUIEvent ); int iY = 0;
     g_HUD.SetBackgroundColors( DlgColor );
     g_HUD.EnableCaption( true );
     g_HUD.SetCaptionText( L"-- Direct3D --" );
@@ -321,22 +321,22 @@ void InitApp()
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_VIEW_CAMERA_Z, L"View Camera Z", 5, iY += 25, 140, 24, false );
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_VIEW_NORMALS_BUFFER, L"View Normals Buffer", 5, iY += 25, 140, 24, false );
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_USE_NORMALS, L"Use Normals", 5, iY += 25, 140, 24, true );
-    
+
     // Init the magnify tool UI
     g_MagnifyTool.InitApp( &g_DialogResourceManager );
     g_MagnifyTool.GetMagnifyUI()->SetCallback( OnGUIEvent );
 
     // This sample doesn't need all functionality from the MagnifyTool
-    g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_DEPTH )->SetVisible( false );        
-    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MIN )->SetVisible( false );    
-    g_MagnifyTool.GetMagnifyUI()->GetSlider( IDC_MAGNIFY_SLIDER_DEPTH_MIN )->SetVisible( false );    
-    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MAX )->SetVisible( false );    
+    g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_DEPTH )->SetVisible( false );
+    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MIN )->SetVisible( false );
+    g_MagnifyTool.GetMagnifyUI()->GetSlider( IDC_MAGNIFY_SLIDER_DEPTH_MIN )->SetVisible( false );
+    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MAX )->SetVisible( false );
     g_MagnifyTool.GetMagnifyUI()->GetSlider( IDC_MAGNIFY_SLIDER_DEPTH_MAX )->SetVisible( false );
     g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_SUB_SAMPLES )->SetVisible( false );
 
     // Setup the default HDAO params for the mesh
     WCHAR szTemp[256];
-    
+
     // Mesh HDAO params
     for( int iMesh=0; iMesh<MESH_TYPE_MAX; iMesh++ )
     {
@@ -367,7 +367,7 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -376,14 +376,14 @@ void RenderText()
     g_pTxtHelper->SetInsertionPos( 5, 5 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
 
-    if( NULL != DXUTGetD3D10Device1() ) 
+    if( NULL != DXUTGetD3D10Device1() )
     {
-        g_pTxtHelper->DrawTextLine( L"Direct3D 10.1 Device Detected" );  
+        g_pTxtHelper->DrawTextLine( L"Direct3D 10.1 Device Detected" );
     }
     else
     {
         g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 0.0f, 0.0f, 1.0f ) );
-        g_pTxtHelper->DrawTextLine( L"Please Run On Direct3D 10.1 Hardware To Access All Features Of This Sample!!" );  
+        g_pTxtHelper->DrawTextLine( L"Please Run On Direct3D 10.1 Hardware To Access All Features Of This Sample!!" );
         g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     }
 
@@ -410,20 +410,20 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
                                       void* pUserContext )
 {
     HRESULT hr;
-    
+
     LPCSTR pszTarget;
     D3D10_SHADER_MACRO* pShaderMacros = NULL;
     D3D10_SHADER_MACRO ShaderMacros[2];
-    
+
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
     #if defined( DEBUG ) || defined( _DEBUG )
         // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-        // Setting this flag improves the shader debugging experience, but still allows 
-        // the shaders to be optimized and to run exactly the way they will run in 
+        // Setting this flag improves the shader debugging experience, but still allows
+        // the shaders to be optimized and to run exactly the way they will run in
         // the release configuration of this program.
         dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
-        
+
     V_RETURN( D3DX10CreateSprite( pd3dDevice, 500, &g_pSprite10 ) );
     V_RETURN( g_DialogResourceManager.OnD3D10CreateDevice( pd3dDevice ) );
     V_RETURN( g_SettingsDlg.OnD3D10CreateDevice( pd3dDevice ) );
@@ -435,9 +435,9 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     // Read the D3DX effect file
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"HDAO10.1.fx" ) );
-   
+
     // Check to see if we have a DX10.1 device
-    if( NULL == DXUTGetD3D10Device1() ) 
+    if( NULL == DXUTGetD3D10Device1() )
     {
         pszTarget = "fx_4_0";
         pShaderMacros = NULL;
@@ -463,8 +463,8 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
             OutputDebugStringA( pErrorStr );
         }
     }
-    SAFE_RELEASE( pErrors );    
-    
+    SAFE_RELEASE( pErrors );
+
 
     // Get effects variables
     g_pRenderScene_10_0 = g_pEffect10->GetTechniqueByName( "RenderScene_10_0" );
@@ -512,7 +512,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     g_pMaterialSpecular = g_pEffect10->GetVariableByName( "g_f4MaterialSpecular" )->AsVector();
     g_pTanH = g_pEffect10->GetVariableByName( "g_fTanH" )->AsScalar();
     g_pTanV = g_pEffect10->GetVariableByName( "g_fTanV" )->AsScalar();
-    
+
     // Define our HQ vertex data layout
     const D3D10_INPUT_ELEMENT_DESC HQlayout[] =
     {
@@ -525,7 +525,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     g_pRenderHQTexturedScene_10_0->GetPassByIndex( 0 )->GetDesc( &HQPassDesc );
     V_RETURN( pd3dDevice->CreateInputLayout( HQlayout, sizeof( HQlayout ) / sizeof( HQlayout[0] ), HQPassDesc.pIAInputSignature,
                                              HQPassDesc.IAInputSignatureSize, &g_pHQVertexLayout ) );
-    
+
     // Define our LQ vertex data layout
     const D3D10_INPUT_ELEMENT_DESC layout1[] =
     {
@@ -544,10 +544,10 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     g_LightCamera.SetViewParams( &vecEye, &vecAt );
     vecEye.x = 0.0f; vecEye.y = 3.0f; vecEye.z = -15.0f;
     g_Camera[MESH_TYPE_DESERT_TANK].SetViewParams( &vecEye, &vecAt );
-        
+
     // Load the Meshes
     g_TankMesh.Create( pd3dDevice, L"softparticles\\tankscene.sdkmesh", false );
-        
+
     // Setup input layout and VB for fullscreen quad
     // Define the input layout
     D3D10_INPUT_ELEMENT_DESC FSlayout[] =
@@ -560,7 +560,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     // Create the input layout
     D3D10_PASS_DESC PassDesc3;
     g_pRenderCombined->GetPassByIndex( 0 )->GetDesc( &PassDesc3 );
-    hr = pd3dDevice->CreateInputLayout( FSlayout, numElements, PassDesc3.pIAInputSignature, 
+    hr = pd3dDevice->CreateInputLayout( FSlayout, numElements, PassDesc3.pIAInputSignature,
         PassDesc3.IAInputSignatureSize, &g_pQuadVertexLayout );
     assert( D3D_OK == hr );
 
@@ -590,10 +590,10 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     InitData.pSysMem = QuadVertices;
     hr = pd3dDevice->CreateBuffer( &BD, &InitData, &g_pQuadVertexBuffer );
     assert( D3D_OK == hr );
-    
+
     // Call the magnify tool hook function
     g_MagnifyTool.OnCreateDevice( pd3dDevice );
-    
+
     // Only add the 10.1 path if we have capable HW
     if( DXUTGetD3D10Device1() )
     {
@@ -607,7 +607,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     return S_OK;
 }
 
-    
+
 //--------------------------------------------------------------------------------------
 // Create any D3D10 resources that depend on the back buffer
 //--------------------------------------------------------------------------------------
@@ -637,36 +637,36 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
     g_SampleUI.SetLocation( pBackBufferSurfaceDesc->Width-180, 115 );
     g_SampleUI.SetSize( 170, 450 );
 
-    // Call the MagnifyTool hook function 
-    g_MagnifyTool.OnResizedSwapChain( pd3dDevice, pSwapChain, pBackBufferSurfaceDesc, pUserContext, 
+    // Call the MagnifyTool hook function
+    g_MagnifyTool.OnResizedSwapChain( pd3dDevice, pSwapChain, pBackBufferSurfaceDesc, pUserContext,
         pBackBufferSurfaceDesc->Width-180, 570 );
-        
+
     // HDAO buffer creation
-    hr = CreateSurface( &g_pHDAOTexture, &g_pHDAOTextureSRV, &g_pHDAOTextureRTV, 
+    hr = CreateSurface( &g_pHDAOTexture, &g_pHDAOTextureSRV, &g_pHDAOTextureRTV,
                         DXGI_FORMAT_R16_FLOAT, pBackBufferSurfaceDesc->Width,
                         pBackBufferSurfaceDesc->Height );
     assert( D3D_OK == hr );
-    
-    // Scene buffer creation 
-    hr = CreateSurface( &g_pSceneTexture, &g_pSceneTextureSRV, &g_pSceneTextureRTV, 
+
+    // Scene buffer creation
+    hr = CreateSurface( &g_pSceneTexture, &g_pSceneTextureSRV, &g_pSceneTextureRTV,
                         DXGI_FORMAT_R8G8B8A8_UNORM, pBackBufferSurfaceDesc->Width,
                         pBackBufferSurfaceDesc->Height );
     assert( D3D_OK == hr );
 
     // Normal buffer(s) creation
     // This is used for the 10.0 path
-    hr = CreateSurface( &g_pNormalsTexture, &g_pNormalsTextureSRV, &g_pNormalsTextureRTV, 
+    hr = CreateSurface( &g_pNormalsTexture, &g_pNormalsTextureSRV, &g_pNormalsTextureRTV,
                         DXGI_FORMAT_R16G16B16A16_FLOAT, pBackBufferSurfaceDesc->Width,
                         pBackBufferSurfaceDesc->Height );
     assert( D3D_OK == hr );
 
     // These 2 are used for the 10.1 path. Z needs to be in a single channel surface for
     // gather4 instruction
-    hr = CreateSurface( &g_pNormalsZTexture, &g_pNormalsZTextureSRV, &g_pNormalsZTextureRTV, 
+    hr = CreateSurface( &g_pNormalsZTexture, &g_pNormalsZTextureSRV, &g_pNormalsZTextureRTV,
                         DXGI_FORMAT_R16_FLOAT, pBackBufferSurfaceDesc->Width,
                         pBackBufferSurfaceDesc->Height );
     assert( D3D_OK == hr );
-    hr = CreateSurface( &g_pNormalsXYTexture, &g_pNormalsXYTextureSRV, &g_pNormalsXYTextureRTV, 
+    hr = CreateSurface( &g_pNormalsXYTexture, &g_pNormalsXYTextureSRV, &g_pNormalsXYTextureRTV,
                         DXGI_FORMAT_R16G16_FLOAT, pBackBufferSurfaceDesc->Width,
                         pBackBufferSurfaceDesc->Height );
     assert( D3D_OK == hr );
@@ -696,16 +696,16 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
     g_pHDAONormalScale->SetFloat( g_HDAOParams[g_MeshType].fNormalScale );
     g_pHDAOAcceptAngle->SetFloat( g_HDAOParams[g_MeshType].fAcceptAngle );
 
-    // Pass these camera space calculations 
+    // Pass these camera space calculations
     float fHFOV = ( D3DX_PI / 4 ) * fAspectRatio;
     float fVFOV = ( D3DX_PI / 4 );
     float fTanH = tanf( ( D3DX_PI / 2 ) - ( fHFOV / 2 ) );
     float fTanV = tanf( ( D3DX_PI / 2 ) - ( fVFOV / 2 ) );
     g_pTanH->SetFloat( fTanH );
     g_pTanV->SetFloat( fTanV );
-    
+
     // Pass the back buffer and primary depth buffer to the MagnifyTool,
-    // this is a once only operation, as the tool uses the hook functions to 
+    // this is a once only operation, as the tool uses the hook functions to
     // keep up with changing devices, and back buffers etc.
     static bool s_bFirstPass = true;
     if( s_bFirstPass )
@@ -714,7 +714,7 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
         ID3D10Resource* pTempRTResource;
         DXUTGetD3D10RenderTargetView()->GetResource( &pTempRTResource );
         DXUTGetD3D10RenderTargetView()->GetDesc( &RTDesc );
-        
+
         D3D10_DEPTH_STENCIL_VIEW_DESC DSDesc;
         ID3D10Resource* pTempDepthResource;
         g_MagnifyTool.GetDepthStencilView()->GetResource( &pTempDepthResource );
@@ -724,13 +724,13 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
         g_MagnifyTool.SetSourceResources( pTempRTResource, RTDesc.Format, pTempDepthResource, DSDesc.Format,
                     DXUTGetDXGIBackBufferSurfaceDesc()->Width, DXUTGetDXGIBackBufferSurfaceDesc()->Height,
                     DXUTGetDXGIBackBufferSurfaceDesc()->SampleDesc.Count );
-                
+
         g_MagnifyTool.SetPixelRegion( 128 );
         g_MagnifyTool.SetScale( 5 );
 
         s_bFirstPass = false;
     }
-        
+
     return S_OK;
 }
 
@@ -749,7 +749,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     ID3D10EffectTechnique* pTechnique = NULL;
     UINT Stride = sizeof( SpriteVertex );
     UINT Offset = 0;
-    
+
     float ClearColor[4] = { 0.176f, 0.196f, 0.667f, 0.0f };
     float NormalColor[4] = { 0.0f, 0.0f, 1.0f, 0.0f };
     float NormalZColor[1] = { 0.0f };
@@ -767,7 +767,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     {
         pd3dDevice->ClearRenderTargetView( g_pNormalsTextureRTV, NormalColor );
     }
-        
+
 
     // If the settings dialog is being shown, then render it instead of rendering the app's scene
     if( g_SettingsDlg.IsActive() )
@@ -779,7 +779,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     // Clear the depth stencil
     ID3D10DepthStencilView* pDSV = g_MagnifyTool.GetDepthStencilView();
     pd3dDevice->ClearDepthStencilView( pDSV, D3D10_CLEAR_DEPTH, 1.0, 0x00 );
-     
+
     // MRT setup
     ID3D10RenderTargetView* pRTVs[4];
 
@@ -790,7 +790,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         pRTVs[2] = g_pNormalsXYTextureRTV;
         pRTVs[3] = NULL;
 
-        // bind to our scene texture and the main depth buffer 
+        // bind to our scene texture and the main depth buffer
         pd3dDevice->OMSetRenderTargets( 3, (ID3D10RenderTargetView*const*)&pRTVs, pDSV );
     }
     else
@@ -800,10 +800,10 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         pRTVs[2] = NULL;
         pRTVs[3] = NULL;
 
-        // bind to our scene texture and the main depth buffer 
+        // bind to our scene texture and the main depth buffer
         pd3dDevice->OMSetRenderTargets( 2, (ID3D10RenderTargetView*const*)&pRTVs, pDSV );
     }
-        
+
 
     // Get the projection & view matrix from the camera class
     mWorld = *g_Camera[g_MeshType].GetWorldMatrix();
@@ -816,8 +816,8 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     D3DXVECTOR3 LightDir( -0.21f, 0.6f, -0.37f );
     D3DXVec3TransformCoord( &LightDir, &LightDir, g_LightCamera.GetWorldMatrix() );
 
-    // Update the effect's variables.  Instead of using strings, it would 
-    // be more efficient to cache a handle to the parameter by calling 
+    // Update the effect's variables.  Instead of using strings, it would
+    // be more efficient to cache a handle to the parameter by calling
     // ID3DXEffect::GetParameterByName
     g_pmWorldViewProj->SetMatrix( ( float* )&mWorldViewProjection );
     g_pmInvProj->SetMatrix( ( float* )&mInvProj );
@@ -832,10 +832,10 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     g_pLightDir->SetFloatVector( (float*)LightDir );
     g_pEyePt->SetFloatVector( (float*)g_Camera[g_MeshType].GetEyePt() );
 
-    
+
     ///////////////////////////////////////////////////////////////////////////
     // Render scene
-    
+
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"Main Scene" );
 
     // Render the meshes
@@ -854,9 +854,9 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
             }
             break;
     }
-            
+
     DXUT_EndPerfEvent();
-        
+
 
     ///////////////////////////////////////////////////////////////////////////
     // HDAO render
@@ -868,7 +868,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         // Render the HDAO buffer
         pd3dDevice->OMSetRenderTargets( 1, &g_pHDAOTextureRTV, NULL );
         g_pDepthTextureVar->SetResource( g_pDepthTextureSRV );
-                
+
         if( g_b10_1 )
         {
             if( g_bUseNormals )
@@ -894,10 +894,10 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
             }
             g_pNormalsTextureVar->SetResource( g_pNormalsTextureSRV );
         }
-                
+
         pTechnique->GetPassByIndex( 0 )->Apply( 0 );
         pd3dDevice->IASetInputLayout( g_pQuadVertexLayout );
-        
+
         pd3dDevice->IASetVertexBuffers( 0, 1, &g_pQuadVertexBuffer, &Stride, &Offset );
         pd3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
         pd3dDevice->Draw( 6, 0 );
@@ -906,7 +906,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         g_pNormalsZTextureVar->SetResource( NULL );
         g_pNormalsXYTextureVar->SetResource( NULL );
         pTechnique->GetPassByIndex( 0 )->Apply( 0 );
-                
+
         // Combine the HDAO buffer with the scene buffer
         pd3dDevice->OMSetRenderTargets( 1, &pRTV, NULL );
         g_pHDAOTextureVar->SetResource( g_pHDAOTextureSRV );
@@ -919,7 +919,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         g_pHDAOTextureVar->SetResource( NULL );
         g_pSceneTextureVar->SetResource( NULL );
         g_pRenderCombined->GetPassByIndex( 0 )->Apply( 0 );
-        
+
         DXUT_EndPerfEvent();
     }
     else
@@ -978,7 +978,7 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
             pTechnique = g_pRenderNormalsBuffer_10_0;
             g_pNormalsTextureVar->SetResource( g_pNormalsTextureSRV );
         }
-                    
+
         pd3dDevice->OMSetRenderTargets( 1, &pRTV, NULL );
         pTechnique->GetPassByIndex( 0 )->Apply( 0 );
         pd3dDevice->IASetInputLayout( g_pQuadVertexLayout );
@@ -990,26 +990,26 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
         g_pNormalsXYTextureVar->SetResource( NULL );
         pTechnique->GetPassByIndex( 0 )->Apply( 0 );
     }
-    
+
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"Magnify Tool" );
 
     g_MagnifyTool.Render();
 
     DXUT_EndPerfEvent();
-    
+
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );
 
     RenderText();
     g_HUD.OnRender( fElapsedTime );
     g_SampleUI.OnRender( fElapsedTime );
-    g_MagnifyTool.GetMagnifyUI()->OnRender( fElapsedTime );    
-    
+    g_MagnifyTool.GetMagnifyUI()->OnRender( fElapsedTime );
+
     DXUT_EndPerfEvent();
 }
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -1032,14 +1032,14 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
     g_DialogResourceManager.OnD3D10DestroyDevice();
     g_SettingsDlg.OnD3D10DestroyDevice();
     DXUTGetGlobalResourceCache().OnDestroyDevice();
- 
+
     SAFE_RELEASE( g_pFont10 );
     SAFE_RELEASE( g_pEffect10 );
     SAFE_RELEASE( g_pVertexLayout );
@@ -1052,7 +1052,7 @@ void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pHDAOTexture );
     SAFE_RELEASE( g_pHDAOTextureSRV );
     SAFE_RELEASE( g_pHDAOTextureRTV );
-    
+
     SAFE_RELEASE( g_pSceneTexture );
     SAFE_RELEASE( g_pSceneTextureSRV );
     SAFE_RELEASE( g_pSceneTextureRTV );
@@ -1089,7 +1089,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         D3DCAPS9 Caps;
         pD3D->GetDeviceCaps( pDeviceSettings->d3d9.AdapterOrdinal, pDeviceSettings->d3d9.DeviceType, &Caps );
 
-        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
         // then switch to SWVP.
         if( ( Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
             Caps.VertexShaderVersion < D3DVS_VERSION( 1, 1 ) )
@@ -1097,8 +1097,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
             pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 
-        // Debugging vertex shaders requires either REF or software vertex processing 
-        // and debugging pixel shaders requires REF.  
+        // Debugging vertex shaders requires either REF or software vertex processing
+        // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
         if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
         {
@@ -1130,9 +1130,9 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     pDeviceSettings->d3d10.sd.SampleDesc.Count = 1;
 
     // Force D32 depth buffer format
-    pDeviceSettings->d3d10.AutoDepthStencilFormat = DXGI_FORMAT_D32_FLOAT; 
+    pDeviceSettings->d3d10.AutoDepthStencilFormat = DXGI_FORMAT_D32_FLOAT;
 
-    // The magnify tool creates the depth buffer, so that it's bindable as a shader 
+    // The magnify tool creates the depth buffer, so that it's bindable as a shader
     // resource
     g_MagnifyTool.ModifyDeviceSettings( pDeviceSettings, pUserContext );
 
@@ -1145,7 +1145,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera[g_MeshType].FrameMove( fElapsedTime );
 
     if( !g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_ENABLE )->GetChecked() )
@@ -1193,7 +1193,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
     {
         return 0;
     }
-    
+
     // Pass all remaining windows messages to camera so it can respond to user input
     g_Camera[g_MeshType].HandleMessages( hWnd, uMsg, wParam, lParam );
 
@@ -1201,7 +1201,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
     {
         g_LightCamera.HandleMessages( hWnd, uMsg, wParam, lParam );
     }
-    
+
     return 0;
 }
 
@@ -1233,13 +1233,13 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
         case IDC_TOGGLEFULLSCREEN:
             DXUTToggleFullScreen();
             break;
-        
+
         case IDC_TOGGLEREF:
-            DXUTToggleREF(); 
+            DXUTToggleREF();
             break;
-        
+
         case IDC_CHANGEDEVICE:
-            g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() ); 
+            g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() );
             break;
 
         case IDC_COMBOBOX_MESH:
@@ -1283,7 +1283,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
         case IDC_SLIDER_REJECT_RADIUS:
             nTemp = ((CDXUTSlider*)pControl)->GetValue();
             g_HDAOParams[g_MeshType].fRejectRadius = ( nTemp / 100.0f );
-            g_HDAOParams[g_MeshType].fRejectRadius *= g_HDAOParams[g_MeshType].fRejectRadiusMax; 
+            g_HDAOParams[g_MeshType].fRejectRadius *= g_HDAOParams[g_MeshType].fRejectRadiusMax;
             swprintf_s( szTemp, L"Reject Radius : %.2f", g_HDAOParams[g_MeshType].fRejectRadius );
             g_SampleUI.GetStatic( IDC_STATIC_REJECT_RADIUS )->SetText( szTemp );
             g_pHDAORejectRadius->SetFloat( g_HDAOParams[g_MeshType].fRejectRadius );

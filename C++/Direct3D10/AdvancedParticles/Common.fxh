@@ -47,39 +47,39 @@ struct SkinnedInfo
 SkinnedInfo SkinVert( VSAnimIn Input )
 {
     SkinnedInfo Output = (SkinnedInfo)0;
-    
+
     float4 Pos = float4(Input.Pos,1);
     float3 Norm = Input.Norm;
     float3 Tan = Input.Tan;
-    
+
     uint iBone = Input.Bones.x;
     float fWeight = Input.Weights.x;
     matrix m = g_mBoneWorld[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     iBone = Input.Bones.y;
     fWeight = Input.Weights.y;
     m = g_mBoneWorld[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     iBone = Input.Bones.z;
     fWeight = Input.Weights.z;
     m = g_mBoneWorld[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     iBone = Input.Bones.w;
     fWeight = Input.Weights.w;
     m = g_mBoneWorld[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
     Output.Norm += fWeight * mul( Norm, m );
     Output.Tan += fWeight * mul( Tan, (float3x3)m );
-    
+
     return Output;
 }
 
@@ -90,28 +90,28 @@ SkinnedInfo SkinVert( VSAnimIn Input )
 SkinnedInfo SkinVertPrev( VSAnimIn Input )
 {
     SkinnedInfo Output = (SkinnedInfo)0;
-    
+
     float4 Pos = float4(Input.Pos,1);
-    
+
     uint iBone = Input.Bones.x;
     float fWeight = Input.Weights.x;
     matrix m = g_mBonePrev[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
-    
+
     iBone = Input.Bones.y;
     fWeight = Input.Weights.y;
     m = g_mBonePrev[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
-    
+
     iBone = Input.Bones.z;
     fWeight = Input.Weights.z;
     m = g_mBonePrev[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
-    
+
     iBone = Input.Bones.w;
     fWeight = Input.Weights.w;
     m = g_mBonePrev[ iBone ];
     Output.Pos += fWeight * mul( Pos, m );
-    
+
     return Output;
 }

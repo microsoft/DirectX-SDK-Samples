@@ -1,9 +1,9 @@
 //----------------------------------------------------------------------------
 // File: VidMemViaDDraw.cpp
 //
-// This method queries the DirectDraw 7 interfaces for the amount of available 
-// video memory. On a discrete video card, this is often close to the amount 
-// of dedicated video memory and usually does not take into account the amount 
+// This method queries the DirectDraw 7 interfaces for the amount of available
+// video memory. On a discrete video card, this is often close to the amount
+// of dedicated video memory and usually does not take into account the amount
 // of shared system memory. This number can end up smaller than expected
 // on systems with large memories and/or large VRAM video cards due to
 // 32-bit overflow. DXGI doesn't suffer from these issues.

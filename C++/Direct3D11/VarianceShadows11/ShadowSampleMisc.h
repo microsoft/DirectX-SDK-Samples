@@ -19,7 +19,7 @@
 #define MAXIMUM_BLUR_LEVELS 7
 
 
-HRESULT CompileShaderFromFile( WCHAR* szFileName, D3D_SHADER_MACRO *defines, LPCSTR szEntryPoint, 
+HRESULT CompileShaderFromFile( WCHAR* szFileName, D3D_SHADER_MACRO *defines, LPCSTR szEntryPoint,
                                LPCSTR szShaderModel, ID3DBlob** ppBlobOut );
 
 enum SHADOW_FILTER
@@ -32,32 +32,32 @@ enum SHADOW_FILTER
   SHADOW_FILTER_POINT
 };
 
-enum SCENE_SELECTION 
+enum SCENE_SELECTION
 {
     POWER_PLANT_SCENE,
     TEST_SCENE
 };
 
-enum FIT_PROJECTION_TO_CASCADES 
+enum FIT_PROJECTION_TO_CASCADES
 {
     FIT_TO_CASCADES,
     FIT_TO_SCENE
 };
 
-enum FIT_TO_NEAR_FAR 
+enum FIT_TO_NEAR_FAR
 {
     FIT_NEARFAR_ZERO_ONE,
     FIT_NEARFAR_AABB,
     FIT_NEARFAR_SCENE_AABB
 };
 
-enum CASCADE_SELECTION 
+enum CASCADE_SELECTION
 {
     CASCADE_SELECTION_MAP,
     CASCADE_SELECTION_INTERVAL
 };
 
-enum CAMERA_SELECTION 
+enum CAMERA_SELECTION
 {
     EYE_CAMERA,
     LIGHT_CAMERA,
@@ -71,7 +71,7 @@ enum CAMERA_SELECTION
     ORTHO_CAMERA8
 };
 // when these paramters change, we must reallocate the shadow resources.
-struct CascadeConfig 
+struct CascadeConfig
 {
     INT m_nCascadeLevels;
     DXGI_FORMAT m_ShadowBufferFormat;
@@ -93,9 +93,9 @@ struct CB_ALL_SHADOW_DATA
 
     // For Map based selection scheme, this keeps the pixels inside of the the valid range.
     // When there is no boarder, these values are 0 and 1 respectivley.
-    FLOAT       m_fMinBorderPadding;     
+    FLOAT       m_fMinBorderPadding;
     FLOAT       m_fMaxBorderPadding;
-                                        
+
     FLOAT       m_fCascadeBlendArea; // Amount to overlap when blending between cascades.
     FLOAT       m_fTexelSize; // Shadow map texel size.
     FLOAT       m_fNativeTexelSizeInX; // Texel size in native map ( textures are packed ).

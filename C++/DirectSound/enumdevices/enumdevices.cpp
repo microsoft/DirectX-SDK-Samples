@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: EnumDevices.cpp
 //
-// Desc: This sample shows how to enumerate DirectSound sound and capture 
+// Desc: This sample shows how to enumerate DirectSound sound and capture
 //       devices.
 //
 // Copyright (c) Microsoft Corp. All rights reserved.
@@ -37,10 +37,10 @@ LPDIRECTSOUNDCAPTURE g_pDSCapture = NULL;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, 
+INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
                       INT nCmdShow )
 {
     // Initialize COM
@@ -64,9 +64,9 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 //-----------------------------------------------------------------------------
 INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-    HRESULT hr; 
+    HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_COMMAND:
             switch( LOWORD(wParam) )
@@ -75,13 +75,13 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     // Init DirectSound
                     if( SUCCEEDED( hr = InitDirectSound( hDlg ) ) )
                     {
-                        MessageBox( hDlg, TEXT("DirectSound interface created successfully"), 
+                        MessageBox( hDlg, TEXT("DirectSound interface created successfully"),
                                           TEXT("EnumDevices"), MB_OK );
                     }
                     else
                     {
                         DXTRACE_ERR_MSGBOX( TEXT("InitDirectSound"), hr );
-                        MessageBox( hDlg, TEXT("DirectSound interface creatation failed"), 
+                        MessageBox( hDlg, TEXT("DirectSound interface creatation failed"),
                                           TEXT("EnumDevices"), MB_OK | MB_ICONERROR );
                     }
                     break;
@@ -100,7 +100,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
             {
                 DXTRACE_ERR_MSGBOX( TEXT("OnInitDialog"), hr );
                 MessageBox( hDlg, L"Error enumerating DirectSound devices. "
-                                  L"Sample will now exit.", L"DirectSound Sample", 
+                                  L"Sample will now exit.", L"DirectSound Sample",
                                   MB_OK | MB_ICONERROR );
                 EndDialog( hDlg, IDABORT );
             }
@@ -109,7 +109,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
         case WM_DESTROY:
             // Cleanup everything
             FreeDirectSound();
-            break; 
+            break;
 
         default:
             return FALSE; // Didn't handle message
@@ -188,15 +188,15 @@ INT_PTR CALLBACK DSoundEnumCallback( GUID* pGUID, TCHAR* strDesc, TCHAR* strDrvN
     HWND hSoundDeviceCombo = (HWND)pContext;
 
     // Add the string to the combo box
-    SendMessage( hSoundDeviceCombo, CB_ADDSTRING, 
+    SendMessage( hSoundDeviceCombo, CB_ADDSTRING,
                  0, (LPARAM) (LPCTSTR) strDesc );
 
     // Get the index of the string in the combo box
-    INT nIndex = (INT)SendMessage( hSoundDeviceCombo, CB_FINDSTRING, 
+    INT nIndex = (INT)SendMessage( hSoundDeviceCombo, CB_FINDSTRING,
                                    0, (LPARAM) (LPCTSTR) strDesc );
 
     // Set the item data to a pointer to the static guid stored in AudioDriverGUIDs
-    SendMessage( hSoundDeviceCombo, CB_SETITEMDATA, 
+    SendMessage( hSoundDeviceCombo, CB_SETITEMDATA,
                  nIndex, (LPARAM) pTemp );
 
     return TRUE;
@@ -221,13 +221,13 @@ HRESULT InitDirectSound( HWND hDlg )
     HWND hCaptureDeviceCombo = GetDlgItem( hDlg, IDC_CAPTURE_DEVICE_COMBO );
 
     // Get the index of the currently selected devices
-    INT nSoundIndex   = (INT)SendMessage( hSoundDeviceCombo,   CB_GETCURSEL, 0, 0 ); 
-    INT nCaptureIndex = (INT)SendMessage( hCaptureDeviceCombo, CB_GETCURSEL, 0, 0 ); 
+    INT nSoundIndex   = (INT)SendMessage( hSoundDeviceCombo,   CB_GETCURSEL, 0, 0 );
+    INT nCaptureIndex = (INT)SendMessage( hCaptureDeviceCombo, CB_GETCURSEL, 0, 0 );
 
     // Get the GUID attached to the combo box item
-    GUID* pSoundGUID = (GUID*) SendMessage( hSoundDeviceCombo, CB_GETITEMDATA, 
+    GUID* pSoundGUID = (GUID*) SendMessage( hSoundDeviceCombo, CB_GETITEMDATA,
                                             nSoundIndex, 0 );
-    GUID* pCaptureGUID = (GUID*) SendMessage( hCaptureDeviceCombo, CB_GETITEMDATA, 
+    GUID* pCaptureGUID = (GUID*) SendMessage( hCaptureDeviceCombo, CB_GETITEMDATA,
                                               nCaptureIndex, 0 );
 
     // Create IDirectSound using the select sound device
@@ -236,14 +236,14 @@ HRESULT InitDirectSound( HWND hDlg )
 
     // Release the IDirectSound object immediately since we don't want
     // to limit this sample to only computers that support full duplex audio
-    SAFE_RELEASE( g_pDS ); 
+    SAFE_RELEASE( g_pDS );
 
     // Create IDirectSoundCapture using the select capture device
     if( FAILED( hr = DirectSoundCaptureCreate( pCaptureGUID, &g_pDSCapture, NULL ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("DirectSoundCaptureCreate"), hr );
 
-    // Release g_pDSCapture, since we don't need it really 
-    SAFE_RELEASE( g_pDSCapture ); 
+    // Release g_pDSCapture, since we don't need it really
+    SAFE_RELEASE( g_pDSCapture );
 
     return S_OK;
 }
@@ -253,13 +253,13 @@ HRESULT InitDirectSound( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: FreeDirectSound()
-// Desc: Releases DirectSound 
+// Desc: Releases DirectSound
 //-----------------------------------------------------------------------------
 HRESULT FreeDirectSound()
 {
     // Release DirectSound interfaces
-    SAFE_RELEASE( g_pDSCapture ); 
-    SAFE_RELEASE( g_pDS ); 
+    SAFE_RELEASE( g_pDSCapture );
+    SAFE_RELEASE( g_pDS );
 
     return S_OK;
 }

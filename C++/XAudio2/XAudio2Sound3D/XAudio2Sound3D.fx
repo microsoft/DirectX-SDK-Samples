@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: XAudio2Sound3D.fx
 //
-// The effect file for the XAudio Sound 3D sample.  
-// 
+// The effect file for the XAudio Sound 3D sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -37,11 +37,11 @@ struct VS_OUTPUT
 VS_OUTPUT RenderSceneVS( VS_INPUT vIn )
 {
     VS_OUTPUT output;
-    
+
     output.Position = mul( vIn.vPosition, g_mTransform );
-    
+
     output.Color = vIn.color;
-    
+
     return output;
 }
 
@@ -51,6 +51,6 @@ VS_OUTPUT RenderSceneVS( VS_INPUT vIn )
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
 float4 RenderScenePS( VS_OUTPUT input ) : SV_TARGET
-{ 
+{
     return input.Color;
 }

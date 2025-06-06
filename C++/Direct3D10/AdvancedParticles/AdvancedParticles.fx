@@ -54,9 +54,9 @@ cbuffer cbImmutable
         float3( -1, -1, 0 ),
         float3( 1, -1, 0 ),
     };
-    float2 g_texcoords[4] = 
-    { 
-        float2(0,1), 
+    float2 g_texcoords[4] =
+    {
+        float2(0,1),
         float2(1,1),
         float2(0,0),
         float2(1,0),
@@ -157,7 +157,7 @@ float3 GetVolumeCoords( float3 pos )
 VSParticleDrawOut VSPointSprite(VSParticleIn input)
 {
     VSParticleDrawOut output = (VSParticleDrawOut)0;
-    
+
     //
     // Pass the point through
     //
@@ -165,7 +165,7 @@ VSParticleDrawOut VSPointSprite(VSParticleIn input)
     output.radius = g_fParticleDrawRadius;
     output.color = input.color;
     output.color.a = 1.0;
-    
+
     return output;
 }
 
@@ -236,7 +236,7 @@ VSParticleIn VSAdvanceParticles(VSParticleIn input)
 void GSPointSprite(point VSParticleDrawOut input[1], inout TriangleStream<PSSceneIn> SpriteStream)
 {
     PSSceneIn output;
-    
+
     //
     // Emit two new triangles
     //
@@ -245,7 +245,7 @@ void GSPointSprite(point VSParticleDrawOut input[1], inout TriangleStream<PSScen
         float3 position = g_positions[i]*input[0].radius;
         position = mul( position, (float3x3)g_mInvView ) + input[0].pos;
         output.pos = mul( float4(position,1.0), g_mWorldViewProj );
-        
+
         output.color = input[0].color;
         output.tex = g_texcoords[i];
         SpriteStream.Append(output);
@@ -257,7 +257,7 @@ void GSPointSprite(point VSParticleDrawOut input[1], inout TriangleStream<PSScen
 // PS for particles
 //
 float4 PSPointSprite(PSSceneIn input) : SV_Target
-{   
+{
     return g_txDiffuse.Sample( g_samLinear, input.tex ) * input.color;
 }
 
@@ -271,11 +271,11 @@ technique10 RenderParticles
         SetVertexShader( CompileShader( vs_4_0, VSPointSprite() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSPointSprite() ) );
         SetPixelShader( CompileShader( ps_4_0, PSPointSprite() ) );
-        
+
         SetBlendState( AdditiveBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepthWrite, 0 );
         SetRasterizerState( CullBack );
-    }  
+    }
 }
 
 //
@@ -290,8 +290,8 @@ technique10 AdvanceParticles
         SetVertexShader( vsAdvanceParticles );
         SetGeometryShader( gsStreamOut );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullBack );
-    }  
+    }
 }

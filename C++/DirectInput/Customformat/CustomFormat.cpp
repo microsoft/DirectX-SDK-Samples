@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 // File: CustomFormat.cpp
 //
-// Desc: demonstrates the use of a custom data format for input retrieval from 
-// a device which doesn't correspond to one of the predefined mouse, keyboard, 
+// Desc: demonstrates the use of a custom data format for input retrieval from
+// a device which doesn't correspond to one of the predefined mouse, keyboard,
 // or joystick types.
 //
 // Copyright (c) Microsoft Corporation.
@@ -29,9 +29,9 @@
 #define DIDFT_OPTIONAL          0x80000000
 #endif
 
-// Here we define a custom data format to store input from a mouse. In a 
-// real program you would almost certainly use either the predefined 
-// DIMOUSESTATE or DIMOUSESTATE2 structure to store mouse input, but some 
+// Here we define a custom data format to store input from a mouse. In a
+// real program you would almost certainly use either the predefined
+// DIMOUSESTATE or DIMOUSESTATE2 structure to store mouse input, but some
 // input devices such as the Sidewinder GameVoice controller are not well
 // described by the provided types and may require custom formats.
 
@@ -40,7 +40,7 @@ struct MouseState
     LONG lAxisX;
     LONG lAxisY;
     BYTE abButtons[3];
-    BYTE bPadding;       // Structure must be DWORD multiple in size.   
+    BYTE bPadding;       // Structure must be DWORD multiple in size.
 };
 
 // Each device object for which you want to receive input must have an entry
@@ -49,12 +49,12 @@ struct MouseState
 // within MouseState structure declared above. Inside the input routine, a
 // MouseState structure is provided to the GetDeviceState method, and
 // DirectInput uses this offset to store the input data in the provided
-// structure. 
-// 
+// structure.
+//
 // Any of the elements which are not flagged as DIDFT_OPTIONAL, and
 // which describe a device object which is not found on the actual device will
 // cause the SetDeviceFormat call to fail. For the format defined below, the
-// system mouse must have an x-axis, y-axis, and at least one button. 
+// system mouse must have an x-axis, y-axis, and at least one button.
 
 DIOBJECTDATAFORMAT g_aObjectFormats[] =
 {
@@ -71,10 +71,10 @@ DIOBJECTDATAFORMAT g_aObjectFormats[] =
 };
 #define numMouseObjects (sizeof(g_aObjectFormats) / sizeof(DIOBJECTDATAFORMAT))
 
-// Finally, the DIDATAFORMAT is filled with the information defined above for 
-// our custom data format. The format also defines whether the returned axis 
-// data is absolute or relative. Usually mouse movement is reported in relative 
-// coordinates, but our custom format will use absolute coordinates. 
+// Finally, the DIDATAFORMAT is filled with the information defined above for
+// our custom data format. The format also defines whether the returned axis
+// data is absolute or relative. Usually mouse movement is reported in relative
+// coordinates, but our custom format will use absolute coordinates.
 
 DIDATAFORMAT            g_dfMouse =
 {
@@ -94,7 +94,7 @@ DIDATAFORMAT            g_dfMouse =
 //-----------------------------------------------------------------------------
 #define SAFE_RELEASE(p) { if(p) { (p)->Release(); (p)=nullptr; } }
 
-LPDIRECTINPUT8          g_pDI = nullptr; // DirectInput interface       
+LPDIRECTINPUT8          g_pDI = nullptr; // DirectInput interface
 LPDIRECTINPUTDEVICE8    g_pMouse = nullptr; // Device interface
 
 
@@ -114,7 +114,7 @@ HRESULT UpdateInputState(HWND hDlg) noexcept;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 int APIENTRY WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ int)
@@ -179,7 +179,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
         return TRUE;
     }
 
-    return FALSE; // Message not handled 
+    return FALSE; // Message not handled
 }
 
 
@@ -252,8 +252,8 @@ HRESULT UpdateInputState(HWND hDlg) noexcept
             hr = g_pMouse->Acquire();
 
         // hr may be DIERR_OTHERAPPHASPRIO or other errors.  This
-        // may occur when the app is minimized or in the process of 
-        // switching, so just try again later 
+        // may occur when the app is minimized or in the process of
+        // switching, so just try again later
         return S_OK;
     }
 
@@ -262,7 +262,7 @@ HRESULT UpdateInputState(HWND hDlg) noexcept
     if (FAILED(hr = g_pMouse->GetDeviceState(sizeof(MouseState), &ms)))
         return hr; // The device should have been acquired during the Poll()
 
-    // The initial mouse position should be subracted from the current point. 
+    // The initial mouse position should be subracted from the current point.
     if (!bInitialized)
     {
         bInitialized = TRUE;
@@ -304,7 +304,7 @@ HRESULT UpdateInputState(HWND hDlg) noexcept
 //-----------------------------------------------------------------------------
 VOID FreeDirectInput() noexcept
 {
-    // Unacquire the device one last time just in case 
+    // Unacquire the device one last time just in case
     // the app tried to exit while the device is still acquired.
     if (g_pMouse)
         g_pMouse->Unacquire();

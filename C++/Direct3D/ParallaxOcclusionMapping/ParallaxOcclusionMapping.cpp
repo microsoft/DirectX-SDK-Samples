@@ -3,12 +3,12 @@
 //
 // Author: Natalya Tatarchuk
 //         ATI Research, Inc.
-//         3D Application Research Group  
+//         3D Application Research Group
 //
-// Implementation of the algorithm as described in "Dynamic Parallax Occlusion Mapping with 
-// Approximate Soft Shadows" paper, by N. Tatarchuk, ATI Research, to appear in the proceedings 
+// Implementation of the algorithm as described in "Dynamic Parallax Occlusion Mapping with
+// Approximate Soft Shadows" paper, by N. Tatarchuk, ATI Research, to appear in the proceedings
 // of ACM Symposium on Interactive 3D Graphics and Games, 2006.
-//                 
+//
 // Copyright (c) ATI Research, Inc. All rights reserved.
 //=================================================================================================
 
@@ -18,8 +18,8 @@
 #include "SDKmisc.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -173,7 +173,7 @@ WCHAR*                      g_strMeshFileName0 = TEXT( "Disc.x" );
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -197,7 +197,7 @@ void RenderText( double fTime );
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a 
+// Entry point to the program. Initializes everything and goes into a
 // message processing loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -360,7 +360,7 @@ void SetPOMTextures( int iTextureIndex )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app: initialize the light controls and the GUI 
+// Initialize the app: initialize the light controls and the GUI
 // elements for this application.
 //--------------------------------------------------------------------------------------
 void InitApp()
@@ -380,7 +380,7 @@ void InitApp()
     // Initialize POM textures and height map parameters:
     SetPOMTextures( POM_STONES );
 
-    // Initialize dialogs // 
+    // Initialize dialogs //
     g_SettingsDlg.Init( &g_DialogResourceManager );
     g_HUD.Init( &g_DialogResourceManager );
     g_SampleUI.Init( &g_DialogResourceManager );
@@ -498,8 +498,8 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// Called during device initialization, this code checks the device for some 
-// minimum set of capabilities, and rejects those that don't pass by 
+// Called during device initialization, this code checks the device for some
+// minimum set of capabilities, and rejects those that don't pass by
 // returning E_FAIL.
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps,
@@ -508,8 +508,8 @@ bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps,
                                   bool bWindowed,
                                   void* pUserContext )
 {
-    // The ParallaxOcculsionMapping technique requires PS 3.0 so reject any device that 
-    // doesn't support at least PS 3.0.  Typically, the app would fallback but 
+    // The ParallaxOcculsionMapping technique requires PS 3.0 so reject any device that
+    // doesn't support at least PS 3.0.  Typically, the app would fallback but
     // ParallaxOcculsionMapping is the purpose of this sample
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 3, 0 ) )
     {
@@ -557,8 +557,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings,
         pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
     }
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
       if ( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
       {
@@ -587,7 +587,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings,
 }
 
 //--------------------------------------------------------------------------------------
-// Loads the effect file from disk. Note: D3D device must be created and set 
+// Loads the effect file from disk. Note: D3D device must be created and set
 // prior to calling this method.
 //--------------------------------------------------------------------------------------
 HRESULT LoadEffectFile()
@@ -601,8 +601,8 @@ HRESULT LoadEffectFile()
 
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DXSHADER_DEBUG;
     #endif
@@ -653,12 +653,12 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice,
     V_RETURN( g_DialogResourceManager.OnD3D9CreateDevice( pd3dDevice ) );
     V_RETURN( g_SettingsDlg.OnD3D9CreateDevice( pd3dDevice ) );
 
-    // Initialize the font 
+    // Initialize the font
     V_RETURN( D3DXCreateFont( pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
                               OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                               L"Arial", &g_pFont ) );
 
-    // Load the mesh 
+    // Load the mesh
     V_RETURN( LoadMesh( pd3dDevice, g_strMeshFileName0, &g_pMesh ) );
 
     D3DXVECTOR3* pData;
@@ -668,8 +668,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice,
     V( D3DXComputeBoundingSphere( pData, g_pMesh->GetNumVertices(), s_iDECL_SIZE, &vCenter, &fObjectRadius ) );
     V( g_pMesh->UnlockVertexBuffer() );
 
-    // Align the starting frame of the mesh to be slightly toward the viewer yet to 
-    // see the grazing angles:                                                      
+    // Align the starting frame of the mesh to be slightly toward the viewer yet to
+    // see the grazing angles:
     D3DXMatrixTranslation( &g_mWorldFix, -vCenter.x, -vCenter.y, -vCenter.z );
     D3DXMATRIXA16 mRotation;
     D3DXMatrixRotationY( &mRotation, -D3DX_PI / 3.0f );
@@ -677,13 +677,13 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice,
     D3DXMatrixRotationX( &mRotation, D3DX_PI / 3.0f );
     g_mWorldFix *= mRotation;
 
-    // Initialize the light control 
+    // Initialize the light control
     V_RETURN( CDXUTDirectionWidget::StaticOnD3D9CreateDevice( pd3dDevice ) );
     g_LightControl.SetRadius( fObjectRadius );
 
     V_RETURN( LoadEffectFile() );
 
-    // Load all textures used by the program from disk 
+    // Load all textures used by the program from disk
     WCHAR str[MAX_PATH];
 
     g_pBaseTextures = ( IDirect3DTexture9** )malloc( sizeof( IDirect3DTexture9* ) * s_iNUM_TEXTURES );
@@ -703,7 +703,7 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice,
 
     for( int iTextureIndex = POM_STONES; iTextureIndex < s_iNUM_TEXTURES; iTextureIndex++ )
     {
-        // Load the pair of textures (base and combined normal map / height map texture) into 
+        // Load the pair of textures (base and combined normal map / height map texture) into
         // memory for each type of POM texture pairs
 
         // Load the base mesh:
@@ -725,7 +725,7 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice,
 
     SetPOMTextures( g_nCurrentTextureID );
 
-    // Setup the camera's view parameters 
+    // Setup the camera's view parameters
     D3DXVECTOR3 vecEye( 0.0f, 0.0f, -15.0f );
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, -0.0f );
     g_Camera.SetViewParams( &vecEye, &vecAt );
@@ -735,8 +735,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice,
 }
 
 //--------------------------------------------------------------------------------------
-// This function loads the mesh and ensures the mesh has normals; it also 
-// optimizes the mesh for the graphics card's vertex cache, which improves 
+// This function loads the mesh and ensures the mesh has normals; it also
+// optimizes the mesh for the graphics card's vertex cache, which improves
 // performance by organizing the internal triangle list for less cache misses.
 //--------------------------------------------------------------------------------------
 HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** ppMesh )
@@ -767,7 +767,7 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
 
     LPD3DXMESH pTempMesh = NULL;
 
-    // Clone mesh to match the specified declaration: 
+    // Clone mesh to match the specified declaration:
     if( FAILED( pMesh->CloneMesh( pMesh->GetOptions(), vertexDecl, pd3dDevice, &pTempMesh ) ) )
     {
         SAFE_RELEASE( pTempMesh );
@@ -832,10 +832,10 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
     }
     V( pMesh->GenerateAdjacency( 1e-6f, rgdwAdjacency ) );
 
-    // Optimize the mesh for this graphics card's vertex cache 
-    // so when rendering the mesh's triangle list the vertices will 
-    // cache hit more often so it won't have to re-execute the vertex shader 
-    // on those vertices so it will improve perf.     
+    // Optimize the mesh for this graphics card's vertex cache
+    // so when rendering the mesh's triangle list the vertices will
+    // cache hit more often so it won't have to re-execute the vertex shader
+    // on those vertices so it will improve perf.
     V( pMesh->OptimizeInplace( D3DXMESHOPT_VERTEXCACHE, rgdwAdjacency, NULL, NULL, NULL ) );
 
     if( !bHadTangent || !bHadBinormal )
@@ -865,8 +865,8 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
@@ -923,7 +923,7 @@ void CALLBACK OnFrameMove( double fTime,
                            float fElapsedTime,
                            void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
 }
@@ -956,7 +956,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice,
     D3DXMATRIXA16 mView;
     D3DXMATRIXA16 mProjection;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DXCOLOR( 0.0f, 0.25f, 0.25f, 0.55f ), 1.0f,
                           0 ) );
 
@@ -994,8 +994,8 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice,
         V( g_pEffect->SetValue( "g_LightDir", &vLightDir, sizeof( D3DXVECTOR3 ) ) );
         V( g_pEffect->SetValue( "g_LightDiffuse", &vLightDiffuse, sizeof( D3DXVECTOR4 ) ) );
 
-        // Update the effect's variables.  Instead of using strings, it would 
-        // be more efficient to cache a handle to the parameter by calling 
+        // Update the effect's variables.  Instead of using strings, it would
+        // be more efficient to cache a handle to the parameter by calling
         // ID3DXEffect::GetParameterByName
         V( g_pEffect->SetMatrix( "g_mWorldViewProjection", &mWorldViewProjection ) );
         V( g_pEffect->SetMatrix( "g_mWorld", &mWorld ) );
@@ -1059,7 +1059,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice,
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont 
+// Render the help and statistics text. This function uses the ID3DXFont
 // interface for efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText( double fTime )
@@ -1361,7 +1361,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
 {
@@ -1376,7 +1376,7 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

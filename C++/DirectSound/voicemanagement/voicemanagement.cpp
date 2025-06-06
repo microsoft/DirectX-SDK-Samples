@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: VoiceManagement.cpp
 //
-// Desc: Main application file for the VoiceManagement sample. 
+// Desc: Main application file for the VoiceManagement sample.
 //
 // This legacy sample tries to use DSBPLAY_LOCHARDWARE when possible, but falls
 // back to software when it's not supported. DSBPLAY_LOCHARDWARE is never supported
@@ -45,10 +45,10 @@ CSound*        g_pSound = NULL;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, 
+INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
                       INT nCmdShow )
 {
     InitCommonControls();
@@ -70,10 +70,10 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_INITDIALOG:
-            OnInitDialog( hDlg ); 
+            OnInitDialog( hDlg );
             break;
 
         case WM_COMMAND:
@@ -93,7 +93,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     {
                         DXTRACE_ERR_MSGBOX( TEXT("OnPlaySound"), hr );
                         MessageBox( hDlg, L"Error playing DirectSound buffer."
-                                    L"Sample will now exit.", L"DirectSound Sample", 
+                                    L"Sample will now exit.", L"DirectSound Sample",
                                     MB_OK | MB_ICONERROR );
                         EndDialog( hDlg, IDABORT );
                     }
@@ -121,17 +121,17 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     break;
 
                 case IDC_BYTIME:
-                    if( IsDlgButtonChecked( hDlg, IDC_BYTIME ) == BST_CHECKED ) 
+                    if( IsDlgButtonChecked( hDlg, IDC_BYTIME ) == BST_CHECKED )
                         CheckDlgButton( hDlg, IDC_BYDISTANCE, BST_UNCHECKED );
                     UpdateBehaviorText( hDlg );
                     break;
 
                 case IDC_BYDISTANCE:
-                    if( IsDlgButtonChecked( hDlg, IDC_BYDISTANCE ) == BST_CHECKED ) 
+                    if( IsDlgButtonChecked( hDlg, IDC_BYDISTANCE ) == BST_CHECKED )
                         CheckDlgButton( hDlg, IDC_BYTIME, BST_UNCHECKED );
                     UpdateBehaviorText( hDlg );
                     break;
-                    
+
                 case IDC_BYPRIORTY:
                     UpdateBehaviorText( hDlg );
                     break;
@@ -147,10 +147,10 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 
         case WM_DESTROY:
             // Cleanup everything
-            KillTimer( hDlg, 1 );    
+            KillTimer( hDlg, 1 );
             SAFE_DELETE( g_pSound );
             SAFE_DELETE( g_pSoundManager );
-            break; 
+            break;
 
         default:
             return FALSE; // Didn't handle message
@@ -178,8 +178,8 @@ VOID OnInitDialog( HWND hDlg )
 #endif
     HICON hIcon = LoadIcon( hInst, MAKEINTRESOURCE( IDR_MAINFRAME ) );
 
-    // Create a static IDirectSound in the CSound class.  
-    // Set coop level to DSSCL_PRIORITY, and set primary buffer 
+    // Create a static IDirectSound in the CSound class.
+    // Set coop level to DSSCL_PRIORITY, and set primary buffer
     // format to stereo, 22kHz and 16-bit output.
     g_pSoundManager = new CSoundManager();
     if( NULL == g_pSoundManager )
@@ -192,22 +192,22 @@ VOID OnInitDialog( HWND hDlg )
     if( FAILED( hr = g_pSoundManager->Initialize( hDlg, DSSCL_PRIORITY ) ) )
     {
         DXTRACE_ERR_MSGBOX( TEXT("Initialize"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
-                          L"DirectSound Sample", MB_OK | MB_ICONERROR );
-        EndDialog( hDlg, IDABORT );
-        return;
-    }
-    
-    if( FAILED( hr = g_pSoundManager->SetPrimaryBufferFormat( 2, 22050, 16 ) ) )
-    {
-        DXTRACE_ERR_MSGBOX( TEXT("SetPrimaryBufferFormat"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                           L"DirectSound Sample", MB_OK | MB_ICONERROR );
         EndDialog( hDlg, IDABORT );
         return;
     }
 
-    // Check the 'hardware' voice allocation button by default. 
+    if( FAILED( hr = g_pSoundManager->SetPrimaryBufferFormat( 2, 22050, 16 ) ) )
+    {
+        DXTRACE_ERR_MSGBOX( TEXT("SetPrimaryBufferFormat"), hr );
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
+                          L"DirectSound Sample", MB_OK | MB_ICONERROR );
+        EndDialog( hDlg, IDABORT );
+        return;
+    }
+
+    // Check the 'hardware' voice allocation button by default.
     CheckRadioButton( hDlg, IDC_ALLOC_EITHER, IDC_ALLOC_SOFTWARE, IDC_ALLOC_EITHER );
 
     HWND hEditPri = GetDlgItem( hDlg, IDC_EDIT_PRIORITY );
@@ -236,7 +236,7 @@ VOID OnInitDialog( HWND hDlg )
 // Name: OnOpenSoundFile()
 // Desc: Called when the user requests to open a sound file
 //-----------------------------------------------------------------------------
-VOID OnOpenSoundFile( HWND hDlg ) 
+VOID OnOpenSoundFile( HWND hDlg )
 {
     HRESULT hr;
 
@@ -288,7 +288,7 @@ VOID OnOpenSoundFile( HWND hDlg )
     if( hFile != NULL )
     {
         // If you try to open a 100MB wav file, you could run out of system memory with this
-        // sample cause it puts all of it into a large buffer.  If you need to do this, then 
+        // sample cause it puts all of it into a large buffer.  If you need to do this, then
         // see the "StreamData" sample to stream the data from the file into a sound buffer.
         DWORD dwFileSizeHigh = 0;
         DWORD dwFileSize = GetFileSize( hFile, &dwFileSizeHigh );
@@ -302,13 +302,13 @@ VOID OnOpenSoundFile( HWND hDlg )
     }
 
     // Load the wave file into a DirectSound buffer
-    if( FAILED( hr = g_pSoundManager->Create( &g_pSound, strFileName, 
+    if( FAILED( hr = g_pSoundManager->Create( &g_pSound, strFileName,
                                          DSBCAPS_LOCDEFER, GUID_NULL ) ) )
     {
         // Not a critical failure, so just update the status
         DXTRACE_ERR( TEXT("Create"), hr );
         SetDlgItemText( hDlg, IDC_FILENAME, TEXT("Could not create sound buffer.") );
-        return; 
+        return;
     }
 
     // Update the UI controls to show the sound as the file is loaded
@@ -329,7 +329,7 @@ VOID OnOpenSoundFile( HWND hDlg )
 // Name: OnPlaySound()
 // Desc: User hit the "Play" button
 //-----------------------------------------------------------------------------
-HRESULT OnPlaySound( HWND hDlg ) 
+HRESULT OnPlaySound( HWND hDlg )
 {
     HRESULT hr;
     LONG    lPriority;
@@ -344,7 +344,7 @@ HRESULT OnPlaySound( HWND hDlg )
 
     bLooped = ( IsDlgButtonChecked( hDlg, IDC_LOOP_CHECK ) == BST_CHECKED );
 
-    // Determine where the buffer would like to be allocated 
+    // Determine where the buffer would like to be allocated
     bAllocHW     = ( IsDlgButtonChecked( hDlg, IDC_ALLOC_HARDWARE ) == BST_CHECKED );
     bAllocSW     = ( IsDlgButtonChecked( hDlg, IDC_ALLOC_SOFTWARE ) == BST_CHECKED );
     bAllocEither = ( IsDlgButtonChecked( hDlg, IDC_ALLOC_EITHER   ) == BST_CHECKED );
@@ -359,7 +359,7 @@ HRESULT OnPlaySound( HWND hDlg )
     else
     {
         // Buffers running in software are not allowed to have
-        // voice management flags since they have no need to 
+        // voice management flags since they have no need to
         // steal hardware resources.
         bByTime      = FALSE;
         bByDistance  = FALSE;
@@ -373,7 +373,7 @@ HRESULT OnPlaySound( HWND hDlg )
 
     if( lPriority < 0 || lPriority > 32767 )
     {
-        MessageBox( hDlg, L"Please enter a buffer priority between 0 and 32767", 
+        MessageBox( hDlg, L"Please enter a buffer priority between 0 and 32767",
                     L"DirectSound Sample", MB_OK );
         return S_OK;
     }
@@ -394,7 +394,7 @@ HRESULT OnPlaySound( HWND hDlg )
     {
         if( bByPriority )
         {
-            dwPlayFlags |= DSBPLAY_TERMINATEBY_TIME | 
+            dwPlayFlags |= DSBPLAY_TERMINATEBY_TIME |
                            DSBPLAY_TERMINATEBY_PRIORITY;
         }
         else
@@ -406,7 +406,7 @@ HRESULT OnPlaySound( HWND hDlg )
     {
         if( bByPriority )
         {
-            dwPlayFlags |= DSBPLAY_TERMINATEBY_DISTANCE | 
+            dwPlayFlags |= DSBPLAY_TERMINATEBY_DISTANCE |
                            DSBPLAY_TERMINATEBY_PRIORITY;
         }
         else
@@ -430,18 +430,18 @@ HRESULT OnPlaySound( HWND hDlg )
     if( bLooped )
         dwPlayFlags |= DSBPLAY_LOOPING;
 
-    // Play the sound 
+    // Play the sound
     if( FAILED( hr = g_pSound->Play( lPriority, dwPlayFlags ) ) )
     {
         DXTRACE_ERR( TEXT("Play"), hr );
         if( hr == DSERR_INVALIDCALL || hr == DSERR_BADFORMAT )
         {
-            MessageBox( hDlg, L"Unsupported wave file format.", 
+            MessageBox( hDlg, L"Unsupported wave file format.",
                         L"DirectSound Sample", MB_OK | MB_ICONERROR );
         }
         else
         {
-            MessageBox( hDlg, L"The buffer could not be played.", 
+            MessageBox( hDlg, L"The buffer could not be played.",
                         L"DirectSound Sample", MB_OK | MB_ICONERROR );
         }
 
@@ -459,15 +459,15 @@ HRESULT OnPlaySound( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: OnTimer()
-// Desc: When we think the sound is playing this periodically checks to see if 
+// Desc: When we think the sound is playing this periodically checks to see if
 //       the sound has stopped.  If it has then updates the dialog.
 //-----------------------------------------------------------------------------
-VOID OnTimer( HWND hDlg ) 
+VOID OnTimer( HWND hDlg )
 {
     if( IsWindowEnabled( GetDlgItem( hDlg, IDC_STOP ) ) )
     {
         // We think the sound is playing, so see if it has stopped yet.
-        if( !g_pSound->IsSoundPlaying() ) 
+        if( !g_pSound->IsSoundPlaying() )
         {
             // Update the UI controls to show the sound as stopped
             EnablePlayUI( hDlg, TRUE );
@@ -493,7 +493,7 @@ VOID UpdateBehaviorText( HWND hDlg )
     BOOL    bByDistance;
     BOOL    bByPriority;
 
-    // Determine where the buffer would like to be allocated 
+    // Determine where the buffer would like to be allocated
     bAllocHW     = ( IsDlgButtonChecked( hDlg, IDC_ALLOC_HARDWARE ) == BST_CHECKED );
     bAllocSW     = ( IsDlgButtonChecked( hDlg, IDC_ALLOC_SOFTWARE ) == BST_CHECKED );
     bAllocEither = ( IsDlgButtonChecked( hDlg, IDC_ALLOC_EITHER   ) == BST_CHECKED );
@@ -508,7 +508,7 @@ VOID UpdateBehaviorText( HWND hDlg )
     else
     {
         // Buffers running in software are not allowed to have
-        // voice management flags since they have no need to 
+        // voice management flags since they have no need to
         // steal hardware resources.
         bByTime      = FALSE;
         bByDistance  = FALSE;
@@ -558,7 +558,7 @@ VOID UpdateBehaviorText( HWND hDlg )
                                      L"will be prematurely terminated. In event "
                                      L"of a priority tie, then the buffer with "
                                      L"the least time left to play will be "
-                                     L"prematurely terminated." );         
+                                     L"prematurely terminated." );
             }
         }
         else
@@ -566,7 +566,7 @@ VOID UpdateBehaviorText( HWND hDlg )
             wcscat_s( strExcepted, 1024, L", and if the hardware has no available "
                                  L"voices, the voice management buffer with "
                                  L"the least time left to play will be "
-                                 L"prematurely terminated." );                                     
+                                 L"prematurely terminated." );
         }
     }
     else if( bByDistance )
@@ -653,7 +653,7 @@ VOID UpdateBehaviorText( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: EnablePlayUI()
-// Desc: Enables or disables the Play UI controls 
+// Desc: Enables or disables the Play UI controls
 //-----------------------------------------------------------------------------
 VOID EnablePlayUI( HWND hDlg, BOOL bShowPlayControl )
 {
@@ -661,7 +661,7 @@ VOID EnablePlayUI( HWND hDlg, BOOL bShowPlayControl )
     EnableWindow( GetDlgItem( hDlg, IDC_STOP ),       !bShowPlayControl );
     EnableWindow( GetDlgItem( hDlg, IDC_PLAY ),        bShowPlayControl );
 
-    // Don't allow the voice allocation or voicemanagement flags 
+    // Don't allow the voice allocation or voicemanagement flags
     // to be changed when a sound is playing
     EnableWindow( GetDlgItem( hDlg, IDC_BYTIME         ), bShowPlayControl );
     EnableWindow( GetDlgItem( hDlg, IDC_BYDISTANCE     ), bShowPlayControl );

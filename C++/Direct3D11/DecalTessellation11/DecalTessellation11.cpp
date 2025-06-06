@@ -145,7 +145,7 @@ CDXUTTextHelper*                    g_pTxtHelper = NULL;
 ID3D11Buffer*                       g_pInitCB;                  // constant buffer (change rarely)
 ID3D11Buffer*                       g_pUpdateCB;                // constant buffer (update every frame)
 ID3D11Buffer*                       g_pDamageCB;                // constant buffer (update every hit)
-ID3D11Buffer*                       g_pMeshVB;                  // object mesh vertext buffer    
+ID3D11Buffer*                       g_pMeshVB;                  // object mesh vertext buffer
 
 // Input Layouts
 ID3D11InputLayout*                  g_pVertexLayout;            // object mesh layout
@@ -168,7 +168,7 @@ ID3D11DepthStencilState*            g_pDepthStencilState;       // <= comparison
 ID3D11BlendState*                   g_pBlendStateNoBlend;       // disable blending
 ID3D11SamplerState*                 g_pSamplerStateLinear;      // linear filtering
 
-// The scene meshes 
+// The scene meshes
 CDXUTSDKMesh                        g_SceneMesh[MESH_TYPE_MAX];
 Model                               g_SceneModel[MESH_TYPE_MAX];
 MESH_TYPE                           g_eMeshType = MESH_TYPE_CAR;
@@ -211,58 +211,58 @@ D3DXVECTOR4                         g_vScreenSize;                      // curen
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext );
 void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext );
 void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, void* pUserContext );
-bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo* AdapterInfo, UINT Output, const CD3D11EnumDeviceInfo* DeviceInfo, 
+bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo* AdapterInfo, UINT Output, const CD3D11EnumDeviceInfo* DeviceInfo,
                                        DXGI_FORMAT BackBufferFormat, bool bWindowed, void* pUserContext );
-HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, 
+HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc,
                                       void* pUserContext );
-HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapChain* pSwapChain, 
+HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapChain* pSwapChain,
                                           const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext );
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext );
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext );
-void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, 
+void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext,
                                   double fTime, float fElapsedTime, void* pUserContext );
 
 void InitApp();
 void RenderText();
-HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob = NULL,
                               BOOL bDumpShader = FALSE);
-HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                     BOOL bDumpShader = FALSE);
-HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                   BOOL bDumpShader = FALSE);
-HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                     BOOL bDumpShader = FALSE);
-HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                       BOOL bDumpShader = FALSE);
-HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                    BOOL bDumpShader = FALSE);
-HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob = NULL, 
+HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob = NULL,
                                      BOOL bDumpShader = FALSE);
 BOOL FileExists( WCHAR* pszFilename);
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -298,7 +298,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -315,13 +315,13 @@ void InitApp()
     D3DCOLOR crosshairColor = D3DCOLOR_XRGB( 0, 0xff, 0 );
     pCrosshair->SetTextColor( crosshairColor );
 
-    int iY = 10; 
+    int iY = 10;
     g_HUD.AddButton( IDC_TOGGLEFULLSCREEN, L"Toggle full screen", 35, iY, 125, 22 );
     g_HUD.AddButton( IDC_TOGGLEREF, L"Toggle REF (F3)", 35, iY += 24, 125, 22, VK_F3 );
     g_HUD.AddButton( IDC_CHANGEDEVICE, L"Change device (F2)", 35, iY += 24, 125, 22, VK_F2 );
 
-    g_SampleUI.SetCallback( OnGUIEvent ); 
-    
+    g_SampleUI.SetCallback( OnGUIEvent );
+
     iY = 0;
     g_SampleUI.AddStatic( IDC_STATIC_MESH, L"Mesh:", 0, iY, 55, 24 );
     CDXUTComboBox* pCombo;
@@ -356,19 +356,19 @@ void InitApp()
     WCHAR szTemp[256];
     swprintf_s( szTemp, L"Tessellation Factor : %f", g_TessellationFactor );
     g_SampleUI.AddStatic( IDC_STATIC_TESS_FACTOR, szTemp, 5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR, 0, iY += 25, 140, 24, g_cTessellationSliderMin, 
+    g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR, 0, iY += 25, 140, 24, g_cTessellationSliderMin,
                           g_cTessellationSliderMax, (int)(g_TessellationFactor * g_cTessellationUIScale ), false );
     swprintf_s( szTemp, L"Displacement Scale : %f", g_DisplacementScale );
     g_SampleUI.AddStatic( IDC_STATIC_DIS_SCALE, szTemp, 5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_DIS_SCALE, 0, iY += 25, 140, 24, g_cDisplacementScaleSliderMin, 
+    g_SampleUI.AddSlider( IDC_SLIDER_DIS_SCALE, 0, iY += 25, 140, 24, g_cDisplacementScaleSliderMin,
                           g_cDisplacementScaleSliderMax, (int)(g_DisplacementScale * g_cDisplacementScaleUIScale ), false );
     swprintf_s( szTemp, L"Displacement Bias : %f", g_DisplacementBias );
     g_SampleUI.AddStatic( IDC_STATIC_DIS_BIAS, szTemp, 5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_DIS_BIAS, 0, iY += 25, 140, 24, g_cDisplacementBiasSliderMin, 
+    g_SampleUI.AddSlider( IDC_SLIDER_DIS_BIAS, 0, iY += 25, 140, 24, g_cDisplacementBiasSliderMin,
                           g_cDisplacementBiasSliderMax, (int)(g_DisplacementBias * g_cDisplacementBiasUIScale ), false );
     swprintf_s( szTemp, L"Decal Radius : %f", g_DecalRadius );
     g_SampleUI.AddStatic( IDC_STATIC_DECAL_RADIUS, szTemp, 5, iY += 25, 108, 24 );
-    g_SampleUI.AddSlider( IDC_SLIDER_DECAL_RADIUS, 0, iY += 25, 140, 24, g_cDecalRadiusSliderMin, 
+    g_SampleUI.AddSlider( IDC_SLIDER_DECAL_RADIUS, 0, iY += 25, 140, 24, g_cDecalRadiusSliderMin,
                           g_cDecalRadiusSliderMax, (int)(g_DecalRadius * g_cDecalRadiusUIScale ), false );
     g_SampleUI.AddButton( IDC_BUTTON_CLEAR, L"Clear Decals", 5, iY += 25, 108, 24 );
 }
@@ -402,7 +402,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera[g_eMeshType].FrameMove( fElapsedTime );
 }
 
@@ -417,7 +417,7 @@ void RenderText()
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( true ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
-    
+
     g_pTxtHelper->End();
 }
 
@@ -481,13 +481,13 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
     switch( nControlID )
     {
         // Standard DXUT controls
-        case IDC_TOGGLEFULLSCREEN:  
+        case IDC_TOGGLEFULLSCREEN:
             DXUTToggleFullScreen();
             break;
-        case IDC_TOGGLEREF:         
+        case IDC_TOGGLEREF:
             DXUTToggleREF();
             break;
-        case IDC_CHANGEDEVICE:      
+        case IDC_CHANGEDEVICE:
             g_D3DSettingsDlg.SetActive( !g_D3DSettingsDlg.IsActive() );
             break;
 
@@ -600,8 +600,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
@@ -628,8 +628,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         { "NORMAL",   0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D11_INPUT_PER_VERTEX_DATA, 0 },
     };
-    V_RETURN( pd3dDevice->CreateInputLayout( vertexElements, ARRAYSIZE( vertexElements ), 
-                                             pBlobVS_DecalTessellation->GetBufferPointer(), pBlobVS_DecalTessellation->GetBufferSize(), 
+    V_RETURN( pd3dDevice->CreateInputLayout( vertexElements, ARRAYSIZE( vertexElements ),
+                                             pBlobVS_DecalTessellation->GetBufferPointer(), pBlobVS_DecalTessellation->GetBufferSize(),
                                              &g_pVertexLayout ) );
     SAFE_RELEASE( pBlobVS_DecalTessellation );
     DXUT_SetDebugName( g_pVertexLayout, "Primary" );
@@ -661,7 +661,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     // Initialize the rest of the scene meshes ...
 
-    // Setup the camera for each scene   
+    // Setup the camera for each scene
     D3DXVECTOR3 vecEye( 0.0f, 0.0f, 0.0f );
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, 0.0f );
     // Tiger
@@ -706,8 +706,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     D3DXMATRIXA16 mModelTranslation;
 
     // Tiger
-    D3DXMatrixRotationX( &mModelRotationX, -D3DX_PI / 36 ); 
-    D3DXMatrixRotationY( &mModelRotationY, D3DX_PI / 4 ); 
+    D3DXMatrixRotationX( &mModelRotationX, -D3DX_PI / 36 );
+    D3DXMatrixRotationY( &mModelRotationY, D3DX_PI / 4 );
     g_m4x4MeshMatrix[MESH_TYPE_TIGER] = mModelRotationX * mModelRotationY;
     D3DXMatrixInverse( &g_m4x4MeshMatrixInv[MESH_TYPE_TIGER], NULL, &g_m4x4MeshMatrix[MESH_TYPE_TIGER] );
 
@@ -782,7 +782,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     V_RETURN( g_SceneMesh[MESH_TYPE_TEAPOT].Create( pd3dDevice, L"teapot\\teapot.sdkmesh" ) );
     ConvertSDKMeshToModel( &g_SceneMesh[MESH_TYPE_TEAPOT], &g_SceneModel[MESH_TYPE_TEAPOT] );
-   
+
     V_RETURN( g_SceneMesh[MESH_TYPE_CAR].Create( pd3dDevice, L"ExoticCar\\ExoticCar.sdkmesh" ) );
     ConvertSDKMeshToModel( &g_SceneMesh[MESH_TYPE_CAR], &g_SceneModel[MESH_TYPE_CAR] );
 
@@ -931,7 +931,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     BlendState.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
     V_RETURN( pd3dDevice->CreateBlendState( &BlendState, &g_pBlendStateNoBlend ) );
     DXUT_SetDebugName( g_pBlendStateNoBlend, "No Blend" );
-    
+
     // Linear filtering sampler state
     D3D11_SAMPLER_DESC SSDesc;
     ZeroMemory( &SSDesc, sizeof( SSDesc ) );
@@ -987,10 +987,10 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 // RenderMesh Allows the app to render individual meshes of an sdkmesh
 // and override the primitive topology
 //--------------------------------------------------------------------------------------
-void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, 
-                 D3D11_PRIMITIVE_TOPOLOGY PrimType = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED, 
-                 UINT uDiffuseSlot = INVALID_SAMPLER_SLOT, 
-                 UINT uNormalSlot = INVALID_SAMPLER_SLOT, 
+void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh,
+                 D3D11_PRIMITIVE_TOPOLOGY PrimType = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,
+                 UINT uDiffuseSlot = INVALID_SAMPLER_SLOT,
+                 UINT uNormalSlot = INVALID_SAMPLER_SLOT,
                  UINT uSpecularSlot = INVALID_SAMPLER_SLOT )
 {
     #define MAX_D3D11_VERTEX_STREAMS D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT
@@ -1022,7 +1022,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh,
 
     ID3D11Buffer* pIB = pDXUTMesh->GetIB11( pMesh->IndexBuffer );
     DXGI_FORMAT ibFormat = pDXUTMesh->GetIBFormat11( pMesh->IndexBuffer );
-    
+
     DXUTGetD3D11DeviceContext()->IASetVertexBuffers( 0, pMesh->NumVertexBuffers, pVB, Strides, Offsets );
     DXUTGetD3D11DeviceContext()->IASetIndexBuffer( pIB, ibFormat, 0 );
 
@@ -1037,7 +1037,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh,
         {
             PrimType = pDXUTMesh->GetPrimitiveType11( ( SDKMESH_PRIMITIVE_TYPE )pSubset->PrimitiveType );
         }
-        
+
         DXUTGetD3D11DeviceContext()->IASetPrimitiveTopology( PrimType );
 
         pMat = pDXUTMesh->GetMaterial( pSubset->MaterialID );
@@ -1059,7 +1059,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh,
         UINT IndexCount = ( UINT )pSubset->IndexCount;
         UINT IndexStart = ( UINT )pSubset->IndexStart;
         UINT VertexStart = ( UINT )pSubset->VertexStart;
-        
+
         DXUTGetD3D11DeviceContext()->DrawIndexed( IndexCount, IndexStart, VertexStart );
     }
 }
@@ -1067,7 +1067,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh,
 //--------------------------------------------------------------------------------------
 // Render the scene using the D3D11 device
 //--------------------------------------------------------------------------------------
-void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, 
+void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext,
                                   double fTime, float fElapsedTime, void* pUserContext )
 {
     ID3D11Buffer*               pBuffers[3];
@@ -1112,7 +1112,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     D3DXVECTOR4 tfmOrigin;
     D3DXVECTOR3 origin( 0.0f, 0.0f, 0.0f );
     D3DXVec3Transform( &tfmOrigin, &origin, &g_m4x4MeshMatrixInv[g_eMeshType] );
-   
+
     // Update Matrices
     // Projection matrix
     D3DXMATRIX mProj = *g_Camera[g_eMeshType].GetProjMatrix();
@@ -1121,16 +1121,16 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // World Matrix
     D3DXMATRIX mWorld = g_m4x4MeshMatrix[g_eMeshType] * (*g_Camera[g_eMeshType].GetWorldMatrix());
     // View Projection Matrix
-    D3DXMATRIX mViewProjection = mView * mProj;    
+    D3DXMATRIX mViewProjection = mView * mProj;
     // World View Projection Matrix
-    D3DXMATRIX mWorldViewProjection = mWorld * mView * mProj;    
+    D3DXMATRIX mWorldViewProjection = mWorld * mView * mProj;
 
     // If gun was fired, find the intersection
     bool hitDetected = false;
     if( g_Shoot )
     {
         // store the bullet trajectory in a ray structure
-        Ray bulletRay;    
+        Ray bulletRay;
 
         // assume the viewing direction is always towards the origin
         bulletRay.origin.x = tfmEyePt.x;
@@ -1261,9 +1261,9 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
     // Transpose matrices before passing to shader stages
-    D3DXMatrixTranspose( &mWorld, &mWorld );                    
+    D3DXMatrixTranspose( &mWorld, &mWorld );
     D3DXMatrixTranspose( &mViewProjection, &mViewProjection );
-    D3DXMatrixTranspose( &mWorldViewProjection, &mWorldViewProjection ); 
+    D3DXMatrixTranspose( &mWorldViewProjection, &mWorldViewProjection );
 
     D3DXVECTOR4 vLightPosition;
     vLightPosition.x = 20;
@@ -1273,17 +1273,17 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
     float scale = g_DisplacementScale * g_fDecalScale[g_eDecalType];
     float bias = (g_DisplacementScale * g_fDecalBias[g_eDecalType]) + g_DisplacementBias;
- 
+
     // update the constant buffer
     UPDATE_CB_STRUCT update_cb_struct;
     ZeroMemory( &update_cb_struct, sizeof( update_cb_struct ) );
     update_cb_struct.mWorld = mWorld;
     update_cb_struct.mViewProjection = mViewProjection;
     update_cb_struct.mWorldViewProjection = mWorldViewProjection;
-    update_cb_struct.vTessellationFactor = 
+    update_cb_struct.vTessellationFactor =
         D3DXVECTOR4( g_TessellationFactor, g_bScreenSpaceAdaptive, g_bBackFaceCulling, g_bDisplacementAdaptive );
-    update_cb_struct.vDisplacementScaleBias = 
-        D3DXVECTOR4( scale * g_fDecalRadiusScale[g_eMeshType], bias * g_fDecalRadiusScale[g_eMeshType], 
+    update_cb_struct.vDisplacementScaleBias =
+        D3DXVECTOR4( scale * g_fDecalRadiusScale[g_eMeshType], bias * g_fDecalRadiusScale[g_eMeshType],
         g_DecalRadius * g_fDecalRadiusScale[g_eMeshType], 0 );
     update_cb_struct.vLightPosition = vLightPosition;
     update_cb_struct.vEyePosition = vEyePt;
@@ -1323,7 +1323,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
     }
     pd3dImmediateContext->GSSetShader( NULL, NULL, 0 );
-    pd3dImmediateContext->PSSetShader( g_pDecalTessellationPS, NULL, 0 ); 
+    pd3dImmediateContext->PSSetShader( g_pDecalTessellationPS, NULL, 0 );
 
     // update state
     pd3dImmediateContext->OMSetDepthStencilState( g_pDepthStencilState, 0 );
@@ -1344,7 +1344,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     }
     else
     {
-        // Render the meshes    
+        // Render the meshes
         for( UINT iMesh = 0; iMesh < g_SceneMesh[g_eMeshType].GetNumMeshes(); iMesh++ )
         {
             RenderMesh( &g_SceneMesh[g_eMeshType], iMesh, PrimitiveTopology, 2 );
@@ -1354,14 +1354,14 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // Render GUI
     g_HUD.OnRender( fElapsedTime );
     g_SampleUI.OnRender( fElapsedTime );
-        
-    // Always render text info 
+
+    // Always render text info
     RenderText();
 }
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1370,7 +1370,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1428,19 +1428,19 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 // This function is called by the shader-specific versions of this
 // function located after the body of this function.
 //--------------------------------------------------------------------------------------
-HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                              LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                              ID3DX11ThreadPump* pPump, ID3D11DeviceChild** ppShader, ID3DBlob** ppShaderBlob,
                               BOOL bDumpShader)
 {
     HRESULT   hr = D3D_OK;
     ID3DBlob* pShaderBlob = NULL;
     ID3DBlob* pErrorBlob = NULL;
     WCHAR     wcFullPath[256];
-    
+
     DXUTFindDXSDKMediaFileCch( wcFullPath, 256, pSrcFile );
     // Compile shader into binary blob
-    hr = D3DX11CompileFromFile( wcFullPath, pDefines, pInclude, pFunctionName, pProfile, 
+    hr = D3DX11CompileFromFile( wcFullPath, pDefines, pInclude, pFunctionName, pProfile,
                                 Flags1, Flags2, pPump, &pShaderBlob, &pErrorBlob, NULL );
     if( FAILED( hr ) )
     {
@@ -1448,39 +1448,39 @@ HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST 
         SAFE_RELEASE( pErrorBlob );
         return hr;
     }
-    
+
     // Create shader from binary blob
     if ( ppShader )
     {
         hr = E_FAIL;
         if ( strstr( pProfile, "vs" ) )
         {
-            hr = pd3dDevice->CreateVertexShader( pShaderBlob->GetBufferPointer(), 
+            hr = pd3dDevice->CreateVertexShader( pShaderBlob->GetBufferPointer(),
                     pShaderBlob->GetBufferSize(), NULL, (ID3D11VertexShader**)ppShader );
         }
         else if ( strstr( pProfile, "hs" ) )
         {
-            hr = pd3dDevice->CreateHullShader( pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11HullShader**)ppShader ); 
+            hr = pd3dDevice->CreateHullShader( pShaderBlob->GetBufferPointer(),
+                    pShaderBlob->GetBufferSize(), NULL, (ID3D11HullShader**)ppShader );
         }
         else if ( strstr( pProfile, "ds" ) )
         {
-            hr = pd3dDevice->CreateDomainShader( pShaderBlob->GetBufferPointer(), 
+            hr = pd3dDevice->CreateDomainShader( pShaderBlob->GetBufferPointer(),
                     pShaderBlob->GetBufferSize(), NULL, (ID3D11DomainShader**)ppShader );
         }
         else if ( strstr( pProfile, "gs" ) )
         {
-            hr = pd3dDevice->CreateGeometryShader( pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11GeometryShader**)ppShader ); 
+            hr = pd3dDevice->CreateGeometryShader( pShaderBlob->GetBufferPointer(),
+                    pShaderBlob->GetBufferSize(), NULL, (ID3D11GeometryShader**)ppShader );
         }
         else if ( strstr( pProfile, "ps" ) )
         {
-            hr = pd3dDevice->CreatePixelShader( pShaderBlob->GetBufferPointer(), 
-                    pShaderBlob->GetBufferSize(), NULL, (ID3D11PixelShader**)ppShader ); 
+            hr = pd3dDevice->CreatePixelShader( pShaderBlob->GetBufferPointer(),
+                    pShaderBlob->GetBufferSize(), NULL, (ID3D11PixelShader**)ppShader );
         }
         else if ( strstr( pProfile, "cs" ) )
         {
-            hr = pd3dDevice->CreateComputeShader( pShaderBlob->GetBufferPointer(), 
+            hr = pd3dDevice->CreateComputeShader( pShaderBlob->GetBufferPointer(),
                     pShaderBlob->GetBufferSize(), NULL, (ID3D11ComputeShader**)ppShader );
         }
         if ( FAILED( hr ) )
@@ -1512,13 +1512,13 @@ HRESULT CreateShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST 
 //--------------------------------------------------------------------------------------
 // Create a vertex shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11VertexShader** ppShader, ID3DBlob** ppShaderBlob,
                                     BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -1526,25 +1526,25 @@ HRESULT CreateVertexShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, 
 //--------------------------------------------------------------------------------------
 // Create a hull shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateHullShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                  LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                  ID3DX11ThreadPump* pPump, ID3D11HullShader** ppShader, ID3DBlob** ppShaderBlob,
                                   BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 //--------------------------------------------------------------------------------------
 // Create a domain shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                    LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                    ID3DX11ThreadPump* pPump, ID3D11DomainShader** ppShader, ID3DBlob** ppShaderBlob,
                                     BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -1552,13 +1552,13 @@ HRESULT CreateDomainShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, 
 //--------------------------------------------------------------------------------------
 // Create a geometry shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                      LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                      ID3DX11ThreadPump* pPump, ID3D11GeometryShader** ppShader, ID3DBlob** ppShaderBlob,
                                       BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -1566,13 +1566,13 @@ HRESULT CreateGeometryShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile
 //--------------------------------------------------------------------------------------
 // Create a pixel shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                   LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                   ID3DX11ThreadPump* pPump, ID3D11PixelShader** ppShader, ID3DBlob** ppShaderBlob,
                                    BOOL bDumpShader )
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -1580,13 +1580,13 @@ HRESULT CreatePixelShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, C
 //--------------------------------------------------------------------------------------
 // Create a compute shader from the specified filename
 //--------------------------------------------------------------------------------------
-HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines, 
-                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2, 
-                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob, 
+HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile, CONST D3D_SHADER_MACRO* pDefines,
+                                     LPD3DINCLUDE pInclude, LPCSTR pFunctionName, LPCSTR pProfile, UINT Flags1, UINT Flags2,
+                                     ID3DX11ThreadPump* pPump, ID3D11ComputeShader** ppShader, ID3DBlob** ppShaderBlob,
                                      BOOL bDumpShader)
 {
-    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile, 
-                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob, 
+    return CreateShaderFromFile( pd3dDevice, pSrcFile, pDefines, pInclude, pFunctionName, pProfile,
+                                 Flags1, Flags2, pPump, (ID3D11DeviceChild **)ppShader, ppShaderBlob,
                                  bDumpShader );
 }
 
@@ -1597,12 +1597,12 @@ HRESULT CreateComputeShaderFromFile( ID3D11Device* pd3dDevice, LPCWSTR pSrcFile,
 BOOL FileExists( WCHAR* pszFilename )
 {
     FILE* f = NULL;
-    
+
     if( _wfopen_s( &f, pszFilename, L"rb" ) == 0 )
     {
         fclose( f );
         return TRUE;
     }
-    
+
     return FALSE;
 }

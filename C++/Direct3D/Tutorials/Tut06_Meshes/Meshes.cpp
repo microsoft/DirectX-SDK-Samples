@@ -20,7 +20,7 @@
 #include <Windows.h>
 #include <mmsystem.h>
 #include <d3dx9.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 
@@ -72,7 +72,7 @@ HRESULT InitD3D( HWND hWnd )
     // Turn on the zbuffer
     g_pd3dDevice->SetRenderState( D3DRS_ZENABLE, TRUE );
 
-    // Turn on ambient lighting 
+    // Turn on ambient lighting
     g_pd3dDevice->SetRenderState( D3DRS_AMBIENT, 0xffffffff );
 
     return S_OK;
@@ -106,7 +106,7 @@ HRESULT InitGeometry()
         }
     }
 
-    // We need to extract the material properties and texture names from the 
+    // We need to extract the material properties and texture names from the
     // pD3DXMtrlBuffer
     D3DXMATERIAL* d3dxMaterials = ( D3DXMATERIAL* )pD3DXMtrlBuffer->GetBufferPointer();
     g_pMeshMaterials = new D3DMATERIAL9[g_dwNumMaterials];
@@ -201,7 +201,7 @@ VOID SetupMatrices()
 
     // Set up our view matrix. A view matrix can be defined given an eye point,
     // a point to lookat, and a direction for which way is up. Here, we set the
-    // eye five units back along the z-axis and up three units, look at the 
+    // eye five units back along the z-axis and up three units, look at the
     // origin, and define "up" to be in the y-direction.
     D3DXVECTOR3 vEyePt( 0.0f, 3.0f,-5.0f );
     D3DXVECTOR3 vLookatPt( 0.0f, 0.0f, 0.0f );

@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -22,7 +22,7 @@ struct VSSceneIn
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Note:	New structure for the GeometryShader input
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 struct GSSceneIn
 {
@@ -115,7 +115,7 @@ float3 GetNormal( float3 A, float3 B, float3 C )
 [maxvertexcount(12)]
 
 //-----------------------------------------------------------------------------------------
-// o/__   <-- BreakdancinBob TODO:	Change the LineStream<PSSceneIn> below to 
+// o/__   <-- BreakdancinBob TODO:	Change the LineStream<PSSceneIn> below to
 // |  (\			TriangleStream<PSSceneIn> in the argument list.  This tells the GS to
 //					output triangles instead of lines.
 //-----------------------------------------------------------------------------------------
@@ -210,9 +210,9 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScene() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    }  
+    }
 }
 
 
@@ -262,8 +262,8 @@ technique10 RenderPiece
         SetVertexShader( CompileShader( vs_4_0, VSScenePiece() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenePiece() ) );
-        
+
         SetBlendState( SrcBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    }  
+    }
 }
 

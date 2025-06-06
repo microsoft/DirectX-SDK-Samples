@@ -121,10 +121,10 @@ unsigned int GridGetValue(unsigned int keyvaluepair)
 void BuildGridCS( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex )
 {
     const unsigned int P_ID = DTid.x; // Particle ID to operate on
-    
+
     float2 position = ParticlesRO[P_ID].position;
     float2 grid_xy = GridCalculateCell( position );
-    
+
     GridRW[P_ID] = GridConstuctKeyValuePair((uint2)grid_xy, P_ID);
 }
 
@@ -145,7 +145,7 @@ void BuildGridIndicesCS( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadI
     const unsigned int G_ID = DTid.x; // Grid ID to operate on
     unsigned int G_ID_PREV = (G_ID == 0)? g_iNumParticles : G_ID; G_ID_PREV--;
     unsigned int G_ID_NEXT = G_ID + 1; if (G_ID_NEXT == g_iNumParticles) { G_ID_NEXT = 0; }
-    
+
     unsigned int cell = GridGetKey( GridRO[G_ID] );
     unsigned int cell_prev = GridGetKey( GridRO[G_ID_PREV] );
     unsigned int cell_next = GridGetKey( GridRO[G_ID_NEXT] );
@@ -199,14 +199,14 @@ void DensityCS_Simple( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID,
     const unsigned int P_ID = DTid.x;
     const float h_sq = g_fSmoothlen * g_fSmoothlen;
     float2 P_position = ParticlesRO[P_ID].position;
-    
+
     float density = 0;
-    
+
     // Calculate the density based on all neighbors
     for (uint N_ID = 0 ; N_ID < g_iNumParticles ; N_ID++)
     {
         float2 N_position = ParticlesRO[N_ID].position;
-        
+
         float2 diff = N_position - P_position;
         float r_sq = dot(diff, diff);
         if (r_sq < h_sq)
@@ -214,7 +214,7 @@ void DensityCS_Simple( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID,
             density += CalculateDensity(r_sq);
         }
     }
-    
+
     ParticlesDensityRW[P_ID].density = density;
 }
 
@@ -231,33 +231,33 @@ void DensityCS_Shared( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID,
     const unsigned int P_ID = DTid.x;
     const float h_sq = g_fSmoothlen * g_fSmoothlen;
     float2 P_position = ParticlesRO[P_ID].position;
-    
+
     float density = 0;
-    
+
     // Calculate the density based on all neighbors
     [loop]
     for (uint N_block_ID = 0 ; N_block_ID < g_iNumParticles ; N_block_ID += SIMULATION_BLOCK_SIZE)
     {
         // Cache a tile of particles unto shared memory to increase IO efficiency
         density_shared_pos[GI] = ParticlesRO[N_block_ID + GI].position;
-       
-        GroupMemoryBarrierWithGroupSync();        
 
-        for (uint N_tile_ID = 0; N_tile_ID < SIMULATION_BLOCK_SIZE; N_tile_ID++) 
+        GroupMemoryBarrierWithGroupSync();
+
+        for (uint N_tile_ID = 0; N_tile_ID < SIMULATION_BLOCK_SIZE; N_tile_ID++)
         {
             float2 N_position = density_shared_pos[N_tile_ID];
-            
+
             float2 diff = N_position - P_position;
             float r_sq = dot(diff, diff);
             if (r_sq < h_sq)
             {
                 density += CalculateDensity(r_sq);
             }
-        }        
-        
+        }
+
         GroupMemoryBarrierWithGroupSync();
     }
-    
+
     ParticlesDensityRW[P_ID].density = density;
 }
 
@@ -272,9 +272,9 @@ void DensityCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
     const unsigned int P_ID = DTid.x;
     const float h_sq = g_fSmoothlen * g_fSmoothlen;
     float2 P_position = ParticlesRO[P_ID].position;
-    
+
     float density = 0;
-    
+
     // Calculate the density based on neighbors from the 8 adjacent cells + current cell
     int2 G_XY = (int2)GridCalculateCell( P_position );
     for (int Y = max(G_XY.y - 1, 0) ; Y <= min(G_XY.y + 1, 255) ; Y++)
@@ -286,7 +286,7 @@ void DensityCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
             for (unsigned int N_ID = G_START_END.x ; N_ID < G_START_END.y ; N_ID++)
             {
                 float2 N_position = ParticlesRO[N_ID].position;
-                
+
                 float2 diff = N_position - P_position;
                 float r_sq = dot(diff, diff);
                 if (r_sq < h_sq)
@@ -296,7 +296,7 @@ void DensityCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
             }
         }
     }
-    
+
     ParticlesDensityRW[P_ID].density = density;
 }
 
@@ -343,21 +343,21 @@ float2 CalculateLapVelocity(float r, float2 P_velocity, float2 N_velocity, float
 void ForceCS_Simple( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex )
 {
     const unsigned int P_ID = DTid.x; // Particle ID to operate on
-    
+
     float2 P_position = ParticlesRO[P_ID].position;
     float2 P_velocity = ParticlesRO[P_ID].velocity;
     float P_density = ParticlesDensityRO[P_ID].density;
     float P_pressure = CalculatePressure(P_density);
-    
+
     const float h_sq = g_fSmoothlen * g_fSmoothlen;
-    
+
     float2 acceleration = float2(0, 0);
 
     // Calculate the acceleration based on all neighbors
     for (uint N_ID = 0 ; N_ID < g_iNumParticles ; N_ID++)
     {
         float2 N_position = ParticlesRO[N_ID].position;
-        
+
         float2 diff = N_position - P_position;
         float r_sq = dot(diff, diff);
         if (r_sq < h_sq && P_ID != N_ID)
@@ -369,12 +369,12 @@ void ForceCS_Simple( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
 
             // Pressure Term
             acceleration += CalculateGradPressure(r, P_pressure, N_pressure, N_density, diff);
-            
+
             // Viscosity Term
             acceleration += CalculateLapVelocity(r, P_velocity, N_velocity, N_density);
         }
     }
-    
+
     ParticlesForcesRW[P_ID].acceleration = acceleration / P_density;
 }
 
@@ -389,14 +389,14 @@ groupshared struct { float2 position; float2 velocity; float density; } force_sh
 void ForceCS_Shared( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex )
 {
     const unsigned int P_ID = DTid.x; // Particle ID to operate on
-    
+
     float2 P_position = ParticlesRO[P_ID].position;
     float2 P_velocity = ParticlesRO[P_ID].velocity;
     float P_density = ParticlesDensityRO[P_ID].density;
     float P_pressure = CalculatePressure(P_density);
-    
+
     const float h_sq = g_fSmoothlen * g_fSmoothlen;
-    
+
     float2 acceleration = float2(0, 0);
 
     // Calculate the acceleration based on all neighbors
@@ -407,15 +407,15 @@ void ForceCS_Shared( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
         force_shared_pos[GI].position = ParticlesRO[N_block_ID + GI].position;
         force_shared_pos[GI].velocity = ParticlesRO[N_block_ID + GI].velocity;
         force_shared_pos[GI].density = ParticlesDensityRO[N_block_ID + GI].density;
-       
-        GroupMemoryBarrierWithGroupSync();        
+
+        GroupMemoryBarrierWithGroupSync();
 
         [loop]
-        for (uint N_tile_ID = 0; N_tile_ID < SIMULATION_BLOCK_SIZE; N_tile_ID++ ) 
+        for (uint N_tile_ID = 0; N_tile_ID < SIMULATION_BLOCK_SIZE; N_tile_ID++ )
         {
             uint N_ID = N_block_ID + N_tile_ID;
             float2 N_position = force_shared_pos[N_tile_ID].position;
-            
+
             float2 diff = N_position - P_position;
             float r_sq = dot(diff, diff);
             if (r_sq < h_sq && P_ID != N_ID)
@@ -427,15 +427,15 @@ void ForceCS_Shared( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
 
                 // Pressure Term
                 acceleration += CalculateGradPressure(r, P_pressure, N_pressure, N_density, diff);
-                
+
                 // Viscosity Term
                 acceleration += CalculateLapVelocity(r, P_velocity, N_velocity, N_density);
             }
-        }        
-        
+        }
+
         GroupMemoryBarrierWithGroupSync();
     }
-    
+
     ParticlesForcesRW[P_ID].acceleration = acceleration / P_density;
 }
 
@@ -448,16 +448,16 @@ void ForceCS_Shared( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, u
 void ForceCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex )
 {
     const unsigned int P_ID = DTid.x; // Particle ID to operate on
-    
+
     float2 P_position = ParticlesRO[P_ID].position;
     float2 P_velocity = ParticlesRO[P_ID].velocity;
     float P_density = ParticlesDensityRO[P_ID].density;
     float P_pressure = CalculatePressure(P_density);
-    
+
     const float h_sq = g_fSmoothlen * g_fSmoothlen;
-    
+
     float2 acceleration = float2(0, 0);
-    
+
     // Calculate the acceleration based on neighbors from the 8 adjacent cells + current cell
     int2 G_XY = (int2)GridCalculateCell( P_position );
     for (int Y = max(G_XY.y - 1, 0) ; Y <= min(G_XY.y + 1, 255) ; Y++)
@@ -469,7 +469,7 @@ void ForceCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uin
             for (unsigned int N_ID = G_START_END.x ; N_ID < G_START_END.y ; N_ID++)
             {
                 float2 N_position = ParticlesRO[N_ID].position;
-                
+
                 float2 diff = N_position - P_position;
                 float r_sq = dot(diff, diff);
                 if (r_sq < h_sq && P_ID != N_ID)
@@ -481,7 +481,7 @@ void ForceCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uin
 
                     // Pressure Term
                     acceleration += CalculateGradPressure(r, P_pressure, N_pressure, N_density, diff);
-                    
+
                     // Viscosity Term
                     acceleration += CalculateLapVelocity(r, P_velocity, N_velocity, N_density);
                 }
@@ -501,11 +501,11 @@ void ForceCS_Grid( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uin
 void IntegrateCS( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTid : SV_GroupThreadID, uint GI : SV_GroupIndex )
 {
     const unsigned int P_ID = DTid.x; // Particle ID to operate on
-    
+
     float2 position = ParticlesRO[P_ID].position;
     float2 velocity = ParticlesRO[P_ID].velocity;
     float2 acceleration = ParticlesForcesRO[P_ID].acceleration;
-    
+
     // Apply the forces from the map walls
     [unroll]
     for (unsigned int i = 0 ; i < 4 ; i++)
@@ -513,14 +513,14 @@ void IntegrateCS( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint
         float dist = dot(float3(position, 1), g_vPlanes[i]);
         acceleration += min(dist, 0) * -g_fWallStiffness * g_vPlanes[i].xy;
     }
-    
+
     // Apply gravity
     acceleration += g_vGravity.xy;
-    
+
     // Integrate
     velocity += g_fTimeStep * acceleration;
     position += g_fTimeStep * velocity;
-    
+
     // Update
     ParticlesRW[P_ID].position = position;
     ParticlesRW[P_ID].velocity = velocity;

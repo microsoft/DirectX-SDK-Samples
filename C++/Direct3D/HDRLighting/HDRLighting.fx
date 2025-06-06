@@ -6,21 +6,21 @@
 //       These shaders are used to quickly calculate the average luminance
 //       of the rendered scene, simulate the viewer's light adaptation level,
 //       map the high dynamic range of colors to a range displayable on a PC
-//       monitor, and perform post-process lighting effects. 
+//       monitor, and perform post-process lighting effects.
 //
-// The algorithms described in this sample are based very closely on the 
-// lighting effects implemented in Masaki Kawase's Rthdribl sample and the tone 
-// mapping process described in the whitepaper "Tone Reproduction for Digital 
+// The algorithms described in this sample are based very closely on the
+// lighting effects implemented in Masaki Kawase's Rthdribl sample and the tone
+// mapping process described in the whitepaper "Tone Reproduction for Digital
 // Images"
 //
 // Real-Time High Dynamic Range Image-Based Lighting (Rthdribl)
 // Masaki Kawase
-// http://www.daionet.gr.jp/~masa/rthdribl/ 
+// http://www.daionet.gr.jp/~masa/rthdribl/
 //
 // "Photographic Tone Reproduction for Digital Images"
 // Erik Reinhard, Mike Stark, Peter Shirley and Jim Ferwerda
-// http://www.cs.utah.edu/~reinhard/cdrom/ 
-// 
+// http://www.cs.utah.edu/~reinhard/cdrom/
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -32,7 +32,7 @@
 // Global constants
 //-----------------------------------------------------------------------------
 static const int    MAX_SAMPLES            = 16;    // Maximum texture grabs
-static const int    NUM_LIGHTS             = 2;     // Scene lights 
+static const int    NUM_LIGHTS             = 2;     // Scene lights
 static const float  BRIGHT_PASS_THRESHOLD  = 5.0f;  // Threshold for BrightPass filter
 static const float  BRIGHT_PASS_OFFSET     = 10.0f; // Offset for BrightPass filter
 
@@ -40,7 +40,7 @@ static const float  BRIGHT_PASS_OFFSET     = 10.0f; // Offset for BrightPass fil
 static const float3 LUMINANCE_VECTOR  = float3(0.2125f, 0.7154f, 0.0721f);
 
 // The per-color weighting to be used for blue shift under low light.
-static const float3 BLUE_SHIFT_VECTOR = float3(1.05f, 0.97f, 1.27f); 
+static const float3 BLUE_SHIFT_VECTOR = float3(1.05f, 0.97f, 1.27f);
 
 
 
@@ -100,8 +100,8 @@ sampler s7 : register(s7);
 
 
 //-----------------------------------------------------------------------------
-// Name: TransformScene     
-// Type: Vertex shader                                      
+// Name: TransformScene
+// Type: Vertex shader
 // Desc: Transforms the incoming vertex from object to clip space, and passes
 //       the vertex position and normal in view space on to the pixel shader
 //-----------------------------------------------------------------------------
@@ -115,7 +115,7 @@ struct TransformSceneOutput
 
 TransformSceneOutput TransformScene
     (
-    float3 vObjectPosition : POSITION, 
+    float3 vObjectPosition : POSITION,
     float3 vObjectNormal : NORMAL,
     float2 vObjectTexture : TEXCOORD0
     )
@@ -123,23 +123,23 @@ TransformSceneOutput TransformScene
     TransformSceneOutput Output;
     float4 vViewPosition;
     float3 vViewNormal;
-  
+
     // tranform the position/normal into view space
     vViewPosition = mul(float4(vObjectPosition, 1.0f), g_mObjectToView);
     vViewNormal = normalize(mul(vObjectNormal, (float3x3)g_mObjectToView));
 
     // project view space to screen space
     Output.Position = mul(vViewPosition, g_mProjection);
-    
+
     // Pass the texture coordinate without modification
     Output.Texture0 = vObjectTexture;
 
     // Pass view position into a texture iterator
     Output.Texture1 = vViewPosition.xyz;
-    
+
     // Pass view surface normal into a texture iterator
     Output.Texture2 = vViewNormal;
-    
+
     return Output;
 }
 
@@ -151,7 +151,7 @@ TransformSceneOutput TransformScene
 
 
 //-----------------------------------------------------------------------------
-// Name: PointLight                                        
+// Name: PointLight
 // Type: Pixel shader
 // Desc: Per-pixel diffuse, specular, and emissive lighting
 //-----------------------------------------------------------------------------
@@ -168,8 +168,8 @@ float4 PointLight
     float3 vIntensity = float3(0.02f, 0.02f, 0.02f);
 
     // Add emissive term to the total intensity
-    vIntensity += g_vEmissive; 
-        
+    vIntensity += g_vEmissive;
+
     for(int iLight=0; iLight < NUM_LIGHTS; iLight++)
     {
         // Calculate illumination variables
@@ -182,12 +182,12 @@ float4 PointLight
 
         // Calculate specular term
         float  fSpecular     = g_fPhongCoefficient * pow(fPhongValue, g_fPhongExponent);
-        
+
         // Scale according to distance from the light
         float fDistance = distance(g_avLightPositionView[iLight], vViewPosition);
         vIntensity += (fDiffuse + fSpecular) * g_avLightIntensity[iLight]/(fDistance*fDistance);
     }
-    
+
     // Multiply by texture color
     if( g_bEnableTexture )
         vIntensity *= tex2D(s0, vTexture);
@@ -200,7 +200,7 @@ float4 PointLight
 
 //-----------------------------------------------------------------------------
 // Name: SampleLumInitial
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Sample the luminance of the source image using a kernal of sample
 //       points, and return a scaled image containing the log() of averages
 //-----------------------------------------------------------------------------
@@ -218,7 +218,7 @@ float4 SampleLumInitial
         vSample = tex2D(s0, vScreenPosition+g_avSampleOffsets[iSample]);
         fLogLumSum += log(dot(vSample, LUMINANCE_VECTOR)+0.0001f);
     }
-    
+
     // Divide the sum to complete the average
     fLogLumSum /= 9;
 
@@ -230,7 +230,7 @@ float4 SampleLumInitial
 
 //-----------------------------------------------------------------------------
 // Name: SampleLumIterative
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Scale down the luminance texture by blending sample points
 //-----------------------------------------------------------------------------
 float4 SampleLumIterative
@@ -238,14 +238,14 @@ float4 SampleLumIterative
     in float2 vScreenPosition : TEXCOORD0
     ) : COLOR
 {
-    float fResampleSum = 0.0f; 
-    
+    float fResampleSum = 0.0f;
+
     for(int iSample = 0; iSample < 16; iSample++)
     {
         // Compute the sum of luminance throughout the sample points
         fResampleSum += tex2D(s0, vScreenPosition+g_avSampleOffsets[iSample]);
     }
-    
+
     // Divide the sum to complete the average
     fResampleSum /= 16;
 
@@ -257,7 +257,7 @@ float4 SampleLumIterative
 
 //-----------------------------------------------------------------------------
 // Name: SampleLumFinal
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Extract the average luminance of the image by completing the averaging
 //       and taking the exp() of the result
 //-----------------------------------------------------------------------------
@@ -267,17 +267,17 @@ float4 SampleLumFinal
     ) : COLOR
 {
     float fResampleSum = 0.0f;
-    
+
     for(int iSample = 0; iSample < 16; iSample++)
     {
         // Compute the sum of luminance throughout the sample points
         fResampleSum += tex2D(s0, vScreenPosition+g_avSampleOffsets[iSample]);
     }
-    
+
     // Divide the sum to complete the average, and perform an exp() to complete
     // the average luminance calculation
     fResampleSum = exp(fResampleSum/16);
-    
+
     return float4(fResampleSum, fResampleSum, fResampleSum, 1.0f);
 }
 
@@ -286,7 +286,7 @@ float4 SampleLumFinal
 
 //-----------------------------------------------------------------------------
 // Name: CalculateAdaptedLumPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Calculate the luminance that the camera is current adapted to, using
 //       the most recented adaptation level, the current scene luminance, and
 //       the time elapsed since last calculated
@@ -298,7 +298,7 @@ float4 CalculateAdaptedLumPS
 {
     float fAdaptedLum = tex2D(s0, float2(0.5f, 0.5f));
     float fCurrentLum = tex2D(s1, float2(0.5f, 0.5f));
-    
+
     // The user's adapted luminance level is simulated by closing the gap between
     // adapted luminance and current luminance by 2% every frame, based on a
     // 30 fps rate. This is not an accurate model of human adaptation, which can
@@ -312,7 +312,7 @@ float4 CalculateAdaptedLumPS
 
 //-----------------------------------------------------------------------------
 // Name: FinalScenePassPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Perform blue shift, tone map the scene, and add post-processed light
 //       effects
 //-----------------------------------------------------------------------------
@@ -340,7 +340,7 @@ float4 FinalScenePassPS
         float3 vRodColor = dot( (float3)vSample, LUMINANCE_VECTOR ) * BLUE_SHIFT_VECTOR;
         vSample.rgb = lerp( (float3)vSample, vRodColor, fBlueShiftCoefficient );
     }
-    
+
 	
     // Map the high range of color values into a range appropriate for
     // display, taking into account the user's adaptation level, and selected
@@ -349,12 +349,12 @@ float4 FinalScenePassPS
     {
 		vSample.rgb *= g_fMiddleGray/(fAdaptedLum + 0.001f);
 		vSample.rgb /= (1.0f+vSample);
-    }  
-    
+    }
+
     // Add the star and bloom post processing effects
     vSample += g_fStarScale * vStar;
     vSample += g_fBloomScale * vBloom;
-    
+
     return vSample;
 }
 
@@ -363,7 +363,7 @@ float4 FinalScenePassPS
 
 //-----------------------------------------------------------------------------
 // Name: DownScale4x4PS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Scale the source texture down to 1/16 scale
 //-----------------------------------------------------------------------------
 float4 DownScale4x4PS
@@ -378,7 +378,7 @@ float4 DownScale4x4PS
 	{
 		sample += tex2D( s0, vScreenPosition + g_avSampleOffsets[i] );
 	}
-    
+
 	return sample / 16;
 }
 
@@ -387,7 +387,7 @@ float4 DownScale4x4PS
 
 //-----------------------------------------------------------------------------
 // Name: DownScale2x2PS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Scale the source texture down to 1/4 scale
 //-----------------------------------------------------------------------------
 float4 DownScale2x2PS
@@ -402,7 +402,7 @@ float4 DownScale2x2PS
 	{
 		sample += tex2D( s0, vScreenPosition + g_avSampleOffsets[i] );
 	}
-    
+
 	return sample / 4;
 }
 
@@ -411,7 +411,7 @@ float4 DownScale2x2PS
 
 //-----------------------------------------------------------------------------
 // Name: GaussBlur5x5PS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Simulate a 5x5 kernel gaussian blur by sampling the 12 points closest
 //       to the center point.
 //-----------------------------------------------------------------------------
@@ -436,7 +436,7 @@ float4 GaussBlur5x5PS
 
 //-----------------------------------------------------------------------------
 // Name: BrightPassFilterPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Perform a high-pass filter on the source texture
 //-----------------------------------------------------------------------------
 float4 BrightPassFilterPS
@@ -457,10 +457,10 @@ float4 BrightPassFilterPS
 	vSample = max(vSample, 0.0f);
 	
 	// Map the resulting value into the 0 to 1 range. Higher values for
-	// BRIGHT_PASS_OFFSET will isolate lights from illuminated scene 
+	// BRIGHT_PASS_OFFSET will isolate lights from illuminated scene
 	// objects.
 	vSample.rgb /= (BRIGHT_PASS_OFFSET+vSample);
-    
+
 	return vSample;
 }
 
@@ -469,9 +469,9 @@ float4 BrightPassFilterPS
 
 //-----------------------------------------------------------------------------
 // Name: BloomPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Blur the source image along one axis using a gaussian
-//       distribution. Since gaussian blurs are separable, this shader is called 
+//       distribution. Since gaussian blurs are separable, this shader is called
 //       twice; first along the horizontal axis, then along the vertical axis.
 //-----------------------------------------------------------------------------
 float4 BloomPS
@@ -479,12 +479,12 @@ float4 BloomPS
     in float2 vScreenPosition : TEXCOORD0
     ) : COLOR
 {
-    
+
     float4 vSample = 0.0f;
     float4 vColor = 0.0f;
-        
+
     float2 vSamplePosition;
-    
+
     // Perform a one-directional gaussian blur
     for(int iSample = 0; iSample < 15; iSample++)
     {
@@ -492,7 +492,7 @@ float4 BloomPS
         vColor = tex2D(s0, vSamplePosition);
         vSample += g_avSampleWeights[iSample]*vColor;
     }
-    
+
     return vSample;
 }
 
@@ -501,7 +501,7 @@ float4 BloomPS
 
 //-----------------------------------------------------------------------------
 // Name: StarPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Each star is composed of up to 8 lines, and each line is created by
 //       up to three passes of this shader, which samples from 8 points along
 //       the current line.
@@ -513,9 +513,9 @@ float4 StarPS
 {
     float4 vSample = 0.0f;
     float4 vColor = 0.0f;
-        
+
     float2 vSamplePosition;
-    
+
     // Sample from eight points along the star line
     for(int iSample = 0; iSample < 8; iSample++)
     {
@@ -532,7 +532,7 @@ float4 StarPS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_1PS
@@ -552,7 +552,7 @@ float4 MergeTextures_1PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_2PS
@@ -573,7 +573,7 @@ float4 MergeTextures_2PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_3PS
@@ -595,7 +595,7 @@ float4 MergeTextures_3PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_4PS
@@ -618,7 +618,7 @@ float4 MergeTextures_4PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_5PS
@@ -642,7 +642,7 @@ float4 MergeTextures_5PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_6PS
@@ -667,7 +667,7 @@ float4 MergeTextures_6PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_7PS
@@ -693,7 +693,7 @@ float4 MergeTextures_7PS
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_NPS
-// Type: Pixel shader                                      
+// Type: Pixel shader
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 float4 MergeTextures_8PS
@@ -725,13 +725,13 @@ float4 MergeTextures_8PS
 
 //-----------------------------------------------------------------------------
 // Name: RenderScene
-// Type: Technique                                     
+// Type: Technique
 // Desc: Performs specular lighting
 //-----------------------------------------------------------------------------
 technique RenderScene
 {
     pass P0
-    {        
+    {
         VertexShader = compile vs_2_0 TransformScene();
         PixelShader  = compile ps_2_0 PointLight();
     }
@@ -742,13 +742,13 @@ technique RenderScene
 
 //-----------------------------------------------------------------------------
 // Name: Bloom
-// Type: Technique                                     
+// Type: Technique
 // Desc: Performs a single horizontal or vertical pass of the blooming filter
 //-----------------------------------------------------------------------------
 technique Bloom
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 BloomPS();
     }
 
@@ -758,13 +758,13 @@ technique Bloom
 
 //-----------------------------------------------------------------------------
 // Name: Star
-// Type: Technique                                     
+// Type: Technique
 // Desc: Perform one of up to three passes composing the current star line
 //-----------------------------------------------------------------------------
 technique Star
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 StarPS();
     }
 
@@ -776,10 +776,10 @@ technique Star
 
 //-----------------------------------------------------------------------------
 // Name: SampleAvgLum
-// Type: Technique                                     
-// Desc: Takes the HDR Scene texture as input and starts the process of 
+// Type: Technique
+// Desc: Takes the HDR Scene texture as input and starts the process of
 //       determining the average luminance by converting to grayscale, taking
-//       the log(), and scaling the image to a single pixel by averaging sample 
+//       the log(), and scaling the image to a single pixel by averaging sample
 //       points.
 //-----------------------------------------------------------------------------
 technique SampleAvgLum
@@ -795,7 +795,7 @@ technique SampleAvgLum
 
 //-----------------------------------------------------------------------------
 // Name: ResampleAvgLum
-// Type: Technique                                     
+// Type: Technique
 // Desc: Continue to scale down the luminance texture
 //-----------------------------------------------------------------------------
 technique ResampleAvgLum
@@ -811,7 +811,7 @@ technique ResampleAvgLum
 
 //-----------------------------------------------------------------------------
 // Name: ResampleAvgLumExp
-// Type: Technique                                     
+// Type: Technique
 // Desc: Sample the texture to a single pixel and perform an exp() to complete
 //       the evalutation
 //-----------------------------------------------------------------------------
@@ -828,7 +828,7 @@ technique ResampleAvgLumExp
 
 //-----------------------------------------------------------------------------
 // Name: CalculateAdaptedLum
-// Type: Technique                                     
+// Type: Technique
 // Desc: Determines the level of the user's simulated light adaptation level
 //       using the last adapted level, the current scene luminance, and the
 //       time since last calculation
@@ -846,7 +846,7 @@ technique CalculateAdaptedLum
 
 //-----------------------------------------------------------------------------
 // Name: DownScale4x4
-// Type: Technique                                     
+// Type: Technique
 // Desc: Scale the source texture down to 1/16 scale
 //-----------------------------------------------------------------------------
 technique DownScale4x4
@@ -862,7 +862,7 @@ technique DownScale4x4
 
 //-----------------------------------------------------------------------------
 // Name: DownScale2x2
-// Type: Technique                                     
+// Type: Technique
 // Desc: Scale the source texture down to 1/4 scale
 //-----------------------------------------------------------------------------
 technique DownScale2x2
@@ -878,7 +878,7 @@ technique DownScale2x2
 
 //-----------------------------------------------------------------------------
 // Name: GaussBlur5x5
-// Type: Technique                                     
+// Type: Technique
 // Desc: Simulate a 5x5 kernel gaussian blur by sampling the 12 points closest
 //       to the center point.
 //-----------------------------------------------------------------------------
@@ -895,7 +895,7 @@ technique GaussBlur5x5
 
 //-----------------------------------------------------------------------------
 // Name: BrightPassFilter
-// Type: Technique                                     
+// Type: Technique
 // Desc: Perform a high-pass filter on the source texture
 //-----------------------------------------------------------------------------
 technique BrightPassFilter
@@ -912,7 +912,7 @@ technique BrightPassFilter
 
 //-----------------------------------------------------------------------------
 // Name: FinalScenePass
-// Type: Technique                                     
+// Type: Technique
 // Desc: Minimally transform and texture the incoming geometry
 //-----------------------------------------------------------------------------
 technique FinalScenePass
@@ -928,13 +928,13 @@ technique FinalScenePass
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_1
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_1PS();
     }
 
@@ -945,13 +945,13 @@ technique MergeTextures_1
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_2
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_2PS();
     }
 
@@ -962,13 +962,13 @@ technique MergeTextures_2
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_3
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_3PS();
     }
 
@@ -979,13 +979,13 @@ technique MergeTextures_3
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_4
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_4PS();
     }
 
@@ -996,13 +996,13 @@ technique MergeTextures_4
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_5
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_5PS();
     }
 
@@ -1013,13 +1013,13 @@ technique MergeTextures_5
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_6
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_6PS();
     }
 
@@ -1030,13 +1030,13 @@ technique MergeTextures_6
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_7
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_7PS();
     }
 
@@ -1047,13 +1047,13 @@ technique MergeTextures_7
 
 //-----------------------------------------------------------------------------
 // Name: MergeTextures_N
-// Type: Technique                                     
+// Type: Technique
 // Desc: Return the average of N input textures
 //-----------------------------------------------------------------------------
 technique MergeTextures_8
 {
     pass P0
-    {        
+    {
         PixelShader  = compile ps_2_0 MergeTextures_8PS();
     }
 

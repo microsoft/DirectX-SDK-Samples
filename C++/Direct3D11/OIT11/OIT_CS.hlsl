@@ -2,7 +2,7 @@
 // File: OIT_CS.hlsl
 //
 // Desc: Compute shaders for used in the Order Independent Transparency sample.
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 // TODO: use structured buffers
@@ -34,7 +34,7 @@ void CreatePrefixSum_Pass0_CS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_Dispatc
     if( nThreadNum%2 == 0 )
     {
         prefixSum[nThreadNum] = fragmentCount[nGid.xy];
-        
+
         // Add the Fragment count to the next bin
         if( (nThreadNum+1) < g_nFrameWidth * g_nFrameHeight )
         {
@@ -50,12 +50,12 @@ void CreatePrefixSum_Pass0_CS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_Dispatc
 // to the second half of the group.  There are n/groupsize groups in each pass.
 // Each pass increases the group size until it is the size of the buffer.
 // The resulting buffer holds the prefix sum of all preceding values in each
-// position 
+// position
 [numthreads(1,1,1)]
 void CreatePrefixSum_Pass1_CS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID, uint3 nGTid : SV_GroupThreadID )
 {
     int nThreadNum = nGid.x;
-    
+
     int nValue = prefixSum[nThreadNum*g_nPassSize + g_nPassSize/2 - 1];
     for(int i = nThreadNum*g_nPassSize + g_nPassSize/2; i < nThreadNum*g_nPassSize + g_nPassSize && i < g_nFrameWidth*g_nFrameHeight; i++)
     {
@@ -72,12 +72,12 @@ groupshared int nIndex[32];
 void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID, uint3 nGTid : SV_GroupThreadID )
 {
     uint nThreadNum = nGid.y * g_nFrameWidth + nGid.x;
-    
+
 //    uint r0, r1, r2;
 //    float rd0, rd1, rd2, rd3, rd4, rd5, rd6, rd7;
 
     uint N = fragmentCount[nDTid.xy];
-    
+
     uint N2 = 1 << (int)(ceil(log2(N)));
 
     float fDepth[32];
@@ -91,15 +91,15 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         nIndex[i] = i;
         fDepth[i] = 1.1f;
     }
-    
+
     uint idx = blocksize*nGTid.y + nGTid.x;
 
     // Bitonic sort
     for( int k = 2; k <= N2; k = 2*k )
     {
-        for( int j = k>>1; j > 0 ; j = j>>1 ) 
+        for( int j = k>>1; j > 0 ; j = j>>1 )
         {
-            for( int i = 0; i < N2; i++ ) 
+            for( int i = 0; i < N2; i++ )
             {
 //                GroupMemoryBarrierWithGroupSync();
                 //i = idx;
@@ -110,7 +110,7 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
                 {
                     float dixj = fDepth[ nIndex[ ixj ] ];
                     if ( ( i&k ) == 0 && di > dixj )
-                    { 
+                    {
                         int temp = nIndex[ i ];
                         nIndex[ i ] = nIndex[ ixj ];
                         nIndex[ ixj ] = temp;
@@ -130,7 +130,7 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
     if( idx == 0 )
     {
 
-     /*   
+     /*
         // Debug
         uint color[8];
         for(int i = 0; i < 8; i++)
@@ -143,8 +143,8 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
             deepBufferDepth[nThreadNum*8+i] = fDepth[i];//fDepth[nIndex[i]];
             deepBufferColorUINT[nThreadNum*8+i] = color[nIndex[i]];
         }
-     */     
-   
+     */
+
         // Accumulate fragments into final result
         float4 result = 0.0f;
         for( int x = N-1; x >= 0; x-- )
@@ -170,11 +170,11 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
     float d0 = deepBufferDepth[nThreadNum*8];
     float d1 = deepBufferDepth[nThreadNum*8+1];
     float d2 = deepBufferDepth[nThreadNum*8+2];
-    
-    uint s0 = deepBufferColorUINT[nThreadNum*8 + 0]; 
+
+    uint s0 = deepBufferColorUINT[nThreadNum*8 + 0];
     uint s1 = deepBufferColorUINT[nThreadNum*8 + 1];
     uint s2 = deepBufferColorUINT[nThreadNum*8 + 2];
-    
+
     uint r0, r1, r2;
     float rd0, rd1, rd2;
     if( d0 < d1 && d0 < d2 )
@@ -185,7 +185,7 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         {
            r1 = s1;
            r2 = s2;
-           
+
            rd1 = d1;
            rd2 = d2;
         }
@@ -193,10 +193,10 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         {
             r1 = s2;
             r2 = s1;
-            
+
             rd1 = d2;
             rd2 = d1;
-        } 
+        }
     }
     else if( d1 < d2 )
     {
@@ -206,7 +206,7 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         {
           r1 = s0;
           r2 = s2;
-          
+
           rd1 = d0;
           rd2 = d2;
         }
@@ -214,7 +214,7 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         {
           r1 = s2;
           r2 = s0;
-          
+
           rd1 = d2;
           rd2 = d0;
         }
@@ -227,7 +227,7 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         {
           r1 = s1;
           r2 = s0;
-          
+
           rd1 = d1;
           rd2 = d0;
         }
@@ -235,12 +235,12 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
         {
           r1 = s0;
           r2 = s1;
-          
+
           rd1 = d0;
           rd2 = d1;
         }
     }
-    
+
     deepBufferDepth[nThreadNum*8] = rd0;
     deepBufferDepth[nThreadNum*8+1] = rd1;
     deepBufferDepth[nThreadNum*8+2] = rd2;
@@ -255,20 +255,20 @@ void SortAndRenderCS( uint3 nGid : SV_GroupID, uint3 nDTid : SV_DispatchThreadID
     color[0].g = (r0 >> 8  & 0xFF) / 255.0f;
     color[0].b = (r0 >> 16 & 0xFF) / 255.0f;
     color[0].a = (r0 >> 24 & 0xFF) / 255.0f;
-    
+
     color[1].r = (r1 >> 0  & 0xFF) / 255.0f;
     color[1].g = (r1 >> 8  & 0xFF) / 255.0f;
     color[1].b = (r1 >> 16 & 0xFF) / 255.0f;
     color[1].a = (r1 >> 24 & 0xFF) / 255.0f;
-    
+
     color[2].r = (r2 >> 0  & 0xFF) / 255.0f;
     color[2].g = (r2 >> 8  & 0xFF) / 255.0f;
     color[2].b = (r2 >> 16 & 0xFF) / 255.0f;
     color[2].a = (r2 >> 24 & 0xFF) / 255.0f;
-    
+
     float4 result = lerp(lerp(lerp(0, color[2], color[2].a), color[1], color[1].a), color[0], color[0].a);
     result.a = 1.0f;
-    
+
     frameBuffer[nDTid.xy] = result;
 }
 

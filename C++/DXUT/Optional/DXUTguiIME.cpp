@@ -170,7 +170,7 @@ void CDXUTIMEEditBox::UpdateRects()
 
 //--------------------------------------------------------------------------------------
 //  GetImeId( UINT uIndex )
-//      returns 
+//      returns
 //  returned value:
 //  0: In the following cases
 //      - Non Chinese IME input locale
@@ -186,7 +186,7 @@ void CDXUTIMEEditBox::UpdateRects()
 //          pVerFixedInfo->dwFileVersionLS
 //
 //  Use IMEID_VER and IMEID_LANG macro to extract version and language information.
-//  
+//
 
 // We define the locale-invariant ID ourselves since it doesn't exist prior to WinXP
 // For more information, see the CompareString() reference.
@@ -300,7 +300,7 @@ bool CDXUTIMEEditBox::HandleMouse( UINT uMsg, POINT pt, WPARAM wParam, LPARAM lP
 {
     if( !m_bEnabled || !m_bVisible )
         return false;
-    
+
     switch( uMsg )
     {
         case WM_LBUTTONDOWN:
@@ -471,7 +471,7 @@ bool CDXUTIMEEditBox::MsgProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
 #if defined(DEBUG) || defined(_DEBUG)
     // DXUT.cpp used to call CDXUTIMEEditBox::StaticMsgProc() so that, but now
-    // this is the application's responsiblity.  To do this, call 
+    // this is the application's responsiblity.  To do this, call
     // CDXUTDialogResourceManager::MsgProc() before calling this function.
     assert( m_bIMEStaticMsgProcCalled && L"To fix, call CDXUTDialogResourceManager::MsgProc() first" );
 #endif
@@ -582,7 +582,7 @@ void CDXUTIMEEditBox::RenderCandidateReadingWindow( float fElapsedTime, bool bRe
             }
             wszCand[lstrlen( wszCand ) - 1] = L'\0';  // Remove the last space
             s_CandList.HoriCand.SetText( wszCand );
-            
+
             m_pDialog->CalcTextRect( s_CandList.HoriCand.GetBuffer(), m_Elements.GetAt( 1 ), &rc );
         }
         nWidthRequired = rc.right - rc.left;
@@ -711,7 +711,7 @@ void CDXUTIMEEditBox::RenderCandidateReadingWindow( float fElapsedTime, bool bRe
 //--------------------------------------------------------------------------------------
 void CDXUTIMEEditBox::RenderComposition( float fElapsedTime )
 {
-    
+
     s_CompString.SetText( ImeUi_GetCompositionString() );
 
     RECT rcCaret = { 0, 0, 0, 0 };
@@ -968,7 +968,7 @@ void CDXUTIMEEditBox::Initialize( HWND hWnd )
     ImeUiCallback_DrawFans = NULL;
 
     ImeUi_Initialize( hWnd );
-    
+
     s_CompString.SetBufferSize( MAX_COMPSTRING_SIZE );
     ImeUi_EnableIme( true );
 }

@@ -21,7 +21,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 #include <windows.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 #include <stdio.h>
@@ -205,7 +205,7 @@ DWORD WINAPI DirectXSetupCallbackFunction( DWORD dwReason, DWORD dwMsgType,
         SetWindowText( GetDlgItem( g_hDlg, ID_MYMESSAGE ), strMessage );
 
         // When dwMsgType is equal to zero we can display status information but
-        // should not wait for input from the user. 
+        // should not wait for input from the user.
         if( dwMsgType == 0 )
         {
             Sleep( 1000 );
@@ -334,7 +334,7 @@ BOOL DirectXInstall( HWND hWnd )
     }
 
     // The DSETUP DLLs should be at the current path, along with the DirectX
-    // redist directory so that it can be found and set up.  Get the exe 
+    // redist directory so that it can be found and set up.  Get the exe
     // name, and exe path
     GetModuleFileName( NULL, strSource, MAX_PATH );
     strSource[MAX_PATH - 1] = 0;
@@ -375,19 +375,19 @@ BOOL DirectXInstall( HWND hWnd )
 
     dwFlags = DSETUP_DIRECTX;
     //-------------------------------------------------------------------------
-    // Notes: 
+    // Notes:
     //
     // 1) Test Install
     //    If you just want to test the install process without
     //    actually installing then add the DSETUP_TESTINSTALL flag like so:
     //    dwFlags |= DSETUP_TESTINSTALL;
-    // 
+    //
     //  2) Managed DirectX
     //     To install Managed DirectX you must add the DSETUP_MANAGEDDX flag like so:
     //     dwFlags |= DSETUP_MANAGEDDX
     //
-    //     Managed DirectX requires the .NET Framework to be installed before 
-    //     installing DirectX.  DirectX does NOT install the .NET Framework.    
+    //     Managed DirectX requires the .NET Framework to be installed before
+    //     installing DirectX.  DirectX does NOT install the .NET Framework.
     //-------------------------------------------------------------------------
 
     iRetCode = s_DirectXSetup( hWnd, strSource, dwFlags );

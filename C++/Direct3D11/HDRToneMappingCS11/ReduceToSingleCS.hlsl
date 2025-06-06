@@ -2,7 +2,7 @@
 // File: ReduceToSingleCS.hlsl
 //
 // Desc: Reduce an input buffer by a factor of groupthreads
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-----------------------------------------------------------------------------
 
@@ -26,13 +26,13 @@ void CSMain( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTi
     else
         accum[GI] = 0;
 
-    // Parallel reduction algorithm follows 
+    // Parallel reduction algorithm follows
     GroupMemoryBarrierWithGroupSync();
     if ( GI < 64 )
-        accum[GI] += accum[64+GI];  
+        accum[GI] += accum[64+GI];
 
     GroupMemoryBarrierWithGroupSync();
-    if ( GI < 32 )    
+    if ( GI < 32 )
         accum[GI] += accum[32+GI];
 
     GroupMemoryBarrierWithGroupSync();
@@ -40,7 +40,7 @@ void CSMain( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTi
         accum[GI] += accum[16+GI];
 
     GroupMemoryBarrierWithGroupSync();
-    if ( GI < 8 ) 
+    if ( GI < 8 )
         accum[GI] += accum[8+GI];
 
     GroupMemoryBarrierWithGroupSync();
@@ -54,9 +54,9 @@ void CSMain( uint3 Gid : SV_GroupID, uint3 DTid : SV_DispatchThreadID, uint3 GTi
     GroupMemoryBarrierWithGroupSync();
     if ( GI < 1 )
         accum[GI] += accum[1+GI];
-    
+
     if ( GI == 0 )
-    {        
+    {
         Result[Gid.x] = accum[0];
     }
 }

@@ -48,7 +48,7 @@ HRESULT CGDFParse::ExtractXML( WCHAR* strGDFBinPath )
 {
     SAFE_RELEASE( m_pRootNode );
 
-    // Extract the GDF XML from the GDF binary 
+    // Extract the GDF XML from the GDF binary
     HMODULE hGDFDll = LoadLibrary( strGDFBinPath );
     if( hGDFDll )
     {
@@ -95,7 +95,7 @@ HRESULT CGDFParse::ExtractXML( WCHAR* strGDFBinPath )
                                             hr = pPersistStreamInit->Load( piStream );
                                             if( SUCCEEDED( hr ) )
                                             {
-                                                // Get the root node to the XML doc and store it 
+                                                // Get the root node to the XML doc and store it
                                                 pDoc->QueryInterface( IID_IXMLDOMNode, ( void** )&m_pRootNode );
                                             }
                                             SAFE_RELEASE( pPersistStreamInit );
@@ -177,7 +177,7 @@ HRESULT CGDFParse::ExtractGDFThumbnail( WCHAR* strGDFBinPath, WCHAR* strDestFile
     HMODULE hGDFDll = LoadLibrary( strGDFBinPath );
     if( hGDFDll )
     {
-        // Extract GDF thumbnail 
+        // Extract GDF thumbnail
         hrsrc = FindResource( hGDFDll, ID_GDF_THUMBNAIL_STR, L"DATA" );
         if( hrsrc )
         {

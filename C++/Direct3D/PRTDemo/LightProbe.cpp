@@ -8,8 +8,8 @@
 #include "SDKmisc.h"
 #include "lightprobe.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 struct LIGHTPROBE_VERTEX
 {
@@ -43,7 +43,7 @@ struct SHCubeProj
         fConvCoeffs[1] = 2.0f / 3.0f;
         fConvCoeffs[2] = 1.0f / 4.0f;
         fConvCoeffs[3] = fConvCoeffs[5] = 0.0f;
-        fConvCoeffs[4] = -6.0f / 144.0f; // 
+        fConvCoeffs[4] = -6.0f / 144.0f; //
     }
 
     void    Init( float* pR, float* pG, float* pB )
@@ -115,7 +115,7 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
     // Note that you should optimally read these HDR light probes on device that supports
     // floating point.  If this current device doesn't support floating point then
     // D3DX will automatically convert them to interger format which won't be optimal.
-    // If you wanted to perform this step in a machine without a good video card, then 
+    // If you wanted to perform this step in a machine without a good video card, then
     // use a D3DDEVTYPE_NULLREF device instead.
     WCHAR strPath[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( strPath, MAX_PATH, strCubeMapFile ) );
@@ -124,10 +124,10 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
                                                NULL, &m_pEnvironmentMap ) );
 
     // Some devices don't support D3DFMT_A16B16G16R16F textures and thus
-    // D3DX will return the texture in a HW compatible format with the possibility of losing its 
+    // D3DX will return the texture in a HW compatible format with the possibility of losing its
     // HDR lighting information.  This will change the SH values returned from D3DXSHProjectCubeMap()
-    // as the cube map will no longer be HDR.  So if this happens, create a load the cube map on 
-    // scratch memory and project using that cube map.  But keep the other one around to render the 
+    // as the cube map will no longer be HDR.  So if this happens, create a load the cube map on
+    // scratch memory and project using that cube map.  But keep the other one around to render the
     // background texture with.
     bool bUsedScratchMem = false;
     D3DSURFACE_DESC desc;
@@ -141,7 +141,7 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
                                               NULL, &pScratchEnvironmentMap );
         if( SUCCEEDED( hr ) )
         {
-            // prefilter the lighting environment by projecting onto the order 6 SH basis.  
+            // prefilter the lighting environment by projecting onto the order 6 SH basis.
             V( D3DXSHProjectCubeMap( 6, pScratchEnvironmentMap, m_fSHData[0], m_fSHData[1], m_fSHData[2] ) );
             bUsedScratchMem = true;
             SAFE_RELEASE( pScratchEnvironmentMap );
@@ -150,7 +150,7 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
 
     if( !bUsedScratchMem )
     {
-        // prefilter the lighting environment by projecting onto the order 6 SH basis.  
+        // prefilter the lighting environment by projecting onto the order 6 SH basis.
         V( D3DXSHProjectCubeMap( 6, m_pEnvironmentMap, m_fSHData[0], m_fSHData[1], m_fSHData[2] ) );
     }
 
@@ -164,7 +164,7 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
         V( D3DXFillCubeTexture( m_pSHEnvironmentMap, SHCubeFill, &projData ) );
 
         // This code will save a cubemap texture that represents the SH projection of the light probe if you want it
-        // V( D3DXSaveTextureToFile( "shprojection.dds", D3DXIFF_DDS, m_pSHEnvironmentMap, NULL ) ); 
+        // V( D3DXSaveTextureToFile( "shprojection.dds", D3DXIFF_DDS, m_pSHEnvironmentMap, NULL ) );
     }
 
     // Create an effect to render the light probe as a skybox
@@ -176,8 +176,8 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
 
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DXSHADER_DEBUG;
     #endif
@@ -189,7 +189,7 @@ HRESULT CLightProbe::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, const WCHAR* 
         dwShaderFlags |= D3DXSHADER_FORCE_PS_SOFTWARE_NOOPT;
     #endif
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     V_RETURN( D3DXCreateEffectFromFile( pd3dDevice, str, NULL, NULL,
                                         dwShaderFlags, NULL, &m_pEffect, NULL ) );
@@ -224,7 +224,7 @@ void CLightProbe::OnResetDevice( const D3DSURFACE_DESC* pBackBufferSurfaceDesc )
     LIGHTPROBE_VERTEX* pVertex = NULL;
     V( m_pVB->Lock( 0, 0, ( void** )&pVertex, 0 ) );
 
-    // Map texels to pixels 
+    // Map texels to pixels
     float fHighW = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );
     float fHighH = -1.0f - ( 1.0f / ( float )pBackBufferSurfaceDesc->Height );
     float fLowW = 1.0f + ( 1.0f / ( float )pBackBufferSurfaceDesc->Width );

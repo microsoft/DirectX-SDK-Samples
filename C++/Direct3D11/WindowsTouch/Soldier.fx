@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: Soldier.fx
 //
-// The effect file for the Skinning10 sample.  
-// 
+// The effect file for the Skinning10 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -10,7 +10,7 @@
 //--------------------------------------------------------------------------------------
 // defines
 //--------------------------------------------------------------------------------------
-#define MAX_BONE_MATRICES 255 
+#define MAX_BONE_MATRICES 255
 #define FT_CONSTANTBUFFER 0
 #define FT_TEXTUREBUFFER 1
 #define FT_TEXTURE 2
@@ -65,7 +65,7 @@ cbuffer cbUserChange : register (b1)
     float4 m_vSelected ;
 };
 
-cbuffer cbImmutable 
+cbuffer cbImmutable
 {
     float4 m_vDirectional = float4(1.0,1.0,1.0,1.0);
     float4 m_vAmbient = float4(0.1,0.1,0.1,0.0);
@@ -146,7 +146,7 @@ struct SkinnedInfo
 matrix FetchBoneTransform( uint iBone )
 {
     matrix mret;
-       mret = m_matConstBoneWorld[ iBone ];    
+       mret = m_matConstBoneWorld[ iBone ];
     return mret;
 }
 
@@ -156,11 +156,11 @@ matrix FetchBoneTransform( uint iBone )
 SkinnedInfo SkinVert( VSSkinnedIn Input)
 {
     SkinnedInfo Output = (SkinnedInfo)0;
-    
+
     float4 Pos = float4(Input.Pos,1);
     float3 Norm = Input.Norm;
     float3 Tan = Input.Tan;
-    Matrix m = 
+    Matrix m =
         FetchBoneTransform (Input.Bones.x) * Input.Weights.x
         + FetchBoneTransform (Input.Bones.y) * Input.Weights.y
         + FetchBoneTransform (Input.Bones.z) * Input.Weights.z
@@ -168,7 +168,7 @@ SkinnedInfo SkinVert( VSSkinnedIn Input)
     Output.Pos = mul (Pos,m);
     Output.Norm = mul (Norm,(float3x3)m);
     Output.Tan = mul (Tan,(float3x3)m);
-    
+
     return Output;
 }
 
@@ -184,7 +184,7 @@ PSSkinnedIn VSSkinnedmain(VSSkinnedIn input)
     output.Norm = normalize( mul( vSkinned.Norm, (float3x3)m_matWorld ) );
     output.Tangent = normalize( mul( vSkinned.Tan, (float3x3)m_matWorld ) );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -197,7 +197,7 @@ PSSkinnedIn VSmain(VSNotanimatedIn input)
     output.Norm = normalize( mul( input.Norm, (float3x3)m_matWorld ) );
     output.Tangent = normalize( mul( input.Tan, (float3x3)m_matWorld ) );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -207,20 +207,20 @@ PSSkinnedIn VSmain(VSNotanimatedIn input)
 // Pixel shader that performs bump mapping on the final vertex
 //--------------------------------------------------------------------------------------
 float4 PSSkinnedmain(PSSkinnedIn input) : SV_Target
-{    
+{
 
     float4 diffuse = g_txDiffuse.Sample( g_samLinear, input.Tex );
     float3 Norm = g_txNormal.Sample( g_samLinear, input.Tex );
     Norm *= 2.0;
     Norm -= float3(1,1,1);
-    
+
     // Create TBN matrix
     float3 lightDir = normalize( m_vLightPos.xyz - input.vPos );
     float3 viewDir = normalize( m_vEyePt.xyz - input.vPos );
     float3 BiNorm = normalize( cross( input.Norm, input.Tangent ) );
     float3x3 BTNMatrix = float3x3( BiNorm, input.Tangent, input.Norm );
     Norm = normalize( mul( Norm, BTNMatrix ) ); //world space bump
-    
+
     //diffuse lighting
     float lightAmt = saturate( dot( lightDir, Norm ) );
     float4 lightColor = lightAmt.xxxx * m_vDirectional + m_vAmbient;
@@ -228,7 +228,7 @@ float4 PSSkinnedmain(PSSkinnedIn input) : SV_Target
     // Calculate specular power
     float3 halfAngle = normalize( viewDir + lightDir );
     float4 vSpecular = pow( saturate(dot( halfAngle, Norm )), 64 );
-        
+
     // Return combined lighting
     return ( lightColor * diffuse + vSpecular * m_vSpecular * diffuse.a) + m_vSelected;
 }

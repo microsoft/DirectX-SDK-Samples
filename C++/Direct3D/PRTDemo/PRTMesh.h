@@ -22,7 +22,7 @@ public:
     // General
     HRESULT LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* pDeviceCaps );
 
-    // Mesh 
+    // Mesh
     HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileName );
     HRESULT SetMesh( IDirect3DDevice9* pd3dDevice, ID3DXMesh* pMesh );
     HRESULT AdjustMeshDecl( IDirect3DDevice9* pd3dDevice, ID3DXMesh** ppMesh );
@@ -169,17 +169,17 @@ protected:
     ID3DXEffect* m_pPRTEffect;
     DWORD m_dwPRTOrder;
     ID3DXPRTCompBuffer* m_pPRTCompBuffer;
-    // The basis buffer is a large array of floats where 
-    // Call ID3DXPRTCompBuffer::ExtractBasis() to extract the basis 
+    // The basis buffer is a large array of floats where
+    // Call ID3DXPRTCompBuffer::ExtractBasis() to extract the basis
     // for every cluster.  The basis for a cluster is an array of
-    // (NumPCAVectors+1)*(NumChannels*Order^2) floats. 
+    // (NumPCAVectors+1)*(NumChannels*Order^2) floats.
     // The "1+" is for the cluster mean.
     float* m_aPRTClusterBases;
     // m_aPRTConstants stores the incident radiance dotted with the transfer function.
-    // Each cluster has an array of floats which is the size of 
-    // 4+MAX_NUM_CHANNELS*NUM_PCA_VECTORS. This number comes from: there can 
-    // be up to 3 channels (R,G,B), and each channel can 
-    // have up to NUM_PCA_VECTORS of PCA vectors.  Each cluster also has 
+    // Each cluster has an array of floats which is the size of
+    // 4+MAX_NUM_CHANNELS*NUM_PCA_VECTORS. This number comes from: there can
+    // be up to 3 channels (R,G,B), and each channel can
+    // have up to NUM_PCA_VECTORS of PCA vectors.  Each cluster also has
     // a mean PCA vector which is described with 4 floats (and hence the +4).
     float* m_aPRTConstants;
 

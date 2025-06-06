@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: Magnify.h
 //
-// Magnify class definition. This class magnifies a region of a given surface, and renders a scaled 
+// Magnify class definition. This class magnifies a region of a given surface, and renders a scaled
 // sprite at the given position on the screen.
 //
 // Contributed by AMD Corporation
@@ -31,7 +31,7 @@ public:
     void SetScale( int nScale );
     void SetDepthRangeMin( float fDepthRangeMin );
     void SetDepthRangeMax( float fDepthRangeMax );
-    void SetSourceResource( ID3D10Resource* pSourceResource, DXGI_FORMAT Format, 
+    void SetSourceResource( ID3D10Resource* pSourceResource, DXGI_FORMAT Format,
         int nWidth, int nHeight, int nSamples );
     void SetSubSampleIndex( int nSubSampleIndex );
 
@@ -76,7 +76,7 @@ private:
     int                         m_nSourceResourceWidth;
     int                         m_nSourceResourceHeight;
     int                         m_nSourceResourceSamples;
-    DXGI_FORMAT                 m_DepthFormat; 
+    DXGI_FORMAT                 m_DepthFormat;
     DXGI_FORMAT                 m_DepthSRVFormat;
     bool                        m_bDepthFormat;
 };

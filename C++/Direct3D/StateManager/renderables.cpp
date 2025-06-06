@@ -130,7 +130,7 @@ HRESULT CTexture::GetNormalMapPtr( LPDIRECT3DBASETEXTURE9* ppTexture )
     assert( ppTexture );
     *ppTexture = NULL;
 
-    // 
+    //
     if( D3DRTYPE_TEXTURE != m_pResource->GetType() )
         return E_FAIL;
 
@@ -662,9 +662,9 @@ CEffectInstance::CEffectInstance( const D3DXEFFECTINSTANCE* pEffectInstance,
     // The CEffectInstance class caches D3DXHANDLE values within the effect, such that
     // parameter values can be easily loaded into the effect at render time.
     // Should the D3DX Effect resource be unloaded and recreated, the handles would need
-    // to be re-cached from the new instance of the effect resource.  To enforce this, 
+    // to be re-cached from the new instance of the effect resource.  To enforce this,
     // the Effect Pointer is also stored by the Effect Instance and it's reference count
-    // is incremented.  To unload the effect, all associated instances of 
+    // is incremented.  To unload the effect, all associated instances of
     // CEffectInstance must be destroyed.
     m_pEffect->AddRef();
 

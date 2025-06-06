@@ -13,8 +13,8 @@ int sas : SasGlobal
 
 
 // texture
-texture Tex0 
-< 
+texture Tex0
+<
     string SasUiLabel = "Texture Map";
     string SasUiControl= "FilePicker";
 >;
@@ -39,8 +39,8 @@ float4x4 Projection
 >;
 
 // light direction (view space)
-float3 LightDir 
-< 
+float3 LightDir
+<
     bool SasUiVisible = false;
     string SasBindAddress= "Sas.DirectionalLight[0].Direction";
 > = normalize(float3(0.0f, 0.0f, 1.0f));
@@ -74,25 +74,25 @@ struct VSTEXTURE_OUTPUT
 // draws unskinned object with one texture and one directional light.
 VSTEXTURE_OUTPUT VSTexture
     (
-    float4 Position : POSITION, 
+    float4 Position : POSITION,
     float3 Normal   : NORMAL,
     float2 TexCoord : TEXCOORD0
     )
 {
     VSTEXTURE_OUTPUT Out = (VSTEXTURE_OUTPUT)0;
-  
+
     float3 L = -LightDir;                                   // light direction (view space)
     float3 P = mul(Position, World);                    // position (view space)
     P = mul(float4(P, 1), View);                    // position (view space)
-    
+
     float3 N = mul(Normal, (float3x3)World); // normal (view space)
     N = normalize(mul(N, (float3x3)View)); // normal (view space)
-   
+
     Out.Position = mul(float4(P, 1), Projection);   // projected position
-    Out.Diffuse  = max(0, dot(N, L));               // diffuse 
+    Out.Diffuse  = max(0, dot(N, L));               // diffuse
     Out.TexCoord = TexCoord;                        // texture coordinates
-    
-    return Out;    
+
+    return Out;
 }
 
 struct VSGLOW_OUTPUT
@@ -104,7 +104,7 @@ struct VSGLOW_OUTPUT
 // draws a transparent hull of the unskinned object.
 VSGLOW_OUTPUT VSGlow
     (
-    float4 Position : POSITION, 
+    float4 Position : POSITION,
     float3 Normal   : NORMAL
     )
 {
@@ -114,7 +114,7 @@ VSGLOW_OUTPUT VSGlow
     N = normalize(mul(N, (float3x3)View));     // normal (view space)
     float3 P = mul(Position, World);    // displaced position (view space)
     P = mul(float4(P, 1) , View) + GlowThickness * N;    // displaced position (view space)
-    
+
     float3 A = float3(0, 0, 1);                                 // glow axis
 
     float Power;
@@ -123,11 +123,11 @@ VSGLOW_OUTPUT VSGlow
     Power *= Power;
     Power -= 1;
     Power *= Power;     // Power = (1 - (N.A)^2)^2 [ = ((N.A)^2 - 1)^2 ]
-    
+
     Out.Position = mul(float4(P, 1), Projection);   // projected position
     Out.Diffuse  = GlowColor * Power + GlowAmbient; // modulated glow color + glow ambient
-    
-    return Out;    
+
+    return Out;
 }
 
 
@@ -135,11 +135,11 @@ VSGLOW_OUTPUT VSGlow
 technique TGlowAndTexture
 {
     pass PTexture
-    {   
+    {
         // single texture/one directional light shader
         VertexShader = compile vs_1_1 VSTexture();
         PixelShader  = NULL;
-        
+
         // texture
         Texture[0] = (Tex0);
 
@@ -148,7 +148,7 @@ technique TGlowAndTexture
         MagFilter[0] = LINEAR;
         MipFilter[0] = POINT;
 
-        // set up texture stage states for single texture modulated by diffuse 
+        // set up texture stage states for single texture modulated by diffuse
         ColorOp[0]   = MODULATE;
         ColorArg1[0] = TEXTURE;
         ColorArg2[0] = CURRENT;
@@ -156,15 +156,15 @@ technique TGlowAndTexture
 
         ColorOp[1]   = DISABLE;
         AlphaOp[1]   = DISABLE;
-        
+
     }
 
     pass PGlow
-    {   
+    {
         // glow shader
         VertexShader = compile vs_1_1 VSGlow();
         PixelShader  = NULL;
-        
+
         // no texture
         Texture[0] = NULL;
 
@@ -188,11 +188,11 @@ technique TGlowAndTexture
 technique TGlowOnly
 {
     pass PGlow
-    {   
+    {
         // glow shader
         VertexShader = compile vs_1_1 VSGlow();
         PixelShader  = NULL;
-        
+
         // no texture
         Texture[0] = NULL;
 

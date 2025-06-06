@@ -2,7 +2,7 @@
 // File: EffectPools2.fx
 //
 // The effect file for the effectpools sample
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -20,16 +20,16 @@ float4x4 g_mWorld;                  // World matrix for object
 PS_INPUT SceneVS( VS_INPUT input )
 {
     PS_INPUT output;
-    
+
     // Setup for per-pixel lambert illumination
     output.Position = mul( float4(input.Position,1), g_mWorld );
     output.Position = mul( output.Position, g_mViewProj );
     output.Normal = mul( input.Normal, (float3x3)g_mWorld );
-    output.Tex = input.Tex; 
+    output.Tex = input.Tex;
     output.Tex.y -= g_TexMove;
     output.Color = g_MaterialDiffuseColor;
-    
-    return output;    
+
+    return output;
 }
 
 //--------------------------------------------------------------------------------------
@@ -38,9 +38,9 @@ PS_INPUT SceneVS( VS_INPUT input )
 technique RenderScene
 {
     pass P0
-    {   
+    {
         VertexShader = compile vs_2_0 SceneVS();
-        PixelShader  = compile ps_2_0 ScenePS();  
+        PixelShader  = compile ps_2_0 ScenePS();
     }
 }
 
@@ -51,7 +51,7 @@ technique RenderScene
 technique10 RenderScene10
 {
     pass P0
-    {       
+    {
         SetVertexShader( CompileShader( vs_4_0, SceneVS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, ScenePS() ) );

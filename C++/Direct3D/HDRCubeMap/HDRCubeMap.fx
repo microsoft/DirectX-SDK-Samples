@@ -29,7 +29,7 @@ float    g_fReflectivity;                  // Reflectivity value
 // Sampler: samCubeMap
 // Desc: Process vertex for HDR environment mapping
 //-----------------------------------------------------------------------------
-samplerCUBE g_samCubeMap = 
+samplerCUBE g_samCubeMap =
 sampler_state
 {
     Texture = <g_txCubeMap>;
@@ -39,7 +39,7 @@ sampler_state
 };
 
 
-samplerCUBE g_samCubeMap2 = 
+samplerCUBE g_samCubeMap2 =
 sampler_state
 {
     Texture = <g_txCubeMap2>;
@@ -145,7 +145,7 @@ void HDRVertScene( float4 iPos : POSITION,
     // Transform normal and write to texcoord2 for per-pixel lighting
     //
     Normal = normalize( mul( iNormal, (float3x3)g_mWorldView ) );
-    
+
     //
     // Propagate texture coord
     //

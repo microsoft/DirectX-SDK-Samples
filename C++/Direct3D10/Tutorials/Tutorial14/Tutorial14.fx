@@ -119,16 +119,16 @@ DepthStencilState RenderWithStencilState
     DepthEnable = false;
     DepthWriteMask = ZERO;
     DepthFunc = Less;
-    
+
     // Setup stencil states
     StencilEnable = true;
     StencilReadMask = 0xFF;
     StencilWriteMask = 0x00;
-    
+
     FrontFaceStencilFunc = Not_Equal;
     FrontFaceStencilPass = Keep;
     FrontFaceStencilFail = Zero;
-    
+
     BackFaceStencilFunc = Not_Equal;
     BackFaceStencilPass = Keep;
     BackFaceStencilFail = Zero;
@@ -142,13 +142,13 @@ DepthStencilState RenderWithStencilState
 PS_INPUT VS( VS_INPUT input )
 {
     PS_INPUT output = (PS_INPUT)0;
-    
+
     output.Pos = mul( float4(input.Pos,1), World );
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Norm = mul( input.Norm, World );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -203,7 +203,7 @@ technique10 RenderScene
     {
         SetVertexShader( CompileShader( vs_4_0, VS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, PS() ) );        
+        SetPixelShader( CompileShader( ps_4_0, PS() ) );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }
@@ -217,8 +217,8 @@ technique10 RenderWithStencil
     {
         SetVertexShader( CompileShader( vs_4_0, ScreenQuadVS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );     
-           
+        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( RenderWithStencilState, 0 );
     }
@@ -233,8 +233,8 @@ technique10 RenderQuadSolid
     {
         SetVertexShader( CompileShader( vs_4_0, QuadVS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );     
-           
+        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }
@@ -246,8 +246,8 @@ technique10 RenderQuadSrcAlphaAdd
     {
         SetVertexShader( CompileShader( vs_4_0, QuadVS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );   
-             
+        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );
+
         SetBlendState( SrcAlphaBlendingAdd, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }
@@ -259,8 +259,8 @@ technique10 RenderQuadSrcAlphaSub
     {
         SetVertexShader( CompileShader( vs_4_0, QuadVS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );   
-             
+        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );
+
         SetBlendState( SrcAlphaBlendingSub, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }
@@ -272,8 +272,8 @@ technique10 RenderQuadSrcColorAdd
     {
         SetVertexShader( CompileShader( vs_4_0, QuadVS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );   
-             
+        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );
+
         SetBlendState( SrcColorBlendingAdd, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }
@@ -285,8 +285,8 @@ technique10 RenderQuadSrcColorSub
     {
         SetVertexShader( CompileShader( vs_4_0, QuadVS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );   
-             
+        SetPixelShader( CompileShader( ps_4_0, QuadPS() ) );
+
         SetBlendState( SrcColorBlendingSub, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
     }
 }

@@ -61,22 +61,22 @@ static int __cdecl SortModesCallback( const void* arg1, const void* arg2 );
 
 
 //--------------------------------------------------------------------------------------
-// This function tries to find valid device settings based upon the input device settings 
-// struct and the match options.  For each device setting a match option in the 
-// DXUTMatchOptions struct specifies how the function makes decisions.  For example, if 
-// the caller wants a HAL device with a back buffer format of D3DFMT_A2B10G10R10 but the 
-// HAL device on the system does not support D3DFMT_A2B10G10R10 however a REF device is 
-// installed that does, then the function has a choice to either use REF or to change to 
-// a back buffer format to compatible with the HAL device.  The match options lets the 
+// This function tries to find valid device settings based upon the input device settings
+// struct and the match options.  For each device setting a match option in the
+// DXUTMatchOptions struct specifies how the function makes decisions.  For example, if
+// the caller wants a HAL device with a back buffer format of D3DFMT_A2B10G10R10 but the
+// HAL device on the system does not support D3DFMT_A2B10G10R10 however a REF device is
+// installed that does, then the function has a choice to either use REF or to change to
+// a back buffer format to compatible with the HAL device.  The match options lets the
 // caller control how these choices are made.
 //
-// Each match option must be one of the following types: 
-//      DXUTMT_IGNORE_INPUT: Uses the closest valid value to a default 
+// Each match option must be one of the following types:
+//      DXUTMT_IGNORE_INPUT: Uses the closest valid value to a default
 //      DXUTMT_PRESERVE_INPUT: Uses the input without change, but may cause no valid device to be found
-//      DXUTMT_CLOSEST_TO_INPUT: Uses the closest valid value to the input 
+//      DXUTMT_CLOSEST_TO_INPUT: Uses the closest valid value to the input
 //
-// If pMatchOptions is NULL then, all of the match options are assumed to be DXUTMT_IGNORE_INPUT.  
-// The function returns failure if no valid device settings can be found otherwise 
+// If pMatchOptions is NULL then, all of the match options are assumed to be DXUTMT_IGNORE_INPUT.
+// The function returns failure if no valid device settings can be found otherwise
 // the function returns success and the valid device settings are written to pOut.
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTFindValidDeviceSettings( DXUTDeviceSettings* pOut, DXUTDeviceSettings* pIn,
@@ -115,9 +115,9 @@ HRESULT WINAPI DXUTFindValidDeviceSettings( DXUTDeviceSettings* pOut, DXUTDevice
     if( pMatchOptions->eAPIVersion != DXUTMT_IGNORE_INPUT && pIn && pIn->ver == DXUT_D3D9_DEVICE )
         bPreferD3D9 = true;
 
-    // Build an optimal device settings structure based upon the match 
+    // Build an optimal device settings structure based upon the match
     // options.  If the match option is set to ignore, then a optimal default value is used.
-    // The default value may not exist on the system, but later this will be taken 
+    // The default value may not exist on the system, but later this will be taken
     // into account.
     bool bFoundValidD3D10 = false;
     bool bFoundValidD3D9 = false;
@@ -292,15 +292,15 @@ CD3D9Enumeration::~CD3D9Enumeration()
 
 
 //--------------------------------------------------------------------------------------
-// Enumerate for each adapter all of the supported display modes, 
-// device types, adapter formats, back buffer formats, window/full screen support, 
+// Enumerate for each adapter all of the supported display modes,
+// device types, adapter formats, back buffer formats, window/full screen support,
 // depth stencil formats, multisampling types/qualities, and presentations intervals.
 //
 // For each combination of device type (HAL/REF), adapter format, back buffer format, and
 // IsWindowed it will call the app's ConfirmDevice callback.  This allows the app
-// to reject or allow that combination based on its caps/etc.  It also allows the 
-// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP 
-// if supported otherwise it will default to SWVP, however the app can change this 
+// to reject or allow that combination based on its caps/etc.  It also allows the
+// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP
+// if supported otherwise it will default to SWVP, however the app can change this
 // through the ConfirmDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CD3D9Enumeration::Enumerate( LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE IsD3D9DeviceAcceptableFunc,
@@ -344,7 +344,7 @@ HRESULT CD3D9Enumeration::Enumerate( LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE IsD3D9
         pAdapterInfo->AdapterOrdinal = adapterOrdinal;
         pD3D->GetAdapterIdentifier( adapterOrdinal, 0, &pAdapterInfo->AdapterIdentifier );
 
-        // Get list of all display modes on this adapter.  
+        // Get list of all display modes on this adapter.
         // Also build a temporary list of all display adapter formats.
         adapterFormatList.RemoveAll();
 
@@ -490,7 +490,7 @@ HRESULT CD3D9Enumeration::EnumerateDevices( CD3D9EnumAdapterInfo* pAdapterInfo,
 
         if( pDeviceInfo->DeviceType != D3DDEVTYPE_HAL )
         {
-            // Create a temp device to verify that it is really possible to create a REF device 
+            // Create a temp device to verify that it is really possible to create a REF device
             // [the developer DirectX redist has to be installed]
             D3DDISPLAYMODE Mode;
             m_pD3D->GetAdapterDisplayMode( 0, &Mode );
@@ -522,7 +522,7 @@ HRESULT CD3D9Enumeration::EnumerateDevices( CD3D9EnumAdapterInfo* pAdapterInfo,
             continue;
         }
 
-        // If at least one devicecombo for this device is found, 
+        // If at least one devicecombo for this device is found,
         // add the deviceInfo to the list
         if( pDeviceInfo->deviceSettingsComboList.GetSize() > 0 )
             pAdapterInfo->deviceInfoList.Add( pDeviceInfo );
@@ -575,7 +575,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
                 if( m_bRequirePostPixelShaderBlending )
                 {
                     // If the backbuffer format doesn't support D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING
-                    // then alpha test, pixel fog, render-target blending, color write enable, and dithering. 
+                    // then alpha test, pixel fog, render-target blending, color write enable, and dithering.
                     // are not supported.
                     if( FAILED( m_pD3D->CheckDeviceFormat( pAdapterInfo->AdapterOrdinal, pDeviceInfo->DeviceType,
                                                            adapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING,
@@ -595,7 +595,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
                 }
 
                 // At this point, we have an adapter/device/adapterformat/backbufferformat/iswindowed
-                // DeviceCombo that is supported by the system and acceptable to the app. We still 
+                // DeviceCombo that is supported by the system and acceptable to the app. We still
                 // need to find one or more suitable depth/stencil buffer format,
                 // multisample type, and present interval.
                 CD3D9EnumDeviceSettingsCombo* pDeviceCombo = new CD3D9EnumDeviceSettingsCombo;
@@ -632,7 +632,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
 
 
 //--------------------------------------------------------------------------------------
-// Adds all depth/stencil formats that are compatible with the device 
+// Adds all depth/stencil formats that are compatible with the device
 //       and app to the given D3DDeviceCombo.
 //--------------------------------------------------------------------------------------
 void CD3D9Enumeration::BuildDepthStencilFormatList( CD3D9EnumDeviceSettingsCombo* pDeviceCombo )
@@ -713,7 +713,7 @@ void CD3D9Enumeration::BuildDSMSConflictList( CD3D9EnumDeviceSettingsCombo* pDev
 
 
 //--------------------------------------------------------------------------------------
-// Adds all present intervals that are compatible with the device and app 
+// Adds all present intervals that are compatible with the device and app
 //       to the given D3DDeviceCombo.
 //--------------------------------------------------------------------------------------
 void CD3D9Enumeration::BuildPresentIntervalList( CD3D9EnumDeviceInfo* pDeviceInfo,
@@ -763,8 +763,8 @@ void CD3D9Enumeration::ClearAdapterInfoList()
 
 
 //--------------------------------------------------------------------------------------
-// Call GetAdapterInfoList() after Enumerate() to get a STL vector of 
-//       CD3D9EnumAdapterInfo* 
+// Call GetAdapterInfoList() after Enumerate() to get a STL vector of
+//       CD3D9EnumAdapterInfo*
 //--------------------------------------------------------------------------------------
 CGrowableArray <CD3D9EnumAdapterInfo*>* CD3D9Enumeration::GetAdapterInfoList()
 {
@@ -806,7 +806,7 @@ CD3D9EnumDeviceInfo* CD3D9Enumeration::GetDeviceInfo( UINT AdapterOrdinal, D3DDE
 
 
 //--------------------------------------------------------------------------------------
-// 
+//
 //--------------------------------------------------------------------------------------
 CD3D9EnumDeviceSettingsCombo* CD3D9Enumeration::GetDeviceSettingsCombo( UINT AdapterOrdinal, D3DDEVTYPE DeviceType,
                                                                         D3DFORMAT AdapterFormat,
@@ -1177,7 +1177,7 @@ HRESULT DXUTFindValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOut, DXUTD3D9D
     {
         CD3D9EnumAdapterInfo* pAdapterInfo = pAdapterList->GetAt( iAdapter );
 
-        // Get the desktop display mode of adapter 
+        // Get the desktop display mode of adapter
         pD3D->GetAdapterDisplayMode( pAdapterInfo->AdapterOrdinal, &adapterDesktopDisplayMode );
 
         // Enum all the device types supported by this adapter to find the best device settings
@@ -1185,14 +1185,14 @@ HRESULT DXUTFindValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOut, DXUTD3D9D
         {
             CD3D9EnumDeviceInfo* pDeviceInfo = pAdapterInfo->deviceInfoList.GetAt( iDeviceInfo );
 
-            // Enum all the device settings combinations.  A device settings combination is 
+            // Enum all the device settings combinations.  A device settings combination is
             // a unique set of an adapter format, back buffer format, and IsWindowed.
             for( int iDeviceCombo = 0; iDeviceCombo < pDeviceInfo->deviceSettingsComboList.GetSize(); iDeviceCombo++ )
             {
                 CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo = pDeviceInfo->deviceSettingsComboList.GetAt(
                     iDeviceCombo );
 
-                // If windowed mode the adapter format has to be the same as the desktop 
+                // If windowed mode the adapter format has to be the same as the desktop
                 // display mode format so skip any that don't match
                 if( pDeviceSettingsCombo->Windowed &&
                     ( pDeviceSettingsCombo->AdapterFormat != adapterDesktopDisplayMode.Format ) )
@@ -1220,7 +1220,7 @@ HRESULT DXUTFindValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOut, DXUTD3D9D
     if( pBestDeviceSettingsCombo == NULL )
         return DXUTERR_NOCOMPATIBLEDEVICES;
 
-    // Using the best device settings combo found, build valid device settings taking heed of 
+    // Using the best device settings combo found, build valid device settings taking heed of
     // the match options and the input device settings
     DXUTD3D9DeviceSettings validDeviceSettings;
     DXUTBuildValidD3D9DeviceSettings( &validDeviceSettings, pBestDeviceSettingsCombo, pIn, pMatchOptions );
@@ -1231,9 +1231,9 @@ HRESULT DXUTFindValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOut, DXUTD3D9D
 
 
 //--------------------------------------------------------------------------------------
-// Internal helper function to build a D3D9 device settings structure based upon the match 
+// Internal helper function to build a D3D9 device settings structure based upon the match
 // options.  If the match option is set to ignore, then a optimal default value is used.
-// The default value may not exist on the system, but later this will be taken 
+// The default value may not exist on the system, but later this will be taken
 // into account.
 //--------------------------------------------------------------------------------------
 void DXUTBuildOptimalD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOptimalDeviceSettings,
@@ -1248,7 +1248,7 @@ void DXUTBuildOptimalD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOptimalDeviceS
 
     //---------------------
     // Adapter ordinal
-    //---------------------    
+    //---------------------
     if( pMatchOptions->eAdapterOrdinal == DXUTMT_IGNORE_INPUT )
         pOptimalDeviceSettings->AdapterOrdinal = D3DADAPTER_DEFAULT;
     else
@@ -1276,7 +1276,7 @@ void DXUTBuildOptimalD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOptimalDeviceS
     if( pMatchOptions->eAdapterFormat == DXUTMT_IGNORE_INPUT )
     {
         // If windowed, default to the desktop display mode
-        // If fullscreen, default to the desktop display mode for quick mode change or 
+        // If fullscreen, default to the desktop display mode for quick mode change or
         // default to D3DFMT_X8R8G8B8 if the desktop display mode is < 32bit
         pD3D->GetAdapterDisplayMode( pOptimalDeviceSettings->AdapterOrdinal, &adapterDesktopDisplayMode );
         if( pOptimalDeviceSettings->pp.Windowed || DXUTGetD3D9ColorChannelBits( adapterDesktopDisplayMode.Format ) >=
@@ -1344,7 +1344,7 @@ void DXUTBuildOptimalD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOptimalDeviceS
     //---------------------
     if( pMatchOptions->eMultiSample == DXUTMT_IGNORE_INPUT )
     {
-        // Default to no multisampling 
+        // Default to no multisampling
         pOptimalDeviceSettings->pp.MultiSampleType = D3DMULTISAMPLE_NONE;
         pOptimalDeviceSettings->pp.MultiSampleQuality = 0;
     }
@@ -1363,7 +1363,7 @@ void DXUTBuildOptimalD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOptimalDeviceS
         pOptimalDeviceSettings->pp.SwapEffect = pDeviceSettingsIn->pp.SwapEffect;
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     if( pMatchOptions->eDepthFormat == DXUTMT_IGNORE_INPUT &&
         pMatchOptions->eStencilFormat == DXUTMT_IGNORE_INPUT )
@@ -1414,7 +1414,7 @@ void DXUTBuildOptimalD3D9DeviceSettings( DXUTD3D9DeviceSettings* pOptimalDeviceS
 
 
 //--------------------------------------------------------------------------------------
-// Returns false for any CD3D9EnumDeviceSettingsCombo that doesn't meet the preserve 
+// Returns false for any CD3D9EnumDeviceSettingsCombo that doesn't meet the preserve
 // match options against the input pDeviceSettingsIn.
 //--------------------------------------------------------------------------------------
 bool DXUTDoesD3D9DeviceComboMatchPreserveOptions( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo,
@@ -1452,7 +1452,7 @@ bool DXUTDoesD3D9DeviceComboMatchPreserveOptions( CD3D9EnumDeviceSettingsCombo* 
     //---------------------
     // Vertex processing
     //---------------------
-    // If keep VP and input has HWVP, then skip if this combo doesn't have HWTL 
+    // If keep VP and input has HWVP, then skip if this combo doesn't have HWTL
     if( pMatchOptions->eVertexProcessing == DXUTMT_PRESERVE_INPUT &&
         ( ( pDeviceSettingsIn->BehaviorFlags & D3DCREATE_HARDWARE_VERTEXPROCESSING ) != 0 ) &&
         ( ( pDeviceSettingsCombo->pDeviceInfo->Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ) )
@@ -1526,7 +1526,7 @@ bool DXUTDoesD3D9DeviceComboMatchPreserveOptions( CD3D9EnumDeviceSettingsCombo* 
     // No caps for swap effects
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     // If keep depth stencil format then check that the depth stencil format is supported by this combo
     if( pMatchOptions->eDepthFormat == DXUTMT_PRESERVE_INPUT &&
@@ -1615,7 +1615,7 @@ bool DXUTDoesD3D9DeviceComboMatchPreserveOptions( CD3D9EnumDeviceSettingsCombo* 
 
 
 //--------------------------------------------------------------------------------------
-// Returns a ranking number that describes how closely this device 
+// Returns a ranking number that describes how closely this device
 // combo matches the optimal combo based on the match options and the optimal device settings
 //--------------------------------------------------------------------------------------
 float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo,
@@ -1648,7 +1648,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
     //---------------------
     if( pDeviceSettingsCombo->DeviceType == pOptimalDeviceSettings->DeviceType )
         fCurRanking += fDeviceTypeWeight;
-    // Slightly prefer HAL 
+    // Slightly prefer HAL
     if( pDeviceSettingsCombo->DeviceType == D3DDEVTYPE_HAL )
         fCurRanking += 0.1f;
 
@@ -1730,7 +1730,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
         fCurRanking += fScale * fBackBufferFormatWeight;
     }
 
-    // Check if this back buffer format is the same as 
+    // Check if this back buffer format is the same as
     // the adapter format since this is preferred.
     bool bAdapterMatchesBB = ( pDeviceSettingsCombo->BackBufferFormat == pDeviceSettingsCombo->AdapterFormat );
     if( bAdapterMatchesBB )
@@ -1766,7 +1766,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
     // No caps for swap effects
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     if( pDeviceSettingsCombo->depthStencilFormatList.Contains( pOptimalDeviceSettings->pp.AutoDepthStencilFormat ) )
         fCurRanking += fDepthStencilWeight;
@@ -1803,7 +1803,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
 
 
 //--------------------------------------------------------------------------------------
-// Builds valid device settings using the match options, the input device settings, and the 
+// Builds valid device settings using the match options, the input device settings, and the
 // best device settings combo found.
 //--------------------------------------------------------------------------------------
 void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSettings,
@@ -1816,7 +1816,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
     D3DDISPLAYMODE adapterDesktopDisplayMode;
     pD3D->GetAdapterDisplayMode( pBestDeviceSettingsCombo->AdapterOrdinal, &adapterDesktopDisplayMode );
 
-    // For each setting pick the best, taking into account the match options and 
+    // For each setting pick the best, taking into account the match options and
     // what's supported by the device
 
     //---------------------
@@ -1830,7 +1830,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
     // Just using pBestDeviceSettingsCombo->DeviceType
 
     //---------------------
-    // Windowed 
+    // Windowed
     //---------------------
     // Just using pBestDeviceSettingsCombo->Windowed
 
@@ -1855,9 +1855,9 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
         else
             dwBestBehaviorFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
     }
-    else // if( pMatchOptions->eVertexProcessing == DXUTMT_CLOSEST_TO_INPUT )    
+    else // if( pMatchOptions->eVertexProcessing == DXUTMT_CLOSEST_TO_INPUT )
     {
-        // Default to input, and fallback to SWVP if HWVP not available 
+        // Default to input, and fallback to SWVP if HWVP not available
         dwBestBehaviorFlags = pDeviceSettingsIn->BehaviorFlags;
         if( ( pBestDeviceSettingsCombo->pDeviceInfo->Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 &&
             ( ( dwBestBehaviorFlags & D3DCREATE_HARDWARE_VERTEXPROCESSING ) != 0 ||
@@ -1898,7 +1898,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
             displayModeIn.Width = pDeviceSettingsIn->pp.BackBufferWidth;
             displayModeIn.Height = pDeviceSettingsIn->pp.BackBufferHeight;
         }
-        else // if( pMatchOptions->eResolution == DXUTMT_IGNORE_INPUT )   
+        else // if( pMatchOptions->eResolution == DXUTMT_IGNORE_INPUT )
         {
             if( pBestDeviceSettingsCombo->Windowed )
             {
@@ -1914,7 +1914,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
             }
         }
 
-        // Call a helper function to find the closest valid display mode to the optimal 
+        // Call a helper function to find the closest valid display mode to the optimal
         DXUTFindValidD3D9Resolution( pBestDeviceSettingsCombo, displayModeIn, &bestDisplayMode );
     }
 
@@ -1936,7 +1936,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
         // Default to double buffering.  Causes less latency than triple buffering
         bestBackBufferCount = 1;
     }
-    else // if( pMatchOptions->eBackBufferCount == DXUTMT_CLOSEST_TO_INPUT )   
+    else // if( pMatchOptions->eBackBufferCount == DXUTMT_CLOSEST_TO_INPUT )
     {
         bestBackBufferCount = pDeviceSettingsIn->pp.BackBufferCount;
         if( bestBackBufferCount > 3 )
@@ -2010,7 +2010,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
     {
         bestSwapEffect = D3DSWAPEFFECT_DISCARD;
     }
-    else // if( pMatchOptions->eSwapEffect == DXUTMT_CLOSEST_TO_INPUT )   
+    else // if( pMatchOptions->eSwapEffect == DXUTMT_CLOSEST_TO_INPUT )
     {
         bestSwapEffect = pDeviceSettingsIn->pp.SwapEffect;
 
@@ -2024,7 +2024,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
     }
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     D3DFORMAT bestDepthStencilFormat;
     bool bestEnableAutoDepthStencil;
@@ -2135,7 +2135,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
         if( bestEnableAutoDepthStencil )
             dwBestFlags = D3DPRESENTFLAG_DISCARD_DEPTHSTENCIL;
     }
-    else // if( pMatchOptions->ePresentFlags == DXUTMT_CLOSEST_TO_INPUT )   
+    else // if( pMatchOptions->ePresentFlags == DXUTMT_CLOSEST_TO_INPUT )
     {
         dwBestFlags = pDeviceSettingsIn->pp.Flags;
         if( bestEnableAutoDepthStencil )
@@ -2163,7 +2163,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
             {
                 refreshRateMatch = pDeviceSettingsIn->pp.FullScreen_RefreshRateInHz;
             }
-            else // if( pMatchOptions->eRefreshRate == DXUTMT_IGNORE_INPUT )   
+            else // if( pMatchOptions->eRefreshRate == DXUTMT_IGNORE_INPUT )
             {
                 refreshRateMatch = adapterDesktopDisplayMode.RefreshRate;
             }
@@ -2181,9 +2181,9 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
                     if( displayMode.Format != pBestDeviceSettingsCombo->AdapterFormat ||
                         displayMode.Height != bestDisplayMode.Height ||
                         displayMode.Width != bestDisplayMode.Width )
-                        continue; // Skip display modes that don't match 
+                        continue; // Skip display modes that don't match
 
-                    // Find the delta between the current refresh rate and the optimal refresh rate 
+                    // Find the delta between the current refresh rate and the optimal refresh rate
                     int nCurRanking = abs( ( int )displayMode.RefreshRate - ( int )refreshRateMatch );
 
                     if( nCurRanking < nBestRefreshRanking )
@@ -2216,7 +2216,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
         // will wait not for the vertical retrace period but may introduce tearing.
         bestPresentInterval = D3DPRESENT_INTERVAL_DEFAULT;
     }
-    else // if( pMatchOptions->ePresentInterval == DXUTMT_CLOSEST_TO_INPUT )   
+    else // if( pMatchOptions->ePresentInterval == DXUTMT_CLOSEST_TO_INPUT )
     {
         if( pBestDeviceSettingsCombo->presentIntervalList.Contains( pDeviceSettingsIn->pp.PresentationInterval ) )
         {
@@ -2253,7 +2253,7 @@ void DXUTBuildValidD3D9DeviceSettings( DXUTD3D9DeviceSettings* pValidDeviceSetti
 
 
 //--------------------------------------------------------------------------------------
-// Internal helper function to find the closest allowed display mode to the optimal 
+// Internal helper function to find the closest allowed display mode to the optimal
 //--------------------------------------------------------------------------------------
 HRESULT DXUTFindValidD3D9Resolution( CD3D9EnumDeviceSettingsCombo* pBestDeviceSettingsCombo,
                                      D3DDISPLAYMODE displayModeIn, D3DDISPLAYMODE* pBestDisplayMode )
@@ -2263,7 +2263,7 @@ HRESULT DXUTFindValidD3D9Resolution( CD3D9EnumDeviceSettingsCombo* pBestDeviceSe
 
     if( pBestDeviceSettingsCombo->Windowed )
     {
-        // In windowed mode, all resolutions are valid but restritions still apply 
+        // In windowed mode, all resolutions are valid but restritions still apply
         // on the size of the window.  See DXUTChangeD3D9Device() for details
         *pBestDisplayMode = displayModeIn;
     }
@@ -2392,15 +2392,15 @@ CD3D10Enumeration::~CD3D10Enumeration()
 
 
 //--------------------------------------------------------------------------------------
-// Enumerate for each adapter all of the supported display modes, 
-// device types, adapter formats, back buffer formats, window/full screen support, 
+// Enumerate for each adapter all of the supported display modes,
+// device types, adapter formats, back buffer formats, window/full screen support,
 // depth stencil formats, multisampling types/qualities, and presentations intervals.
 //
 // For each combination of device type (HAL/REF), adapter format, back buffer format, and
 // IsWindowed it will call the app's ConfirmDevice callback.  This allows the app
-// to reject or allow that combination based on its caps/etc.  It also allows the 
-// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP 
-// if supported otherwise it will default to SWVP, however the app can change this 
+// to reject or allow that combination based on its caps/etc.  It also allows the
+// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP
+// if supported otherwise it will default to SWVP, however the app can change this
 // through the ConfirmDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CD3D10Enumeration::Enumerate( LPDXUTCALLBACKISD3D10DEVICEACCEPTABLE IsD3D10DeviceAcceptableFunc,
@@ -2818,7 +2818,7 @@ HRESULT CD3D10Enumeration::EnumerateDeviceCombosNoAdapter(  CD3D10EnumAdapterInf
                             continue;
                     }
                     // At this point, we have an adapter/device/backbufferformat/iswindowed
-                    // DeviceCombo that is supported by the system. We still 
+                    // DeviceCombo that is supported by the system. We still
                     // need to find one or more suitable depth/stencil buffer format,
                     // multisample type, and present interval.
                     CD3D10EnumDeviceSettingsCombo* pDeviceCombo = new CD3D10EnumDeviceSettingsCombo;
@@ -2839,7 +2839,7 @@ HRESULT CD3D10Enumeration::EnumerateDeviceCombosNoAdapter(  CD3D10EnumAdapterInf
                     if( FAILED( pAdapterInfo->deviceSettingsComboList.Add( pDeviceCombo ) ) )
                         delete pDeviceCombo;
                 }
-                    
+
         }
 
 
@@ -2909,7 +2909,7 @@ HRESULT CD3D10Enumeration::EnumerateDeviceCombos( IDXGIFactory* pFactory, CD3D10
                     }
 
                     // At this point, we have an adapter/device/backbufferformat/iswindowed
-                    // DeviceCombo that is supported by the system. We still 
+                    // DeviceCombo that is supported by the system. We still
                     // need to find one or more suitable depth/stencil buffer format,
                     // multisample type, and present interval.
                     CD3D10EnumDeviceSettingsCombo* pDeviceCombo = new CD3D10EnumDeviceSettingsCombo;
@@ -3011,8 +3011,8 @@ void CD3D10Enumeration::BuildMultiSampleQualityList( DXGI_FORMAT fmt, CD3D10Enum
 
 
 //--------------------------------------------------------------------------------------
-// Call GetAdapterInfoList() after Enumerate() to get a STL vector of 
-//       CD3D10EnumAdapterInfo* 
+// Call GetAdapterInfoList() after Enumerate() to get a STL vector of
+//       CD3D10EnumAdapterInfo*
 //--------------------------------------------------------------------------------------
 CGrowableArray <CD3D10EnumAdapterInfo*>* CD3D10Enumeration::GetAdapterInfoList()
 {
@@ -3202,7 +3202,7 @@ HRESULT DXUTFindValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOut, DXUTD3D
         // Get the desktop display mode of adapter
         DXUTGetD3D10AdapterDisplayMode( pAdapterInfo->AdapterOrdinal, 0, &adapterDisplayMode );
 
-        // Enum all the device settings combinations.  A device settings combination is 
+        // Enum all the device settings combinations.  A device settings combination is
         // a unique set of an adapter format, back buffer format, and IsWindowed.
         for( int iDeviceCombo = 0; iDeviceCombo < pAdapterInfo->deviceSettingsComboList.GetSize(); iDeviceCombo++ )
         {
@@ -3229,7 +3229,7 @@ HRESULT DXUTFindValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOut, DXUTD3D
     if( pBestDeviceSettingsCombo == NULL )
         return DXUTERR_NOCOMPATIBLEDEVICES;
 
-    // Using the best device settings combo found, build valid device settings taking heed of 
+    // Using the best device settings combo found, build valid device settings taking heed of
     // the match options and the input device settings
     DXUTD3D10DeviceSettings validDeviceSettings;
     DXUTBuildValidD3D10DeviceSettings( &validDeviceSettings, pBestDeviceSettingsCombo, pIn, pMatchOptions );
@@ -3240,9 +3240,9 @@ HRESULT DXUTFindValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOut, DXUTD3D
 
 
 //--------------------------------------------------------------------------------------
-// Internal helper function to build a D3D10 device settings structure based upon the match 
+// Internal helper function to build a D3D10 device settings structure based upon the match
 // options.  If the match option is set to ignore, then a optimal default value is used.
-// The default value may not exist on the system, but later this will be taken 
+// The default value may not exist on the system, but later this will be taken
 // into account.
 //--------------------------------------------------------------------------------------
 void DXUTBuildOptimalD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOptimalDeviceSettings,
@@ -3342,7 +3342,7 @@ void DXUTBuildOptimalD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOptimalDevic
     //---------------------
     if( pMatchOptions->eMultiSample == DXUTMT_IGNORE_INPUT )
     {
-        // Default to no multisampling 
+        // Default to no multisampling
         pOptimalDeviceSettings->sd.SampleDesc.Count = 0;
         pOptimalDeviceSettings->sd.SampleDesc.Quality = 0;
     }
@@ -3361,7 +3361,7 @@ void DXUTBuildOptimalD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOptimalDevic
         pOptimalDeviceSettings->sd.SwapEffect = pDeviceSettingsIn->sd.SwapEffect;
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     if( pMatchOptions->eDepthFormat == DXUTMT_IGNORE_INPUT &&
         pMatchOptions->eStencilFormat == DXUTMT_IGNORE_INPUT )
@@ -3413,7 +3413,7 @@ void DXUTBuildOptimalD3D10DeviceSettings( DXUTD3D10DeviceSettings* pOptimalDevic
 
 
 //--------------------------------------------------------------------------------------
-// Returns false for any CD3D9EnumDeviceSettingsCombo that doesn't meet the preserve 
+// Returns false for any CD3D9EnumDeviceSettingsCombo that doesn't meet the preserve
 // match options against the input pDeviceSettingsIn.
 //--------------------------------------------------------------------------------------
 bool DXUTDoesD3D10DeviceComboMatchPreserveOptions( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCombo,
@@ -3513,7 +3513,7 @@ bool DXUTDoesD3D10DeviceComboMatchPreserveOptions( CD3D10EnumDeviceSettingsCombo
     // No caps for swap effects
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     // No caps for depth stencil
 
@@ -3563,7 +3563,7 @@ bool DXUTDoesD3D10DeviceComboMatchPreserveOptions( CD3D10EnumDeviceSettingsCombo
 
 
 //--------------------------------------------------------------------------------------
-// Returns a ranking number that describes how closely this device 
+// Returns a ranking number that describes how closely this device
 // combo matches the optimal combo based on the match options and the optimal device settings
 //--------------------------------------------------------------------------------------
 float DXUTRankD3D10DeviceCombo( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCombo,
@@ -3599,7 +3599,7 @@ float DXUTRankD3D10DeviceCombo( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCo
     //---------------------
     if( pDeviceSettingsCombo->DeviceType == pOptimalDeviceSettings->DriverType )
         fCurRanking += fDeviceTypeWeight;
-    // Slightly prefer HAL 
+    // Slightly prefer HAL
     if( pDeviceSettingsCombo->DeviceType == D3DDEVTYPE_HAL )
         fCurRanking += 0.1f;
 
@@ -3671,7 +3671,7 @@ float DXUTRankD3D10DeviceCombo( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCo
     // No caps for swap effects
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     // No caps for swap effects
 
@@ -3693,7 +3693,7 @@ float DXUTRankD3D10DeviceCombo( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCo
 
             if( displayMode.RefreshRate.Denominator )
                 fDenom1 = (float)displayMode.RefreshRate.Denominator;
-            
+
             if( pOptimalDeviceSettings->sd.BufferDesc.RefreshRate.Denominator )
                 fDenom2 = (float)pOptimalDeviceSettings->sd.BufferDesc.RefreshRate.Denominator;
 
@@ -3715,7 +3715,7 @@ float DXUTRankD3D10DeviceCombo( CD3D10EnumDeviceSettingsCombo* pDeviceSettingsCo
 
 
 //--------------------------------------------------------------------------------------
-// Builds valid device settings using the match options, the input device settings, and the 
+// Builds valid device settings using the match options, the input device settings, and the
 // best device settings combo found.
 //--------------------------------------------------------------------------------------
 void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSettings,
@@ -3729,7 +3729,7 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
     DXUTGetD3D10AdapterDisplayMode( pBestDeviceSettingsCombo->AdapterOrdinal,
                                     pBestDeviceSettingsCombo->Output, &adapterDisplayMode );
 
-    // For each setting pick the best, taking into account the match options and 
+    // For each setting pick the best, taking into account the match options and
     // what's supported by the device
 
     //---------------------
@@ -3743,7 +3743,7 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
     // Just using pBestDeviceSettingsCombo->DeviceType
 
     //---------------------
-    // Windowed 
+    // Windowed
     //---------------------
     // Just using pBestDeviceSettingsCombo->Windowed
 
@@ -3770,7 +3770,7 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
             displayModeIn.Width = pDeviceSettingsIn->sd.BufferDesc.Width;
             displayModeIn.Height = pDeviceSettingsIn->sd.BufferDesc.Height;
         }
-        else // if( pMatchOptions->eResolution == DXUTMT_IGNORE_INPUT )   
+        else // if( pMatchOptions->eResolution == DXUTMT_IGNORE_INPUT )
         {
             if( pBestDeviceSettingsCombo->Windowed )
             {
@@ -3810,10 +3810,10 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
     }
     else if( pMatchOptions->eBackBufferCount == DXUTMT_IGNORE_INPUT )
     {
-        // The framework defaults to triple buffering 
+        // The framework defaults to triple buffering
         bestBackBufferCount = 2;
     }
-    else // if( pMatchOptions->eBackBufferCount == DXUTMT_CLOSEST_TO_INPUT )   
+    else // if( pMatchOptions->eBackBufferCount == DXUTMT_CLOSEST_TO_INPUT )
     {
         bestBackBufferCount = pDeviceSettingsIn->sd.BufferCount;
         if( bestBackBufferCount > 3 )
@@ -3899,7 +3899,7 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
     }
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     DXGI_FORMAT bestDepthStencilFormat;
     bool bestEnableAutoDepthStencil;
@@ -4041,7 +4041,7 @@ void DXUTBuildValidD3D10DeviceSettings( DXUTD3D10DeviceSettings* pValidDeviceSet
 
 
 //--------------------------------------------------------------------------------------
-// Internal helper function to find the closest allowed display mode to the optimal 
+// Internal helper function to find the closest allowed display mode to the optimal
 //--------------------------------------------------------------------------------------
 HRESULT DXUTFindValidD3D10Resolution( CD3D10EnumDeviceSettingsCombo* pBestDeviceSettingsCombo,
                                       DXGI_MODE_DESC displayModeIn, DXGI_MODE_DESC* pBestDisplayMode )
@@ -4113,7 +4113,7 @@ HRESULT DXUTFindValidD3D10Resolution( CD3D10EnumDeviceSettingsCombo* pBestDevice
 
 
 //--------------------------------------------------------------------------------------
-// Returns the DXGI_MODE_DESC struct for a given adapter and output 
+// Returns the DXGI_MODE_DESC struct for a given adapter and output
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTGetD3D10AdapterDisplayMode( UINT AdapterOrdinal, UINT nOutput, DXGI_MODE_DESC* pModeDesc )
 {

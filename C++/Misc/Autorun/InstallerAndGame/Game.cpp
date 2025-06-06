@@ -57,7 +57,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM /* lPara
                 swprintf_s( szBuffer, L"This process is %s and is running as %s.",
                             ( processInfo->Elevated() ? L"elevated" : L"not elevated" ),
                             processInfo->UserName() );
-                
+
                 delete processInfo;
             }
             else
@@ -67,7 +67,7 @@ INT_PTR CALLBACK DialogProc( HWND hDlg, UINT Msg, WPARAM wParam, LPARAM /* lPara
             SetDlgItemText( hDlg, IDC_EDIT, szBuffer );
         }
         return TRUE;
-        
+
         case WM_COMMAND:
         {
             if( wParam == IDOK || wParam == IDCANCEL )

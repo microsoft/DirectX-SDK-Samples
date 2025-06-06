@@ -63,7 +63,7 @@ PS_INPUT VS( VS_INPUT input )
     output.Pos = mul( output.Pos, Projection );
     output.Norm = mul( input.Norm, World );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 

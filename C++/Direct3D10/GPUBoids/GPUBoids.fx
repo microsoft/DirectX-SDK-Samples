@@ -167,10 +167,10 @@ cbuffer cbImmutable
         float3( -1, -1, 0 ),
         float3( 1, -1, 0 ),
     };
-    
-    float2 g_texcoords[4] = 
-    { 
-        float2(0,0), 
+
+    float2 g_texcoords[4] =
+    {
+        float2(0,0),
         float2(1,0),
         float2(0,1),
         float2(1,1),
@@ -260,7 +260,7 @@ DepthStencilState EnableDepth
 VSParticleDrawOut VSParticleDraw(VSParticleIn input)
 {
     VSParticleDrawOut output;
-    
+
     // Lookup the particle position
     int4 texcoord;
     texcoord.x = input.id % g_iTexSize;
@@ -269,10 +269,10 @@ VSParticleDrawOut VSParticleDraw(VSParticleIn input)
     texcoord.w = 0; // mip level
 
     output.pos = g_txParticleData.Load(texcoord).xyz;
-    
+
     float3 force = g_txForce.Load(texcoord).xyz;
     output.color = float4(1,0.5,0.2,1);
-    
+
     return output;
 }
 
@@ -283,7 +283,7 @@ VSParticleDrawOut VSParticleDraw(VSParticleIn input)
 void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSParticleDrawOut> SpriteStream)
 {
 	GSParticleDrawOut output;
-    
+
     //
     // Emit two new triangles
     //
@@ -292,7 +292,7 @@ void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSPar
         float3 position = g_positions[i]*g_fParticleRad;
         position = mul( position, (float3x3)g_mInvView ) + input[0].pos;
         output.pos = mul( float4(position,1.0), g_mWorldViewProj );
-        
+
         output.color = input[0].color;
         output.tex = g_texcoords[i];
         SpriteStream.Append(output);
@@ -304,7 +304,7 @@ void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSPar
 // PS for drawing particles
 //
 float4 PSParticleDraw(PSParticleDrawIn input) : SV_Target
-{   
+{
     return g_txDiffuse.Sample( g_samLinear, input.tex ) * input.color;
 }
 
@@ -315,7 +315,7 @@ float4 PSParticleDraw(PSParticleDrawIn input) : SV_Target
 VSForceOut VSForceGS(VSParticleIn input)
 {
     VSForceOut output;
-    
+
     // Lookup the particle position
     int4 texcoord;
     texcoord.x = input.id % g_iTexSize;
@@ -324,7 +324,7 @@ VSForceOut VSForceGS(VSParticleIn input)
     texcoord.w = 0; // mip level
 
     output.pos = g_txParticleData.Load(texcoord).xyz;
-    
+
     return output;
 }
 
@@ -334,7 +334,7 @@ VSForceOut VSForceGS(VSParticleIn input)
 GSForceOut VSForce(VSSplatIn input)
 {
     GSForceOut output;
- 
+
     // Lookup the particle position
     uint id = input.id / 6;
     int4 texcoord;
@@ -346,7 +346,7 @@ GSForceOut VSForce(VSSplatIn input)
     output.pos = g_txParticleData.Load(texcoord).xyz;
     output.tex = input.tex;
     output.clippos = float4( input.pos, 1 );
-    
+
     return output;
 }
 
@@ -357,9 +357,9 @@ GSForceOut VSForce(VSSplatIn input)
 void GSForce(point VSForceOut input[1], inout TriangleStream<GSForceOut> SpriteStream)
 {
 	GSForceOut output;
-    
+
     output.pos = input[0].pos;
-    
+
     //
     // Emit two new triangles
     //
@@ -367,7 +367,7 @@ void GSForce(point VSForceOut input[1], inout TriangleStream<GSForceOut> SpriteS
     {
         output.clippos = float4(g_positions[i],1);
         output.tex = g_texcoords[i];
-        
+
         SpriteStream.Append(output);
     }
     SpriteStream.RestartStrip();
@@ -455,7 +455,7 @@ float3 Alignment( float3 vLocalPos, float3 vLocalVel, float3 vVel )
 // PS for particles
 //
 float4 PSForce(PSForceIn input) : SV_Target
-{   
+{
 	float3 texcoord = float3( input.tex, 0 );
 	float3 vLocalPos = g_txParticleData.SampleLevel( g_samPoint, texcoord, 0 );
 	texcoord.z = 1;
@@ -482,9 +482,9 @@ float4 PSForce(PSForceIn input) : SV_Target
 VSAdvanceOut VSAdvance(VSParticleIn input)
 {
     VSAdvanceOut output;
-    
+
     output.pos = float3(0,0,0);
-    
+
     return output;
 }
 
@@ -495,7 +495,7 @@ VSAdvanceOut VSAdvance(VSParticleIn input)
 void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> SpriteStream)
 {
 	GSAdvanceOut output;
-    
+
     // position quad
     output.irt = 0;
     output.rtindex = 0;
@@ -503,11 +503,11 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
     {
         output.clippos = float4(g_positions[i],1);
         output.tex = g_texcoords[i];
-        
+
         SpriteStream.Append(output);
     }
     SpriteStream.RestartStrip();
-    
+
     // velocity quad
     output.irt = 1;
     output.rtindex = 1;
@@ -515,11 +515,11 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
     {
         output.clippos = float4(g_positions[i],1);
         output.tex = g_texcoords[i];
-        
+
         SpriteStream.Append(output);
     }
     SpriteStream.RestartStrip();
-    
+
     // up quad
     output.irt = 2;
     output.rtindex = 2;
@@ -527,7 +527,7 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
     {
         output.clippos = float4(g_positions[i],1);
         output.tex = g_texcoords[i];
-        
+
         SpriteStream.Append(output);
     }
     SpriteStream.RestartStrip();
@@ -537,7 +537,7 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
 // PS for particles
 //
 float4 PSAdvance(PSAdvanceIn input) : SV_Target
-{   
+{
 	float3 texcoord = float3( input.tex, 0 );
 	float3 pos = g_txParticleData.SampleLevel( g_samPoint, texcoord, 0 );
 	float3 avgPos = g_txParticleData.SampleLevel( g_samPoint, texcoord, g_iMaxMip );
@@ -623,9 +623,9 @@ VSBoidOut VSBoids( VSBoidIn input )
     texcoord.z = 2;
     float3 up = g_txParticleData.Load(texcoord).xyz;
     float3 right = normalize( cross( up, dir ) );
-    
+
     float3x3 rotMatrix = { right*g_fBoidScale, up*g_fBoidScale, dir*g_fBoidScale };
-   
+
 	output.norm = mul( input.norm, rotMatrix );
 	float4 transpos;
 	transpos.xyz = mul( input.pos, (float3x3)rotMatrix );
@@ -672,10 +672,10 @@ technique10 RenderParticles
         SetVertexShader( CompileShader( vs_4_0, VSParticleDraw() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSParticleDraw() ) );
         SetPixelShader( CompileShader( ps_4_0, PSParticleDraw() ) );
-        
+
         SetBlendState( ParticleBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -688,10 +688,10 @@ technique10 AccumulateForcesGS
         SetVertexShader( CompileShader( vs_4_0, VSForceGS() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSForce() ) );
         SetPixelShader( CompileShader( ps_4_0, PSForce() ) );
-        
+
         SetBlendState( AdditiveBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -704,10 +704,10 @@ technique10 AccumulateForces
         SetVertexShader( CompileShader( vs_4_0, VSForce() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSForce() ) );
-        
+
         SetBlendState( AdditiveBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -720,10 +720,10 @@ technique10 AdvanceParticles
         SetVertexShader( CompileShader( vs_4_0, VSAdvance() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSAdvance() ) );
         SetPixelShader( CompileShader( ps_4_0, PSAdvance() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -736,14 +736,14 @@ technique10 RenderBoids
         SetVertexShader( CompileShader( vs_4_0, VSBoids() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSBoids() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }
 
 //
-// RenderMesh 
+// RenderMesh
 //
 technique10 RenderMesh
 {
@@ -752,8 +752,8 @@ technique10 RenderMesh
         SetVertexShader( CompileShader( vs_4_0, VSMesh() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSMesh() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepth, 0 );
-    }  
+    }
 }

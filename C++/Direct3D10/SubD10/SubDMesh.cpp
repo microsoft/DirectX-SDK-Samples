@@ -286,7 +286,7 @@ void CSubDMesh::DeleteCache()
 // The 1-ring neighborhood of the quad is represented by vertices 4 through 17.  The counter-
 // clockwise winding of this 1-ring neighborhood is important, especially when it comes to compute
 // the corner vertices of the bicubic patch that we will use to approximate the subd quad (0,1,2,3).
-// 
+//
 // The resulting bicubic patch fits within the subd quad (0,1,2,3) and has the following control
 // point layout:
 //
@@ -300,16 +300,16 @@ void CSubDMesh::DeleteCache()
 // a much more complex weighting of the subd patch and the 1-ring neighborhood.  In the example above
 // the bicubic control point 0 is actually a weighted combination of subd points 0,1,2,3 and 1-ring
 // neighborhood points 17, 4, 5, 6, 7, 8, and 9.  We can see that the 1-ring neighbor hood is simply
-// walked from the prefix value from the previous corner (corner 3 in this case) to the prefix 
+// walked from the prefix value from the previous corner (corner 3 in this case) to the prefix
 // prefix value for the current corner.  We add one more vertex on either side of the prefix values
 // and we have all the data necessary to calculate the value for the corner points.
 //
-// The edge control points of the bicubic patch (1,2,13,14,4,8,7,11) are also combinations of their 
+// The edge control points of the bicubic patch (1,2,13,14,4,8,7,11) are also combinations of their
 // neighbors, but fortunately each one is only a combination of 6 values and no walk is required.
 //--------------------------------------------------------------------------------------
 
 //--------------------------------------------------------------------------------------
-// Condition each patch in the mesh.  Conditioning precomputes the prefixes and 1-ring 
+// Condition each patch in the mesh.  Conditioning precomputes the prefixes and 1-ring
 // neighborhood data mentioned above.  This is done on a per-patch basis in a very simple
 // and inefficient manner.  However, this work should ideally be part of the production
 // pipeline and the data should be saved to the app specific file format before loading.
@@ -666,7 +666,7 @@ HRESULT CSubDMesh::ComputeTangents()
         {0, 32, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_TANGENT, 0},
         {0, 44, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT,  D3DDECLUSAGE_BINORMAL, 0},
 
-        {0xFF,0,D3DDECLTYPE_UNUSED, 0,0,0}// D3DDECL_END 
+        {0xFF,0,D3DDECLTYPE_UNUSED, 0,0,0}// D3DDECL_END
     };
 
     ID3DXMesh* pMesh = NULL;
@@ -801,9 +801,9 @@ template <class T, class Q, class W> void QuickSort( T* indices, Q* pTanQuad, W*
 
 //--------------------------------------------------------------------------------------
 // Sort patches by size (number of verts) so we can separate regular and extraordinary
-// patches.  Not only will doing regular and extraordinary in different passes help with 
-// performance, but also ordering them by size will make more efficient use of the GPU 
-// so that the majority of the patches being processed at once will have the same number 
+// patches.  Not only will doing regular and extraordinary in different passes help with
+// performance, but also ordering them by size will make more efficient use of the GPU
+// so that the majority of the patches being processed at once will have the same number
 // of vertices.  This will help exploit the SIMD nature of the GPU.
 //--------------------------------------------------------------------------------------
 void CSubDMesh::SortPatchesBySize()

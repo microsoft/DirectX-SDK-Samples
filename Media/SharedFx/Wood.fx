@@ -32,8 +32,8 @@ float4x4 Projection
 >;
 
 // light direction (view space)
-float3 lightDir 
-<  
+float3 lightDir
+<
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.DirectionalLight[0].Direction";
 > = {0.577, -0.577, 0.577};
@@ -79,9 +79,9 @@ float4 k_s
 float  k_n
 <
     string SasUiLabel = "Material Specular Power";
-    string SasUiControl = "Slider"; 
-    float SasUiMin = 1.0f; 
-    float SasUiMax = 32.0f; 
+    string SasUiControl = "Slider";
+    float SasUiMin = 1.0f;
+    float SasUiMax = 32.0f;
     int SasUiSteps = 31;
 >   = 8.0f;                         // power
 
@@ -95,15 +95,15 @@ float  k_n
 #define VOLUME_SIZE 32
 // textures
 
-texture LinearTex 
-< 
+texture LinearTex
+<
 	string SasUiLabel = "Linear Map";
 	string SasUiControl= "FilePicker";
 	string SasResourceAddress = "../misc/linear.dds";
 >;
 
-texture NoiseTex  
-< 
+texture NoiseTex
+<
 	string SasUiLabel = "Noise Map";
 	string SasUiControl= "FilePicker";
 	string SasResourceAddress = "../misc/noise3d.dds";
@@ -135,12 +135,12 @@ struct VS_OUTPUT
     float4 Pos  : POSITION;
     float3 Diff : COLOR0;
     float3 Spec : COLOR1;
-    float3 Tex0 : TEXCOORD0;               
-    float3 Tex1 : TEXCOORD1;               
-    float2 Tex2 : TEXCOORD2;               
+    float3 Tex0 : TEXCOORD0;
+    float3 Tex1 : TEXCOORD1;
+    float2 Tex2 : TEXCOORD2;
 };
 
-VS_OUTPUT VS(    
+VS_OUTPUT VS(
     float3 Pos  : POSITION,
     float3 Norm : NORMAL)
 {
@@ -149,27 +149,27 @@ VS_OUTPUT VS(
     float3 L = -lightDir;
     float3 P = mul(float4(Pos, 1), World);    // position (view space)
     P = mul(float4(P, 1), View);    // position (view space)
-    
-    
+
+
     float3 N = mul(Norm, (float3x3)World);   // normal (view space)
     N = normalize(mul(N, (float3x3)View));   // normal (view space)
-   
-    
+
+
     float3 R = normalize(2 * dot(N, L) * N - L);            // reflection vector (view space)
     float3 V = -normalize(P);                               // view direction (view space)
 
     Out.Pos  = mul(float4(P, 1), Projection);             // position (projected)
     Out.Diff = I_a * k_a + I_d * k_d * max(0, dot(N, L)); // diffuse + ambient
     Out.Spec = I_s * k_s * pow(max(0, dot(R, V)), k_n/4);   // specular
-    Out.Tex1 = 0.5 * Pos * POINTSCALE; 
-    Out.Tex0 = Out.Tex1 * TURBULENCE;        
+    Out.Tex1 = 0.5 * Pos * POINTSCALE;
+    Out.Tex0 = Out.Tex1 * TURBULENCE;
     Out.Tex2 = RINGSCALE * length(Out.Tex1.xz);
 
     return Out;
 }
 
 // samplers
-sampler NoiseSamp<bool SasUiVisible = false;> = sampler_state 
+sampler NoiseSamp<bool SasUiVisible = false;> = sampler_state
 {
     texture = <NoiseTex>;
     AddressU  = WRAP;		
@@ -180,10 +180,10 @@ sampler NoiseSamp<bool SasUiVisible = false;> = sampler_state
     MAGFILTER = LINEAR;
 };
 
-sampler LinearSamp<bool SasUiVisible = false;> = sampler_state 
+sampler LinearSamp<bool SasUiVisible = false;> = sampler_state
 {
     texture = <LinearTex>;
-    AddressU  = WRAP;        
+    AddressU  = WRAP;
     AddressV  = WRAP;
     AddressW  = WRAP;
     MIPFILTER = LINEAR;
@@ -193,23 +193,23 @@ sampler LinearSamp<bool SasUiVisible = false;> = sampler_state
 
 // PS11 version is a gross approximation
 float4 PS11(VS_OUTPUT In) : COLOR
-{   
+{
     float4 Color;
     float r;
 
     // note the use of a linear texture with wrapped texcoords to emulate 'frac'
-    r = tex2D(LinearSamp, In.Tex2) +  0.1 * (tex3D(NoiseSamp, In.Tex1) - 0.5); 
+    r = tex2D(LinearSamp, In.Tex2) +  0.1 * (tex3D(NoiseSamp, In.Tex1) - 0.5);
 
     Color.rgb = In.Diff * lerp(DARK, LIGHT, saturate(0.8 - 0.6 * r))
               + In.Spec;
     Color.w   = 1;
 
     return Color;
-}  
+}
 
 // PS20 is much better than PS11 because of dependent texture reads
 float4 PS20(VS_OUTPUT In) : COLOR
-{   
+{
     float4 Color;
     float3 PP = In.Tex1 + 0.1 * (tex3D(NoiseSamp, frac(In.Tex1)) - 0.5);
     float r;
@@ -223,7 +223,7 @@ float4 PS20(VS_OUTPUT In) : COLOR
     Color.w   = 1;
 
     return Color;
-}  
+}
 
 technique TWood_PS_2_0
 {

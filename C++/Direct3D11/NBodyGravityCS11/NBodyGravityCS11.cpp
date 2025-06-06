@@ -83,7 +83,7 @@ struct PARTICLE
 #define IDC_RESETPARTICLES      5
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -119,14 +119,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -141,7 +141,7 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 }
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -175,7 +175,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -188,7 +188,7 @@ void InitApp()
     g_HUD.AddButton( IDC_TOGGLEREF, L"Toggle REF (F3)", 0, iY += 26, 170, 23, VK_F3 );
     g_HUD.AddButton( IDC_CHANGEDEVICE, L"Change device (F2)", 0, iY += 26, 170, 23, VK_F2 );
     g_HUD.AddButton( IDC_RESETPARTICLES, L"Reset particles", 0, iY += 26, 170, 22, VK_F2 );
-    g_SampleUI.SetCallback( OnGUIEvent ); 
+    g_SampleUI.SetCallback( OnGUIEvent );
 }
 
 HRESULT CreateParticleBuffer( ID3D11Device* pd3dDevice )
@@ -266,7 +266,7 @@ void LoadParticles( PARTICLE* pParticles,
         pParticles[i].pos.w = 10000.0f * 10000.0f;
 
         pParticles[i].velo = Velocity;
-    }    
+    }
 }
 
 HRESULT CreateParticlePosVeloBuffers( ID3D11Device* pd3dDevice )
@@ -284,9 +284,9 @@ HRESULT CreateParticlePosVeloBuffers( ID3D11Device* pd3dDevice )
     // Initialize the data in the buffers
     PARTICLE* pData1 = new PARTICLE[ MAX_PARTICLES ];
     if( !pData1 )
-        return E_OUTOFMEMORY;    
+        return E_OUTOFMEMORY;
 
-    srand( GetTickCount() );   
+    srand( GetTickCount() );
 
 #if 1
     // Disk Galaxy Formation
@@ -296,10 +296,10 @@ HRESULT CreateParticlePosVeloBuffers( ID3D11Device* pd3dDevice )
         g_fSpread, MAX_PARTICLES / 2 );
     LoadParticles( &pData1[MAX_PARTICLES / 2],
         D3DXVECTOR3( -fCenterSpread, 0, 0 ), D3DXVECTOR4( 0, 0, 20, 1/10000.0f / 10000.0f ),
-        g_fSpread, MAX_PARTICLES / 2 );    
+        g_fSpread, MAX_PARTICLES / 2 );
 #else
     // Disk Galaxy Formation with impacting third cluster
-    LoadParticles( pData1, 
+    LoadParticles( pData1,
         D3DXVECTOR3(g_fSpread,0,0), D3DXVECTOR4(0,0,-8,1/10000.0f / 10000.0f),
         g_fSpread, MAX_PARTICLES/3 );
     LoadParticles( &pData1[MAX_PARTICLES/3],
@@ -373,9 +373,9 @@ void SWAP( T* &x, T* &y )
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
@@ -384,11 +384,11 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     ID3D11DeviceContext* pd3dImmediateContext = DXUTGetD3D11DeviceContext();
 
     int dimx = int(ceil(MAX_PARTICLES/128.0f));
-    
+
     {
         pd3dImmediateContext->CSSetShader( g_pCalcCS, NULL, 0 );
 
-        // For CS input            
+        // For CS input
         ID3D11ShaderResourceView* aRViews[ 1 ] = { g_pParticlePosVeloRV0 };
         pd3dImmediateContext->CSSetShaderResources( 0, 1, aRViews );
 
@@ -401,7 +401,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
         V( pd3dImmediateContext->Map( g_pcbCS, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
         CB_CS* pcbCS = ( CB_CS* )MappedResource.pData;
         pcbCS->param[0] = MAX_PARTICLES;
-        pcbCS->param[1] = dimx;      
+        pcbCS->param[1] = dimx;
         pcbCS->paramf[0] = 0.1f;
         pcbCS->paramf[1] = 1;
         pd3dImmediateContext->Unmap( g_pcbCS, 0 );
@@ -424,13 +424,13 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
         SWAP( g_pParticlePosVeloUAV0, g_pParticlePosVeloUAV1 );
     }
 
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -496,7 +496,7 @@ bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo *AdapterInfo,
     // reject any device which doesn't support CS4x
     if ( DeviceInfo->ComputeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x == FALSE )
         return false;
-    
+
     return true;
 }
 
@@ -563,7 +563,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     V_RETURN( pd3dDevice->CreateInputLayout( layout, sizeof( layout ) / sizeof( layout[0] ),
         pBlobRenderParticlesVS->GetBufferPointer(), pBlobRenderParticlesVS->GetBufferSize(), &g_pParticleVertexLayout ) );
     DXUT_SetDebugName( g_pParticleVertexLayout, "Particles" );
-    
+
     SAFE_RELEASE( pBlobRenderParticlesVS );
     SAFE_RELEASE( pBlobRenderParticlesGS );
     SAFE_RELEASE( pBlobRenderParticlesPS );
@@ -655,7 +655,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
-    g_DialogResourceManager.OnD3D11ReleasingSwapChain();    
+    g_DialogResourceManager.OnD3D11ReleasingSwapChain();
 }
 
 void RenderText()
@@ -684,7 +684,7 @@ bool RenderParticles( ID3D11DeviceContext* pd3dImmediateContext, D3DXMATRIX& mVi
     pd3dImmediateContext->VSSetShader( g_pRenderParticlesVS, NULL, 0 );
     pd3dImmediateContext->GSSetShader( g_pRenderParticlesGS, NULL, 0 );
     pd3dImmediateContext->PSSetShader( g_pRenderParticlesPS, NULL, 0 );
-    
+
     pd3dImmediateContext->IASetInputLayout( g_pParticleVertexLayout );
 
     // Set IA parameters
@@ -699,8 +699,8 @@ bool RenderParticles( ID3D11DeviceContext* pd3dImmediateContext, D3DXMATRIX& mVi
 
     D3D11_MAPPED_SUBRESOURCE MappedResource;
     pd3dImmediateContext->Map( g_pcbGS, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource);
-    CB_GS* pCBGS = ( CB_GS* )MappedResource.pData; 
-    D3DXMatrixMultiply( &pCBGS->m_WorldViewProj, &mView, &mProj );   
+    CB_GS* pCBGS = ( CB_GS* )MappedResource.pData;
+    D3DXMatrixMultiply( &pCBGS->m_WorldViewProj, &mView, &mProj );
     D3DXMatrixInverse( &pCBGS->m_InvView, NULL, &mView );
     pd3dImmediateContext->Unmap( g_pcbGS, 0 );
     pd3dImmediateContext->GSSetConstantBuffers( 0, 1, &g_pcbGS );
@@ -738,7 +738,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         g_D3DSettingsDlg.OnRender( fElapsedTime );
         return;
     }
-    
+
     ID3D11RenderTargetView* pRTV = DXUTGetD3D11RenderTargetView();
     pd3dImmediateContext->ClearRenderTargetView( pRTV, ClearColor );
     ID3D11DepthStencilView* pDSV = DXUTGetD3D11DepthStencilView();
@@ -764,7 +764,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // which is useful because you can then turn off all UI rendering as they cloud performance
     /*static DWORD dwTimefirst = GetTickCount();
     if ( GetTickCount() - dwTimefirst > 5000 )
-    {    
+    {
         OutputDebugString( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
         OutputDebugString( L"\n" );
         dwTimefirst = GetTickCount();
@@ -772,7 +772,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 }
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -781,7 +781,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     DXUTGetGlobalResourceCache().OnDestroyDevice();
     SAFE_DELETE( g_pTxtHelper );
 
-    SAFE_RELEASE( g_pParticleBuffer ); 
+    SAFE_RELEASE( g_pParticleBuffer );
     SAFE_RELEASE( g_pParticleVertexLayout );
 
     SAFE_RELEASE( g_pParticlePosVelo0 );

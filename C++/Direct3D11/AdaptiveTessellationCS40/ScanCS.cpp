@@ -2,10 +2,10 @@
 // File: ScanCS.cpp
 //
 // A simple inclusive prefix sum(scan) implemented in CS4.0
-// 
+//
 // Note, to maintain the simplicity of the sample, this scan has these limitations:
 //      - At maximum 16384 elements can be scanned.
-//      - The element to be scanned is of type uint2, see comments in ScanCS.hlsl 
+//      - The element to be scanned is of type uint2, see comments in ScanCS.hlsl
 //        and below for how to change this type
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
@@ -13,7 +13,7 @@
 #include "DXUT.h"
 #include "ScanCS.h"
 
-HRESULT CompileShaderFromFile( WCHAR* szFileName, D3D_SHADER_MACRO* pDefines, LPCSTR szEntryPoint, 
+HRESULT CompileShaderFromFile( WCHAR* szFileName, D3D_SHADER_MACRO* pDefines, LPCSTR szEntryPoint,
                                LPCSTR szShaderModel, ID3DBlob** ppBlobOut );
 
 CScanCS::CScanCS()
@@ -23,7 +23,7 @@ CScanCS::CScanCS()
         m_pAuxBufUAV(NULL),
         m_pScanCS(NULL),
         m_pScan2CS(NULL)
-        
+
 {
 }
 
@@ -51,7 +51,7 @@ HRESULT CScanCS::OnD3D11CreateDevice( ID3D11Device* pd3dDevice )
     Desc.Usage = D3D11_USAGE_DYNAMIC;
     Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     Desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    Desc.MiscFlags = 0;    
+    Desc.MiscFlags = 0;
     Desc.ByteWidth = sizeof( CB_CS );
     V_RETURN( pd3dDevice->CreateBuffer( &Desc, NULL, &m_pcbCS ) );
     DXUT_SetDebugName( m_pcbCS, "CB_CS" );
@@ -105,7 +105,7 @@ HRESULT CScanCS::ScanCS( ID3D11DeviceContext* pd3dImmediateContext,
                          ID3D11ShaderResourceView* p1SRV,
                          ID3D11UnorderedAccessView* p1UAV )
 {
-    HRESULT hr = S_OK;    
+    HRESULT hr = S_OK;
 
     // first pass, scan in each bucket
     {
@@ -115,7 +115,7 @@ HRESULT CScanCS::ScanCS( ID3D11DeviceContext* pd3dImmediateContext,
         pd3dImmediateContext->CSSetShaderResources( 0, 1, aRViews );
 
         ID3D11UnorderedAccessView* aUAViews[ 1 ] = { p1UAV };
-        pd3dImmediateContext->CSSetUnorderedAccessViews( 0, 1, aUAViews, NULL );        
+        pd3dImmediateContext->CSSetUnorderedAccessViews( 0, 1, aUAViews, NULL );
 
         pd3dImmediateContext->Dispatch( INT(ceil(nNumToScan/128.0f)), 1, 1 );
 

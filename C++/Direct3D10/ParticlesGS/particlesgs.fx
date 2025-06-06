@@ -47,9 +47,9 @@ cbuffer cbImmutable
         float3( -1, -1, 0 ),
         float3( 1, -1, 0 ),
     };
-    float2 g_texcoords[4] = 
-    { 
-        float2(0,1), 
+    float2 g_texcoords[4] =
+    {
+        float2(0,1),
         float2(1,1),
         float2(0,0),
         float2(1,0),
@@ -115,14 +115,14 @@ DepthStencilState DisableDepth
 VSParticleDrawOut VSScenemain(VSParticleIn input)
 {
     VSParticleDrawOut output = (VSParticleDrawOut)0;
-    
+
     //
     // Pass the point through
     //
     output.pos = input.pos;
     output.radius = 1.5;
-    
-    //  
+
+    //
     // calculate the color
     //
     if( input.Type == PT_LAUNCHER )
@@ -149,7 +149,7 @@ VSParticleDrawOut VSScenemain(VSParticleIn input)
         output.color = float4(1,0.1,0.1,1);
         output.color *= (input.Timer / P_EMBER3LIFE );
     }
-    
+
     return output;
 }
 
@@ -197,7 +197,7 @@ void GSLauncherHandler( VSParticleIn input, inout PointStream<VSParticleIn> Part
         output.Timer = P_SHELLLIFE + vRandom.y*0.5;
         output.Type = PT_SHELL;
         ParticleOutputStream.Append( output );
-        
+
         //reset our timer
         input.Timer = g_fSecondsPerFirework + vRandom.x*0.4;
     }
@@ -205,10 +205,10 @@ void GSLauncherHandler( VSParticleIn input, inout PointStream<VSParticleIn> Part
     {
         input.Timer -= g_fElapsedTime;
     }
-    
+
     //emit ourselves to keep us alive
     ParticleOutputStream.Append( input );
-    
+
 }
 
 //
@@ -220,8 +220,8 @@ void GSShellHandler( VSParticleIn input, inout PointStream<VSParticleIn> Particl
     {
         VSParticleIn output;
         float3 vRandom = float3(0,0,0);
-        
-        //time to emit a series of new Ember1s  
+
+        //time to emit a series of new Ember1s
         for(int i=0; i<g_iNumEmber1s; i++)
         {
             vRandom = normalize( RandomDir( input.Type + i ) );
@@ -231,7 +231,7 @@ void GSShellHandler( VSParticleIn input, inout PointStream<VSParticleIn> Particl
             output.Type = PT_EMBER1;
             ParticleOutputStream.Append( output );
         }
-        
+
         //find out how many Ember2s to emit
         for(int i=0; i<abs(vRandom.x)*g_fMaxEmber2s; i++)
         {
@@ -242,7 +242,7 @@ void GSShellHandler( VSParticleIn input, inout PointStream<VSParticleIn> Particl
             output.Type = PT_EMBER2;
             ParticleOutputStream.Append( output );
         }
-        
+
     }
     else
     {
@@ -269,8 +269,8 @@ void GSEmber2Handler( VSParticleIn input, inout PointStream<VSParticleIn> Partic
     if(input.Timer <= 0)
     {
         VSParticleIn output;
-    
-        //time to emit a series of new Ember3s  
+
+        //time to emit a series of new Ember3s
         for(int i=0; i<10; i++)
         {
             output.pos = input.pos + input.vel*g_fElapsedTime;
@@ -310,7 +310,7 @@ void GSAdvanceParticlesMain(point VSParticleIn input[1], inout PointStream<VSPar
 void GSScenemain(point VSParticleDrawOut input[1], inout TriangleStream<PSSceneIn> SpriteStream)
 {
     PSSceneIn output;
-    
+
     //
     // Emit two new triangles
     //
@@ -319,7 +319,7 @@ void GSScenemain(point VSParticleDrawOut input[1], inout TriangleStream<PSSceneI
         float3 position = g_positions[i]*input[0].radius;
         position = mul( position, (float3x3)g_mInvView ) + input[0].pos;
         output.pos = mul( float4(position,1.0), g_mWorldViewProj );
-        
+
         output.color = input[0].color;
         output.tex = g_texcoords[i];
         SpriteStream.Append(output);
@@ -331,7 +331,7 @@ void GSScenemain(point VSParticleDrawOut input[1], inout TriangleStream<PSSceneI
 // PS for particles
 //
 float4 PSScenemain(PSSceneIn input) : SV_Target
-{   
+{
     return g_txDiffuse.Sample( g_samLinear, input.tex ) * input.color;
 }
 
@@ -345,10 +345,10 @@ technique10 RenderParticles
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScenemain() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetBlendState( AdditiveBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -363,7 +363,7 @@ technique10 AdvanceParticles
         SetVertexShader( CompileShader( vs_4_0, VSPassThroughmain() ) );
         SetGeometryShader( gsStreamOut );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }

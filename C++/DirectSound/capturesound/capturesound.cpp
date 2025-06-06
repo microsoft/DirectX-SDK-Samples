@@ -1,8 +1,8 @@
 //----------------------------------------------------------------------------
 // File: CaptureSound.cpp
 //
-// Desc: The CaptureSound sample shows how to use DirectSoundCapture to capture 
-//       sound into a wave file 
+// Desc: The CaptureSound sample shows how to use DirectSoundCapture to capture
+//       sound into a wave file
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -59,8 +59,8 @@ HINSTANCE                  g_hInst              = NULL;
 GUID                       g_guidCaptureDevice  = GUID_NULL;
 BOOL                       g_bRecording;
 WAVEFORMATEX               g_wfxInput;
-DSBPOSITIONNOTIFY          g_aPosNotify[ NUM_REC_NOTIFICATIONS + 1 ];  
-HANDLE                     g_hNotificationEvent; 
+DSBPOSITIONNOTIFY          g_aPosNotify[ NUM_REC_NOTIFICATIONS + 1 ];
+HANDLE                     g_hNotificationEvent;
 BOOL                       g_abInputFormatSupported[20];
 DWORD                      g_dwCaptureBufferSize;
 DWORD                      g_dwNextCaptureOffset;
@@ -72,10 +72,10 @@ CWaveFile*                  g_pWaveFile;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, 
+INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
                       INT nCmdShow )
 {
     HRESULT hr;
@@ -92,11 +92,11 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 
 
     // Display the formats dialog box, and show it
-    dwResult = (DWORD)DialogBox( hInst, MAKEINTRESOURCE(IDD_DEVICES), 
+    dwResult = (DWORD)DialogBox( hInst, MAKEINTRESOURCE(IDD_DEVICES),
                                  NULL, DevicesDlgProc );
     if( dwResult != IDOK )
     {
-        // The user canceled, so stop message pump, 
+        // The user canceled, so stop message pump,
         // and fall through to the cleanup code
         PostQuitMessage( 0 );
     }
@@ -106,7 +106,7 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
         if( FAILED( hr = InitDirectSound( hDlg, &g_guidCaptureDevice ) ) )
         {
             DXTRACE_ERR_MSGBOX( TEXT("InitDirectSound"), hr );
-            MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+            MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                         L"DirectSound Sample", MB_OK | MB_ICONERROR );
             PostQuitMessage( 0 );
             dwResult = IDCANCEL;
@@ -117,13 +117,13 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
     // Display the formats dialog box, and show it
     if( dwResult == IDOK )
     {
-        dwResult = (DWORD)DialogBox( hInst, MAKEINTRESOURCE(IDD_FORMATS), 
+        dwResult = (DWORD)DialogBox( hInst, MAKEINTRESOURCE(IDD_FORMATS),
                                      NULL, FormatsDlgProc );
     }
 
     if( dwResult != IDOK )
     {
-        // The user canceled, so stop message pump, 
+        // The user canceled, so stop message pump,
         // and fall through to the cleanup code
         PostQuitMessage( 0 );
     }
@@ -137,33 +137,33 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 
         ZeroMemory( &wfxInput, sizeof(wfxInput));
         g_pDSBCapture->GetFormat( &wfxInput, sizeof(wfxInput), NULL );
-        ConvertWaveFormatToString( &wfxInput, strInputFormat, 255 );   
+        ConvertWaveFormatToString( &wfxInput, strInputFormat, 255 );
 
         SetWindowText( hInputFormatText, strInputFormat );
 
         g_bRecording = FALSE;
-        ShowWindow( hDlg, SW_SHOW ); 
+        ShowWindow( hDlg, SW_SHOW );
     }
 
     bDone = FALSE;
-    while( !bDone ) 
-    { 
-        dwResult = MsgWaitForMultipleObjects( 1, &g_hNotificationEvent, 
+    while( !bDone )
+    {
+        dwResult = MsgWaitForMultipleObjects( 1, &g_hNotificationEvent,
                                               FALSE, INFINITE, QS_ALLEVENTS );
         switch( dwResult )
         {
             case WAIT_OBJECT_0 + 0:
                 // g_hNotificationEvents[0] is signaled
 
-                // This means that DirectSound just finished playing 
-                // a piece of the buffer, so we need to fill the circular 
+                // This means that DirectSound just finished playing
+                // a piece of the buffer, so we need to fill the circular
                 // buffer with new sound from the wav file
 
                 if( FAILED( hr = RecordCapturedData() ) )
                 {
                     DXTRACE_ERR_MSGBOX( TEXT("RecordCapturedData"), hr );
                     MessageBox( hDlg, L"Error handling DirectSound notifications. "
-                               L"Sample will now exit.", L"DirectSound Sample", 
+                               L"Sample will now exit.", L"DirectSound Sample",
                                MB_OK | MB_ICONERROR );
                     bDone = TRUE;
                 }
@@ -171,12 +171,12 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 
             case WAIT_OBJECT_0 + 1:
                 // Windows messages are available
-                while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
-                { 
-                    if( !IsDialogMessage( hDlg, &msg ) )  
+                while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+                {
+                    if( !IsDialogMessage( hDlg, &msg ) )
                     {
-                        TranslateMessage( &msg ); 
-                        DispatchMessage( &msg ); 
+                        TranslateMessage( &msg );
+                        DispatchMessage( &msg );
                     }
 
                     if( msg.message == WM_QUIT )
@@ -208,7 +208,7 @@ HRESULT InitDirectSound( HWND hDlg, GUID* pDeviceGuid )
 {
     HRESULT hr;
 
-    ZeroMemory( &g_aPosNotify, sizeof(DSBPOSITIONNOTIFY) * 
+    ZeroMemory( &g_aPosNotify, sizeof(DSBPOSITIONNOTIFY) *
                                (NUM_REC_NOTIFICATIONS + 1) );
     g_dwCaptureBufferSize = 0;
     g_dwNotifySize        = 0;
@@ -231,7 +231,7 @@ HRESULT InitDirectSound( HWND hDlg, GUID* pDeviceGuid )
 
 //-----------------------------------------------------------------------------
 // Name: FreeDirectSound()
-// Desc: Releases DirectSound 
+// Desc: Releases DirectSound
 //-----------------------------------------------------------------------------
 HRESULT FreeDirectSound()
 {
@@ -240,7 +240,7 @@ HRESULT FreeDirectSound()
     // Release DirectSound interfaces
     SAFE_RELEASE( g_pDSNotify );
     SAFE_RELEASE( g_pDSBCapture );
-    SAFE_RELEASE( g_pDSCapture ); 
+    SAFE_RELEASE( g_pDSCapture );
 
     // Release COM
     CoUninitialize();
@@ -259,14 +259,14 @@ INT_PTR CALLBACK DevicesDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
     case WM_INITDIALOG:
         if( FAILED( hr = OnInitDevicesDialog( hDlg ) ) )
         {
             DXTRACE_ERR_MSGBOX( TEXT("OnInitDevicesDialog"), hr );
             MessageBox( hDlg, L"Error scanning DirectSoundCapture devices. "
-                        L"Sample will now exit.", L"DirectSound Sample", 
+                        L"Sample will now exit.", L"DirectSound Sample",
                         MB_OK | MB_ICONERROR );
             EndDialog( hDlg, IDABORT );
         }
@@ -284,14 +284,14 @@ INT_PTR CALLBACK DevicesDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
                 HWND hCaptureDeviceCombo = GetDlgItem( hDlg, IDC_CAPTURE_DEVICE_COMBO );
 
                 // Get the index of the currently selected devices
-                INT nCaptureIndex = (INT)SendMessage( hCaptureDeviceCombo, CB_GETCURSEL, 0, 0 ); 
+                INT nCaptureIndex = (INT)SendMessage( hCaptureDeviceCombo, CB_GETCURSEL, 0, 0 );
 
                 // Get the GUID attached to the combo box item
-                GUID* pCaptureGUID = (GUID*) SendMessage( hCaptureDeviceCombo, CB_GETITEMDATA, 
+                GUID* pCaptureGUID = (GUID*) SendMessage( hCaptureDeviceCombo, CB_GETITEMDATA,
                                                           nCaptureIndex, 0 );
 
                 // Remember that guid
-                if( pCaptureGUID ) 
+                if( pCaptureGUID )
                     g_guidCaptureDevice = *pCaptureGUID;
 
                 EndDialog( hDlg, IDOK );
@@ -300,7 +300,7 @@ INT_PTR CALLBACK DevicesDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
 
             default:
                 return FALSE; // Didn't handle message
-        }   
+        }
         break;
 
     default:
@@ -341,14 +341,14 @@ INT_PTR CALLBACK FormatsDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
     case WM_INITDIALOG:
         if( FAILED( hr = OnInitFormatsDialog( hDlg ) ) )
         {
             DXTRACE_ERR_MSGBOX( TEXT("OnInitFormatsDialog"), hr );
             MessageBox( hDlg, L"Error scanning DirectSound formats. "
-                        L"Sample will now exit.", L"DirectSound Sample", 
+                        L"Sample will now exit.", L"DirectSound Sample",
                         MB_OK | MB_ICONERROR );
             EndDialog( hDlg, IDABORT );
         }
@@ -366,7 +366,7 @@ INT_PTR CALLBACK FormatsDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
                 {
                     DXTRACE_ERR_MSGBOX( TEXT("OnFormatsOK"), hr );
                     MessageBox( hDlg, L"Error accepting DirectSound formats. "
-                                L"Sample will now exit.", L"DirectSound Sample", 
+                                L"Sample will now exit.", L"DirectSound Sample",
                                 MB_OK | MB_ICONERROR );
                     EndDialog( hDlg, IDABORT );
                 }
@@ -376,10 +376,10 @@ INT_PTR CALLBACK FormatsDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
             case IDC_FORMATS_INPUT_LISTBOX:
                 OnInputFormatBoxSelected( hDlg );
                 break;
-            
+
             default:
                 return FALSE; // Didn't handle message
-        }   
+        }
         break;
 
     default:
@@ -415,7 +415,7 @@ HRESULT OnInitFormatsDialog( HWND hDlg )
 //-----------------------------------------------------------------------------
 // Name: ScanAvailableInputFormats()
 // Desc: Tests to see if 20 different standard wave formats are supported by
-//       the capture device 
+//       the capture device
 //-----------------------------------------------------------------------------
 HRESULT ScanAvailableInputFormats()
 {
@@ -424,11 +424,11 @@ HRESULT ScanAvailableInputFormats()
     HCURSOR       hCursor;
     DSCBUFFERDESC dscbd;
     LPDIRECTSOUNDCAPTUREBUFFER pDSCaptureBuffer = NULL;
-    
+
     // This might take a second or two, so throw up the hourglass
     hCursor = GetCursor();
     SetCursor( LoadCursor( NULL, IDC_WAIT ) );
-    
+
     ZeroMemory( &wfx, sizeof(wfx));
     wfx.wFormatTag = WAVE_FORMAT_PCM;
 
@@ -440,14 +440,14 @@ HRESULT ScanAvailableInputFormats()
     {
         GetWaveFormatFromIndex( iIndex, &wfx );
 
-        // To test if a capture format is supported, try to create a 
+        // To test if a capture format is supported, try to create a
         // new capture buffer using a specific format.  If it works
         // then the format is supported, otherwise not.
         dscbd.dwBufferBytes = wfx.nAvgBytesPerSec;
         dscbd.lpwfxFormat = &wfx;
-        
-        if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd, 
-                                                            &pDSCaptureBuffer, 
+
+        if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd,
+                                                            &pDSCaptureBuffer,
                                                             NULL ) ) )
             g_abInputFormatSupported[ iIndex ] = FALSE;
         else
@@ -517,7 +517,7 @@ HRESULT FillFormatListBox( HWND hListBox, BOOL* aFormatSupported )
             // string and put the string in the listbox
             GetWaveFormatFromIndex( iIndex, &wfx );
             ConvertWaveFormatToString( &wfx, strFormatName, 255 );
-            dwStringIndex = (DWORD)SendMessage( hListBox, LB_ADDSTRING, 0, 
+            dwStringIndex = (DWORD)SendMessage( hListBox, LB_ADDSTRING, 0,
                                                 (LPARAM) (LPCTSTR) strFormatName );
             SendMessage( hListBox, LB_SETITEMDATA, dwStringIndex, iIndex );
         }
@@ -535,10 +535,10 @@ HRESULT FillFormatListBox( HWND hListBox, BOOL* aFormatSupported )
 //-----------------------------------------------------------------------------
 VOID ConvertWaveFormatToString( WAVEFORMATEX* pwfx, TCHAR* strFormatName, int cchFormatName )
 {
-    swprintf_s( strFormatName, cchFormatName, 
-              TEXT("%u Hz, %u-bit %s"), 
-              pwfx->nSamplesPerSec, 
-              pwfx->wBitsPerSample, 
+    swprintf_s( strFormatName, cchFormatName,
+              TEXT("%u Hz, %u-bit %s"),
+              pwfx->nSamplesPerSec,
+              pwfx->wBitsPerSample,
               ( pwfx->nChannels == 1 ) ? TEXT("Mono") : TEXT("Stereo") );
 }
 
@@ -554,7 +554,7 @@ HRESULT OnInputFormatBoxSelected( HWND hDlg )
     HWND hInputList  = GetDlgItem( hDlg, IDC_FORMATS_INPUT_LISTBOX );
     HWND hOK         = GetDlgItem( hDlg, IDOK );
 
-    if( SendMessage( hInputList,  LB_GETCURSEL, 0, 0 ) != -1 )        
+    if( SendMessage( hInputList,  LB_GETCURSEL, 0, 0 ) != -1 )
         EnableWindow( hOK, TRUE );
     else
         EnableWindow( hOK, FALSE );
@@ -605,7 +605,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
     case WM_INITDIALOG:
         OnInitMainDialog( hDlg );
@@ -617,7 +617,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
             case IDCANCEL:
                 PostQuitMessage( 0 );
                 EndDialog( hDlg, IDCANCEL );
-                break; 
+                break;
 
             case IDC_SOUNDFILE:
                 OnSaveSoundFile( hDlg );
@@ -628,8 +628,8 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                 if( FAILED( hr = StartOrStopRecord( g_bRecording ) ) )
                 {
                     DXTRACE_ERR_MSGBOX( TEXT("StartOrStopRecord"), hr );
-                    MessageBox( hDlg, L"Error with DirectSoundCapture buffer."                            
-                                L"Sample will now exit.", L"DirectSound Sample", 
+                    MessageBox( hDlg, L"Error with DirectSoundCapture buffer."
+                                L"Sample will now exit.", L"DirectSound Sample",
                                 MB_OK | MB_ICONERROR );
                     PostQuitMessage( 0 );
                     EndDialog( hDlg, IDABORT );
@@ -702,15 +702,15 @@ INT_PTR CALLBACK DSoundEnumCallback( GUID* pGUID, LPSTR strDesc, LPSTR strDrvNam
     HWND hSoundDeviceCombo = (HWND)pContext;
 
     // Add the string to the combo box
-    SendMessage( hSoundDeviceCombo, CB_ADDSTRING, 
+    SendMessage( hSoundDeviceCombo, CB_ADDSTRING,
                  0, (LPARAM) (LPCTSTR) strDesc );
 
     // Get the index of the string in the combo box
-    INT nIndex = (INT)SendMessage( hSoundDeviceCombo, CB_FINDSTRING, 
+    INT nIndex = (INT)SendMessage( hSoundDeviceCombo, CB_FINDSTRING,
                                    0, (LPARAM) (LPCTSTR) strDesc );
 
     // Set the item data to a pointer to the static guid stored in AudioDriverGUIDs
-    SendMessage( hSoundDeviceCombo, CB_SETITEMDATA, 
+    SendMessage( hSoundDeviceCombo, CB_SETITEMDATA,
                  nIndex, (LPARAM) pTemp );
 
     return TRUE;
@@ -723,7 +723,7 @@ INT_PTR CALLBACK DSoundEnumCallback( GUID* pGUID, LPSTR strDesc, LPSTR strDrvNam
 // Name: OnSaveSoundFile()
 // Desc: Called when the user requests to save to a sound file
 //-----------------------------------------------------------------------------
-VOID OnSaveSoundFile( HWND hDlg ) 
+VOID OnSaveSoundFile( HWND hDlg )
 {
     HRESULT hr;
 
@@ -735,8 +735,8 @@ VOID OnSaveSoundFile( HWND hDlg )
                          TEXT("Wave Files\0*.wav\0All Files\0*.*\0\0"), NULL,
                          0, 1, strFileName, MAX_PATH, NULL, 0, strPath,
                          TEXT("Save Sound File"),
-                         OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | 
-                         OFN_HIDEREADONLY    | OFN_NOREADONLYRETURN, 
+                         OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST |
+                         OFN_HIDEREADONLY    | OFN_NOREADONLYRETURN,
                          0, 0, TEXT(".wav"), 0, NULL, NULL };
 
     // Get the default media path (something like C:\WINDOWS\MEDIA)
@@ -750,7 +750,7 @@ VOID OnSaveSoundFile( HWND hDlg )
 
     if( g_bRecording )
     {
-        // Stop the capture and read any data that 
+        // Stop the capture and read any data that
         // was not caught by a notification
         StartOrStopRecord( FALSE );
         g_bRecording = FALSE;
@@ -803,7 +803,7 @@ VOID OnSaveSoundFile( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: CreateCaptureBuffer()
-// Desc: Creates a capture buffer and sets the format 
+// Desc: Creates a capture buffer and sets the format
 //-----------------------------------------------------------------------------
 HRESULT CreateCaptureBuffer( WAVEFORMATEX* pwfxInput )
 {
@@ -815,9 +815,9 @@ HRESULT CreateCaptureBuffer( WAVEFORMATEX* pwfxInput )
 
     // Set the notification size
     g_dwNotifySize = MAX( 1024, pwfxInput->nAvgBytesPerSec / 8 );
-    g_dwNotifySize -= g_dwNotifySize % pwfxInput->nBlockAlign;   
+    g_dwNotifySize -= g_dwNotifySize % pwfxInput->nBlockAlign;
 
-    // Set the buffer sizes 
+    // Set the buffer sizes
     g_dwCaptureBufferSize = g_dwNotifySize * NUM_REC_NOTIFICATIONS;
 
     SAFE_RELEASE( g_pDSNotify );
@@ -829,8 +829,8 @@ HRESULT CreateCaptureBuffer( WAVEFORMATEX* pwfxInput )
     dscbd.dwBufferBytes = g_dwCaptureBufferSize;
     dscbd.lpwfxFormat   = pwfxInput; // Set the format during creatation
 
-    if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd, 
-                                                        &g_pDSBCapture, 
+    if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd,
+                                                        &g_pDSBCapture,
                                                         NULL ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("CreateCaptureBuffer"), hr );
 
@@ -852,13 +852,13 @@ HRESULT CreateCaptureBuffer( WAVEFORMATEX* pwfxInput )
 //-----------------------------------------------------------------------------
 HRESULT InitNotifications()
 {
-    HRESULT hr; 
+    HRESULT hr;
 
     if( NULL == g_pDSBCapture )
         return E_FAIL;
 
     // Create a notification event, for when the sound stops playing
-    if( FAILED( hr = g_pDSBCapture->QueryInterface( IID_IDirectSoundNotify, 
+    if( FAILED( hr = g_pDSBCapture->QueryInterface( IID_IDirectSoundNotify,
                                                     (VOID**)&g_pDSNotify ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("QueryInterface"), hr );
 
@@ -866,12 +866,12 @@ HRESULT InitNotifications()
     for( INT i = 0; i < NUM_REC_NOTIFICATIONS; i++ )
     {
         g_aPosNotify[i].dwOffset = (g_dwNotifySize * i) + g_dwNotifySize - 1;
-        g_aPosNotify[i].hEventNotify = g_hNotificationEvent;             
+        g_aPosNotify[i].hEventNotify = g_hNotificationEvent;
     }
-    
-    // Tell DirectSound when to notify us. the notification will come in the from 
+
+    // Tell DirectSound when to notify us. the notification will come in the from
     // of signaled events that are handled in WinMain()
-    if( FAILED( hr = g_pDSNotify->SetNotificationPositions( NUM_REC_NOTIFICATIONS, 
+    if( FAILED( hr = g_pDSNotify->SetNotificationPositions( NUM_REC_NOTIFICATIONS,
                                                             g_aPosNotify ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("SetNotificationPositions"), hr );
 
@@ -891,8 +891,8 @@ HRESULT StartOrStopRecord( BOOL bStartRecording )
 
     if( bStartRecording )
     {
-        // Create a capture buffer, and tell the capture 
-        // buffer to start recording   
+        // Create a capture buffer, and tell the capture
+        // buffer to start recording
         if( FAILED( hr = CreateCaptureBuffer( &g_wfxInput ) ) )
             return DXTRACE_ERR_MSGBOX( TEXT("CreateCaptureBuffer"), hr );
 
@@ -901,12 +901,12 @@ HRESULT StartOrStopRecord( BOOL bStartRecording )
     }
     else
     {
-        // Stop the capture and read any data that 
+        // Stop the capture and read any data that
         // was not caught by a notification
         if( NULL == g_pDSBCapture )
             return S_OK;
 
-        // Stop the buffer, and read any data that was not 
+        // Stop the buffer, and read any data that was not
         // caught by a notification
         if( FAILED( hr = g_pDSBCapture->Stop() ) )
             return DXTRACE_ERR_MSGBOX( TEXT("Stop"), hr );
@@ -926,9 +926,9 @@ HRESULT StartOrStopRecord( BOOL bStartRecording )
 
 //-----------------------------------------------------------------------------
 // Name: RecordCapturedData()
-// Desc: Copies data from the capture buffer to the output buffer 
+// Desc: Copies data from the capture buffer to the output buffer
 //-----------------------------------------------------------------------------
-HRESULT RecordCapturedData() 
+HRESULT RecordCapturedData()
 {
     HRESULT hr;
     VOID*   pbCaptureData    = NULL;
@@ -959,36 +959,36 @@ HRESULT RecordCapturedData()
         return S_FALSE;
 
     // Lock the capture buffer down
-    if( FAILED( hr = g_pDSBCapture->Lock( g_dwNextCaptureOffset, lLockSize, 
-                                          &pbCaptureData, &dwCaptureLength, 
+    if( FAILED( hr = g_pDSBCapture->Lock( g_dwNextCaptureOffset, lLockSize,
+                                          &pbCaptureData, &dwCaptureLength,
                                           &pbCaptureData2, &dwCaptureLength2, 0L ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("Lock"), hr );
 
     // Write the data into the wav file
-    if( FAILED( hr = g_pWaveFile->Write( dwCaptureLength, 
-                                              (BYTE*)pbCaptureData, 
+    if( FAILED( hr = g_pWaveFile->Write( dwCaptureLength,
+                                              (BYTE*)pbCaptureData,
                                               &dwDataWrote ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("Write"), hr );
 
     // Move the capture offset along
-    g_dwNextCaptureOffset += dwCaptureLength; 
+    g_dwNextCaptureOffset += dwCaptureLength;
     g_dwNextCaptureOffset %= g_dwCaptureBufferSize; // Circular buffer
 
     if( pbCaptureData2 != NULL )
     {
         // Write the data into the wav file
-        if( FAILED( hr = g_pWaveFile->Write( dwCaptureLength2, 
-                                                  (BYTE*)pbCaptureData2, 
+        if( FAILED( hr = g_pWaveFile->Write( dwCaptureLength2,
+                                                  (BYTE*)pbCaptureData2,
                                                   &dwDataWrote ) ) )
             return DXTRACE_ERR_MSGBOX( TEXT("Write"), hr );
 
         // Move the capture offset along
-        g_dwNextCaptureOffset += dwCaptureLength2; 
+        g_dwNextCaptureOffset += dwCaptureLength2;
         g_dwNextCaptureOffset %= g_dwCaptureBufferSize; // Circular buffer
     }
 
     // Unlock the capture buffer
-    g_pDSBCapture->Unlock( pbCaptureData,  dwCaptureLength, 
+    g_pDSBCapture->Unlock( pbCaptureData,  dwCaptureLength,
                            pbCaptureData2, dwCaptureLength2 );
 
 

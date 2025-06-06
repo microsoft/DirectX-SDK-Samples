@@ -2,7 +2,7 @@
 // File: HDAO10.1.fx
 //
 // These shaders demonstrate the use of the DX10.1 Gather instruction to accelerate the
-// HDAO technique 
+// HDAO technique
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -78,45 +78,45 @@ SamplerState g_SampleLinear
 
 struct VS_RenderSceneInput
 {
-    float3 f3Position  : POSITION;   
-    float3 f3Normal    : NORMAL;     
+    float3 f3Position  : POSITION;
+    float3 f3Normal    : NORMAL;
     float2 f2TexCoord  : TEXTURE0;
 };
 
 struct PS_RenderSceneInput
 {
     float4 f4Position   : SV_Position;
-    float4 f4Normal     : NORMAL; 
-    float4 f4Diffuse    : COLOR0; 
-    float2 f2TexCoord   : TEXTURE0;  
+    float4 f4Normal     : NORMAL;
+    float4 f4Diffuse    : COLOR0;
+    float2 f2TexCoord   : TEXTURE0;
 };
 
 struct VS_HQRenderSceneInput
 {
-	float3 f3Position   : POSITION;  
-    float3 f3Normal     : NORMAL;     
+	float3 f3Position   : POSITION;
+    float3 f3Normal     : NORMAL;
     float2 f2TexCoord   : TEXTURE0;
-    float3 f3Tangent    : TANGENT;    
+    float3 f3Tangent    : TANGENT;
 };
 
 struct PS_HQRenderSceneInput
 {
     float4 f4Position	: SV_Position;
-    float3 f3Normal     : NORMAL; 
+    float3 f3Normal     : NORMAL;
     float2 f2TexCoord   : TEXTURE0;
     float3 f3Tangent    : TEXCOORD1;
-    float3 f3WorldPos   : TEXCOORD2;  
+    float3 f3WorldPos   : TEXCOORD2;
 };
 
 struct VS_RenderQuadInput
 {
-    float3 f3Position : POSITION; 
-    float2 f2TexCoord : TEXTURE0; 
+    float3 f3Position : POSITION;
+    float2 f2TexCoord : TEXTURE0;
 };
 
 struct PS_RenderQuadInput
 {
-    float4 f4Position : SV_Position; 
+    float4 f4Position : SV_Position;
     float2 f2TexCoord : TEXTURE0;
 };
 
@@ -149,18 +149,18 @@ struct PS_RenderOutput_10_1
 #define NUM_RING_4_GATHERS    (20)
 
 // Ring sample pattern
-static const float2 g_f2HDAORingPattern[NUM_RING_4_GATHERS] = 
+static const float2 g_f2HDAORingPattern[NUM_RING_4_GATHERS] =
 {
     // Ring 1
     { 1, -1 },
     { 0, 1 },
-    
+
     // Ring 2
     { 0, 3 },
     { 2, 1 },
     { 3, -1 },
     { 1, -3 },
-        
+
     // Ring 3
     { 1, -5 },
     { 3, -3 },
@@ -168,7 +168,7 @@ static const float2 g_f2HDAORingPattern[NUM_RING_4_GATHERS] =
     { 4, 1 },
     { 2, 3 },
     { 0, 5 },
-    
+
     // Ring 4
     { 0, 7 },
     { 2, 5 },
@@ -181,18 +181,18 @@ static const float2 g_f2HDAORingPattern[NUM_RING_4_GATHERS] =
 };
 
 // Ring weights
-static const float4 g_f4HDAORingWeight[NUM_RING_4_GATHERS] = 
+static const float4 g_f4HDAORingWeight[NUM_RING_4_GATHERS] =
 {
     // Ring 1 (Sum = 5.30864)
     { 1.00000, 0.50000, 0.44721, 0.70711 },
     { 0.50000, 0.44721, 0.70711, 1.00000 },
-    
+
     // Ring 2 (Sum = 6.08746)
     { 0.30000, 0.29104, 0.37947, 0.40000 },
     { 0.42426, 0.33282, 0.37947, 0.53666 },
     { 0.40000, 0.30000, 0.29104, 0.37947 },
     { 0.53666, 0.42426, 0.33282, 0.37947 },
-    
+
     // Ring 3 (Sum = 6.53067)
     { 0.31530, 0.29069, 0.24140, 0.25495 },
     { 0.36056, 0.29069, 0.26000, 0.30641 },
@@ -200,7 +200,7 @@ static const float4 g_f4HDAORingWeight[NUM_RING_4_GATHERS] =
     { 0.29069, 0.24140, 0.25495, 0.31530 },
     { 0.29069, 0.26000, 0.30641, 0.36056 },
     { 0.21667, 0.21372, 0.25495, 0.26000 },
-    
+
     // Ring 4 (Sum = 7.00962)
     { 0.17500, 0.17365, 0.19799, 0.20000 },
     { 0.22136, 0.20870, 0.24010, 0.25997 },
@@ -221,7 +221,7 @@ static const float g_fRingWeightsTotal[RING_4] =
 };
 
 #define NUM_NORMAL_LOADS (4)
-static const int2 g_i2NormalLoadPattern[NUM_NORMAL_LOADS] = 
+static const int2 g_i2NormalLoadPattern[NUM_NORMAL_LOADS] =
 {
     { 1, 8 },
     { 8, -1 },
@@ -231,12 +231,12 @@ static const int2 g_i2NormalLoadPattern[NUM_NORMAL_LOADS] =
 
 
 //----------------------------------------------------------------------------------------
-// Helper function to Gather samples in 10.1 and 10.0 modes 
+// Helper function to Gather samples in 10.1 and 10.0 modes
 //----------------------------------------------------------------------------------------
 float4 GatherSamples( Texture2D Tex, float2 f2TexCoord, uniform bool b10_1 )
 {
     float4 f4Ret;
-    
+
     if( b10_1 )
     {
 #ifdef DX10_1_ENABLED
@@ -250,7 +250,7 @@ float4 GatherSamples( Texture2D Tex, float2 f2TexCoord, uniform bool b10_1 )
         f4Ret.z = Tex.SampleLevel( g_SamplePoint, f2TexCoord, 0, int2( 1, 0 ) ).x;
         f4Ret.w = Tex.SampleLevel( g_SamplePoint, f2TexCoord, 0, int2( 0, 0 ) ).x;
     }
-        
+
     return f4Ret;
 }
 
@@ -262,10 +262,10 @@ float4 GatherZSamples( Texture2D Tex, float2 f2TexCoord, uniform bool b10_1 )
 {
     float4 f4Ret;
     float4 f4Gather;
-        
+
     f4Gather = GatherSamples( Tex, f2TexCoord, b10_1 );
     f4Ret = -g_fQTimesZNear.xxxx / ( f4Gather - g_fQ.xxxx );
-    
+
     return f4Ret;
 }
 
@@ -276,19 +276,19 @@ float4 GatherZSamples( Texture2D Tex, float2 f2TexCoord, uniform bool b10_1 )
 float3 GetCameraXYZFromDepth( float fDepth, int2 i2ScreenCoord )
 {
     float3 f3CameraPos;
-    
+
     // Compute camera Z
     f3CameraPos.z = -g_fQTimesZNear / ( fDepth - g_fQ );
-    
+
     // Convert screen coords to projection space XY
     f3CameraPos.xy = float2( 2.0f, 2.0f ) * ( (float2)i2ScreenCoord / g_f2RTSize ) - float2( 1.0f, 1.0f );
-    
+
     // Compute camera X
     f3CameraPos.x = g_fTanH * f3CameraPos.x * f3CameraPos.z;
-    
+
     // Compute camera Y
     f3CameraPos.y = -g_fTanV * f3CameraPos.y * f3CameraPos.z;
-    
+
     return f3CameraPos;
 }
 
@@ -307,10 +307,10 @@ float GeometryRejectionTest( int2 i2ScreenCoord, uniform bool b10_1 )
     int2 i2OffsetScreenCoord;
     int2 i2MirrorOffsetScreenCoord;
     float fDepth;
-    
+
     fDepth = g_txDepth.Load( int3( i2ScreenCoord, 0 ) ).x;
     f3Pos[0] = GetCameraXYZFromDepth( fDepth, i2ScreenCoord );
-    
+
     if( b10_1 )
     {
         f3N[0].z = g_txNormalsZ.Load( int3( i2ScreenCoord, 0) ).x;
@@ -327,18 +327,18 @@ float GeometryRejectionTest( int2 i2ScreenCoord, uniform bool b10_1 )
         i2MirrorPattern = ( g_i2NormalLoadPattern[iNormal] + int2( 1, 1 ) ) * int2( -1, -1 );
         i2OffsetScreenCoord = i2ScreenCoord + g_i2NormalLoadPattern[iNormal];
         i2MirrorOffsetScreenCoord = i2ScreenCoord + i2MirrorPattern;
-        
+
         // Clamp our test to screen coordinates
         i2OffsetScreenCoord = ( i2OffsetScreenCoord > ( g_f2RTSize - float2( 1.0f, 1.0f ) ) ) ? ( g_f2RTSize - float2( 1.0f, 1.0f ) ) : ( i2OffsetScreenCoord );
         i2MirrorOffsetScreenCoord = ( i2MirrorOffsetScreenCoord > ( g_f2RTSize - float2( 1.0f, 1.0f ) ) ) ? ( g_f2RTSize - float2( 1.0f, 1.0f ) ) : ( i2MirrorOffsetScreenCoord );
         i2OffsetScreenCoord = ( i2OffsetScreenCoord < 0 ) ? ( 0 ) : ( i2OffsetScreenCoord );
         i2MirrorOffsetScreenCoord = ( i2MirrorOffsetScreenCoord < 0 ) ? ( 0 ) : ( i2MirrorOffsetScreenCoord );
-        
+
         fDepth = g_txDepth.Load( int3( i2OffsetScreenCoord, 0 ) ).x;
         f3Pos[1] = GetCameraXYZFromDepth( fDepth, i2OffsetScreenCoord );
         fDepth = g_txDepth.Load( int3( i2MirrorOffsetScreenCoord, 0 ) ).x;
         f3Pos[2] = GetCameraXYZFromDepth( fDepth, i2MirrorOffsetScreenCoord );
-        
+
         if( b10_1 )
         {
             f3N[1].z = g_txNormalsZ.Load( int3( i2OffsetScreenCoord, 0) ).x;
@@ -351,21 +351,21 @@ float GeometryRejectionTest( int2 i2ScreenCoord, uniform bool b10_1 )
             f3N[1].zxy = g_txNormals.Load( int3( i2OffsetScreenCoord, 0) ).xyz;
             f3N[2].zxy = g_txNormals.Load( int3( i2MirrorOffsetScreenCoord, 0) ).xyz;
         }
-                
+
         f3Pos[1] -= ( f3N[1] * g_fNormalScale );
         f3Pos[2] -= ( f3N[2] * g_fNormalScale );
-        
+
         f3Dir[0] = f3Pos[1] - f3Pos[0];
         f3Dir[1] = f3Pos[2] - f3Pos[0];
-        
+
         f3Dir[0] = normalize( f3Dir[0] );
         f3Dir[1] = normalize( f3Dir[1] );
-        
+
         fDot = dot( f3Dir[0], f3Dir[1] );
-        
+
         fSummedDot += ( fDot + 2.0f );
     }
-        
+
     return ( fSummedDot * 0.125f );
 }
 
@@ -388,13 +388,13 @@ float NormalRejectionTest( int2 i2ScreenCoord, uniform bool b10_1 )
         i2MirrorPattern = ( g_i2NormalLoadPattern[iNormal] + int2( 1, 1 ) ) * int2( -1, -1 );
         i2OffsetScreenCoord = i2ScreenCoord + g_i2NormalLoadPattern[iNormal];
         i2MirrorOffsetScreenCoord = i2ScreenCoord + i2MirrorPattern;
-        
+
         // Clamp our test to screen coordinates
         i2OffsetScreenCoord = ( i2OffsetScreenCoord > ( g_f2RTSize - float2( 1.0f, 1.0f ) ) ) ? ( g_f2RTSize - float2( 1.0f, 1.0f ) ) : ( i2OffsetScreenCoord );
         i2MirrorOffsetScreenCoord = ( i2MirrorOffsetScreenCoord > ( g_f2RTSize - float2( 1.0f, 1.0f ) ) ) ? ( g_f2RTSize - float2( 1.0f, 1.0f ) ) : ( i2MirrorOffsetScreenCoord );
         i2OffsetScreenCoord = ( i2OffsetScreenCoord < 0 ) ? ( 0 ) : ( i2OffsetScreenCoord );
         i2MirrorOffsetScreenCoord = ( i2MirrorOffsetScreenCoord < 0 ) ? ( 0 ) : ( i2MirrorOffsetScreenCoord );
-                        
+
         if( b10_1 )
         {
             f3N1.z = g_txNormalsZ.Load( int3( i2OffsetScreenCoord, 0) ).x;
@@ -407,18 +407,18 @@ float NormalRejectionTest( int2 i2ScreenCoord, uniform bool b10_1 )
             f3N1.zxy = g_txNormals.Load( int3( i2OffsetScreenCoord, 0) ).xyz;
             f3N2.zxy = g_txNormals.Load( int3( i2MirrorOffsetScreenCoord, 0) ).xyz;
         }
-        
+
         fDot = dot( f3N1, f3N2 );
-        
+
         fSummedDot += ( fDot > g_fAcceptAngle ) ? ( 0.0f ) : ( 1.0f - ( abs( fDot ) * 0.25f ) );
     }
-        
+
     return ( 0.5f + fSummedDot * 0.25f  );
 }
 
 
 //--------------------------------------------------------------------------------------
-// HDAO : Performs valley detection in Camera Z space, and optionally offsets by the Z 
+// HDAO : Performs valley detection in Camera Z space, and optionally offsets by the Z
 // component of the camera space normal
 //--------------------------------------------------------------------------------------
 float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumRingGathers,
@@ -448,17 +448,17 @@ float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumR
     float fDot = 1.0f;
     float2 f2KernelScale = float2( g_f2RTSize.x / 1024.0f, g_f2RTSize.y / 768.0f );
     float3 f3CameraPos;
-                            
+
     // Compute integer screen coord, and store off the inverse of the RT Size
     f2InvRTSize = 1.0f / g_f2RTSize;
     f2ScreenCoord = I.f2TexCoord * g_f2RTSize;
     i2ScreenCoord = int2( f2ScreenCoord );
-                
+
     // Test the normals to see if we should apply occlusion
-    fDot = NormalRejectionTest( i2ScreenCoord, b10_1 );    
+    fDot = NormalRejectionTest( i2ScreenCoord, b10_1 );
 
     if( fDot > 0.5f )
-    {                
+    {
         // Sample the center pixel for camera Z
         if( b10_1 )
         {
@@ -473,7 +473,7 @@ float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumR
 
         float fDepth = g_txDepth.SampleLevel( g_SamplePoint, f2TexCoord, 0 ).x;
         fCenterZ = -g_fQTimesZNear / ( fDepth - g_fQ );
-        
+
         if( bUseNormals )
         {
             if( b10_1 )
@@ -486,21 +486,21 @@ float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumR
             }
             fOffsetCenterZ = fCenterZ + fCenterNormalZ * g_fNormalScale;
         }
-            
+
         // Loop through each gather location, and compare with its mirrored location
         for( iGather=0; iGather<iNumRingGathers; iGather++ )
         {
             f2MirrorScreenCoord = ( ( f2KernelScale * g_f2HDAORingPattern[iGather] ) + float2( 1.0f, 1.0f ) ) * float2( -1.0f, -1.0f );
-            
+
             f2TexCoord = float2( ( f2ScreenCoord + ( f2KernelScale * g_f2HDAORingPattern[iGather] ) ) * f2InvRTSize );
             f2MirrorTexCoord = float2( ( f2ScreenCoord + ( f2MirrorScreenCoord ) ) * f2InvRTSize );
-            
+
             // Sample
             if( b10_1 )
             {
                 f2TexCoord_10_1 = float2( ( f2ScreenCoord_10_1 + ( ( f2KernelScale * g_f2HDAORingPattern[iGather] ) + float2( 1.0f, 1.0f ) ) ) * f2InvRTSize );
                 f2MirrorTexCoord_10_1 = float2( ( f2ScreenCoord_10_1 + ( f2MirrorScreenCoord + float2( 1.0f, 1.0f ) ) ) * f2InvRTSize );
-                
+
                 f4SampledZ[0] = GatherZSamples( g_txDepth, f2TexCoord_10_1, b10_1 );
                 f4SampledZ[1] = GatherZSamples( g_txDepth, f2MirrorTexCoord_10_1, b10_1 );
             }
@@ -509,24 +509,24 @@ float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumR
                 f4SampledZ[0] = GatherZSamples( g_txDepth, f2TexCoord, b10_1 );
                 f4SampledZ[1] = GatherZSamples( g_txDepth, f2MirrorTexCoord, b10_1 );
             }
-                        
+
             // Detect valleys
             f4Diff = fCenterZ.xxxx - f4SampledZ[0];
             f4Compare[0] = ( f4Diff < g_fHDAORejectRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
             f4Compare[0] *= ( f4Diff > g_fHDAOAcceptRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
-            
+
             f4Diff = fCenterZ.xxxx - f4SampledZ[1];
             f4Compare[1] = ( f4Diff < g_fHDAORejectRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
             f4Compare[1] *= ( f4Diff > g_fHDAOAcceptRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
-            
-            f4Occlusion.xyzw += ( g_f4HDAORingWeight[iGather].xyzw * ( f4Compare[0].xyzw * f4Compare[1].zwxy ) * fDot );    
-                
+
+            f4Occlusion.xyzw += ( g_f4HDAORingWeight[iGather].xyzw * ( f4Compare[0].xyzw * f4Compare[1].zwxy ) * fDot );
+
             if( bUseNormals )
             {
                 // Sample normals
                 if( b10_1 )
                 {
-        
+
                     f4SampledNormalZ[0] = GatherSamples( g_txNormalsZ, f2TexCoord_10_1, b10_1 );
                     f4SampledNormalZ[1] = GatherSamples( g_txNormalsZ, f2MirrorTexCoord_10_1, b10_1 );
                 }
@@ -535,25 +535,25 @@ float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumR
                     f4SampledNormalZ[0] = GatherSamples( g_txNormals, f2TexCoord, b10_1 );
                     f4SampledNormalZ[1] = GatherSamples( g_txNormals, f2MirrorTexCoord, b10_1 );
                 }
-                    
+
                 // Scale normals
                 f4OffsetSampledZ[0] = f4SampledZ[0] + ( f4SampledNormalZ[0] * g_fNormalScale );
                 f4OffsetSampledZ[1] = f4SampledZ[1] + ( f4SampledNormalZ[1] * g_fNormalScale );
-                            
+
                 // Detect valleys
                 f4Diff = fOffsetCenterZ.xxxx - f4OffsetSampledZ[0];
                 f4Compare[0] = ( f4Diff < g_fHDAORejectRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
                 f4Compare[0] *= ( f4Diff > g_fHDAOAcceptRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
-                
+
                 f4Diff = fOffsetCenterZ.xxxx - f4OffsetSampledZ[1];
                 f4Compare[1] = ( f4Diff < g_fHDAORejectRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
                 f4Compare[1] *= ( f4Diff > g_fHDAOAcceptRadius.xxxx ) ? ( 1.0f ) : ( 0.0f );
-                
-                f4Occlusion.xyzw += ( g_f4HDAORingWeight[iGather].xyzw * ( f4Compare[0].xyzw * f4Compare[1].zwxy ) * fDot );    
+
+                f4Occlusion.xyzw += ( g_f4HDAORingWeight[iGather].xyzw * ( f4Compare[0].xyzw * f4Compare[1].zwxy ) * fDot );
             }
         }
     }
-                    
+
     // Finally calculate the HDAO occlusion value
     if( bUseNormals )
     {
@@ -571,18 +571,18 @@ float PS_RenderHDAO( PS_RenderQuadInput I, uniform bool b10_1, uniform int iNumR
 
 //--------------------------------------------------------------------------------------
 // This vertex shader passes params through to the pixel shader for
-// higher quality per pixel lighting 
+// higher quality per pixel lighting
 //--------------------------------------------------------------------------------------
 PS_HQRenderSceneInput VS_HQRenderScene( VS_HQRenderSceneInput I )
 {
     PS_HQRenderSceneInput O;
-    
+
     O.f3WorldPos = mul( float4( I.f3Position, 1.0f ), g_f4x4World );
     O.f4Position = mul( float4( I.f3Position, 1.0f ), g_f4x4WorldViewProjection );
     O.f3Normal = normalize( mul( I.f3Normal, (float3x3)g_f4x4World ) );
     O.f3Tangent = normalize( mul( I.f3Tangent, (float3x3)g_f4x4World ) );
     O.f2TexCoord = I.f2TexCoord;
-    
+
     return O;
 }
 
@@ -600,41 +600,41 @@ static float3 g_f3LightDir2 = float3( -5.947f, -5.342f, -5.733f );
 PS_RenderOutput_10_0 PS_HQRenderTexturedScene_10_0( PS_HQRenderSceneInput I )
 {
     PS_RenderOutput_10_0 O;
-    
+
     float3 LD1 = normalize( mul( g_f3LightDir1, (float3x3)g_f4x4World ) );
     float3 LD2 = normalize( mul( g_f3LightDir2, (float3x3)g_f4x4World ) );
-        
+
     float4 f4Diffuse = g_txDiffuse.Sample( g_SampleLinear, I.f2TexCoord );
     float fSpecMask = f4Diffuse.a;
     float3 f3Norm = g_txNormal.Sample( g_SampleLinear, I.f2TexCoord );
     f3Norm *= 2.0f;
     f3Norm -= float3( 1.0f, 1.0f, 1.0f );
-    
+
     float3 f3Binorm = normalize( cross( I.f3Normal, I.f3Tangent ) );
     float3x3 f3x3BasisMatrix = float3x3( f3Binorm, I.f3Tangent, I.f3Normal );
     f3Norm = normalize( mul( f3Norm, f3x3BasisMatrix ) );
-   
-    // Write out the camera space normal 
-    O.f4Normal.x = f3Norm.z;     
-    O.f4Normal.y = f3Norm.x;    
-    O.f4Normal.z = f3Norm.y;    
+
+    // Write out the camera space normal
+    O.f4Normal.x = f3Norm.z;
+    O.f4Normal.y = f3Norm.x;
+    O.f4Normal.z = f3Norm.y;
     O.f4Normal.w = 0.0f;
-                
+
     // Diffuse lighting
     float4 f4Lighting = saturate( dot( f3Norm, LD1.xyz ) ) * g_f4Directional1;
     f4Lighting += saturate( dot( f3Norm, LD2.xyz ) ) * g_f4Directional2;
     f4Lighting += ( g_f4Ambient );
-    
+
     // Calculate specular power
     float3 f3ViewDir = normalize( g_f3EyePt - I.f3WorldPos );
     float3 f3HalfAngle = normalize( f3ViewDir + LD1.xyz );
     float4 f4SpecPower1 = pow( saturate( dot( f3HalfAngle, f3Norm ) ), 32 ) * g_f4Directional1;
-    
+
     f3HalfAngle = normalize( f3ViewDir + LD2.xyz );
     float4 f4SpecPower2 = pow( saturate( dot( f3HalfAngle, f3Norm ) ), 32 ) * g_f4Directional2;
-    
+
     O.f4Color = f4Lighting * f4Diffuse + ( f4SpecPower1 + f4SpecPower2 ) * fSpecMask;
-    
+
     return O;
 }
 
@@ -645,39 +645,39 @@ PS_RenderOutput_10_0 PS_HQRenderTexturedScene_10_0( PS_HQRenderSceneInput I )
 PS_RenderOutput_10_1 PS_HQRenderTexturedScene_10_1( PS_HQRenderSceneInput I )
 {
     PS_RenderOutput_10_1 O;
-    
+
     float3 LD1 = normalize( mul( g_f3LightDir1, (float3x3)g_f4x4World ) );
     float3 LD2 = normalize( mul( g_f3LightDir2, (float3x3)g_f4x4World ) );
-        
+
     float4 f4Diffuse = g_txDiffuse.Sample( g_SampleLinear, I.f2TexCoord );
     float fSpecMask = f4Diffuse.a;
     float3 f3Norm = g_txNormal.Sample( g_SampleLinear, I.f2TexCoord );
     f3Norm *= 2.0f;
     f3Norm -= float3( 1.0f, 1.0f, 1.0f );
-    
+
     float3 f3Binorm = normalize( cross( I.f3Normal, I.f3Tangent ) );
     float3x3 f3x3BasisMatrix = float3x3( f3Binorm, I.f3Tangent, I.f3Normal );
     f3Norm = normalize( mul( f3Norm, f3x3BasisMatrix ) );
-    
+
     // Write out the camera space normal
-    O.fNormalZ.x = f3Norm.z;        // we deliberately place Z in a seperate surface for gather4 instruction 
-    O.f2NormalXY.xy = f3Norm.xy;    
-                
+    O.fNormalZ.x = f3Norm.z;        // we deliberately place Z in a seperate surface for gather4 instruction
+    O.f2NormalXY.xy = f3Norm.xy;
+
     // Diffuse lighting
     float4 f4Lighting = saturate( dot( f3Norm, LD1.xyz ) ) * g_f4Directional1;
     f4Lighting += saturate( dot( f3Norm, LD2.xyz ) ) * g_f4Directional2;
     f4Lighting += ( g_f4Ambient );
-    
+
     // Calculate specular power
     float3 f3ViewDir = normalize( g_f3EyePt - I.f3WorldPos );
     float3 f3HalfAngle = normalize( f3ViewDir + LD1.xyz );
     float4 f4SpecPower1 = pow( saturate( dot( f3HalfAngle, f3Norm ) ), 32 ) * g_f4Directional1;
-    
+
     f3HalfAngle = normalize( f3ViewDir + LD2.xyz );
     float4 f4SpecPower2 = pow( saturate( dot( f3HalfAngle, f3Norm ) ), 32 ) * g_f4Directional2;
-    
+
     O.f4Color = f4Lighting * f4Diffuse + ( f4SpecPower1 + f4SpecPower2 ) * fSpecMask;
-    
+
     return O;
 }
 
@@ -689,32 +689,32 @@ PS_RenderSceneInput VS_RenderScene( VS_RenderSceneInput I )
 {
     PS_RenderSceneInput O;
     float3 f3NormalWorldSpace;
-    
+
     // Transform the position from object space to homogeneous projection space
     O.f4Position = mul( float4( I.f3Position, 1.0f ), g_f4x4WorldViewProjection );
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     f3NormalWorldSpace = normalize( mul( I.f3Normal, (float3x3)g_f4x4World ) );
-    
+
     // Output camera space normals
     O.f4Normal.xyz = mul( f3NormalWorldSpace,  (float3x3)g_f4x4View );
     O.f4Normal.w = 0.0f;
-       
+
     // Calc diffuse color
-    O.f4Diffuse.rgb = max( 0, dot( f3NormalWorldSpace, g_f3LightDir ) );   
-    
-    // Calc diffuse color    
+    O.f4Diffuse.rgb = max( 0, dot( f3NormalWorldSpace, g_f3LightDir ) );
+
+    // Calc diffuse color
     float4 f4MaterialDiffuseColor = float4( 1.0f, 1.0f, 1.0f, 1.0f );
     float4 f4LightDiffuse = float4( 1.0f, 1.0f, 1.0f, 1.0f );
     float4 f4MaterialAmbientColor = float4( 0.2f, 0.2f, 0.2f, 1.0f );
-    O.f4Diffuse.rgb = g_f4MaterialDiffuse * f4LightDiffuse * max( 0, dot( f3NormalWorldSpace, g_f3LightDir ) ) + 
-                      f4MaterialAmbientColor + g_f4MaterialSpecular;  
-    O.f4Diffuse.a = 1.0f; 
-    
+    O.f4Diffuse.rgb = g_f4MaterialDiffuse * f4LightDiffuse * max( 0, dot( f3NormalWorldSpace, g_f3LightDir ) ) +
+                      f4MaterialAmbientColor + g_f4MaterialSpecular;
+    O.f4Diffuse.a = 1.0f;
+
     // Propogate texture coordinate
     O.f2TexCoord = I.f2TexCoord;
-    
-    return O;    
+
+    return O;
 }
 
 
@@ -725,11 +725,11 @@ PS_RenderSceneInput VS_RenderScene( VS_RenderSceneInput I )
 PS_RenderOutput_10_0 PS_RenderScene_10_0( PS_RenderSceneInput I )
 {
     PS_RenderOutput_10_0 O;
-    
+
     O.f4Normal.xyzw = I.f4Normal.zxyw;
-    
+
     O.f4Color = I.f4Diffuse;
-    
+
     return O;
 }
 
@@ -741,12 +741,12 @@ PS_RenderOutput_10_0 PS_RenderScene_10_0( PS_RenderSceneInput I )
 PS_RenderOutput_10_1 PS_RenderScene_10_1( PS_RenderSceneInput I )
 {
     PS_RenderOutput_10_1 O;
-    
+
     O.fNormalZ = I.f4Normal.z;
     O.f2NormalXY = I.f4Normal.xy;
-        
+
     O.f4Color = I.f4Diffuse;
-    
+
     return O;
 }
 
@@ -756,13 +756,13 @@ PS_RenderOutput_10_1 PS_RenderScene_10_1( PS_RenderSceneInput I )
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
 PS_RenderOutput_10_0 PS_RenderTexturedScene_10_0( PS_RenderSceneInput I )
-{ 
+{
     PS_RenderOutput_10_0 O;
-    
+
     O.f4Normal.xyzw = I.f4Normal.zxyw;
-    
+
     O.f4Color = g_txDiffuse.Sample( g_SampleLinear, I.f2TexCoord );
-    
+
     return O;
 }
 
@@ -772,14 +772,14 @@ PS_RenderOutput_10_0 PS_RenderTexturedScene_10_0( PS_RenderSceneInput I )
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
 PS_RenderOutput_10_1 PS_RenderTexturedScene_10_1( PS_RenderSceneInput I )
-{ 
+{
     PS_RenderOutput_10_1 O;
-    
+
     O.fNormalZ.x = I.f4Normal.z;
     O.f2NormalXY.xy = I.f4Normal.xy;
-    
+
     O.f4Color = g_txDiffuse.Sample( g_SampleLinear, I.f2TexCoord );
-    
+
     return O;
 }
 
@@ -790,15 +790,15 @@ PS_RenderOutput_10_1 PS_RenderTexturedScene_10_1( PS_RenderSceneInput I )
 PS_RenderQuadInput VS_RenderQuad( VS_RenderQuadInput I )
 {
     PS_RenderQuadInput O;
-    
+
     O.f4Position.x = I.f3Position.x;
     O.f4Position.y = I.f3Position.y;
     O.f4Position.z = I.f3Position.z;
     O.f4Position.w = 1.0f;
-    
+
     O.f2TexCoord = I.f2TexCoord;
-    
-    return O;    
+
+    return O;
 }
 
 
@@ -806,7 +806,7 @@ PS_RenderQuadInput VS_RenderQuad( VS_RenderQuadInput I )
 // Combines the main scene render with the HDAO texture
 //--------------------------------------------------------------------------------------
 float4 PS_RenderCombined( PS_RenderQuadInput I ) : SV_Target
-{ 
+{
     // Sample the scene and HDAO textures
     float fHDAO = g_txHDAO.Sample( g_SamplePoint, I.f2TexCoord );
     float4 f4Scene = g_txScene.Sample( g_SamplePoint, I.f2TexCoord );
@@ -820,7 +820,7 @@ float4 PS_RenderCombined( PS_RenderQuadInput I ) : SV_Target
 // Renders the HDAO buffer
 //--------------------------------------------------------------------------------------
 float4 PS_RenderHDAOBuffer( PS_RenderQuadInput I ) : SV_Target
-{ 
+{
     // Sample the HDAO texture
     return g_txHDAO.Sample( g_SamplePoint, I.f2TexCoord ).xxxx;
 }
@@ -830,13 +830,13 @@ float4 PS_RenderHDAOBuffer( PS_RenderQuadInput I ) : SV_Target
 // Renders camera space Z
 //--------------------------------------------------------------------------------------
 float4 PS_RenderCameraZ( PS_RenderQuadInput I ) : SV_Target
-{ 
+{
     float fDepth;
     float4 f4CameraZ;
-    
+
     fDepth = g_txDepth.SampleLevel( g_SamplePoint, I.f2TexCoord, 0 ).x;
     f4CameraZ.x = -g_fQTimesZNear / ( fDepth - g_fQ );
-    
+
     return f4CameraZ.xxxx * 0.005f;
 }
 
@@ -845,11 +845,11 @@ float4 PS_RenderCameraZ( PS_RenderQuadInput I ) : SV_Target
 // Renders the normals buffer
 //--------------------------------------------------------------------------------------
 float4 PS_RenderNormalsBuffer( PS_RenderQuadInput I, uniform bool b10_1 ) : SV_Target
-{ 
+{
     float4 f4Ret;
-    
+
     if( b10_1 )
-    {    
+    {
         f4Ret.z = g_txNormalsZ.Sample( g_SamplePoint, I.f2TexCoord ).x;
         f4Ret.xy = g_txNormalsXY.Sample( g_SamplePoint, I.f2TexCoord ).xy;
     }
@@ -857,9 +857,9 @@ float4 PS_RenderNormalsBuffer( PS_RenderQuadInput I, uniform bool b10_1 ) : SV_T
     {
         f4Ret.zxy = g_txNormals.Sample( g_SamplePoint, I.f2TexCoord ).xyz;
     }
-    
+
     f4Ret.w = 0.0f;
-    
+
     return f4Ret;
 }
 
@@ -868,13 +868,13 @@ float4 PS_RenderNormalsBuffer( PS_RenderQuadInput I, uniform bool b10_1 ) : SV_T
 // Render the scene without HDAO combined
 //--------------------------------------------------------------------------------------
 float4 PS_RenderUnCombined( PS_RenderQuadInput I ) : SV_Target
-{ 
+{
     return g_txScene.Sample( g_SamplePoint, I.f2TexCoord );
 }
 
 
 //--------------------------------------------------------------------------------------
-// Render states 
+// Render states
 //--------------------------------------------------------------------------------------
 
 
@@ -902,15 +902,15 @@ BlendState NoBlending
 
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique10 RenderScene_10_0
 {
     pass P0
-    {  
+    {
         SetDepthStencilState( EnableDepthTestWrite, 0x00 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-             
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderScene_10_0() ) );
@@ -920,10 +920,10 @@ technique10 RenderScene_10_0
 technique10 RenderScene_10_1
 {
     pass P0
-    {  
+    {
         SetDepthStencilState( EnableDepthTestWrite, 0x00 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-             
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderScene_10_1() ) );
@@ -932,15 +932,15 @@ technique10 RenderScene_10_1
 
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique10 RenderTexturedScene_10_0
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( EnableDepthTestWrite, 0x00 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderTexturedScene_10_0() ) );
@@ -950,10 +950,10 @@ technique10 RenderTexturedScene_10_0
 technique10 RenderTexturedScene_10_1
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( EnableDepthTestWrite, 0x00 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderTexturedScene_10_1() ) );
@@ -963,10 +963,10 @@ technique10 RenderTexturedScene_10_1
 technique10 RenderHQTexturedScene_10_0
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( EnableDepthTestWrite, 0x00 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_HQRenderScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_HQRenderTexturedScene_10_0() ) );
@@ -976,10 +976,10 @@ technique10 RenderHQTexturedScene_10_0
 technique10 RenderHQTexturedScene_10_1
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( EnableDepthTestWrite, 0x00 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_HQRenderScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_HQRenderTexturedScene_10_1() ) );
@@ -988,7 +988,7 @@ technique10 RenderHQTexturedScene_10_1
 
 
 //--------------------------------------------------------------------------------------
-// Renders HDAO 10.1 version 
+// Renders HDAO 10.1 version
 //--------------------------------------------------------------------------------------
 
 #ifdef DX10_1_ENABLED
@@ -996,9 +996,9 @@ technique10 RenderHQTexturedScene_10_1
 technique10 RenderHDAO_Normals_10_1
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_1, PS_RenderHDAO( true, NUM_RING_4_GATHERS, RING_4, true ) ) );
@@ -1008,9 +1008,9 @@ technique10 RenderHDAO_Normals_10_1
 technique10 RenderHDAO_10_1
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_1, PS_RenderHDAO( true, NUM_RING_4_GATHERS, RING_4, false ) ) );
@@ -1020,14 +1020,14 @@ technique10 RenderHDAO_10_1
 #endif
 
 //--------------------------------------------------------------------------------------
-// Renders HDAO 10.0 version 
+// Renders HDAO 10.0 version
 //--------------------------------------------------------------------------------------
 technique10 RenderHDAO_Normals_10_0
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-                
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderHDAO( false, NUM_RING_4_GATHERS, RING_4, true ) ) );
@@ -1037,9 +1037,9 @@ technique10 RenderHDAO_Normals_10_0
 technique10 RenderHDAO_10_0
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-                
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderHDAO( false, NUM_RING_4_GATHERS, RING_4, false ) ) );
@@ -1048,14 +1048,14 @@ technique10 RenderHDAO_10_0
 
 
 //--------------------------------------------------------------------------------------
-// Renders combined HDAO and scene 
+// Renders combined HDAO and scene
 //--------------------------------------------------------------------------------------
 technique10 RenderCombined
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderCombined() ) );
@@ -1064,14 +1064,14 @@ technique10 RenderCombined
 
 
 //--------------------------------------------------------------------------------------
-// Renders the HDAO buffer 
+// Renders the HDAO buffer
 //--------------------------------------------------------------------------------------
 technique10 RenderHDAOBuffer
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderHDAOBuffer() ) );
@@ -1080,14 +1080,14 @@ technique10 RenderHDAOBuffer
 
 
 //--------------------------------------------------------------------------------------
-// Renders camera space Z 
+// Renders camera space Z
 //--------------------------------------------------------------------------------------
 technique10 RenderCameraZ
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderCameraZ() ) );
@@ -1096,14 +1096,14 @@ technique10 RenderCameraZ
 
 
 //--------------------------------------------------------------------------------------
-// Renders the Normals buffer 
+// Renders the Normals buffer
 //--------------------------------------------------------------------------------------
 technique10 RenderNormalsBuffer_10_0
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderNormalsBuffer( false ) ) );
@@ -1113,9 +1113,9 @@ technique10 RenderNormalsBuffer_10_0
 technique10 RenderNormalsBuffer_10_1
 {
     pass P0
-    {       
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-        
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderNormalsBuffer( true ) ) );
@@ -1124,14 +1124,14 @@ technique10 RenderNormalsBuffer_10_1
 
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique10 RenderUnCombined
 {
     pass P0
-    {    
+    {
         SetDepthStencilState( DisableDepthTestWrite, 0x00 );
-           
+
         SetVertexShader( CompileShader( vs_4_0, VS_RenderQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PS_RenderUnCombined() ) );
@@ -1140,7 +1140,7 @@ technique10 RenderUnCombined
 
 
 //--------------------------------------------------------------------------------------
-// EOF 
+// EOF
 //--------------------------------------------------------------------------------------
 
 

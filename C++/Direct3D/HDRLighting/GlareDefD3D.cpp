@@ -1,4 +1,4 @@
-// File provided by Masaki Kawase 
+// File provided by Masaki Kawase
 // http://www.daionet.gr.jp/~masa/rthdribl/
 
 // GlareDefD3D.cpp : Glare information definition
@@ -36,7 +36,7 @@ static GLAREDEF s_aLibGlareDef[NUM_GLARELIBTYPES] =
         _Rad( 00.0f ),    0.0f,   0.40f,  0.85f,  0.5f,  },   // GLT_NATURAL
     {   TEXT( "Cheap Lens Camera" ),              1.25f,  2.0f,   1.5f,   0.05f,  2.0f,   STLT_CROSS,
         _Rad( 00.0f ),    0.5f,   0.18f,  0.95f,  1.0f,  },   // GLT_CHEAPLENS
-    /*  
+    /*
       {   TEXT("Afterimage"),                     1.5f,   1.2f,   0.5f,   0.00f,  0.7f,   STLT_CROSS,
       _Rad(00.0f),    0.5f,   0.1f,   0.98f,  2.0f,  },   // GLT_AFTERIMAGE
      */
@@ -62,7 +62,7 @@ static int                      s_nLibGlareDefs = sizeof( s_aLibGlareDef ) / siz
 
 
 //----------------------------------------------------------
-// Information object for star generation 
+// Information object for star generation
 
 CStarDef*                       CStarDef::ms_pStarLib = NULL;
 D3DXCOLOR CStarDef::ms_avChromaticAberrationColor[];

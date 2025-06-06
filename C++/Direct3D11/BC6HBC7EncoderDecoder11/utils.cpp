@@ -28,9 +28,9 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
 {
     typedef HRESULT (WINAPI * LPD3D11CREATEDEVICE)( IDXGIAdapter*, D3D_DRIVER_TYPE, HMODULE, UINT32, D3D_FEATURE_LEVEL*, UINT, UINT32, ID3D11Device**, D3D_FEATURE_LEVEL*, ID3D11DeviceContext** );
     static LPD3D11CREATEDEVICE  s_DynamicD3D11CreateDevice = NULL;
-    
+
     if ( s_DynamicD3D11CreateDevice == NULL )
-    {            
+    {
         HMODULE hModD3D11 = LoadLibrary( L"d3d11.dll" );
 
         if ( hModD3D11 == NULL )
@@ -38,7 +38,7 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
             // Ensure this "D3D11 absent" message is shown only once. As sometimes, the app would like to try
             // to create device multiple times
             static bool bMessageAlreadyShwon = false;
-            
+
             if ( !bMessageAlreadyShwon )
             {
                 OSVERSIONINFOEX osv;
@@ -47,7 +47,7 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
                 GetVersionEx( (LPOSVERSIONINFO)&osv );
 
                 if ( ( osv.dwMajorVersion > 6 )
-                    || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 ) 
+                    || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 )
                     || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion == 0 && osv.dwBuildNumber > 6002 ) )
                 {
 
@@ -77,12 +77,12 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
                 }
 
                 bMessageAlreadyShwon = true;
-            }            
+            }
 
             return E_FAIL;
         }
 
-        s_DynamicD3D11CreateDevice = ( LPD3D11CREATEDEVICE )GetProcAddress( hModD3D11, "D3D11CreateDevice" );           
+        s_DynamicD3D11CreateDevice = ( LPD3D11CREATEDEVICE )GetProcAddress( hModD3D11, "D3D11CreateDevice" );
     }
 
     return s_DynamicD3D11CreateDevice( pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels,
@@ -93,7 +93,7 @@ HRESULT CreateDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContex
 {
     *ppDeviceOut = NULL;
     *ppContextOut = NULL;
-    
+
     HRESULT hr = S_OK;
 
     UINT uCreationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
@@ -101,7 +101,7 @@ HRESULT CreateDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContex
     uCreationFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
     D3D_FEATURE_LEVEL flOut = D3D_FEATURE_LEVEL_9_1;
-    
+
     if ( !bForceRef )
     {
         hr = Dynamic_D3D11CreateDevice( NULL,                        // Use default graphics card
@@ -113,16 +113,16 @@ HRESULT CreateDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContex
                                          D3D11_SDK_VERSION,           // SDK version
                                          ppDeviceOut,                 // Device out
                                          &flOut,                      // Actual feature level created
-                                         ppContextOut );              // Context out                
+                                         ppContextOut );              // Context out
     }
-    
+
     if ( bForceRef || FAILED(hr) )
     {
         // Either because of failure on creating a hardware device or we are forced to create a ref device, we create a ref device here
 
         SAFE_RELEASE( *ppDeviceOut );
         SAFE_RELEASE( *ppContextOut );
-        
+
         hr = Dynamic_D3D11CreateDevice( NULL,                        // Use default graphics card
                                          D3D_DRIVER_TYPE_REFERENCE,   // Try to create a hardware accelerated device
                                          NULL,                        // Do not use external software rasterizer module
@@ -162,7 +162,7 @@ HRESULT CreateComputeShaderCached( LPCWSTR pSrcFile, LPCSTR pFunctionName, LPCST
     // First check whether our cache dir exists, if not, create it
     if ( 0xFFFFFFFF == GetFileAttributes( strDirectory ) )
         if ( !CreateDirectory( strDirectory, NULL ) )
-            return E_FAIL;       
+            return E_FAIL;
 
     // Finds the correct path for the shader file.
     // This is only required for this sample to be run correctly from within the Sample Browser,
@@ -197,17 +197,17 @@ again:
     if ( 0xFFFFFFFF == GetFileAttributes( &fname[0] ) )
     {
         // The cached shader file does not exist, then compile it and save it
-        
-        ID3DBlob* pErrorBlob = NULL;        
+
+        ID3DBlob* pErrorBlob = NULL;
         DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
         // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-        // Setting this flag improves the shader debugging experience, but still allows 
-        // the shaders to be optimized and to run exactly the way they will run in 
+        // Setting this flag improves the shader debugging experience, but still allows
+        // the shaders to be optimized and to run exactly the way they will run in
         // the release configuration of this program.
         dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
-        hr = D3DX11CompileFromFile( str, NULL, NULL, pFunctionName, pProfile, 
+        hr = D3DX11CompileFromFile( str, NULL, NULL, pFunctionName, pProfile,
             dwShaderFlags, NULL, NULL, &pBlob, &pErrorBlob, NULL );
         if ( FAILED(hr) )
         {
@@ -215,10 +215,10 @@ again:
                 OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
 
             SAFE_RELEASE( pErrorBlob );
-            SAFE_RELEASE( pBlob );    
+            SAFE_RELEASE( pBlob );
 
             return hr;
-        }  
+        }
 
         SAFE_RELEASE( pErrorBlob );
 
@@ -254,13 +254,13 @@ again:
             DeleteFile( fname.c_str() );
 
             goto again;
-        }        
+        }
 
-        D3DCreateBlob( GetFileSize( hFile, NULL ) - sizeof(dwVersion), &pBlob );        
+        D3DCreateBlob( GetFileSize( hFile, NULL ) - sizeof(dwVersion), &pBlob );
         ReadFile( hFile, pBlob->GetBufferPointer(), (DWORD)pBlob->GetBufferSize(), &dwBytesRead, NULL );
         CloseHandle( hFile );
     }
-         
+
     hr = pDevice->CreateComputeShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, ppShaderOut );
 #if defined(DEBUG) || defined(PROFILE)
     if ( *ppShaderOut )
@@ -273,12 +273,12 @@ again:
 
 void RunComputeShader( ID3D11DeviceContext* pd3dImmediateContext,
                        ID3D11ComputeShader* pComputeShader,
-                       ID3D11ShaderResourceView** pShaderResourceViews, 
+                       ID3D11ShaderResourceView** pShaderResourceViews,
 					   UINT uNumSRVs,
-                       ID3D11Buffer* pCBCS, 
+                       ID3D11Buffer* pCBCS,
                        ID3D11UnorderedAccessView* pUnorderedAccessView,
                        UINT X, UINT Y, UINT Z )
-{    
+{
     pd3dImmediateContext->CSSetShader( pComputeShader, NULL, 0 );
     pd3dImmediateContext->CSSetShaderResources( 0, uNumSRVs, pShaderResourceViews );
     pd3dImmediateContext->CSSetUnorderedAccessViews( 0, 1, &pUnorderedAccessView, NULL );
@@ -308,12 +308,12 @@ HRESULT LoadTextureFromFile( ID3D11Device* pd3dDevice, LPCTSTR lpFileName, DXGI_
     img_load_info.BindFlags = 0;
     img_load_info.CpuAccessFlags = D3D11_CPU_ACCESS_READ;
     img_load_info.MiscFlags = 0;
-    img_load_info.Format = fmtLoadAs;    
+    img_load_info.Format = fmtLoadAs;
     img_load_info.Filter = D3DX11_DEFAULT;
     img_load_info.MipFilter = D3DX11_DEFAULT;
     img_load_info.pSrcInfo = NULL;
 
-    D3DX11CreateTextureFromFile( pd3dDevice, lpFileName, &img_load_info, NULL, 
+    D3DX11CreateTextureFromFile( pd3dDevice, lpFileName, &img_load_info, NULL,
         (ID3D11Resource**)(ppTextureOut), &hr );
 
     if ( FAILED( hr ) && (pd3dDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_11_0) && FileExists( lpFileName ) )
@@ -340,7 +340,7 @@ HRESULT LoadTextureFromFile( ID3D11Device* pd3dDevice, LPCTSTR lpFileName, DXGI_
                                 D3D11_SDK_VERSION,           // SDK version
                                 &pDeviceFL11,                // Device out
                                 &flOut,                      // Actual feature level created
-                                &pContextFL11 );             // Context out 
+                                &pContextFL11 );             // Context out
         if ( FAILED( hr ) )
             return hr;
 
@@ -350,7 +350,7 @@ HRESULT LoadTextureFromFile( ID3D11Device* pd3dDevice, LPCTSTR lpFileName, DXGI_
         img_load_info.CpuAccessFlags = D3D11_CPU_ACCESS_READ;
         img_load_info.Usage = D3D11_USAGE_STAGING;
 
-        D3DX11CreateTextureFromFile( pDeviceFL11, lpFileName, &img_load_info, NULL, 
+        D3DX11CreateTextureFromFile( pDeviceFL11, lpFileName, &img_load_info, NULL,
             (ID3D11Resource**)(ppTextureOut), &hr );
 
         SAFE_RELEASE( pDeviceFL11 );
@@ -382,7 +382,7 @@ ID3D11Buffer* CreateAndCopyToCPUBuf( ID3D11Device* pDevice, ID3D11DeviceContext*
     return cpubuf;
 }
 
-HRESULT FindDXSDKShaderFileCch( WCHAR* strDestPath, int cchDest, 
+HRESULT FindDXSDKShaderFileCch( WCHAR* strDestPath, int cchDest,
                                 LPCWSTR strFilename )
 {
     if( NULL == strFilename || strFilename[0] == 0 || NULL == strDestPath || cchDest < 10 )
@@ -424,7 +424,7 @@ HRESULT FindDXSDKShaderFileCch( WCHAR* strDestPath, int cchDest,
 
     swprintf_s( strDestPath, cchDest, L"%s\\..\\..\\%s\\%s", strExePath, strExeName, strFilename );
     if( GetFileAttributes( strDestPath ) != 0xFFFFFFFF )
-        return true;    
+        return true;
 
     // On failure, return the file as the path but also return an error code
     wcscpy_s( strDestPath, cchDest, strFilename );

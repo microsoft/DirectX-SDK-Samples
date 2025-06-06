@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: CustomUI.fx
 //
-// The effect file for the CustomUI sample.  
-// 
+// The effect file for the CustomUI sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

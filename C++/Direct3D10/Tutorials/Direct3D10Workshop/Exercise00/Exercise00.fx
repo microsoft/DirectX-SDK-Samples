@@ -7,7 +7,7 @@
 
 //-----------------------------------------------------------------------------------------
 // o/__   <-- Breakdancin' Bob will guide you through the exercise
-// |  (\    
+// |  (\
 //-----------------------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------------------
@@ -94,8 +94,8 @@ float4 PSScene(PSSceneIn input) : SV_Target
 }
 
 //-----------------------------------------------------------------------------------------
-// o/__   <-- BreakdancinBob NOTE: For 10 FX files we use technique10 to denote Direct3D 10 
-// |  (\			level techniques. 
+// o/__   <-- BreakdancinBob NOTE: For 10 FX files we use technique10 to denote Direct3D 10
+// |  (\			level techniques.
 //-----------------------------------------------------------------------------------------
 technique10 RenderTextured
 {
@@ -105,10 +105,10 @@ technique10 RenderTextured
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         // Set our render states
         // This is actually the default state and will not be set in future exercises
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
-    }  
+    }
 }
 

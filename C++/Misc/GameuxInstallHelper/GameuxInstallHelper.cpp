@@ -35,62 +35,62 @@
 #include "GDFParse.h"
 
 // Uncomment to get a debug messagebox
-// #define SHOW_S1_DEBUG_MSGBOXES 
+// #define SHOW_S1_DEBUG_MSGBOXES
 // #define SHOW_S2_DEBUG_MSGBOXES // more detail
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LPWSTR GetPropertyFromMSI(MSIHANDLE hMSI, LPCWSTR szPropName);
 HRESULT GenerateGUID(GUID* pInstanceGUID);
 HRESULT ConvertStringToGUID(const WCHAR* strSrc, GUID* pGuidDest);
 
-HRESULT ConvertGUIDToStringCch(const GUID* pGuidSrc, 
-                            WCHAR* strDest, 
+HRESULT ConvertGUIDToStringCch(const GUID* pGuidSrc,
+                            WCHAR* strDest,
                             int cchDestChar);
 
 HRESULT CreateShortcut(WCHAR* strLaunchPath,
-                            WCHAR* strCommandLineArgs, 
+                            WCHAR* strCommandLineArgs,
                             WCHAR* strShortcutFilePath);
 
-HRESULT GetAccountName(WCHAR* strUser, 
-                            DWORD cchUser, 
-                            WCHAR* strDomain, 
+HRESULT GetAccountName(WCHAR* strUser,
+                            DWORD cchUser,
+                            WCHAR* strDomain,
                             DWORD cchDomain);
 
 HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID);
 
-HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath, 
-                            WCHAR* strGameInstallPath, 
+HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
+                            WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope);
 
 HRESULT GameExplorerUninstallFromRegistry(WCHAR* strGDFBinPath);
 
 HRESULT RemoveTasks(WCHAR* strGDFBinPath);
 HRESULT CreateTasks(WCHAR* strGDFBinPath,
-                            WCHAR* strGameInstallPath, 
+                            WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope);
 HRESULT IsV2GDF (
-    __in WCHAR* strGDFBinPath, 
+    __in WCHAR* strGDFBinPath,
     __out BOOL* pfV2GDF
     );
 
-HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer, 
-                            WCHAR* strGDFBinPath, 
-                            WCHAR* strGameInstallPath, 
+HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer,
+                            WCHAR* strGDFBinPath,
+                            WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope);
 
 HRESULT GameExplorerUninstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer, WCHAR* strGDFBinPath);
 
-HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2, 
-                            WCHAR* strGDFBinPath, 
-                            WCHAR* strGameInstallPath, 
+HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2,
+                            WCHAR* strGDFBinPath,
+                            WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope);
 
 HRESULT GameExplorerUninstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2, WCHAR* strGDFBinPath);
 
 STDAPI GameExplorerUninstallW(WCHAR* strGDFBinPath);
-STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath, 
+STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath,
                             WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope);
 
@@ -125,12 +125,12 @@ UINT __stdcall GameExplorerSetMSIProperties(MSIHANDLE hModule)
     {
         szInstallDir = GetPropertyFromMSI(hModule, L"TARGETDIR");
     }
-    
-    // See if the install location property is set.  If it is, use that.  
+
+    // See if the install location property is set.  If it is, use that.
     // Otherwise, get the property from TARGETDIR
     if (szInstallDir != NULL)
     {
-        // Set the ARPINSTALLLOCATION property to the install dir so that 
+        // Set the ARPINSTALLLOCATION property to the install dir so that
         // the uninstall custom action can have it when getting the INSTALLPROPERTY_INSTALLLOCATION
         MsiSetPropertyW(hModule, L"ARPINSTALLLOCATION", szInstallDir);
 
@@ -143,7 +143,7 @@ UINT __stdcall GameExplorerSetMSIProperties(MSIHANDLE hModule)
             wcscat_s(szCustomActionData, 1024, L"|");
             wcscat_s(szCustomActionData, 1024, szInstallDir);
             wcscat_s(szCustomActionData, 1024, L"|");
-            
+
             WCHAR* szALLUSERS = GetPropertyFromMSI(hModule, L"ALLUSERS");
             if (szALLUSERS && (szALLUSERS[0] == '1' || szALLUSERS[0] == '2'))
             {
@@ -169,7 +169,7 @@ UINT __stdcall GameExplorerSetMSIProperties(MSIHANDLE hModule)
             MsiSetProperty(hModule, L"GameUXRemoveAsCurUser", szFullPathToGDF);
             MsiSetProperty(hModule, L"GameUXRollBackAddAsAdmin", szFullPathToGDF);
             MsiSetProperty(hModule, L"GameUXRollBackAddAsCurUser", szFullPathToGDF);
-            
+
             if (szALLUSERS != NULL)
             {
                 SAFE_DELETE_ARRAY(szALLUSERS);
@@ -178,7 +178,7 @@ UINT __stdcall GameExplorerSetMSIProperties(MSIHANDLE hModule)
         }
         SAFE_DELETE_ARRAY(szInstallDir);
     }
-    
+
     return ERROR_SUCCESS;
 }
 
@@ -274,7 +274,7 @@ UINT __stdcall GameExplorerUninstallUsingMSI(MSIHANDLE hModule)
 //--------------------------------------------------------------------------------------
 // Install a game to the Game Explorer (UNICODE)
 //--------------------------------------------------------------------------------------
-STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath, 
+STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath,
                             WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope)
 {
@@ -349,7 +349,7 @@ STDAPI GameExplorerInstallW(WCHAR* strGDFBinPath,
 //--------------------------------------------------------------------------------------
 // Install game to the Game Explorer (ASCII)
 //--------------------------------------------------------------------------------------
-STDAPI GameExplorerInstallA(CHAR* strGDFBinPath, 
+STDAPI GameExplorerInstallA(CHAR* strGDFBinPath,
                             CHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope)
 {
@@ -360,7 +360,7 @@ STDAPI GameExplorerInstallA(CHAR* strGDFBinPath,
     {
         return E_INVALIDARG;
     }
-    
+
     WCHAR wstrBinPath[MAX_PATH] = {0};
     WCHAR wstrInstallPath[MAX_PATH] = {0};
 
@@ -508,7 +508,7 @@ STDAPI GameExplorerUpdateA(CHAR* strGDFBinPath)
 //--------------------------------------------------------------------------------------
 // Adds a game to the Game Explorer for XP
 //--------------------------------------------------------------------------------------
-HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath, 
+HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
                                  WCHAR* strGameInstallPath,
                                  GAME_INSTALL_SCOPE InstallScope)
 {
@@ -519,24 +519,24 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr = E_FAIL;
     BSTR bstrGDFBinPath = NULL;
     BSTR bstrGameInstallPath = NULL;
-    
+
     bstrGDFBinPath = SysAllocString(strGDFBinPath);
     bstrGameInstallPath = SysAllocString(strGameInstallPath);
     if (bstrGDFBinPath != NULL && bstrGameInstallPath != NULL)
     {
-        // On Windows XP or eariler, write registry keys to known location 
-        // so that if the machine is upgraded to Windows Vista or later, these games will 
+        // On Windows XP or eariler, write registry keys to known location
+        // so that if the machine is upgraded to Windows Vista or later, these games will
         // be automatically found.
-        // 
+        //
         // Depending on GAME_INSTALL_SCOPE, write to:
         //      HKLM\Software\Microsoft\Windows\CurrentVersion\GameUX\GamesToFindOnWindowsUpgrade\{GUID}\
         // or
         //      HKCU\Software\Classes\Software\Microsoft\Windows\CurrentVersion\GameUX\GamesToFindOnWindowsUpgrade\{GUID}\
-        // and write there these 2 string values: GDFBinaryPath and GameInstallPath 
+        // and write there these 2 string values: GDFBinaryPath and GameInstallPath
         //
         HKEY hKeyGamesToFind = NULL, hKeyGame = NULL;
         LONG lResult;
@@ -553,7 +553,7 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
                                       L"Software\\Microsoft\\Windows\\CurrentVersion\\GameUX\\GamesToFindOnWindowsUpgrade",
                                       0, NULL, 0, KEY_WRITE, NULL, &hKeyGamesToFind, &dwDisposition);
         }
-        
+
 #ifdef SHOW_S1_DEBUG_MSGBOXES
         WCHAR sz[1024];
         swprintf_s(sz, 1024, L"RegCreateKeyEx lResult=%d", lResult);
@@ -568,7 +568,7 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
             {
                 GenerateGUID(&InstanceGUID);
             }
-            
+
             WCHAR strGameInstanceGUID[128] = {0};
             if (StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID)) != 0)
             {
@@ -592,7 +592,7 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
         SysFreeString(bstrGDFBinPath);
         SysFreeString(bstrGameInstallPath);
     }
-    
+
     // create short cut, play tasks, and support tasks
     if (SUCCEEDED(hr))
     {
@@ -604,15 +604,15 @@ HRESULT GameExplorerInstallToRegistry(WCHAR* strGDFBinPath,
 //--------------------------------------------------------------------------------------
 // Adds a game to the Game Explorer for Windows Vista
 //--------------------------------------------------------------------------------------
-HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer, 
-                                    WCHAR* strGDFBinPath, 
+HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer,
+                                    WCHAR* strGDFBinPath,
                                     WCHAR* strGameInstallPath,
                                     GAME_INSTALL_SCOPE InstallScope)
 {
     assert(strGDFBinPath);
     assert(strGameInstallPath);
     assert(pFwGameExplorer);
-    
+
     if (strGDFBinPath == NULL || strGameInstallPath == NULL || pFwGameExplorer == NULL)
     {
         return E_INVALIDARG;
@@ -621,7 +621,7 @@ HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer,
     HRESULT hr = E_FAIL;
     BSTR bstrGDFBinPath = NULL;
     BSTR bstrGameInstallPath = NULL;
-    
+
     bstrGDFBinPath = SysAllocString(strGDFBinPath);
     bstrGameInstallPath = SysAllocString(strGameInstallPath);
     if ((bstrGDFBinPath != NULL) && (bstrGameInstallPath != NULL))
@@ -633,7 +633,7 @@ HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer,
         {
             hr = pFwGameExplorer->AddGame(bstrGDFBinPath, bstrGameInstallPath, InstallScope, &InstanceGUID);
         }
-        
+
 #ifdef SHOW_S1_DEBUG_MSGBOXES
         WCHAR strUser[256] = {0};
         WCHAR strDomain[256] = {0};
@@ -657,16 +657,16 @@ HRESULT GameExplorerInstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer,
     {
         hr = CreateTasks(strGDFBinPath, strGameInstallPath, InstallScope);
     }
-    
+
     return hr;
 }
 
 //--------------------------------------------------------------------------------------
 // Adds a game to the Game Explorer
 //--------------------------------------------------------------------------------------
-HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2, 
-                                   WCHAR* strGDFBinPath, 
-                                   WCHAR* strGameInstallPath, 
+HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2,
+                                   WCHAR* strGDFBinPath,
+                                   WCHAR* strGameInstallPath,
                                    GAME_INSTALL_SCOPE InstallScope)
 {
     assert(strGDFBinPath);
@@ -677,11 +677,11 @@ HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2,
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr = E_FAIL;
     BSTR bstrGDFBinPath = NULL;
     BSTR bstrGameInstallPath = NULL;
-    
+
     bstrGDFBinPath = SysAllocString(strGDFBinPath);
     bstrGameInstallPath = SysAllocString(strGameInstallPath);
     if (bstrGDFBinPath != NULL && bstrGameInstallPath != NULL)
@@ -697,7 +697,7 @@ HRESULT GameExplorerInstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer2,
        WCHAR sz[1024] = {0};
        WCHAR strGameInstanceGUID[128] = {0};
        GUID InstanceGUID = GUID_NULL;
-       
+
        RetrieveGUIDForApplication(strGDFBinPath, &InstanceGUID);
        StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
        swprintf_s(sz, 1024, L"szGDFBinPath='%s'\nszGameInstallPath='%s'\nInstallScope='%s'\nszGUID='%s'\nAccount=%s\\%s\nAdmin=%d\nhr=0x%0.8x",
@@ -724,7 +724,7 @@ HRESULT GameExplorerUninstallFromRegistry(WCHAR* strGDFBinPath)
     {
         return E_INVALIDARG;
     }
-    
+
     GUID InstanceGUID = GUID_NULL;
     HRESULT hr = RemoveTasks(strGDFBinPath);
     if (SUCCEEDED(hr))
@@ -754,7 +754,7 @@ HRESULT GameExplorerUninstallFromRegistry(WCHAR* strGDFBinPath)
 #ifdef SHOW_S1_DEBUG_MSGBOXES
     WCHAR sz[1024];
     WCHAR strGameInstanceGUID[128] = {0};
-                
+
     StringFromGUID2(InstanceGUID, strGameInstanceGUID, ARRAYSIZE(strGameInstanceGUID));
     swprintf_s(sz, 1024, L"bVistaPath=%d\npInstanceGUID='%s'\nhr=0x%0.8x", false, strGameInstanceGUID, hr);
     MessageBox(NULL, sz, L"GameExplorerUninstallForXP", MB_OK);
@@ -771,7 +771,7 @@ HRESULT GameExplorerUninstallUsingIGameExplorer(IGameExplorer* pFwGameExplorer, 
 {
     assert(pFwGameExplorer);
     assert(strGDFBinPath);
-    
+
     if (strGDFBinPath == NULL || pFwGameExplorer == NULL)
     {
         return E_INVALIDARG;
@@ -808,7 +808,7 @@ HRESULT GameExplorerUninstallUsingIGameExplorer2(IGameExplorer2* pFwGameExplorer
 {
     assert(pFwGameExplorer2);
     assert(strGDFBinPath);
-    
+
     if (strGDFBinPath == NULL || pFwGameExplorer2 == NULL)
     {
         return E_INVALIDARG;
@@ -841,7 +841,7 @@ HRESULT GameExplorerUpdateUsingIGameExplorer(IGameExplorer* pFwGameExplorer, WCH
 {
     assert(pFwGameExplorer);
     assert(strGDFBinPath);
-    
+
     if (strGDFBinPath == NULL || pFwGameExplorer == NULL)
     {
         return E_INVALIDARG;
@@ -873,12 +873,12 @@ HRESULT GameExplorerUpdateUsingIGameExplorer(IGameExplorer* pFwGameExplorer, WCH
 HRESULT GenerateGUID(GUID* pInstanceGUID)
 {
     assert(pInstanceGUID);
-    
+
     if (pInstanceGUID == NULL)
     {
         return E_INVALIDARG;
     }
-    
+
     return CoCreateGuid(pInstanceGUID);
 }
 
@@ -924,12 +924,12 @@ HRESULT ConvertStringToGUID(const WCHAR* strSrc, GUID* pGuidDest)
 {
     assert(strSrc);
     assert(pGuidDest);
-    
+
     if (strSrc == NULL || pGuidDest == NULL)
     {
         return E_INVALIDARG;
     }
-    
+
     UINT aiTmp[10];
 
     if (swscanf_s(strSrc, L"{%8X-%4X-%4X-%2X%2X-%2X%2X%2X%2X%2X%2X}",
@@ -961,18 +961,18 @@ HRESULT ConvertStringToGUID(const WCHAR* strSrc, GUID* pGuidDest)
 
 
 //-----------------------------------------------------------------------------
-HRESULT ConvertGUIDToStringCch(const GUID* pGuidSrc, 
-                               WCHAR* strDest, 
+HRESULT ConvertGUIDToStringCch(const GUID* pGuidSrc,
+                               WCHAR* strDest,
                                int cchDestChar)
 {
     assert(pGuidSrc);
     assert(strDest);
-    
+
     if (pGuidSrc == NULL || strDest == NULL)
     {
         return E_INVALIDARG;
     }
-    
+
     return swprintf_s(strDest, cchDestChar, L"{%0.8X-%0.4X-%0.4X-%0.2X%0.2X-%0.2X%0.2X%0.2X%0.2X%0.2X%0.2X}",
                            pGuidSrc->Data1, pGuidSrc->Data2, pGuidSrc->Data3,
                            pGuidSrc->Data4[0], pGuidSrc->Data4[1],
@@ -986,13 +986,13 @@ HRESULT ConvertGUIDToStringCch(const GUID* pGuidSrc,
 // Enums WinXP registry for GDF upgrade keys, and returns the GUID
 // based on the GDF binary path
 //-----------------------------------------------------------------------------
-bool RetrieveGUIDForApplicationOnWinXP(HKEY hKeyRoot, 
-                                       WCHAR* szPathToGDFdll, 
+bool RetrieveGUIDForApplicationOnWinXP(HKEY hKeyRoot,
+                                       WCHAR* szPathToGDFdll,
                                        GUID* pGUID)
 {
     assert(szPathToGDFdll);
     assert(pGUID);
-    
+
     DWORD iKey = 0;
     WCHAR strRegKeyName[256];
     WCHAR strGDFBinPath[MAX_PATH];
@@ -1039,12 +1039,12 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
 {
     assert(szPathToGDFdll);
     assert(pGUID);
-    
+
     if (szPathToGDFdll == NULL || pGUID == NULL)
     {
         return E_INVALIDARG;
     }
-    
+
     bool bFound = false;
 
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
@@ -1063,7 +1063,7 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
                                                0L, NULL, NULL, &pIWbemServices);
             if (SUCCEEDED(hr) && (pIWbemServices != NULL))
             {
-                // Switch security level to IMPERSONATE. 
+                // Switch security level to IMPERSONATE.
                 CoSetProxyBlanket(pIWbemServices, RPC_C_AUTHN_WINNT, RPC_C_AUTHZ_NONE, NULL,
                                    RPC_C_AUTHN_LEVEL_CALL, RPC_C_IMP_LEVEL_IMPERSONATE, NULL, 0);
 
@@ -1114,13 +1114,13 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
                         if (SUCCEEDED(hr) && (var.vt == VT_BSTR))
                         {
                             bFound = true;
-                            if (pGUID) 
+                            if (pGUID)
                             {
                                 ConvertStringToGUID(var.bstrVal, pGUID);
                             }
                         }
 
-                        if (pPropName) 
+                        if (pPropName)
                         {
                             SysFreeString(pPropName);
                         }
@@ -1132,7 +1132,7 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
                 SAFE_RELEASE(pEnum);
             }
 
-            if (pNamespace) 
+            if (pNamespace)
             {
                 SysFreeString(pNamespace);
             }
@@ -1183,19 +1183,19 @@ HRESULT RetrieveGUIDForApplication(WCHAR* szPathToGDFdll, GUID* pGUID)
 //-----------------------------------------------------------------------------
 // Debug function to return account name of calling process
 //-----------------------------------------------------------------------------
-HRESULT GetAccountName(WCHAR* strUser, 
-                       DWORD cchUser, 
-                       WCHAR* strDomain, 
+HRESULT GetAccountName(WCHAR* strUser,
+                       DWORD cchUser,
+                       WCHAR* strDomain,
                        DWORD cchDomain)
 {
     assert(strUser);
     assert(strDomain);
-    
+
     if (strUser == NULL || strDomain == NULL )
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr = E_FAIL;
     WCHAR strMachine[256] = {0};
     DWORD cchMachine = 256;
@@ -1228,15 +1228,15 @@ HRESULT GetAccountName(WCHAR* strUser,
 }
 
 //--------------------------------------------------------------------------------------
-HRESULT GetXMLAttribute(IXMLDOMNode* pNode, 
-                        WCHAR* strAttribName, 
-                        WCHAR* strValue, 
+HRESULT GetXMLAttribute(IXMLDOMNode* pNode,
+                        WCHAR* strAttribName,
+                        WCHAR* strValue,
                         int cchValue)
 {
     assert(pNode);
     assert(strAttribName);
     assert(strValue);
-    
+
     if (pNode == NULL || strAttribName == NULL || strValue == NULL)
     {
         return E_INVALIDARG;
@@ -1285,14 +1285,14 @@ HRESULT GetBaseKnownFolderCsidl(WCHAR* strBaseKnownFolder, int* pCsidl)
 {
     assert(strBaseKnownFolder);
     assert(pCsidl);
-    
+
     if (strBaseKnownFolder == NULL || pCsidl == NULL )
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr = S_OK;
-    
+
     if (wcscmp(strBaseKnownFolder, L"{905e63b6-c1bf-494e-b29c-65b732d3d21a}") == 0)
     {
            *pCsidl =  CSIDL_PROGRAM_FILES;
@@ -1334,19 +1334,19 @@ HRESULT GetBaseKnownFolderCsidl(WCHAR* strBaseKnownFolder, int* pCsidl)
 }
 
 //-----------------------------------------------------------------------------
-HRESULT CreateShortcut(WCHAR* strLaunchPath, 
+HRESULT CreateShortcut(WCHAR* strLaunchPath,
                        WCHAR* strCommandLineArgs,      // strCommandLineArgs can be NULL
-                       WCHAR* strShortcutFilePath, 
+                       WCHAR* strShortcutFilePath,
                        BOOL bFileTask)
 {
     assert(strLaunchPath);
     assert(strShortcutFilePath);
-    
+
     if (strLaunchPath == NULL || strShortcutFilePath == NULL )
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr = CoInitializeEx(0, COINIT_MULTITHREADED);
     if (SUCCEEDED(hr))
     {
@@ -1373,7 +1373,7 @@ HRESULT CreateShortcut(WCHAR* strLaunchPath,
                 WCHAR strFullPath[512];
                 WCHAR* strExePart;
                 GetFullPathName(strLaunchPath, 512, strFullPath, &strExePart);
-                if (strExePart) 
+                if (strExePart)
                 {
                     *strExePart = 0;
                 }
@@ -1390,7 +1390,7 @@ HRESULT CreateShortcut(WCHAR* strLaunchPath,
             }
             psl->Release();
         }
-        
+
         CoUninitialize();
     }
 
@@ -1398,7 +1398,7 @@ HRESULT CreateShortcut(WCHAR* strLaunchPath,
 }
 
 //-----------------------------------------------------------------------------
-HRESULT SubCreateSingleTask(GAME_INSTALL_SCOPE InstallScope,         // Either GIS_CURRENT_USER or GIS_ALL_USERS 
+HRESULT SubCreateSingleTask(GAME_INSTALL_SCOPE InstallScope,         // Either GIS_CURRENT_USER or GIS_ALL_USERS
                    WCHAR* strGDFBinPath,                    // valid GameInstance GUID that was passed to AddGame()
                    WCHAR* strTaskName,                      // Name of task.  Ex "Play"
                    WCHAR* strLaunchPath,                    // Path to exe.  Example: "C:\Program Files\Microsoft\MyGame.exe"
@@ -1410,12 +1410,12 @@ HRESULT SubCreateSingleTask(GAME_INSTALL_SCOPE InstallScope,         // Either G
     assert(strGDFBinPath);
     assert(strTaskName);
     assert(strLaunchPath);
-    
+
     if (strGDFBinPath == NULL || strTaskName == NULL || strLaunchPath == NULL)
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr;
     WCHAR strPath[512];
     WCHAR strGUID[256];
@@ -1450,7 +1450,7 @@ HRESULT SubCreateSingleTask(GAME_INSTALL_SCOPE InstallScope,         // Either G
     // Create the directory and all intermediate directories
     SHCreateDirectoryEx(NULL, strPath, NULL);
 
-    // Create full file path to shortcut 
+    // Create full file path to shortcut
     swprintf_s(strShortcutFilePath, 512, L"%s\\%s.lnk", strPath, strTaskName);
 
 #ifdef SHOW_S2_DEBUG_MSGBOXES
@@ -1473,7 +1473,7 @@ HRESULT RemoveTasks(WCHAR* strGDFBinPath) // valid GameInstance GUID that was pa
     {
         return E_INVALIDARG;
     }
-    
+
     HRESULT hr;
     WCHAR strPath[512] = {0};
     WCHAR strGUID[256];
@@ -1489,7 +1489,7 @@ HRESULT RemoveTasks(WCHAR* strGDFBinPath) // valid GameInstance GUID that was pa
     {
         return hr;
     }
-    
+
     GUID InstanceGUID = GUID_NULL;
     if (FAILED(hr = RetrieveGUIDForApplication(strGDFBinPath, &InstanceGUID)))
     {
@@ -1527,11 +1527,11 @@ HRESULT RemoveTasks(WCHAR* strGDFBinPath) // valid GameInstance GUID that was pa
 }
 
 //-----------------------------------------------------------------------------
-HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode, 
-                           WCHAR* strGDFBinPath, 
-                           WCHAR* strGameInstallPath, 
+HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
+                           WCHAR* strGDFBinPath,
+                           WCHAR* strGameInstallPath,
                            GAME_INSTALL_SCOPE InstallScope,
-                           BOOL bPrimaryTask, 
+                           BOOL bPrimaryTask,
                            BOOL bSupportTask)
 {
     assert(pTaskNode);
@@ -1565,7 +1565,7 @@ HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
         {
             hr = GetXMLAttribute(pTaskNode, L"index", strTaskID, 256);
         }
-        
+
         if (SUCCEEDED(hr))
         {
             int nTaskID = _wtoi(strTaskID);
@@ -1624,13 +1624,13 @@ HRESULT CreateSingleTask(IXMLDOMNode* pTaskNode,
             }
         }
     }
-    
+
     return hr;
 }
 
 //-----------------------------------------------------------------------------
-HRESULT CreateTasks(WCHAR* strGDFBinPath, 
-                            WCHAR* strGameInstallPath, 
+HRESULT CreateTasks(WCHAR* strGDFBinPath,
+                            WCHAR* strGameInstallPath,
                             GAME_INSTALL_SCOPE InstallScope)
 {
     assert(strGDFBinPath);
@@ -1640,7 +1640,7 @@ HRESULT CreateTasks(WCHAR* strGDFBinPath,
     {
         return E_INVALIDARG;
     }
-    
+
     CGDFParse gdfParse;
     HRESULT hr = gdfParse.ExtractXML( strGDFBinPath );
     if( SUCCEEDED( hr ) )
@@ -1689,7 +1689,7 @@ HRESULT CreateTasks(WCHAR* strGDFBinPath,
             }
             else
             {
-#ifdef SHOW_S1_DEBUG_MSGBOXES 
+#ifdef SHOW_S1_DEBUG_MSGBOXES
                 WCHAR sz[1024];
                 swprintf_s(sz, 1024, L"The game task information is missing! Please check your GDF file and reinstall the game again!");
                 MessageBox(NULL, sz, L"GameExplorerInstall", MB_OK);
@@ -1698,16 +1698,16 @@ HRESULT CreateTasks(WCHAR* strGDFBinPath,
             }
         }
     }
-    
+
     return hr;
 }
 
 /******************************************************************
  IsV2GDF - test the GDF version
- 
+
 ********************************************************************/
 HRESULT IsV2GDF (
-    __in WCHAR* strGDFBinPath, 
+    __in WCHAR* strGDFBinPath,
     __out BOOL* pfV2GDF
     )
 {
@@ -1723,7 +1723,7 @@ HRESULT IsV2GDF (
     {
         return E_INVALIDARG;
     }
-    
+
     *pfV2GDF = FALSE;
     CGDFParse gdfParse;
     HRESULT hr = gdfParse.ExtractXML( strGDFBinPath );
@@ -1749,7 +1749,7 @@ HRESULT IsV2GDF (
             }
         }
     }
-    
+
     return hr;
 }
 

@@ -34,7 +34,7 @@ CScene::CScene()
 HRESULT CScene::OnD3D11CreateDevice( ID3D11Device* pDevice )
 {
     HRESULT hr;
-    
+
     // Create the vertex shader
     ID3DBlob* pBlobVS = NULL;
     V_RETURN( CompileShaderFromFile( L"SceneVS.hlsl", "SceneVS", "vs_5_0", &pBlobVS ) );
@@ -74,7 +74,7 @@ HRESULT CScene::OnD3D11CreateDevice( ID3D11Device* pDevice )
     pVertex[1].pos = D3DXVECTOR4( fLeft, fTop, 50.0f, 1.0f );
     pVertex[2].pos = D3DXVECTOR4( fRight, fLowH, 50.0f, 1.0f );
     pVertex[3].pos = D3DXVECTOR4( fRight, fTop, 50.0f, 1.0f );
-    
+
 	pVertex[0].color = D3DXVECTOR4( 1.0f, 0.0f, 0.0f, 0.5f );
 	pVertex[1].color = D3DXVECTOR4( 1.0f, 0.0f, 0.0f, 0.5f );
 	pVertex[2].color = D3DXVECTOR4( 1.0f, 0.0f, 0.0f, 0.5f );
@@ -105,10 +105,10 @@ HRESULT CScene::OnD3D11CreateDevice( ID3D11Device* pDevice )
     vbdesc.Usage = D3D11_USAGE_IMMUTABLE;
     vbdesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
     vbdesc.CPUAccessFlags = 0;
-    vbdesc.MiscFlags = 0;    
+    vbdesc.MiscFlags = 0;
 
     D3D11_SUBRESOURCE_DATA InitData;
-    InitData.pSysMem = pVertex;    
+    InitData.pSysMem = pVertex;
     V( pDevice->CreateBuffer( &vbdesc, &InitData, &m_pVB ) );
     DXUT_SetDebugName( m_pVB, "Vertices") ;
 
@@ -121,7 +121,7 @@ HRESULT CScene::OnD3D11CreateDevice( ID3D11Device* pDevice )
 void CScene::D3D11Render( D3DXMATRIX* pmWorldViewProj, ID3D11DeviceContext* pd3dImmediateContext )
 {
     HRESULT hr;
-    
+
     pd3dImmediateContext->IASetInputLayout( m_pVertexLayout );
 
     UINT uStrides = sizeof( SCENE_VERTEX );
@@ -135,7 +135,7 @@ void CScene::D3D11Render( D3DXMATRIX* pmWorldViewProj, ID3D11DeviceContext* pd3d
     // Update the constant buffer
     D3D11_MAPPED_SUBRESOURCE MappedResource;
     V( pd3dImmediateContext->Map( m_pVS_CB, 0, D3D11_MAP_WRITE_DISCARD, 0, &MappedResource ) );
-    VS_CB* pVS_CB = ( VS_CB* )MappedResource.pData;  
+    VS_CB* pVS_CB = ( VS_CB* )MappedResource.pData;
 	pVS_CB->mWorldViewProj = *pmWorldViewProj;
     pd3dImmediateContext->Unmap( m_pVS_CB, 0 );
     pd3dImmediateContext->VSSetConstantBuffers( 0, 1, &m_pVS_CB );

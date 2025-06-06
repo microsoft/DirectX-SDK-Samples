@@ -2,7 +2,7 @@
 // File: TessellatorCS40_common.hlsl
 //
 // The common utils included by other shaders in the sample
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -23,7 +23,7 @@ cbuffer cbNeverChanges : register(b0)
 #define D3D11_TESSELLATOR_PARTITIONING_POW2               ( 1 )
 #define D3D11_TESSELLATOR_PARTITIONING_FRACTIONAL_ODD     ( 2 )
 #define D3D11_TESSELLATOR_PARTITIONING_FRACTIONAL_EVEN    ( 3 )
-    
+
 #define TESSELLATOR_PARITY_EVEN                           ( 0 )
 #define TESSELLATOR_PARITY_ODD                            ( 1 )
 
@@ -44,12 +44,12 @@ struct PROCESSED_TESS_FACTORS_TRI
     float4 outsideInsideTessFactor;
     int4 outsideInsideTessFactorParity;
 
-    float4 outsideInsideInvNumSegmentsOnFloorTessFactor; 
+    float4 outsideInsideInvNumSegmentsOnFloorTessFactor;
     float4 outsideInsideInvNumSegmentsOnCeilTessFactor;
     float4 outsideInsideHalfTessFactor;
-    int4 outsideInsideSplitPointOnFloorHalfTessFactor; 
+    int4 outsideInsideSplitPointOnFloorHalfTessFactor;
 
-    // Stuff below is specific to the traversal order 
+    // Stuff below is specific to the traversal order
     uint4 numPointsForOutsideInside;
     uint insideEdgePointBaseOffset;
 };
@@ -103,13 +103,13 @@ void ComputeTessFactorContext(float4 tessFactor, int4 parity,
     out int4 splitPointOnFloorHalfTessFactor)
 {
     halfTessFactor = tessFactor / 2;
-    
+
     halfTessFactor += 0.5 * ((TESSELLATOR_PARITY_ODD == parity) | (0.5f == halfTessFactor));
-    
+
     float4 floorHalfTessFactor = floor(halfTessFactor);
     float4 ceilHalfTessFactor = ceil(halfTessFactor);
     int4 numHalfTessFactorPoints = int4(ceilHalfTessFactor);
-    
+
     for (int index = 0; index < 4; ++ index)
     {
         if( ceilHalfTessFactor[index] == floorHalfTessFactor[index] )
@@ -132,7 +132,7 @@ void ComputeTessFactorContext(float4 tessFactor, int4 parity,
             splitPointOnFloorHalfTessFactor[index] = (RemoveMSB(int(floorHalfTessFactor[index])) << 1) + 1;
         }
     }
-    
+
     int4 numFloorSegments = int4(floorHalfTessFactor * 2);
     int4 numCeilSegments = int4(ceilHalfTessFactor * 2);
     int4 s = (TESSELLATOR_PARITY_ODD == parity);
@@ -147,7 +147,7 @@ int TriProcessTessFactors( inout float4 tessFactor,
                            int partitioning )
 {
     processedTessFactors = (PROCESSED_TESS_FACTORS_TRI)0;
-    
+
     int parity = TESSELLATOR_PARITY_EVEN;
     switch( partitioning )
     {
@@ -180,7 +180,7 @@ int TriProcessTessFactors( inout float4 tessFactor,
             lowerBound = D3D11_TESSELLATOR_MIN_ODD_TESSELLATION_FACTOR;
             upperBound = D3D11_TESSELLATOR_MAX_EVEN_TESSELLATION_FACTOR;
             break;
-         
+
         case D3D11_TESSELLATOR_PARTITIONING_FRACTIONAL_EVEN:
             lowerBound = D3D11_TESSELLATOR_MIN_EVEN_TESSELLATION_FACTOR;
             upperBound = D3D11_TESSELLATOR_MAX_EVEN_TESSELLATION_FACTOR;
@@ -199,9 +199,9 @@ int TriProcessTessFactors( inout float4 tessFactor,
     {
         if( (tessFactor.x > MIN_ODD_TESSFACTOR_PLUS_HALF_EPSILON) ||
             (tessFactor.y > MIN_ODD_TESSFACTOR_PLUS_HALF_EPSILON) ||
-            (tessFactor.z > MIN_ODD_TESSFACTOR_PLUS_HALF_EPSILON)) 
-            // Don't need the same check for insideTessFactor for tri patches, 
-            // since there is only one insideTessFactor, as opposed to quad 
+            (tessFactor.z > MIN_ODD_TESSFACTOR_PLUS_HALF_EPSILON))
+            // Don't need the same check for insideTessFactor for tri patches,
+            // since there is only one insideTessFactor, as opposed to quad
             // patches which have 2 insideTessFactors.
         {
             // Force picture frame
@@ -237,12 +237,12 @@ int TriProcessTessFactors( inout float4 tessFactor,
     {
         processedTessFactors.outsideInsideTessFactorParity = parity;
     }
-    
+
     processedTessFactors.outsideInsideTessFactor = tessFactor;
 
     if (((partitioning == D3D11_TESSELLATOR_PARTITIONING_INTEGER)|| (partitioning == D3D11_TESSELLATOR_PARTITIONING_POW2)) || (parity == TESSELLATOR_PARITY_ODD))
     {
-        // Special case if all TessFactors are 1 
+        // Special case if all TessFactors are 1
         if( (1 == processedTessFactors.outsideInsideTessFactor.x) &&
             (1 == processedTessFactors.outsideInsideTessFactor.y) &&
             (1 == processedTessFactors.outsideInsideTessFactor.z) &&
@@ -276,7 +276,7 @@ int TriProcessTessFactors( inout float4 tessFactor,
 
     // inside storage, including interior edges above
     {
-        int numInteriorRings = (processedTessFactors.numPointsForOutsideInside.w >> 1) - 1; 
+        int numInteriorRings = (processedTessFactors.numPointsForOutsideInside.w >> 1) - 1;
         int numInteriorPoints;
         if( processedTessFactors.outsideInsideTessFactorParity.w == TESSELLATOR_PARITY_ODD )
         {
@@ -288,7 +288,7 @@ int TriProcessTessFactors( inout float4 tessFactor,
         }
         NumPoints += numInteriorPoints;
     }
-    
+
     return NumPoints;
 }
 
@@ -381,13 +381,13 @@ int GetRingFromIndexStitchRegular(bool bTrapezoid, int diagonals, int numPointsF
     }
 }
 
-uint3 NumStitchTransition(int4 outsideInsideNumHalfTessFactorPoints, 
+uint3 NumStitchTransition(int4 outsideInsideNumHalfTessFactorPoints,
                                     int4 outsideInsideEdgeTessFactorParity)
 {
     outsideInsideNumHalfTessFactorPoints -= (TESSELLATOR_PARITY_ODD == outsideInsideEdgeTessFactorParity);
 
     uint3 num_index = insidePointIndex[outsideInsideNumHalfTessFactorPoints.w][MAX_FACTOR / 2 + 1].y * 8;
-    
+
     [unroll]
     for (int edge = 0; edge < 3; ++ edge)
     {

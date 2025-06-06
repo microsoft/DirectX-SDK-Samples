@@ -57,7 +57,7 @@ HWND g_hWnd;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int )
@@ -109,7 +109,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, 
         }
     }
 
-    // Clean up 
+    // Clean up
     UnregisterClass( L"XInputSample", nullptr );
 
     CoUninitialize();
@@ -197,12 +197,12 @@ void RenderFrame()
 
     if( bRepaint )
     {
-        // Repaint the window if needed 
+        // Repaint the window if needed
         InvalidateRect( g_hWnd, nullptr, TRUE );
         UpdateWindow( g_hWnd );
     }
 
-    // This sample doesn't use Direct3D.  Instead, it just yields CPU time to other 
+    // This sample doesn't use Direct3D.  Instead, it just yields CPU time to other
     // apps but this is not typically done when rendering
     Sleep( 10 );
 }
@@ -231,8 +231,8 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
             else
             {
                 // App is now inactive, so disable XInput to prevent
-                // user input from effecting application and to 
-                // disable rumble. 
+                // user input from effecting application and to
+                // disable rumble.
                 XInputEnable( FALSE );
             }
 

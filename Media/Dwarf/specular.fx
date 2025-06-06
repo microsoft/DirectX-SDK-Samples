@@ -25,14 +25,14 @@ float4x4 g_mWorld : WORLD
 <
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.Skeleton.MeshToJointToWorld[0]";
->;        
+>;
 
 
 float4x4 g_mView : VIEW
 <
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.Camera.WorldToView";
->;   
+>;
 
 
 float4x4 g_mProj : PROJECTION
@@ -42,14 +42,14 @@ float4x4 g_mProj : PROJECTION
 >;
 
 float4 g_vLightColor
-<  
+<
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.PointLight[0].Color";
 > = {1.0f, 1.0f, 1.0f, 1.0f}; // Light value
 
 
 float3 g_vLight
-<  
+<
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.PointLight[0].Position";
 > = {0.0f, 3.0f, -100.0f};
@@ -67,9 +67,9 @@ float4 Specular
 float  Power
 <
     string SasUiLabel = "Specular Power";
-    string SasUiControl = "Slider"; 
-    float SasUiMin = 1.0f; 
-    float SasUiMax = 32.0f; 
+    string SasUiControl = "Slider";
+    float SasUiMin = 1.0f;
+    float SasUiMax = 32.0f;
     int SasUiSteps = 31;
 
 > = 8.0f;
@@ -141,7 +141,7 @@ float4 PixScene( float4 MatDiffuse : COLOR0,
 
     // Compute normal dot half for specular light
     float fSpecular = pow( saturate( dot( vHalf, normalize( Normal ) ) ), Power );
-   
+
    return float4( (float3)( g_vLightColor * ( tex2D( g_samScene, Tex0 ) * MatDiffuse + fSpecular ) ), 1.0f );
 }
 

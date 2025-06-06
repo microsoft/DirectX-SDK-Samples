@@ -9,8 +9,8 @@
 #include "prtmesh.h"
 #include <stdio.h>
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 //--------------------------------------------------------------------------------------
 CPRTMesh::CPRTMesh( void )
@@ -92,7 +92,7 @@ HRESULT CPRTMesh::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice, D3DFORMAT fmt )
 
 
 //--------------------------------------------------------------------------------------
-// Callback to fill cube texture with SH basis functions 
+// Callback to fill cube texture with SH basis functions
 //--------------------------------------------------------------------------------------
 VOID WINAPI CPRTMesh::StaticFillCubeTextureWithSHCallback( D3DXVECTOR4* pOut,
                           CONST D3DXVECTOR3* pTexCoord,
@@ -135,8 +135,8 @@ HRESULT CPRTMesh::OnResetDevice()
 
 
 //--------------------------------------------------------------------------------------
-// This function loads the mesh and ensures the mesh has normals; it also optimizes the 
-// mesh for the graphics card's vertex cache, which improves performance by organizing 
+// This function loads the mesh and ensures the mesh has normals; it also optimizes the
+// mesh for the graphics card's vertex cache, which improves performance by organizing
 // the internal triangle list for less cache misses.
 //--------------------------------------------------------------------------------------
 HRESULT CPRTMesh::LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileName )
@@ -186,7 +186,7 @@ HRESULT CPRTMesh::LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileName
     pVB->Unlock();
     SAFE_RELEASE( pVB );
 
-    // Make the mesh have a known decl in order to pass per vertex CPCA 
+    // Make the mesh have a known decl in order to pass per vertex CPCA
     // data to the shader
     V_RETURN( AdjustMeshDecl( pd3dDevice, &m_pMesh ) );
 
@@ -204,9 +204,9 @@ HRESULT CPRTMesh::LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strMeshFileName
 
         // Sort just the faces for optimal vertex cache perf on the current HW device.
         // But note that the vertices are not sorted for optimal vertex cache because
-        // this would reorder the vertices depending on the HW which would make it difficult 
-        // to precompute the PRT results for all HW.  Alternatively you could do the vcache 
-        // optimize with vertex reordering after putting the PRT data into the VB for a 
+        // this would reorder the vertices depending on the HW which would make it difficult
+        // to precompute the PRT results for all HW.  Alternatively you could do the vcache
+        // optimize with vertex reordering after putting the PRT data into the VB for a
         // more optimal result
         if( rgdwAdjacency == NULL )
             return E_OUTOFMEMORY;
@@ -301,7 +301,7 @@ bool DoesMeshHaveUsage( ID3DXMesh* pMesh, BYTE Usage )
 
 
 //-----------------------------------------------------------------------------
-// Make the mesh have a known decl in order to pass per vertex CPCA 
+// Make the mesh have a known decl in order to pass per vertex CPCA
 // data to the shader
 //-----------------------------------------------------------------------------
 HRESULT CPRTMesh::AdjustMeshDecl( IDirect3DDevice9* pd3dDevice, ID3DXMesh** ppMesh )
@@ -326,13 +326,13 @@ HRESULT CPRTMesh::AdjustMeshDecl( IDirect3DDevice9* pd3dDevice, ID3DXMesh** ppMe
         D3DDECL_END()
     };
 
-    // To do CPCA, we need to store (g_dwNumPCAVectors + 1) scalers per vertex, so 
-    // make the mesh have a known decl to store this data.  Since we can't do 
-    // skinning and PRT at once, we use D3DDECLUSAGE_BLENDWEIGHT[0] 
+    // To do CPCA, we need to store (g_dwNumPCAVectors + 1) scalers per vertex, so
+    // make the mesh have a known decl to store this data.  Since we can't do
+    // skinning and PRT at once, we use D3DDECLUSAGE_BLENDWEIGHT[0]
     // to D3DDECLUSAGE_BLENDWEIGHT[6] to store our per vertex data needed for PRT.
     // Notice that D3DDECLUSAGE_BLENDWEIGHT[0] is a float1, and
-    // D3DDECLUSAGE_BLENDWEIGHT[1]-D3DDECLUSAGE_BLENDWEIGHT[6] are float4.  This allows 
-    // up to 24 PCA weights and 1 float that gives the vertex shader 
+    // D3DDECLUSAGE_BLENDWEIGHT[1]-D3DDECLUSAGE_BLENDWEIGHT[6] are float4.  This allows
+    // up to 24 PCA weights and 1 float that gives the vertex shader
     // an index into the vertex's cluster's data
     V( pInMesh->CloneMesh( pInMesh->GetOptions(), decl, pd3dDevice, &pOutMesh ) );
 
@@ -523,7 +523,7 @@ HRESULT CPRTMesh::CompressPRTBuffer( D3DXSHCOMPRESSQUALITYTYPE Quality, UINT Num
 
     hr = D3DXCreatePRTCompBuffer( Quality, NumClusters, NumPCA, pCB, lpUserContext, m_pPRTBuffer, &pNewPRTCompBuffer );
     if( FAILED( hr ) )
-        return hr;// handle user aborting compression via callback 
+        return hr;// handle user aborting compression via callback
 
     SAFE_RELEASE( m_pPRTCompBuffer );
     m_pPRTCompBuffer = pNewPRTCompBuffer;
@@ -559,7 +559,7 @@ HRESULT CPRTMesh::LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* pDe
     UINT dwNumClusters = m_pPRTCompBuffer->GetNumClusters();
     UINT dwNumPCA = m_pPRTCompBuffer->GetNumPCA();
 
-    // The number of vertex consts need by the shader can't exceed the 
+    // The number of vertex consts need by the shader can't exceed the
     // amount the HW can support
     DWORD dwNumVConsts = dwNumClusters * ( 1 + dwNumChannels * dwNumPCA / 4 ) + 4;
     if( dwNumVConsts > pDeviceCaps->MaxVertexShaderConst )
@@ -584,21 +584,21 @@ HRESULT CPRTMesh::LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* pDe
     aDefines[2].Name = NULL;
     aDefines[2].Definition = NULL;
 
-    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.  
-    // Debugging vertex shaders requires either REF or software vertex processing, and debugging 
-    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug 
-    // experience in the shader debugger.  It enables source level debugging, prevents instruction 
-    // reordering, prevents dead code elimination, and forces the compiler to compile against the next 
-    // higher available software target, which ensures that the unoptimized shaders do not exceed 
-    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders 
-    // will be unoptimized and forced into software.  See the DirectX documentation for more information 
+    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the shader debugger.
+    // Debugging vertex shaders requires either REF or software vertex processing, and debugging
+    // pixel shaders requires REF.  The D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug
+    // experience in the shader debugger.  It enables source level debugging, prevents instruction
+    // reordering, prevents dead code elimination, and forces the compiler to compile against the next
+    // higher available software target, which ensures that the unoptimized shaders do not exceed
+    // the shader model limitations.  Setting these flags will cause slower rendering since the shaders
+    // will be unoptimized and forced into software.  See the DirectX documentation for more information
     // about using the shader debugger.
     DWORD dwShaderFlags = D3DXFX_NOT_CLONEABLE;
 
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DXSHADER_DEBUG;
     #endif
@@ -614,7 +614,7 @@ HRESULT CPRTMesh::LoadEffects( IDirect3DDevice9* pd3dDevice, const D3DCAPS9* pDe
     WCHAR str[MAX_PATH];
     V( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, TEXT( "PRT.fx" ) ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     V( D3DXCreateEffectFromFile( pd3dDevice, str, aDefines, NULL,
                                  dwShaderFlags, NULL, &m_pPRTEffect, NULL ) );
@@ -650,10 +650,10 @@ void CPRTMesh::ExtractCompressedDataForPRTShader()
 {
     HRESULT hr;
 
-    // First call ID3DXPRTCompBuffer::NormalizeData.  This isn't nessacary, 
+    // First call ID3DXPRTCompBuffer::NormalizeData.  This isn't nessacary,
     // but it makes it easier to use data formats that have little presision.
     // It normalizes the PCA weights so that they are between [-1,1]
-    // and modifies the basis vectors accordingly.  
+    // and modifies the basis vectors accordingly.
     V( m_pPRTCompBuffer->NormalizeData() );
 
     UINT dwNumSamples = m_pPRTCompBuffer->GetNumSamples();
@@ -662,10 +662,10 @@ void CPRTMesh::ExtractCompressedDataForPRTShader()
     UINT dwNumClusters = m_pPRTCompBuffer->GetNumClusters();
     UINT dwNumPCA = m_pPRTCompBuffer->GetNumPCA();
 
-    // With clustered PCA, each vertex is assigned to a cluster.  To figure out 
+    // With clustered PCA, each vertex is assigned to a cluster.  To figure out
     // which vertex goes with which cluster, call ID3DXPRTCompBuffer::ExtractClusterIDs.
     // This will return a cluster ID for every vertex.  Simply pass in an array of UINTs
-    // that is the size of the number of vertices (which also equals the number of samples), and 
+    // that is the size of the number of vertices (which also equals the number of samples), and
     // the cluster ID for vertex N will be at puClusterIDs[N].
     UINT* pClusterIDs = new UINT[ dwNumSamples ];
     assert( pClusterIDs );
@@ -676,12 +676,12 @@ void CPRTMesh::ExtractCompressedDataForPRTShader()
     D3DVERTEXELEMENT9 declCur[MAX_FVF_DECL_SIZE];
     m_pMesh->GetDeclaration( declCur );
 
-    // Now use this cluster ID info to store a value in the mesh in the 
+    // Now use this cluster ID info to store a value in the mesh in the
     // D3DDECLUSAGE_BLENDWEIGHT[0] which is declared in the vertex decl to be a float1
-    // This value will be passed into the vertex shader to allow the shader 
-    // use this number as an offset into an array of shader constants.  
-    // The value we set per vertex is based on the cluster ID and the stride 
-    // of the shader constants array.  
+    // This value will be passed into the vertex shader to allow the shader
+    // use this number as an offset into an array of shader constants.
+    // The value we set per vertex is based on the cluster ID and the stride
+    // of the shader constants array.
     BYTE* pV = NULL;
     V( m_pMesh->LockVertexBuffer( 0, ( void** )&pV ) );
     UINT uStride = m_pMesh->GetNumBytesPerVertex();
@@ -697,17 +697,17 @@ void CPRTMesh::ExtractCompressedDataForPRTShader()
 
     // Now we also need to store the per vertex PCA weights.  Earilier when
     // the mesh was loaded, we changed the vertex decl to make room to store these
-    // PCA weights.  In this sample, we will use D3DDECLUSAGE_BLENDWEIGHT[1] to 
-    // D3DDECLUSAGE_BLENDWEIGHT[6].  Using D3DDECLUSAGE_BLENDWEIGHT intead of some other 
-    // usage was an arbritatey decision.  Since D3DDECLUSAGE_BLENDWEIGHT[1-6] were 
+    // PCA weights.  In this sample, we will use D3DDECLUSAGE_BLENDWEIGHT[1] to
+    // D3DDECLUSAGE_BLENDWEIGHT[6].  Using D3DDECLUSAGE_BLENDWEIGHT intead of some other
+    // usage was an arbritatey decision.  Since D3DDECLUSAGE_BLENDWEIGHT[1-6] were
     // declared as float4 then we can store up to 6*4 PCA weights per vertex.  They don't
-    // have to be declared as float4, but its a reasonable choice.  So for example, 
+    // have to be declared as float4, but its a reasonable choice.  So for example,
     // if dwNumPCAVectors=16 the function will write data to D3DDECLUSAGE_BLENDWEIGHT[1-4]
     V( m_pPRTCompBuffer->ExtractToMesh( dwNumPCA, D3DDECLUSAGE_BLENDWEIGHT, 1, m_pMesh ) );
 
-    // Extract the cluster bases into a large array of floats.  
-    // ID3DXPRTCompBuffer::ExtractBasis will extract the basis 
-    // for a single cluster.  
+    // Extract the cluster bases into a large array of floats.
+    // ID3DXPRTCompBuffer::ExtractBasis will extract the basis
+    // for a single cluster.
     //
     // A single cluster basis is an array of
     // (NumPCA+1)*NumCoeffs*NumChannels floats
@@ -741,8 +741,8 @@ void CPRTMesh::ComputeSHIrradEnvMapConstants( float* pSHCoeffsRed, float* pSHCoe
     // Lighting environment coefficients
     D3DXVECTOR4 vCoefficients[3];
 
-    // These constants are described in the article by Peter-Pike Sloan titled 
-    // "Efficient Evaluation of Irradiance Environment Maps" in the book 
+    // These constants are described in the article by Peter-Pike Sloan titled
+    // "Efficient Evaluation of Irradiance Environment Maps" in the book
     // "ShaderX 2 - Shader Programming Tips and Tricks" by Wolfgang F. Engel.
     static const float s_fSqrtPI = ( ( float )sqrtf( D3DX_PI ) );
     const float fC0 = 1.0f / ( 2.0f * s_fSqrtPI );
@@ -803,19 +803,19 @@ void CPRTMesh::ComputeShaderConstants( float* pSHCoeffsRed, float* pSHCoeffsGree
     //       R[p] = (M[k] dot L') + sum( w[p][j] * (B[k][j] dot L');
     // where the sum runs j between 0 and # of PCA vectors
     //       R[p] = exit radiance at point p
-    //       M[k] = mean of cluster k 
+    //       M[k] = mean of cluster k
     //       L' = source radiance approximated with SH coefficients
     //       w[p][j] = the j'th PCA weight for point p
     //       B[k][j] = the j'th PCA basis vector for cluster k
     //
-    // Note: since both (M[k] dot L') and (B[k][j] dot L') can be computed on the CPU, 
-    // these values are passed as constants using the array m_aPRTConstants.   
-    // 
+    // Note: since both (M[k] dot L') and (B[k][j] dot L') can be computed on the CPU,
+    // these values are passed as constants using the array m_aPRTConstants.
+    //
     // So we compute an array of floats, m_aPRTConstants, here.
     // This array is the L' dot M[k] and L' dot B[k][j].
     // The source radiance is the lighting environment in terms of spherical
-    // harmonic coefficients which can be computed with D3DXSHEval* or D3DXSHProjectCubeMap.  
-    // M[k] and B[k][j] are also in terms of spherical harmonic basis coefficients 
+    // harmonic coefficients which can be computed with D3DXSHEval* or D3DXSHProjectCubeMap.
+    // M[k] and B[k][j] are also in terms of spherical harmonic basis coefficients
     // and come from ID3DXPRTCompBuffer::ExtractBasis().
     //
     DWORD dwClusterStride = dwNumChannels * dwNumPCA + 4;
@@ -1068,7 +1068,7 @@ void CPRTMesh::ComputeLDPRTConstants( float* pSHCoeffsR, float* pSHCoeffsG, floa
 {
     HRESULT hr;
 
-    // Set coefficients 
+    // Set coefficients
     V( m_pLDPRTEffect->SetFloatArray( "RLight", pSHCoeffsR, 36 ) );
     V( m_pLDPRTEffect->SetFloatArray( "GLight", pSHCoeffsG, 36 ) );
     V( m_pLDPRTEffect->SetFloatArray( "BLight", pSHCoeffsB, 36 ) );
@@ -1325,7 +1325,7 @@ void CPRTMesh::GetSHTransferFunctionAtVertex( unsigned int uVert, int uTechnique
         default:
         case 1: // APP_TECH_SHIRRADENVMAP
             {
-                // SH irradiance environment map transfer function 
+                // SH irradiance environment map transfer function
                 float fVals[36];
                 float fcCoefs[6] = {1.0f,2.0f / 3.0f,0.25f,0.0f,0.0f,0.0f};
 

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL.fx
 //
-// The effect file for the BasicHLSL sample.  
-// 
+// The effect file for the BasicHLSL sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -30,7 +30,7 @@ float4x4 g_mWorldViewProjection;    // World * View * Projection matrix
 //--------------------------------------------------------------------------------------
 // Texture samplers
 //--------------------------------------------------------------------------------------
-sampler MeshTextureSampler = 
+sampler MeshTextureSampler =
 sampler_state
 {
     Texture = <g_MeshTexture>;
@@ -45,16 +45,16 @@ sampler_state
 //--------------------------------------------------------------------------------------
 struct VS_OUTPUT
 {
-    float4 Position   : POSITION;   // vertex position 
+    float4 Position   : POSITION;   // vertex position
     float4 Diffuse    : COLOR0;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
-    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
+    float2 TextureUV  : TEXCOORD0;  // vertex texture coords
 };
 
 
 //--------------------------------------------------------------------------------------
 // This shader computes standard transform and lighting
 //--------------------------------------------------------------------------------------
-VS_OUTPUT RenderSceneVS( float4 vPos : POSITION, 
+VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
                          float3 vNormal : NORMAL,
                          float2 vTexCoord0 : TEXCOORD0,
                          uniform int nNumLights,
@@ -63,35 +63,35 @@ VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-  
+
     float4 vAnimatedPos = vPos;
-    
+
     // Animation the vertex based on time and the vertex's object space position
     if( bAnimate )
 		vAnimatedPos += float4(vNormal, 0) * (sin(g_fTime+5.5)+0.5)*5;
-    
+
     // Transform the position from object space to homogeneous projection space
     Output.Position = mul(vAnimatedPos, g_mWorldViewProjection);
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     vNormalWorldSpace = normalize(mul(vNormal, (float3x3)g_mWorld)); // normal (world space)
-    
+
     // Compute simple directional lighting equation
     float3 vTotalLightDiffuse = float3(0,0,0);
     for(int i=0; i<nNumLights; i++ )
         vTotalLightDiffuse += g_LightDiffuse[i] * max(0,dot(vNormalWorldSpace, g_LightDir[i]));
-        
-    Output.Diffuse.rgb = g_MaterialDiffuseColor * vTotalLightDiffuse + 
-                         g_MaterialAmbientColor * g_LightAmbient;   
-    Output.Diffuse.a = 1.0f; 
-    
+
+    Output.Diffuse.rgb = g_MaterialDiffuseColor * vTotalLightDiffuse +
+                         g_MaterialAmbientColor * g_LightAmbient;
+    Output.Diffuse.a = 1.0f;
+
     // Just copy the texture coordinate through
-    if( bTexture ) 
-        Output.TextureUV = vTexCoord0; 
+    if( bTexture )
+        Output.TextureUV = vTexCoord0;
     else
-        Output.TextureUV = 0; 
-    
-    return Output;    
+        Output.TextureUV = 0;
+
+    return Output;
 }
 
 
@@ -100,7 +100,7 @@ VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
 //--------------------------------------------------------------------------------------
 struct PS_OUTPUT
 {
-    float4 RGBColor : COLOR0;  // Pixel color    
+    float4 RGBColor : COLOR0;  // Pixel color
 };
 
 
@@ -109,8 +109,8 @@ struct PS_OUTPUT
 //       color with diffuse material color
 //--------------------------------------------------------------------------------------
 PS_OUTPUT RenderScenePS( VS_OUTPUT In,
-                         uniform bool bTexture ) 
-{ 
+                         uniform bool bTexture )
+{
     PS_OUTPUT Output;
 
     // Lookup mesh texture and modulate it with diffuse
@@ -129,7 +129,7 @@ PS_OUTPUT RenderScenePS( VS_OUTPUT In,
 technique RenderSceneWithTexture1Light
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 RenderSceneVS( 1, true, true );
         PixelShader  = compile ps_2_0 RenderScenePS( true ); // trivial pixel shader (could use FF instead if desired)
     }
@@ -138,7 +138,7 @@ technique RenderSceneWithTexture1Light
 technique RenderSceneWithTexture2Light
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 RenderSceneVS( 2, true, true );
         PixelShader  = compile ps_2_0 RenderScenePS( true ); // trivial pixel shader (could use FF instead if desired)
     }
@@ -147,7 +147,7 @@ technique RenderSceneWithTexture2Light
 technique RenderSceneWithTexture3Light
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 RenderSceneVS( 3, true, true );
         PixelShader  = compile ps_2_0 RenderScenePS( true ); // trivial pixel shader (could use FF instead if desired)
     }
@@ -156,7 +156,7 @@ technique RenderSceneWithTexture3Light
 technique RenderSceneNoTexture
 {
     pass P0
-    {          
+    {
         VertexShader = compile vs_2_0 RenderSceneVS( 1, false, false );
         PixelShader  = compile ps_2_0 RenderScenePS( false ); // trivial pixel shader (could use FF instead if desired)
     }

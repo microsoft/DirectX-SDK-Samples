@@ -203,7 +203,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer( const char* Name,
         pNewMeshContainer->pSkinInfo = pSkinInfo;
         pSkinInfo->AddRef();
 
-        // Will need an array of offset matrices to move the vertices from the figure space to the 
+        // Will need an array of offset matrices to move the vertices from the figure space to the
         // bone's space
         const DWORD NumBones = pSkinInfo->GetNumBones();
         pNewBoneOffsetMatrices = new D3DXMATRIX[ NumBones ];
@@ -223,7 +223,7 @@ HRESULT CAllocateHierarchy::CreateMeshContainer( const char* Name,
         pNewMeshContainer->pBoneOffsetMatrices = pNewBoneOffsetMatrices;
         pNewBoneOffsetMatrices = NULL;
 
-        // GenerateSkinnedMesh will take the general skinning information and transform it to a 
+        // GenerateSkinnedMesh will take the general skinning information and transform it to a
         // HW friendly version
         hr = GenerateSkinnedMesh( pd3dDevice, pNewMeshContainer );
         if( FAILED( hr ) )
@@ -242,7 +242,7 @@ e_Exit:
     SAFE_RELEASE( pNewMesh );
     SAFE_RELEASE( pd3dDevice );
 
-    // Call Destroy function to properly clean up the memory allocated 
+    // Call Destroy function to properly clean up the memory allocated
     if( pNewMeshContainer )
         DestroyMeshContainer( pNewMeshContainer );
 
@@ -303,9 +303,9 @@ e_Exit:
 
 
 //--------------------------------------------------------------------------------------
-// Called either by CreateMeshContainer when loading a skin mesh, or when 
-// changing methods.  This function uses the pSkinInfo of the mesh 
-// container to generate the desired drawable mesh and bone combination 
+// Called either by CreateMeshContainer when loading a skin mesh, or when
+// changing methods.  This function uses the pSkinInfo of the mesh
+// container to generate the desired drawable mesh and bone combination
 // table.
 //--------------------------------------------------------------------------------------
 HRESULT GenerateSkinnedMesh( IDirect3DDevice9* pd3dDevice, D3DXMESHCONTAINER_DERIVED* pMeshContainer )
@@ -327,7 +327,7 @@ HRESULT GenerateSkinnedMesh( IDirect3DDevice9* pd3dDevice, D3DXMESHCONTAINER_DER
         goto e_Exit;
     }
 
-    // Use ConvertToIndexedBlendedMesh to generate drawable mesh 
+    // Use ConvertToIndexedBlendedMesh to generate drawable mesh
     pMeshContainer->NumPaletteEntries = min( MAX_BONES, pSkinInfo->GetNumBones() );
 
     hr = pSkinInfo->ConvertToIndexedBlendedMesh( pMeshStart,
@@ -352,7 +352,7 @@ e_Exit:
 
 //--------------------------------------------------------------------------------------
 // Name: CAllocateHierarchy::DestroyFrame()
-// Desc: 
+// Desc:
 //--------------------------------------------------------------------------------------
 HRESULT CAllocateHierarchy::DestroyFrame( LPD3DXFRAME pFrameToFree )
 {
@@ -364,7 +364,7 @@ HRESULT CAllocateHierarchy::DestroyFrame( LPD3DXFRAME pFrameToFree )
 
 //--------------------------------------------------------------------------------------
 // Name: CAllocateHierarchy::DestroyMeshContainer()
-// Desc: 
+// Desc:
 //--------------------------------------------------------------------------------------
 HRESULT CAllocateHierarchy::DestroyMeshContainer( LPD3DXMESHCONTAINER pMeshContainerBase )
 {

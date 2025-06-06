@@ -42,10 +42,10 @@ void PlacePointIn1D(PROCESSED_TESS_FACTORS_TRI processedTessFactors, int ctx_ind
         bFlip = false;
     }
 
-    if( pt == numHalfTessFactorPoints ) 
+    if( pt == numHalfTessFactorPoints )
     {
         location = 0.5f;
-    }    
+    }
     else
     {
         unsigned int indexOnCeilHalfTessFactor = pt;
@@ -71,12 +71,12 @@ void CSTessellationVertices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gr
 {
     uint id = DTid.x;
     //uint id = Gid.x * 128 + GI; // Workaround for some CS4x preview drivers
-    
+
     if ( id < g_param.x )
     {
         uint tri_id = InputTriIDIndexID[id].x;
         uint vert_id = InputTriIDIndexID[id].y;
-        
+
         float4 outside_inside_factor = InputEdgeFactor[tri_id];
 
         PROCESSED_TESS_FACTORS_TRI processedTessFactors;
@@ -122,7 +122,7 @@ void CSTessellationVertices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gr
                         edge = 2;
                     }
                 }
-                
+
                 int p = vert_id;
                 int endPoint = processedTessFactors.numPointsForOutsideInside[edge] - 1;
                 float param;
@@ -163,7 +163,7 @@ void CSTessellationVertices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gr
                     float perpParam;
                     PlacePointIn1D(processedTessFactors, 3, perpendicularAxisPoint, perpParam, processedTessFactors.outsideInsideTessFactorParity.w);
                     perpParam = perpParam * 2 / 3;
-                    
+
                     float param;
                     int q = (edge & 0x1) ? p : endPoint - (p - startPoint); // whether to reverse point given we are defining V or U (W implicit):
                                                              // edge0, VW, has V decreasing, so reverse 1D points below
@@ -172,7 +172,7 @@ void CSTessellationVertices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gr
                     PlacePointIn1D(processedTessFactors, 3, q,param, processedTessFactors.outsideInsideTessFactorParity.w);
                     // edge0 VW, has perpendicular parameter U constant
                     // edge1 WU, has perpendicular parameter V constant
-                    // edge2 UV, has perpendicular parameter W constant 
+                    // edge2 UV, has perpendicular parameter W constant
                     const unsigned int deriv = 2; // reciprocal is the rate of change of edge-parallel parameters as they are pushed into the triangle
                     if (0 == edge)
                     {
@@ -197,8 +197,8 @@ void CSTessellationVertices( uint3 DTid : SV_DispatchThreadID, uint3 Gid : SV_Gr
                 }
             }
         }
-        
+
         TessedVerticesOut[id].BaseTriID = tri_id;
         TessedVerticesOut[id].bc = uv;
-    }    
+    }
 }

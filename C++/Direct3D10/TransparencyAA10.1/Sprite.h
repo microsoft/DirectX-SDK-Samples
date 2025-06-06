@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: Sprite.h
 //
-// Sprite class definition. This class provides functionality to render sprites, at a given position and scale. 
+// Sprite class definition. This class provides functionality to render sprites, at a given position and scale.
 //
 // Contributed by AMD Corporation
 //
@@ -27,15 +27,15 @@ public:
         int nStartPosY, int nWidth, int nHeight, bool bAlpha, bool bBordered );
 
     HRESULT RenderSpriteMS( ID3D10ShaderResourceView* pTextureView, int nStartPosX,
-        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight, 
+        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight,
         bool bAlpha, bool bBordered, int nSampleIndex );
 
     HRESULT RenderSpriteAsDepth( ID3D10ShaderResourceView* pTextureView, int nStartPosX,
-        int nStartPosY, int nWidth, int nHeight, bool bBordered, float fDepthRangeMin, 
+        int nStartPosY, int nWidth, int nHeight, bool bBordered, float fDepthRangeMin,
         float fDepthRangeMax );
 	
     HRESULT RenderSpriteAsDepthMS( ID3D10ShaderResourceView1* pTextureView, int nStartPosX,
-        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight, 
+        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight,
         bool bBordered, float fDepthRangeMin, float fDepthRangeMax, int nSampleIndex );
 
     void SetBorderColor( D3DXCOLOR Color );

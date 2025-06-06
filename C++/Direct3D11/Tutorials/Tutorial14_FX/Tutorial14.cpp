@@ -84,15 +84,15 @@ CDXUTSDKMesh                        g_Mesh;
 ID3D11ShaderResourceView*           g_pScreenRV[2] = { nullptr, nullptr };
 
 UINT                                g_eSceneDepthStencilMode = 0;
-ID3D11DepthStencilState*            g_pDepthStencilStates[MAX_DEPTH_STENCIL_MODES]; // Depth Stencil states for non-FX 
+ID3D11DepthStencilState*            g_pDepthStencilStates[MAX_DEPTH_STENCIL_MODES]; // Depth Stencil states for non-FX
 // depth stencil state managment
 
 UINT                                g_eSceneRasterizerMode = 0;
-ID3D11RasterizerState*              g_pRasterStates[MAX_RASTERIZER_MODES];  // Rasterizer states for non-FX 
+ID3D11RasterizerState*              g_pRasterStates[MAX_RASTERIZER_MODES];  // Rasterizer states for non-FX
 // rasterizer state management
 
 UINT                                g_eQuadRenderMode = 0;
-ID3DX11EffectTechnique*             g_pTechniqueQuad[MAX_QUAD_TECHNIQUES]; // Quad Techniques from the FX file for 
+ID3DX11EffectTechnique*             g_pTechniqueQuad[MAX_QUAD_TECHNIQUES]; // Quad Techniques from the FX file for
 // FX based alpha blend state management
 
 ID3DX11EffectTechnique*             g_pTechniqueScene = nullptr;             // FX technique for rendering the scene
@@ -129,7 +129,7 @@ struct SCREEN_VERTEX
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 void RenderText();
 void InitApp();
@@ -173,8 +173,8 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #ifdef _DEBUG
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 
@@ -198,7 +198,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     SAFE_RELEASE( pEffectBuffer );
     if ( FAILED(hr) )
         return hr;
-    
+
 #endif
 
     // Obtain the technique handles
@@ -328,7 +328,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     if( g_bSpinning )
@@ -506,7 +506,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -515,7 +515,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -586,7 +586,7 @@ void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserC
     {
         switch( nChar )
         {
-            case VK_F1: // Change as needed                
+            case VK_F1: // Change as needed
                 break;
         }
     }
@@ -699,7 +699,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {

@@ -48,7 +48,7 @@ struct Model {
 struct Intersection {
     Triangle        *pTri;      // Pointer to mesh triangle that was intersected by ray
     D3DXVECTOR3     position;   // Intersection point on the triangle
-    float           alpha;      // Alpha and beta are two of the barycentric coordinates of the intersection 
+    float           alpha;      // Alpha and beta are two of the barycentric coordinates of the intersection
     float           beta;       // ... the third barycentric coordinate can be calculated by: 1- (alpha + beta).
     bool            valid;      // "valid" is set to true if an intersection was found
 };
@@ -73,12 +73,12 @@ void CreateBoxModel( float xOrigin, float yOrigin, float zOrigin, float width, f
 void CreateQuadMesh( float minX, float minY, float maxX, float maxY, SimpleVertex** ppVB );
 
 // Checks for an intersection between a ray and a model. Returns true if an intersection was found.
-// If an intersection was found, the location in the model's decal texture is given in the offsets 
+// If an intersection was found, the location in the model's decal texture is given in the offsets
 bool RayCastForDecalPosition( Ray ray, Model model, D3DXVECTOR3* pIntersection, Triangle** ppIntTri );
 
 // Creates an orthonormal basis from a single vector
 void CreateOrthonormalBasis( D3DXVECTOR3* v, D3DXVECTOR3* vNormal, D3DXVECTOR3* vBinormal, D3DXVECTOR3* vTangent );
 
-// Converts a DXUT SDKMesh object to an internal Model format for hit detection. 
+// Converts a DXUT SDKMesh object to an internal Model format for hit detection.
 // Allocates the appropriate sized model structures.
 void ConvertSDKMeshToModel( CDXUTSDKMesh* pMesh, Model* pModel );

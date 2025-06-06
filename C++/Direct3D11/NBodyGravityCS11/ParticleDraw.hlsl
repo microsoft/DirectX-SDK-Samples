@@ -51,12 +51,12 @@ SamplerState g_samLinear
 cbuffer cb0
 {
     row_major float4x4 g_mWorldViewProj;
-    row_major float4x4 g_mInvView;    
+    row_major float4x4 g_mInvView;
 };
 
 cbuffer cb1
 {
-    static float g_fParticleRad = 10.0f;   
+    static float g_fParticleRad = 10.0f;
 };
 
 cbuffer cbImmutable
@@ -68,10 +68,10 @@ cbuffer cbImmutable
         float3( -1, -1, 0 ),
         float3( 1, -1, 0 ),
     };
-    
-    static float2 g_texcoords[4] = 
-    { 
-        float2(0,0), 
+
+    static float2 g_texcoords[4] =
+    {
+        float2(0,0),
         float2(1,0),
         float2(0,1),
         float2(1,1),
@@ -84,12 +84,12 @@ cbuffer cbImmutable
 VSParticleDrawOut VSParticleDraw(VSParticleIn input)
 {
     VSParticleDrawOut output;
-    
+
     output.pos = g_bufPosVelo[input.id].pos;
-    
+
     float mag = g_bufPosVelo[input.id].velo.w/9;
     output.color = lerp( float4(1,0.1,0.1,1), input.color, mag );
-    
+
     return output;
 }
 
@@ -100,7 +100,7 @@ VSParticleDrawOut VSParticleDraw(VSParticleIn input)
 void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSParticleDrawOut> SpriteStream)
 {
     GSParticleDrawOut output;
-    
+
     //
     // Emit two new triangles
     //
@@ -108,9 +108,9 @@ void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSPar
     {
         float3 position = g_positions[i] * g_fParticleRad;
         position = mul( position, (float3x3)g_mInvView ) + input[0].pos;
-        output.pos = mul( float4(position,1.0), g_mWorldViewProj ); 
+        output.pos = mul( float4(position,1.0), g_mWorldViewProj );
 
-        output.color = input[0].color;        
+        output.color = input[0].color;
         output.tex = g_texcoords[i];
         SpriteStream.Append(output);
     }
@@ -121,6 +121,6 @@ void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSPar
 // PS for drawing particles
 //
 float4 PSParticleDraw(PSParticleDrawIn input) : SV_Target
-{   
+{
     return g_txDiffuse.Sample( g_samLinear, input.tex ) * input.color;
 }

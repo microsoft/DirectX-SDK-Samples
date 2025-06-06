@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: CompiledEffect.cpp
 //
-// This sample shows how an ID3DXEffect object can be compiled when the 
+// This sample shows how an ID3DXEffect object can be compiled when the
 // project is built and loaded directly as a binary file at run time.
 //
 // Copyright (c) Microsoft Corporation.
@@ -15,8 +15,8 @@
 #include "SDKmisc.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -34,11 +34,11 @@ D3DXVECTOR3                 g_vObjectCenter;        // Center of bounding sphere
 FLOAT                       g_fObjectRadius;        // Radius of bounding sphere of object
 D3DXMATRIXA16               g_mCenterWorld;         // World matrix to center the mesh
 
-D3DXHANDLE                  g_hTime = NULL;                        // Handle to var in the effect 
-D3DXHANDLE                  g_hWorld = NULL;                       // Handle to var in the effect 
-D3DXHANDLE                  g_hMeshTexture = NULL;                 // Handle to var in the effect 
-D3DXHANDLE                  g_hWorldViewProjection = NULL;         // Handle to var in the effect 
-D3DXHANDLE                  g_hTechniqueRenderScene = NULL;        // Handle to technique in the effect 
+D3DXHANDLE                  g_hTime = NULL;                        // Handle to var in the effect
+D3DXHANDLE                  g_hWorld = NULL;                       // Handle to var in the effect
+D3DXHANDLE                  g_hMeshTexture = NULL;                 // Handle to var in the effect
+D3DXHANDLE                  g_hWorldViewProjection = NULL;         // Handle to var in the effect
+D3DXHANDLE                  g_hTechniqueRenderScene = NULL;        // Handle to technique in the effect
 
 
 //--------------------------------------------------------------------------------------
@@ -50,7 +50,7 @@ D3DXHANDLE                  g_hTechniqueRenderScene = NULL;        // Handle to 
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -73,7 +73,7 @@ void RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -83,7 +83,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -111,7 +111,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -162,7 +162,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
                             pDeviceSettings->d3d9.DeviceType,
                             &caps ) );
 
-    // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+    // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
     // then switch to SWVP.
     if( ( caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
         caps.VertexShaderVersion < D3DVS_VERSION( 1, 1 ) )
@@ -170,8 +170,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
     }
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
     if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
     {
@@ -258,7 +258,7 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
     }
 
     // Since we are loading a binary file here and this effect has already been compiled,
-    // you can not pass compiler flags here (for example to debug the shaders). 
+    // you can not pass compiler flags here (for example to debug the shaders).
     // To debug the shaders, you must pass these flags to the compiler that generated the
     // binary (for example fxc.exe).  In this sample, there are 2 extra Visual Studio configurations
     // called "Debug Shaders" and "Unicode Debug Shaders" that pass the debug shader flags to fxc.exe.
@@ -274,8 +274,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -300,8 +300,8 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
     g_pEffect->SetVector( "g_MaterialAmbientColor", ( D3DXVECTOR4* )&colorMtrlAmbient );
     g_pEffect->SetVector( "g_MaterialDiffuseColor", ( D3DXVECTOR4* )&colorMtrlDiffuse );
 
-    // To read or write to D3DX effect variables we can use the string name 
-    // instead of using handles, however it improves perf to use handles since then 
+    // To read or write to D3DX effect variables we can use the string name
+    // instead of using handles, however it improves perf to use handles since then
     // D3DX won't have to spend time doing string compares
     g_hTechniqueRenderScene = g_pEffect->GetTechniqueByName( "RenderScene" );
     g_hTime = g_pEffect->GetParameterByName( NULL, "g_fTime" );
@@ -331,7 +331,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     D3DXMATRIXA16 mProj;
     D3DXMATRIXA16 mWorldViewProjection;
 
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     // Get the projection & view matrix from the camera class
@@ -341,7 +341,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 
     mWorldViewProjection = mWorld * mView * mProj;
 
-    // Update the effect's variables 
+    // Update the effect's variables
     g_pEffect->SetMatrix( g_hWorldViewProjection, &mWorldViewProjection );
     g_pEffect->SetMatrix( g_hWorld, &mWorld );
     g_pEffect->SetFloat( g_hTime, ( float )fTime );
@@ -363,7 +363,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 
     HRESULT hr;
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     V( pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET | D3DCLEAR_ZBUFFER, D3DCOLOR_ARGB( 0, 45, 50, 70 ), 1.0f, 0 ) );
 
     // Render the scene
@@ -388,7 +388,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -474,7 +474,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
 {
@@ -491,7 +491,7 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

@@ -8,7 +8,7 @@
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
 #include "DXUT.h"
-#pragma warning( disable:4995 ) // disable deprecated warning 
+#pragma warning( disable:4995 ) // disable deprecated warning
 #include "DXUTgui.h"
 #include "DXUTmisc.h"
 #include "DXUTcamera.h"
@@ -24,8 +24,8 @@ using namespace std;    // saves us typing std:: before vector
 
 // Uncomment below two lines to use PIX's HLSL shader tracing
 // in addition to asm shader tracing
-//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders
 
 int                                 g_tex_cnt = 0;
 
@@ -279,7 +279,7 @@ ID3DXEffect*                        g_pEffect9 = NULL;
 #define IDC_SELECTSCISSORSSTATE	24
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
                           void* pUserContext );
@@ -309,7 +309,7 @@ HRESULT ToggleAltTextures( IDirect3DDevice9* pd3dDevice, LPCWSTR meshtextures[NU
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -319,7 +319,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
     g_Camera.SetLimitPitch( false );
 
@@ -349,7 +349,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -449,7 +449,7 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -485,7 +485,7 @@ bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
         return false;
     }
 
-    // No fallback defined by this app, so reject any device that 
+    // No fallback defined by this app, so reject any device that
     // doesn't support at least ps2.0
     if( pCaps->PixelShaderVersion < D3DPS_VERSION( 2, 0 ) )
     {
@@ -517,7 +517,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         pDeviceSettings->d3d9.pp.PresentationInterval = D3DPRESENT_INTERVAL_IMMEDIATE;
         g_SettingsDlg.GetDialogControl()->GetComboBox( DXUTSETTINGSDLG_PRESENT_INTERVAL )->SetEnabled( false );
 
-        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
         // then switch to SWVP.
         if( ( Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
             Caps.VertexShaderVersion < D3DVS_VERSION( 1, 1 ) )
@@ -525,8 +525,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
             pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 
-        // Debugging vertex shaders requires either REF or software vertex processing 
-        // and debugging pixel shaders requires REF.  
+        // Debugging vertex shaders requires either REF or software vertex processing
+        // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
         if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
         {
@@ -802,8 +802,8 @@ HRESULT CALLBACK OnD3D9CreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURF
 
 
 //--------------------------------------------------------------------------------------
-// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT) 
-// or that are tied to the back buffer size 
+// Create any D3D9 resources that won't live through a device reset (D3DPOOL_DEFAULT)
+// or that are tied to the back buffer size
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
                                     const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -861,7 +861,7 @@ HRESULT CALLBACK OnD3D9ResetDevice( IDirect3DDevice9* pd3dDevice,
 
 
 //--------------------------------------------------------------------------------------
-// Handle updates to the scene.  
+// Handle updates to the scene.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
@@ -1199,8 +1199,8 @@ void CALLBACK OnD3D9FrameRender( IDirect3DDevice9* pd3dDevice, double fTime, flo
                 {
                     V( g_pEffect9->BeginPass( iPass ) );
 
-                    // The effect interface queues up the changes and performs them 
-                    // with the CommitChanges call. You do not need to call CommitChanges if 
+                    // The effect interface queues up the changes and performs them
+                    // with the CommitChanges call. You do not need to call CommitChanges if
                     // you are not setting any parameters between the BeginPass and EndPass.
                     // V( g_pEffect->CommitChanges() );
                     for( DWORD i = 0; i < g_MeshObj[obj].m_dwNumMaterials; ++i )
@@ -1602,7 +1602,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9ResetDevice callback 
+// Release D3D9 resources created in the OnD3D9ResetDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9LostDevice( void* pUserContext )
 {
@@ -1619,7 +1619,7 @@ void CALLBACK OnD3D9LostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D9 resources created in the OnD3D9CreateDevice callback 
+// Release D3D9 resources created in the OnD3D9CreateDevice callback
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D9DestroyDevice( void* pUserContext )
 {

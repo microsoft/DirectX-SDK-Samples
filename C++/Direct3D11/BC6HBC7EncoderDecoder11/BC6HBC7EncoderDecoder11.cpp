@@ -40,7 +40,7 @@ HRESULT CPU_EncodeDecode( ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
                           ID3D11Texture2D* pSrcTexture,
                           DXGI_FORMAT dstFormat, ID3D11Texture2D** ppDstTextureOut );
 
-struct CCommandLineOptions 
+struct CCommandLineOptions
 {
     enum Mode
     {
@@ -142,9 +142,9 @@ BOOL ParseCommandLine( int argc, WCHAR* argv[] )
 int __cdecl wmain(int argc, WCHAR* argv[])
 {
     printf( "Microsoft (R) Direct3D11 Compute Shader Accelerated BC6H BC7 Encoder/Decoder\n\n" );
-    
+
     if ( argc < 3 )
-    {                
+    {
         printf( "Usage: BC6HBC7EncoderDecoder11.exe (options) Filename0 Filename1 Filename2...\n\n" );
 
         printf( "\tWhere (options) can be the following:\n\n" );
@@ -154,16 +154,16 @@ int __cdecl wmain(int argc, WCHAR* argv[])
         printf( "\t/bc7\t\tEncode to BC7 and save the encoded texture\n" );
         printf( "\t/decode\t\tDecode from BC6H or BC7 encoded texture\n\n" );
 
-        printf( "\tOne and only one of the above options must be present, the following options are optional:\n\n" );                
+        printf( "\tOne and only one of the above options must be present, the following options are optional:\n\n" );
 
         printf( "\t/cpu\t\tForce to use CPU encoder and decoder\n" );
         printf( "\t/sre\t\tShow reconstruction error\n" );
-        printf( "\t/srf\t\tSave reconstruction file\n\n" );        
-        
+        printf( "\t/srf\t\tSave reconstruction file\n\n" );
+
         printf( "\t/sre and /srf are only valid when encoding textures. \n\n\tAfter encoding to BC6H or BC7, \
 /sre decodes the encoded texture and then compares this reconstructed texture with original input texture, and output the L2 error and bias. \
 You can choose to save this reconstructed texture using /srf\n\n" );
-        
+
         printf( "\tOnce a certain operation is chosen by the options above, the same operation will be performed on all input Filename[i]\n\n" );
 
         return 1;
@@ -179,12 +179,12 @@ You can choose to save this reconstructed texture using /srf\n\n" );
     printf( "done\n" );
 
     // Check for Compute Shader 4.x support
-    if ( !g_CommandLineOptions.bForceCPU )    
+    if ( !g_CommandLineOptions.bForceCPU )
     {
         printf( "Checking CS4x capability..." );
         D3D11_FEATURE_DATA_D3D10_X_HARDWARE_OPTIONS hwopts;
         g_pDevice->CheckFeatureSupport( D3D11_FEATURE_D3D10_X_HARDWARE_OPTIONS, &hwopts, sizeof(hwopts) );
-        g_bCS4xAvailable = hwopts.ComputeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x;                
+        g_bCS4xAvailable = hwopts.ComputeShaders_Plus_RawAndStructuredBuffers_Via_Shader_4_x;
     }
 
     if ( g_bCS4xAvailable )
@@ -197,7 +197,7 @@ You can choose to save this reconstructed texture using /srf\n\n" );
         g_GPUBC7Decoder.Initialize( g_pDevice, g_pContext );
     } else
     {
-        // No CS4x support, or the user forces using CPU encoder, everything will be on CPU. 
+        // No CS4x support, or the user forces using CPU encoder, everything will be on CPU.
         // In order for D3DX texture utility to work on BC6H and BC7 textures, a FL11 device is required
         if ( g_pDevice->GetFeatureLevel() < D3D_FEATURE_LEVEL_11_0 )
         {
@@ -205,13 +205,13 @@ You can choose to save this reconstructed texture using /srf\n\n" );
             SAFE_RELEASE( g_pContext );
             if ( FAILED( CreateDevice( &g_pDevice, &g_pContext, TRUE ) ) )
                 return 1;
-        }        
+        }
 
         if ( g_CommandLineOptions.bForceCPU )
             printf( "Forcing CPU encoder, might be very very slow\n" );
         else
             printf( "No, using CPU encoder, might be very very slow\n" );
-    }   
+    }
 
     // Process the input files
     for ( int i = 1; i < argc; ++i )
@@ -224,8 +224,8 @@ You can choose to save this reconstructed texture using /srf\n\n" );
         {
             wprintf( L"\nFile not found: %s\n", argv[i] );
             continue;
-        }       
-    
+        }
+
         wprintf( L"\nProcessing source texture %s...\n", argv[i] );
 
         DXGI_FORMAT fmtLoadAs = DXGI_FORMAT_FROM_FILE;
@@ -250,15 +250,15 @@ You can choose to save this reconstructed texture using /srf\n\n" );
         if ( g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC7 )
         {
             // Encode to BC7
-            if ( FAILED( EncodeDecodeBC7( argv[i], g_pSourceTexture ) ) )            
-                continue;            
+            if ( FAILED( EncodeDecodeBC7( argv[i], g_pSourceTexture ) ) )
+                continue;
         } else
-        if ( g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HS || 
+        if ( g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HS ||
              g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HU )
         {
             // Encode to BC6H
-            if ( FAILED( EncodeDecodeBC6H( argv[i], g_pSourceTexture ) ) )            
-                continue;            
+            if ( FAILED( EncodeDecodeBC6H( argv[i], g_pSourceTexture ) ) )
+                continue;
         } else
         if ( g_CommandLineOptions.mode == CCommandLineOptions::MODE_DECODE )
         {
@@ -272,13 +272,13 @@ You can choose to save this reconstructed texture using /srf\n\n" );
             {
                 // Decode to DXGI_FORMAT_R32G32B32A32_FLOAT from BC6H
                 if ( FAILED( DecodeBC6H( argv[i], g_pSourceTexture ) ) )
-                    continue;                  
+                    continue;
             } else
             {
                 printf( "\tNot BC6H nor BC7 input texture\n" );
             }
-        } 
-    }    
+        }
+    }
 
 
     Cleanup();
@@ -428,12 +428,12 @@ void BC7AnalyzeAndDisplayResult( ID3D11Device* pd3dDevice,
 HRESULT EncodeDecodeBC7( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture )
 {
     HRESULT hr = S_OK;
-    
+
     D3D11_TEXTURE2D_DESC srcTexDesc;
     pSourceTexture->GetDesc( &srcTexDesc );
 
     std::wstring fname = strSrcFilename;
-    
+
     INT pos = (INT)fname.rfind( '.' );
     fname.insert( pos, L"_BC7" );
     pos = (INT)fname.rfind( '.' );
@@ -444,14 +444,14 @@ HRESULT EncodeDecodeBC7( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture 
     {
         // GPU path
 
-        V_RETURN( g_GPUBC7Encoder.GPU_BC7EncodeAndSave( pSourceTexture, DXGI_FORMAT_BC7_UNORM, &fname[0] ) ); 
-        
+        V_RETURN( g_GPUBC7Encoder.GPU_BC7EncodeAndSave( pSourceTexture, DXGI_FORMAT_BC7_UNORM, &fname[0] ) );
+
         if ( g_CommandLineOptions.bSaveReconstructionFile || g_CommandLineOptions.bShowReconstructionError )
         {
             fname.insert( fname.rfind( '.' ), L"_Restored" );
 
             // Either the user request to save reconstruction file or show reconstruction error, we need to decode
-            V_RETURN( g_GPUBC7Decoder.GPU_BC7DecodeAndSaveInternal( g_GPUBC7Encoder.GetEncodedTextureAsBuf(), srcTexDesc.Width, srcTexDesc.Height, DXGI_FORMAT_BC7_UNORM, 
+            V_RETURN( g_GPUBC7Decoder.GPU_BC7DecodeAndSaveInternal( g_GPUBC7Encoder.GetEncodedTextureAsBuf(), srcTexDesc.Width, srcTexDesc.Height, DXGI_FORMAT_BC7_UNORM,
                                                                     g_CommandLineOptions.bSaveReconstructionFile ? &fname[0] : NULL ) );
 
             if ( g_CommandLineOptions.bShowReconstructionError )
@@ -496,7 +496,7 @@ HRESULT EncodeDecodeBC7( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture 
 
         SAFE_RELEASE( pTexEncoded );
         SAFE_RELEASE( pTexRestored );
-    }    
+    }
 
     return hr;
 }
@@ -520,23 +520,23 @@ HRESULT EncodeDecodeBC6H( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture
     {
         // GPU path
 
-        V_RETURN( g_GPUBC6HEncoder.GPU_BC6HEncodeAndSave( pSourceTexture, 
+        V_RETURN( g_GPUBC6HEncoder.GPU_BC6HEncodeAndSave( pSourceTexture,
             g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HS ? DXGI_FORMAT_BC6H_SF16 : DXGI_FORMAT_BC6H_UF16, &fname[0] ) );
-        
+
         if ( g_CommandLineOptions.bSaveReconstructionFile || g_CommandLineOptions.bShowReconstructionError )
         {
             fname.insert( fname.rfind( '.' ), L"_Restored" );
 
             // Either the user request to save reconstruction file or show reconstruction error, we need to decode
-            V_RETURN( g_GPUBC6HDecoder.GPU_BC6HDecodeAndSaveInternal( g_GPUBC6HEncoder.GetEncodedTextureAsBuf(), srcTexDesc.Width, srcTexDesc.Height, 
-                g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HS ? DXGI_FORMAT_BC6H_SF16 : DXGI_FORMAT_BC6H_UF16, 
-                g_CommandLineOptions.bSaveReconstructionFile ? &fname[0] : NULL ) ); 
+            V_RETURN( g_GPUBC6HDecoder.GPU_BC6HDecodeAndSaveInternal( g_GPUBC6HEncoder.GetEncodedTextureAsBuf(), srcTexDesc.Width, srcTexDesc.Height,
+                g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HS ? DXGI_FORMAT_BC6H_SF16 : DXGI_FORMAT_BC6H_UF16,
+                g_CommandLineOptions.bSaveReconstructionFile ? &fname[0] : NULL ) );
 
             if ( g_CommandLineOptions.bShowReconstructionError )
             {
                 BC6HAnalyzeAndDisplayResult( g_pDevice, g_pContext, pSourceTexture, g_GPUBC6HDecoder.GetRestoredTexture() );
             }
-        }       
+        }
     } else
     {
         // CPU path
@@ -544,7 +544,7 @@ HRESULT EncodeDecodeBC6H( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture
         ID3D11Texture2D* pTexEncoded = NULL;
         ID3D11Texture2D* pTexRestored = NULL;
         printf( "\tEncoding to BC6H..." );
-        V_RETURN( CPU_EncodeDecode( g_pDevice, g_pContext, pSourceTexture, 
+        V_RETURN( CPU_EncodeDecode( g_pDevice, g_pContext, pSourceTexture,
             g_CommandLineOptions.mode == CCommandLineOptions::MODE_ENCODE_BC6HS ? DXGI_FORMAT_BC6H_SF16 : DXGI_FORMAT_BC6H_UF16, &pTexEncoded ) );
         printf( "done\n" );
 
@@ -559,7 +559,7 @@ HRESULT EncodeDecodeBC6H( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture
             printf( "\tDecoding from BC6H..." );
             V_RETURN( CPU_EncodeDecode( g_pDevice, g_pContext, pTexEncoded, DXGI_FORMAT_R32G32B32A32_FLOAT, &pTexRestored ) );
             printf( "done\n" );
-            
+
             if ( g_CommandLineOptions.bSaveReconstructionFile )
             {
                 wprintf( L"\tSaving to %s...", &fname[0] );
@@ -582,7 +582,7 @@ HRESULT EncodeDecodeBC6H( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture
 
 HRESULT DecodeBC7( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture )
 {
-    HRESULT hr = S_OK;        
+    HRESULT hr = S_OK;
 
     std::wstring fname = strSrcFilename;
     fname.insert( fname.rfind( '.' ), L"_Restored" );
@@ -615,7 +615,7 @@ HRESULT DecodeBC6H( WCHAR* strSrcFilename, ID3D11Texture2D* pSourceTexture )
 
     if ( g_bCS4xAvailable )
     {
-        V_RETURN( g_GPUBC6HDecoder.GPU_BC6HDecodeAndSave( pSourceTexture, &fname[0] ) );            
+        V_RETURN( g_GPUBC6HDecoder.GPU_BC6HDecodeAndSave( pSourceTexture, &fname[0] ) );
     } else
     {
         ID3D11Texture2D* pTexRestored = NULL;

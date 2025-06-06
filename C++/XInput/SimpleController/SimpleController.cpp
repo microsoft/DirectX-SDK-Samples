@@ -35,7 +35,7 @@ void RenderFrame();
 //-----------------------------------------------------------------------------
 // Defines, constants, and global variables
 //-----------------------------------------------------------------------------
-#define MAX_CONTROLLERS 4  // XInput handles up to 4 controllers 
+#define MAX_CONTROLLERS 4  // XInput handles up to 4 controllers
 #define INPUT_DEADZONE  ( 0.24f * FLOAT(0x7FFF) )  // Default to 24% of the +/- 32767 range.   This is a reasonable default value but can be altered if needed.
 
 struct CONTROLLER_STATE
@@ -52,7 +52,7 @@ bool    g_bDeadZoneOn = true;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, _In_ int )
@@ -104,7 +104,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE, _In_ LPWSTR, 
         }
     }
 
-    // Clean up 
+    // Clean up
     UnregisterClass( L"XInputSample", nullptr );
 
     CoUninitialize();
@@ -146,7 +146,7 @@ void RenderFrame()
 
             if( g_bDeadZoneOn )
             {
-                // Zero value if thumbsticks are within the dead zone 
+                // Zero value if thumbsticks are within the dead zone
                 if( ( g_Controllers[i].state.Gamepad.sThumbLX < INPUT_DEADZONE &&
                       g_Controllers[i].state.Gamepad.sThumbLX > -INPUT_DEADZONE ) &&
                     ( g_Controllers[i].state.Gamepad.sThumbLY < INPUT_DEADZONE &&
@@ -208,12 +208,12 @@ void RenderFrame()
 
     if( bRepaint )
     {
-        // Repaint the window if needed 
+        // Repaint the window if needed
         InvalidateRect( g_hWnd, nullptr, TRUE );
         UpdateWindow( g_hWnd );
     }
 
-    // This sample doesn't use Direct3D.  Instead, it just yields CPU time to other 
+    // This sample doesn't use Direct3D.  Instead, it just yields CPU time to other
     // apps but this is not typically done when rendering
     Sleep( 10 );
 }
@@ -242,8 +242,8 @@ LRESULT WINAPI MsgProc( HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam )
             else
             {
                 // App is now inactive, so disable XInput to prevent
-                // user input from effecting application and to 
-                // disable rumble. 
+                // user input from effecting application and to
+                // disable rumble.
                 XInputEnable( FALSE );
             }
 

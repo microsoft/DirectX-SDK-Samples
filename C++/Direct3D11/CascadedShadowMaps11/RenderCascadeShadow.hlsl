@@ -2,8 +2,8 @@
 //--------------------------------------------------------------------------------------
 // File: RenderCascadeShadow.hlsl
 //
-// The shader file for the RenderCascadeScene sample.  
-// 
+// The shader file for the RenderCascadeScene sample.
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ struct VS_OUTPUT
 VS_OUTPUT VSMain( VS_INPUT Input )
 {
     VS_OUTPUT Output;
-    
+
     // There is nothing special here, just transform and write out the depth.
     Output.vPosition = mul( Input.vPosition, g_mWorldViewProjection );
 

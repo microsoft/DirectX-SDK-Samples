@@ -120,11 +120,11 @@ void CDXUTTimer::GetTimeValues( double* pfTime, double* pfAbsoluteTime, float* p
     m_llLastElapsedTime = qwTime.QuadPart;
 
     // Clamp the timer to non-negative values to ensure the timer is accurate.
-    // fElapsedTime can be outside this range if processor goes into a 
-    // power save mode or we somehow get shuffled to another processor.  
-    // However, the main thread should call SetThreadAffinityMask to ensure that 
-    // we don't get shuffled to another processor.  Other worker threads should NOT call 
-    // SetThreadAffinityMask, but use a shared copy of the timer data gathered from 
+    // fElapsedTime can be outside this range if processor goes into a
+    // power save mode or we somehow get shuffled to another processor.
+    // However, the main thread should call SetThreadAffinityMask to ensure that
+    // we don't get shuffled to another processor.  Other worker threads should NOT call
+    // SetThreadAffinityMask, but use a shared copy of the timer data gathered from
     // the main thread.
     if( fElapsedTime < 0.0f )
         fElapsedTime = 0.0f;
@@ -172,7 +172,7 @@ bool CDXUTTimer::IsStopped()
 }
 
 //--------------------------------------------------------------------------------------
-// Limit the current thread to one processor (the current one). This ensures that timing code 
+// Limit the current thread to one processor (the current one). This ensures that timing code
 // runs on only one processor, and will not suffer any ill effects from power management.
 // See "Game Timing and Multicore Processors" for more details
 //--------------------------------------------------------------------------------------
@@ -886,7 +886,7 @@ BOOL WINAPI DXUT_Dynamic_D3D10StateBlockMaskGetSetting( D3D10_STATE_BLOCK_MASK* 
 }
 
 //--------------------------------------------------------------------------------------
-// Trace a string description of a decl 
+// Trace a string description of a decl
 //--------------------------------------------------------------------------------------
 void WINAPI DXUTTraceDecl( D3DVERTEXELEMENT9 decl[MAX_FVF_DECL_SIZE] )
 {
@@ -1327,8 +1327,8 @@ HMONITOR WINAPI DXUTMonitorFromRect( LPCRECT lprcScreenCoords, DWORD dwFlags )
 
 
 //--------------------------------------------------------------------------------------
-// Get the desktop resolution of an adapter. This isn't the same as the current resolution 
-// from GetAdapterDisplayMode since the device might be fullscreen 
+// Get the desktop resolution of an adapter. This isn't the same as the current resolution
+// from GetAdapterDisplayMode since the device might be fullscreen
 //--------------------------------------------------------------------------------------
 void WINAPI DXUTGetDesktopResolution( UINT AdapterOrdinal, UINT* pWidth, UINT* pHeight )
 {
@@ -1369,7 +1369,7 @@ void WINAPI DXUTGetDesktopResolution( UINT AdapterOrdinal, UINT* pWidth, UINT* p
 
 
 //--------------------------------------------------------------------------------------
-// Display error msg box to help debug 
+// Display error msg box to help debug
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTTrace( const CHAR* strFile, DWORD dwLine, HRESULT hr,
                           const WCHAR* strMsg, bool bPopMsgBox )
@@ -1646,7 +1646,7 @@ bool DXUTReLaunchMediaCenter()
     if( GetFileAttributes( szExpandedPath ) == 0xFFFFFFFF )
         return false;
 
-    // Launch ehshell.exe 
+    // Launch ehshell.exe
     INT_PTR result = ( INT_PTR )ShellExecute( NULL, TEXT( "open" ), szExpandedPath, NULL, NULL, SW_SHOWNORMAL );
     return ( result > 32 );
 }
@@ -1749,7 +1749,7 @@ HRESULT DXUTGetGamepadState( DWORD dwPort, DXUT_GAMEPAD* pGamePad, bool bThumbst
     pGamePad->fThumbRX = pGamePad->sThumbRX / 32767.0f;
     pGamePad->fThumbRY = pGamePad->sThumbRY / 32767.0f;
 
-    // Get the boolean buttons that have been pressed since the last call. 
+    // Get the boolean buttons that have been pressed since the last call.
     // Each button is represented by one bit.
     pGamePad->wPressedButtons = ( pGamePad->wLastButtons ^ pGamePad->wButtons ) & pGamePad->wButtons;
     pGamePad->wLastButtons = pGamePad->wButtons;
@@ -1769,7 +1769,7 @@ HRESULT DXUTGetGamepadState( DWORD dwPort, DXUT_GAMEPAD* pGamePad, bool bThumbst
 
 
 //--------------------------------------------------------------------------------------
-// Don't pause the game or deactive the window without first stopping rumble otherwise 
+// Don't pause the game or deactive the window without first stopping rumble otherwise
 // the controller will continue to rumble
 //--------------------------------------------------------------------------------------
 void DXUTEnableXInput( bool bEnable )
@@ -1788,7 +1788,7 @@ void DXUTEnableXInput( bool bEnable )
 
 
 //--------------------------------------------------------------------------------------
-// Don't pause the game or deactive the window without first stopping rumble otherwise 
+// Don't pause the game or deactive the window without first stopping rumble otherwise
 // the controller will continue to rumble
 //--------------------------------------------------------------------------------------
 HRESULT DXUTStopRumbleOnAllControllers()

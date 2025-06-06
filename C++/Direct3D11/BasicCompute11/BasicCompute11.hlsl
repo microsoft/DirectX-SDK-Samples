@@ -2,7 +2,7 @@
 // File: BasicCompute11.hlsl
 //
 // This file contains the Compute Shader to perform array A + array B
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -14,7 +14,7 @@ struct BufType
     float f;
 #ifdef TEST_DOUBLE
     double d;
-#endif    
+#endif
 };
 
 StructuredBuffer<BufType> Buffer0 : register(t0);
@@ -28,7 +28,7 @@ void CSMain( uint3 DTid : SV_DispatchThreadID )
     BufferOut[DTid.x].f = Buffer0[DTid.x].f + Buffer1[DTid.x].f;
 #ifdef TEST_DOUBLE
     BufferOut[DTid.x].d = Buffer0[DTid.x].d + Buffer1[DTid.x].d;
-#endif 
+#endif
 }
 
 #else // The following code is for raw buffers
@@ -47,10 +47,10 @@ void CSMain( uint3 DTid : SV_DispatchThreadID )
     int i1 = asint( Buffer1.Load( DTid.x*16 ) );
     float f1 = asfloat( Buffer1.Load( DTid.x*16+4 ) );
     double d1 = asdouble( Buffer1.Load( DTid.x*16+8 ), Buffer1.Load( DTid.x*16+12 ) );
-    
+
     BufferOut.Store( DTid.x*16, asuint(i0 + i1) );
     BufferOut.Store( DTid.x*16+4, asuint(f0 + f1) );
-    
+
     uint dl, dh;
     asuint( d0 + d1, dl, dh );
 
@@ -61,7 +61,7 @@ void CSMain( uint3 DTid : SV_DispatchThreadID )
     float f0 = asfloat( Buffer0.Load( DTid.x*8+4 ) );
     int i1 = asint( Buffer1.Load( DTid.x*8 ) );
     float f1 = asfloat( Buffer1.Load( DTid.x*8+4 ) );
-    
+
     BufferOut.Store( DTid.x*8, asuint(i0 + i1) );
     BufferOut.Store( DTid.x*8+4, asuint(f0 + f1) );
 #endif // TEST_DOUBLE

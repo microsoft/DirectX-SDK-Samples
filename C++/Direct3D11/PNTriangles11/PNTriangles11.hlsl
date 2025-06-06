@@ -59,8 +59,8 @@ SamplerState g_SampleLinear : register( s1 );
 
 struct VS_RenderSceneInput
 {
-    float3 f3Position   : POSITION;  
-    float3 f3Normal     : NORMAL;     
+    float3 f3Position   : POSITION;
+    float3 f3Normal     : NORMAL;
     float2 f2TexCoord   : TEXCOORD;
 };
 
@@ -76,7 +76,7 @@ struct HS_ConstantOutput
     // Tess factor for the FF HW block
     float fTessFactor[3]    : SV_TessFactor;
     float fInsideTessFactor : SV_InsideTessFactor;
-    
+
     // Geometry cubic generated control points
     float3 f3B210    : POSITION3;
     float3 f3B120    : POSITION4;
@@ -85,9 +85,9 @@ struct HS_ConstantOutput
     float3 f3B102    : POSITION7;
     float3 f3B201    : POSITION8;
     float3 f3B111    : CENTER;
-    
+
     // Normal quadratic generated control points
-    float3 f3N110    : NORMAL3;      
+    float3 f3N110    : NORMAL3;
     float3 f3N011    : NORMAL4;
     float3 f3N101    : NORMAL5;
 };
@@ -126,21 +126,21 @@ PS_RenderSceneInput VS_RenderScene( VS_RenderSceneInput I )
 {
     PS_RenderSceneInput O;
     float3 f3NormalWorldSpace;
-    
+
     // Transform the position from object space to homogeneous projection space
     O.f4Position = mul( float4( I.f3Position, 1.0f ), g_f4x4WorldViewProjection );
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     f3NormalWorldSpace = normalize( mul( I.f3Normal, (float3x3)g_f4x4World ) );
-    
-    // Calc diffuse color    
-    O.f4Diffuse.rgb = g_f4MaterialDiffuseColor * g_f4LightDiffuse * max( 0, dot( f3NormalWorldSpace, g_f4LightDir.xyz ) ) + g_f4MaterialAmbientColor;  
+
+    // Calc diffuse color
+    O.f4Diffuse.rgb = g_f4MaterialDiffuseColor * g_f4LightDiffuse * max( 0, dot( f3NormalWorldSpace, g_f4LightDir.xyz ) ) + g_f4MaterialAmbientColor;
     O.f4Diffuse.a = 1.0f;
-    
+
     // Pass through texture coords
-    O.f2TexCoord = I.f2TexCoord; 
-    
-    return O;    
+    O.f2TexCoord = I.f2TexCoord;
+
+    return O;
 }
 
 
@@ -150,22 +150,22 @@ PS_RenderSceneInput VS_RenderScene( VS_RenderSceneInput I )
 HS_Input VS_RenderSceneWithTessellation( VS_RenderSceneInput I )
 {
     HS_Input O;
-    
+
     // Pass through world space position
     O.f3Position = mul( I.f3Position, (float3x3)g_f4x4World );
-    
-    // Pass through normalized world space normal    
+
+    // Pass through normalized world space normal
     O.f3Normal = normalize( mul( I.f3Normal, (float3x3)g_f4x4World ) );
-        
+
     // Pass through texture coordinates
     O.f2TexCoord = I.f2TexCoord;
-    
-    return O;    
+
+    return O;
 }
 
 
 //--------------------------------------------------------------------------------------
-// This hull shader passes the tessellation factors through to the HW tessellator, 
+// This hull shader passes the tessellation factors through to the HW tessellator,
 // and the 10 (geometry), 6 (normal) control points of the PN-triangular patch to the domain shader
 //--------------------------------------------------------------------------------------
 HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
@@ -174,19 +174,19 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
     bool bViewFrustumCull = false;
     bool bBackFaceCull = false;
     float fEdgeDot[3];
-    
+
     #ifdef USE_VIEW_FRUSTUM_CULLING
 
         // Perform view frustum culling test
         bViewFrustumCull = ViewFrustumCull( I[0].f3Position, I[1].f3Position, I[2].f3Position, g_f4ViewFrustumPlanes, g_f4GUIParams2.y );
-                    
+
     #endif
 
     #ifdef USE_BACK_FACE_CULLING
 
         // Perform back face culling test
-        
-        // Aquire patch edge dot product between patch edge normal and view vector 
+
+        // Aquire patch edge dot product between patch edge normal and view vector
         fEdgeDot[0] = GetEdgeDotProduct( I[2].f3Normal, I[0].f3Normal, g_f4ViewVector.xyz );
         fEdgeDot[1] = GetEdgeDotProduct( I[0].f3Normal, I[1].f3Normal, g_f4ViewVector.xyz );
         fEdgeDot[2] = GetEdgeDotProduct( I[1].f3Normal, I[2].f3Normal, g_f4ViewVector.xyz );
@@ -199,42 +199,42 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
     // Skip the rest of the function if culling
     if( !bViewFrustumCull && !bBackFaceCull )
     {
-        // Use the tessellation factors as defined in constant space 
+        // Use the tessellation factors as defined in constant space
         O.fTessFactor[0] = O.fTessFactor[1] = O.fTessFactor[2] = g_f4TessFactors.x;
         float fAdaptiveScaleFactor;
-                
+
         #if defined( USE_SCREEN_SPACE_ADAPTIVE_TESSELLATION )
 
-            // Get the screen space position of each control point, so we can compute the 
+            // Get the screen space position of each control point, so we can compute the
             // desired tess factor based upon an ideal primitive size
             float2 f2EdgeScreenPosition0 = GetScreenSpacePosition( I[0].f3Position, g_f4x4ViewProjection,  g_f4ScreenParams.x,  g_f4ScreenParams.y );
             float2 f2EdgeScreenPosition1 = GetScreenSpacePosition( I[1].f3Position, g_f4x4ViewProjection,  g_f4ScreenParams.x,  g_f4ScreenParams.y );
             float2 f2EdgeScreenPosition2 = GetScreenSpacePosition( I[2].f3Position, g_f4x4ViewProjection,  g_f4ScreenParams.x,  g_f4ScreenParams.y );
             // Edge 0
             fAdaptiveScaleFactor = GetScreenSpaceAdaptiveScaleFactor( f2EdgeScreenPosition2, f2EdgeScreenPosition0, g_f4TessFactors.x, g_f4GUIParams1.w );
-            O.fTessFactor[0] = lerp( 1.0f, O.fTessFactor[0], fAdaptiveScaleFactor ); 
+            O.fTessFactor[0] = lerp( 1.0f, O.fTessFactor[0], fAdaptiveScaleFactor );
             // Edge 1
             fAdaptiveScaleFactor = GetScreenSpaceAdaptiveScaleFactor( f2EdgeScreenPosition0, f2EdgeScreenPosition1, g_f4TessFactors.x, g_f4GUIParams1.w );
-            O.fTessFactor[1] = lerp( 1.0f, O.fTessFactor[1], fAdaptiveScaleFactor ); 
+            O.fTessFactor[1] = lerp( 1.0f, O.fTessFactor[1], fAdaptiveScaleFactor );
             // Edge 2
             fAdaptiveScaleFactor = GetScreenSpaceAdaptiveScaleFactor( f2EdgeScreenPosition1, f2EdgeScreenPosition2, g_f4TessFactors.x, g_f4GUIParams1.w );
-            O.fTessFactor[2] = lerp( 1.0f, O.fTessFactor[2], fAdaptiveScaleFactor ); 
+            O.fTessFactor[2] = lerp( 1.0f, O.fTessFactor[2], fAdaptiveScaleFactor );
 
         #else
-        
+
             #if defined( USE_DISTANCE_ADAPTIVE_TESSELLATION )
-        
+
                 // Perform distance adaptive tessellation per edge
                 // Edge 0
                 fAdaptiveScaleFactor = GetDistanceAdaptiveScaleFactor(    g_f4Eye.xyz, I[2].f3Position, I[0].f3Position, g_f4TessFactors.z, g_f4TessFactors.w * g_f4GUIParams1.z );
-                O.fTessFactor[0] = lerp( 1.0f, O.fTessFactor[0], fAdaptiveScaleFactor ); 
+                O.fTessFactor[0] = lerp( 1.0f, O.fTessFactor[0], fAdaptiveScaleFactor );
                 // Edge 1
                 fAdaptiveScaleFactor = GetDistanceAdaptiveScaleFactor(    g_f4Eye.xyz, I[0].f3Position, I[1].f3Position, g_f4TessFactors.z, g_f4TessFactors.w * g_f4GUIParams1.z );
-                O.fTessFactor[1] = lerp( 1.0f, O.fTessFactor[1], fAdaptiveScaleFactor ); 
+                O.fTessFactor[1] = lerp( 1.0f, O.fTessFactor[1], fAdaptiveScaleFactor );
                 // Edge 2
                 fAdaptiveScaleFactor = GetDistanceAdaptiveScaleFactor(    g_f4Eye.xyz, I[1].f3Position, I[2].f3Position, g_f4TessFactors.z, g_f4TessFactors.w * g_f4GUIParams1.z );
-                O.fTessFactor[2] = lerp( 1.0f, O.fTessFactor[2], fAdaptiveScaleFactor ); 
-            
+                O.fTessFactor[2] = lerp( 1.0f, O.fTessFactor[2], fAdaptiveScaleFactor );
+
             #endif
 
             #if defined( USE_SCREEN_RESOLUTION_ADAPTIVE_TESSELLATION )
@@ -242,13 +242,13 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
                 // Use screen resolution as a global scaling factor
                 // Edge 0
                 fAdaptiveScaleFactor = GetScreenResolutionAdaptiveScaleFactor( g_f4ScreenParams.x, g_f4ScreenParams.y, g_fMaxScreenWidth * g_f4GUIParams2.x, g_fMaxScreenHeight * g_f4GUIParams2.x );
-                O.fTessFactor[0] = lerp( 1.0f, O.fTessFactor[0], fAdaptiveScaleFactor ); 
+                O.fTessFactor[0] = lerp( 1.0f, O.fTessFactor[0], fAdaptiveScaleFactor );
                 // Edge 1
                 fAdaptiveScaleFactor = GetScreenResolutionAdaptiveScaleFactor( g_f4ScreenParams.x, g_f4ScreenParams.y, g_fMaxScreenWidth * g_f4GUIParams2.x, g_fMaxScreenHeight * g_f4GUIParams2.x );
-                O.fTessFactor[1] = lerp( 1.0f, O.fTessFactor[1], fAdaptiveScaleFactor ); 
+                O.fTessFactor[1] = lerp( 1.0f, O.fTessFactor[1], fAdaptiveScaleFactor );
                 // Edge 2
                 fAdaptiveScaleFactor = GetScreenResolutionAdaptiveScaleFactor( g_f4ScreenParams.x, g_f4ScreenParams.y, g_fMaxScreenWidth * g_f4GUIParams2.x, g_fMaxScreenHeight * g_f4GUIParams2.x );
-                O.fTessFactor[2] = lerp( 1.0f, O.fTessFactor[2], fAdaptiveScaleFactor ); 
+                O.fTessFactor[2] = lerp( 1.0f, O.fTessFactor[2], fAdaptiveScaleFactor );
 
             #endif
 
@@ -259,10 +259,10 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
             #ifndef USE_BACK_FACE_CULLING
 
                 // If back face culling is not used, then aquire patch edge dot product
-                // between patch edge normal and view vector 
+                // between patch edge normal and view vector
                 fEdgeDot[0] = GetEdgeDotProduct( I[2].f3Normal, I[0].f3Normal, g_f4ViewVector.xyz );
                 fEdgeDot[1] = GetEdgeDotProduct( I[0].f3Normal, I[1].f3Normal, g_f4ViewVector.xyz );
-                fEdgeDot[2] = GetEdgeDotProduct( I[1].f3Normal, I[2].f3Normal, g_f4ViewVector.xyz );    
+                fEdgeDot[2] = GetEdgeDotProduct( I[1].f3Normal, I[2].f3Normal, g_f4ViewVector.xyz );
 
             #endif
 
@@ -270,30 +270,30 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
             // vector
             // Edge 0
             fAdaptiveScaleFactor = GetOrientationAdaptiveScaleFactor( fEdgeDot[0], g_f4GUIParams1.y );
-            float fTessFactor0 = lerp( 1.0f, g_f4TessFactors.x, fAdaptiveScaleFactor ); 
+            float fTessFactor0 = lerp( 1.0f, g_f4TessFactors.x, fAdaptiveScaleFactor );
             // Edge 1
             fAdaptiveScaleFactor = GetOrientationAdaptiveScaleFactor( fEdgeDot[1], g_f4GUIParams1.y );
-            float fTessFactor1 = lerp( 1.0f, g_f4TessFactors.x, fAdaptiveScaleFactor ); 
+            float fTessFactor1 = lerp( 1.0f, g_f4TessFactors.x, fAdaptiveScaleFactor );
             // Edge 2
             fAdaptiveScaleFactor = GetOrientationAdaptiveScaleFactor( fEdgeDot[2], g_f4GUIParams1.y );
-            float fTessFactor2 = lerp( 1.0f, g_f4TessFactors.x, fAdaptiveScaleFactor ); 
+            float fTessFactor2 = lerp( 1.0f, g_f4TessFactors.x, fAdaptiveScaleFactor );
 
             #if defined( USE_SCREEN_SPACE_ADAPTIVE_TESSELLATION ) || defined( USE_DISTANCE_ADAPTIVE_TESSELLATION )
 
-                O.fTessFactor[0] = ( O.fTessFactor[0] + fTessFactor0 ) / 2.0f;    
-                O.fTessFactor[1] = ( O.fTessFactor[1] + fTessFactor1 ) / 2.0f;    
-                O.fTessFactor[2] = ( O.fTessFactor[2] + fTessFactor2 ) / 2.0f;    
+                O.fTessFactor[0] = ( O.fTessFactor[0] + fTessFactor0 ) / 2.0f;
+                O.fTessFactor[1] = ( O.fTessFactor[1] + fTessFactor1 ) / 2.0f;
+                O.fTessFactor[2] = ( O.fTessFactor[2] + fTessFactor2 ) / 2.0f;
 
             #else
-            
-                O.fTessFactor[0] = fTessFactor0;    
-                O.fTessFactor[1] = fTessFactor1;    
-                O.fTessFactor[2] = fTessFactor2;    
+
+                O.fTessFactor[0] = fTessFactor0;
+                O.fTessFactor[1] = fTessFactor1;
+                O.fTessFactor[2] = fTessFactor2;
 
             #endif
-                                            
+
         #endif
-        
+
         // Now setup the PNTriangle control points...
 
         // Assign Positions
@@ -304,7 +304,7 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
         float3 f3N002 = I[0].f3Normal;
         float3 f3N020 = I[1].f3Normal;
         float3 f3N200 = I[2].f3Normal;
-            
+
         // Compute the cubic geometry control points
         // Edge control points
         O.f3B210 = ( ( 2.0f * f3B003 ) + f3B030 - ( dot( ( f3B030 - f3B003 ), f3N002 ) * f3N002 ) ) / 3.0f;
@@ -317,7 +317,7 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
         float3 f3E = ( O.f3B210 + O.f3B120 + O.f3B021 + O.f3B012 + O.f3B102 + O.f3B201 ) / 6.0f;
         float3 f3V = ( f3B003 + f3B030 + f3B300 ) / 3.0f;
         O.f3B111 = f3E + ( ( f3E - f3V ) / 2.0f );
-        
+
         // Compute the quadratic normal control points, and rotate into world space
         float fV12 = 2.0f * dot( f3B030 - f3B003, f3N002 + f3N020 ) / dot( f3B030 - f3B003, f3B030 - f3B003 );
         O.f3N110 = normalize( f3N002 + f3N020 - fV12 * ( f3B030 - f3B003 ) );
@@ -336,7 +336,7 @@ HS_ConstantOutput HS_PNTrianglesConstant( InputPatch<HS_Input, 3> I )
 
     // Inside tess factor is just the average of the edge factors
     O.fInsideTessFactor = ( O.fTessFactor[0] + O.fTessFactor[1] + O.fTessFactor[2] ) / 3.0f;
-               
+
     return O;
 }
 
@@ -354,13 +354,13 @@ HS_ControlPointOutput HS_PNTriangles( InputPatch<HS_Input, 3> I, uint uCPID : SV
     O.f3Position = I[uCPID].f3Position;
     O.f3Normal = I[uCPID].f3Normal;
     O.f2TexCoord = I[uCPID].f2TexCoord;
-    
+
     return O;
 }
 
 
 //--------------------------------------------------------------------------------------
-// This domain shader applies contol point weighting to the barycentric coords produced by the FF tessellator 
+// This domain shader applies contol point weighting to the barycentric coords produced by the FF tessellator
 //--------------------------------------------------------------------------------------
 [domain("tri")]
 DS_Output DS_PNTriangles( HS_ConstantOutput HSConstantData, const OutputPatch<HS_ControlPointOutput, 3> I, float3 f3BarycentricCoords : SV_DomainLocation )
@@ -372,14 +372,14 @@ DS_Output DS_PNTriangles( HS_ConstantOutput HSConstantData, const OutputPatch<HS
     float fV = f3BarycentricCoords.y;
     float fW = f3BarycentricCoords.z;
 
-    // Precompute squares and squares * 3 
+    // Precompute squares and squares * 3
     float fUU = fU * fU;
     float fVV = fV * fV;
     float fWW = fW * fW;
     float fUU3 = fUU * 3.0f;
     float fVV3 = fVV * 3.0f;
     float fWW3 = fWW * 3.0f;
-    
+
     // Compute position from cubic control points and barycentric coords
     float3 f3Position = I[0].f3Position * fWW * fW +
                         I[1].f3Position * fUU * fU +
@@ -391,7 +391,7 @@ DS_Output DS_PNTriangles( HS_ConstantOutput HSConstantData, const OutputPatch<HS
                         HSConstantData.f3B102 * fW * fVV3 +
                         HSConstantData.f3B012 * fU * fVV3 +
                         HSConstantData.f3B111 * 6.0f * fW * fU * fV;
-    
+
     // Compute normal from quadratic control points and barycentric coords
     float3 f3Normal =   I[0].f3Normal * fWW +
                         I[1].f3Normal * fUU +
@@ -400,47 +400,47 @@ DS_Output DS_PNTriangles( HS_ConstantOutput HSConstantData, const OutputPatch<HS
                         HSConstantData.f3N011 * fU * fV +
                         HSConstantData.f3N101 * fW * fV;
 
-    // Normalize the interpolated normal    
+    // Normalize the interpolated normal
     f3Normal = normalize( f3Normal );
 
     // Linearly interpolate the texture coords
     O.f2TexCoord = I[0].f2TexCoord * fW + I[1].f2TexCoord * fU + I[2].f2TexCoord * fV;
 
-    // Calc diffuse color    
-    O.f4Diffuse.rgb = g_f4MaterialDiffuseColor * g_f4LightDiffuse * max( 0, dot( f3Normal, g_f4LightDir.xyz ) ) + g_f4MaterialAmbientColor;  
-    O.f4Diffuse.a = 1.0f; 
+    // Calc diffuse color
+    O.f4Diffuse.rgb = g_f4MaterialDiffuseColor * g_f4LightDiffuse * max( 0, dot( f3Normal, g_f4LightDir.xyz ) ) + g_f4MaterialAmbientColor;
+    O.f4Diffuse.a = 1.0f;
 
     // Transform model position with view-projection matrix
     O.f4Position = mul( float4( f3Position.xyz, 1.0 ), g_f4x4ViewProjection );
-        
+
     return O;
 }
 
 
 //--------------------------------------------------------------------------------------
-// This shader outputs the pixel's color by passing through the lit 
+// This shader outputs the pixel's color by passing through the lit
 // diffuse material color & modulating with the diffuse texture
 //--------------------------------------------------------------------------------------
 PS_RenderOutput PS_RenderSceneTextured( PS_RenderSceneInput I )
 {
     PS_RenderOutput O;
-    
+
     O.f4Color = g_txDiffuse.Sample( g_SampleLinear, I.f2TexCoord ) * I.f4Diffuse;
-    
+
     return O;
 }
 
 
 //--------------------------------------------------------------------------------------
-// This shader outputs the pixel's color by passing through the lit 
+// This shader outputs the pixel's color by passing through the lit
 // diffuse material color
 //--------------------------------------------------------------------------------------
 PS_RenderOutput PS_RenderScene( PS_RenderSceneInput I )
 {
     PS_RenderOutput O;
-    
+
     O.f4Color = I.f4Diffuse;
-    
+
     return O;
 }
 

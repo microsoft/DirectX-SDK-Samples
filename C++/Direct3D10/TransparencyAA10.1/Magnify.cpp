@@ -1,9 +1,9 @@
 //--------------------------------------------------------------------------------------
 // File: Magnify.cpp
 //
-// Magnify class implementation. This class magnifies a region of a given surface, and renders a scaled 
-// sprite at the given position on the screen. 
-// 
+// Magnify class implementation. This class magnifies a region of a given surface, and renders a scaled
+// sprite at the given position on the screen.
+//
 // Contributed by AMD Corporation
 //
 // Copyright (c) Microsoft Corporation.
@@ -45,7 +45,7 @@ Magnify::Magnify()
 	m_nSourceResourceWidth = 0;
 	m_nSourceResourceHeight = 0;
 	m_nSourceResourceSamples = 0;
-	m_DepthFormat = DXGI_FORMAT_UNKNOWN; 
+	m_DepthFormat = DXGI_FORMAT_UNKNOWN;
 	m_DepthSRVFormat = DXGI_FORMAT_UNKNOWN;
 	m_bDepthFormat = false;
 }
@@ -68,7 +68,7 @@ HRESULT Magnify::OnCreateDevice( ID3D10Device* pd3dDevice )
 
 	hr = m_Sprite.OnCreateDevice( pd3dDevice );
 	assert( D3D_OK == hr );
-		    
+		
 	return hr;
 }
 
@@ -86,7 +86,7 @@ void Magnify::OnDestroyDevice()
 void Magnify::OnResizedSwapChain( const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc )
 {
 	assert( NULL != pBackBufferSurfaceDesc );
-    
+
     if( pBackBufferSurfaceDesc == NULL )
         return;
 
@@ -124,7 +124,7 @@ void Magnify::Capture()
 	SourceRegion.back = 1;
 }
 
-void Magnify::SetSourceResource( ID3D10Resource* pSourceResource, DXGI_FORMAT Format, 
+void Magnify::SetSourceResource( ID3D10Resource* pSourceResource, DXGI_FORMAT Format,
 		int nWidth, int nHeight, int nSamples )
 {
 	assert( NULL != pSourceResource );
@@ -208,7 +208,7 @@ void Magnify::RenderBackground()
 	{
 		if( m_nSourceResourceSamples > 1 )
 		{
-			DXUTGetD3D10Device()->ResolveSubresource( m_pResolvedSourceResource, 0, 
+			DXUTGetD3D10Device()->ResolveSubresource( m_pResolvedSourceResource, 0,
 				m_pSourceResource, 0, m_SourceResourceFormat );
 		}
 		else
@@ -232,8 +232,8 @@ void Magnify::RenderBackground()
 			
 			m_Sprite.SetUVs( 0.0f, 0.0f, 1.0f, 1.0f );
 
-			m_Sprite.RenderSpriteAsDepthMS( m_pSourceResourceSRV1, 0, m_nBackBufferHeight, 
-				m_nBackBufferWidth, m_nBackBufferHeight, m_nBackBufferWidth, m_nBackBufferHeight, 
+			m_Sprite.RenderSpriteAsDepthMS( m_pSourceResourceSRV1, 0, m_nBackBufferHeight,
+				m_nBackBufferWidth, m_nBackBufferHeight, m_nBackBufferWidth, m_nBackBufferHeight,
 				false, m_fDepthRangeMin, m_fDepthRangeMax, m_nSubSampleIndex );
 
 			// Bind back to the original render, depth target, and viewport
@@ -247,7 +247,7 @@ void Magnify::RenderBackground()
 		{
 			m_Sprite.SetUVs( 0.0f, 0.0f, 1.0f, 1.0f );
 
-			m_Sprite.RenderSpriteAsDepth( m_pCopySourceResourceSRV, 0, m_nBackBufferHeight, 
+			m_Sprite.RenderSpriteAsDepth( m_pCopySourceResourceSRV, 0, m_nBackBufferHeight,
 				m_nBackBufferWidth, m_nBackBufferHeight, false, m_fDepthRangeMin, m_fDepthRangeMax );
 		}
 	}
@@ -257,12 +257,12 @@ void Magnify::RenderBackground()
 
 		if( m_nSourceResourceSamples > 1 )
 		{
-			m_Sprite.RenderSprite( m_pResolvedSourceResourceSRV, 0, m_nBackBufferHeight, 
+			m_Sprite.RenderSprite( m_pResolvedSourceResourceSRV, 0, m_nBackBufferHeight,
 				m_nBackBufferWidth, m_nBackBufferHeight, false, false );
 		}
 		else
 		{
-			m_Sprite.RenderSprite( m_pCopySourceResourceSRV, 0, m_nBackBufferHeight, 
+			m_Sprite.RenderSprite( m_pCopySourceResourceSRV, 0, m_nBackBufferHeight,
 				m_nBackBufferWidth, m_nBackBufferHeight, false, false );
 		}
 	}
@@ -290,9 +290,9 @@ void Magnify::RenderMagnifiedRegion()
 			// Bind our render target view to the OM stage
 			DXUTGetD3D10Device()->OMSetRenderTargets( 1, (ID3D10RenderTargetView* const*)&pRenderTargetView, NULL );
 			
-			m_Sprite.RenderSpriteAsDepthMS( m_pSourceResourceSRV1, (m_nPositionX - m_nHalfPixelRegion * m_nScale), 
-				(m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale), 
-				(m_nPixelRegion * m_nScale), m_nSourceResourceWidth, m_nSourceResourceHeight, true, 
+			m_Sprite.RenderSpriteAsDepthMS( m_pSourceResourceSRV1, (m_nPositionX - m_nHalfPixelRegion * m_nScale),
+				(m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale),
+				(m_nPixelRegion * m_nScale), m_nSourceResourceWidth, m_nSourceResourceHeight, true,
 				m_fDepthRangeMin, m_fDepthRangeMax, m_nSubSampleIndex );
 
 			// Bind back to the original render, depth target, and viewport
@@ -304,8 +304,8 @@ void Magnify::RenderMagnifiedRegion()
 		}
 		else
 		{
-			m_Sprite.RenderSpriteAsDepth( m_pCopySourceResourceSRV, (m_nPositionX - m_nHalfPixelRegion * m_nScale), 
-				(m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale), 
+			m_Sprite.RenderSpriteAsDepth( m_pCopySourceResourceSRV, (m_nPositionX - m_nHalfPixelRegion * m_nScale),
+				(m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale),
 				(m_nPixelRegion * m_nScale), true, m_fDepthRangeMin, m_fDepthRangeMax );
 		}
 	}
@@ -316,15 +316,15 @@ void Magnify::RenderMagnifiedRegion()
 
         if( m_nSourceResourceSamples > 1 )
         {
-            m_Sprite.RenderSprite( m_pResolvedSourceResourceSRV, (m_nPositionX - m_nHalfPixelRegion * m_nScale), 
-                (m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale), 
-                (m_nPixelRegion * m_nScale), false, true ); 
+            m_Sprite.RenderSprite( m_pResolvedSourceResourceSRV, (m_nPositionX - m_nHalfPixelRegion * m_nScale),
+                (m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale),
+                (m_nPixelRegion * m_nScale), false, true );
         }
         else
         {
-            m_Sprite.RenderSprite( m_pCopySourceResourceSRV, (m_nPositionX - m_nHalfPixelRegion * m_nScale), 
-                (m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale), 
-                (m_nPixelRegion * m_nScale), false, true ); 
+            m_Sprite.RenderSprite( m_pCopySourceResourceSRV, (m_nPositionX - m_nHalfPixelRegion * m_nScale),
+                (m_nPositionY + m_nHalfPixelRegion * m_nScale), (m_nPixelRegion * m_nScale),
+                (m_nPixelRegion * m_nScale), false, true );
         }
     }
 }

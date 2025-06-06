@@ -9,10 +9,10 @@
 
 #ifndef SAFE_DELETE
 #define SAFE_DELETE(p)       { if(p) { delete (p);     (p)=nullptr; } }
-#endif    
+#endif
 #ifndef SAFE_DELETE_ARRAY
 #define SAFE_DELETE_ARRAY(p) { if(p) { delete[] (p);   (p)=nullptr; } }
-#endif    
+#endif
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)      { if(p) { (p)->Release(); (p)=nullptr; } }
 #endif
@@ -33,7 +33,7 @@
 CRatingsDB::CRatingsDB(void)
 {
     HRESULT hr = CoInitialize( 0 );
-    m_bCleanupCOM = SUCCEEDED(hr); 
+    m_bCleanupCOM = SUCCEEDED(hr);
     m_pRootNode = nullptr;
 }
 
@@ -51,15 +51,15 @@ CRatingsDB::~CRatingsDB(void)
 HRESULT CRatingsDB::LoadDB()
 {
     // Find resource will pick the right ID_GDF_XML_STR based on the current language
-    HRSRC hrsrc = FindResource( nullptr, MAKEINTRESOURCE(ID_RATINGS_XML), L"DATA" ); 
-    if( hrsrc ) 
-    { 
-        HGLOBAL hgResource = LoadResource( nullptr, hrsrc ); 
-        if( hgResource ) 
-        { 
-            BYTE* pResourceBuffer = (BYTE*)LockResource( hgResource ); 
-            if( pResourceBuffer ) 
-            { 
+    HRSRC hrsrc = FindResource( nullptr, MAKEINTRESOURCE(ID_RATINGS_XML), L"DATA" );
+    if( hrsrc )
+    {
+        HGLOBAL hgResource = LoadResource( nullptr, hrsrc );
+        if( hgResource )
+        {
+            BYTE* pResourceBuffer = (BYTE*)LockResource( hgResource );
+            if( pResourceBuffer )
+            {
                 DWORD dwGDFXMLSize = SizeofResource( nullptr, hrsrc );
                 if( dwGDFXMLSize )
                 {
@@ -74,24 +74,24 @@ HRESULT CRatingsDB::LoadDB()
                             GlobalUnlock( hgResource );
 
                             IStream* piStream = nullptr;
-                            HRESULT hr = CreateStreamOnHGlobal( hgResourceCopy, TRUE, &piStream ); 
+                            HRESULT hr = CreateStreamOnHGlobal( hgResourceCopy, TRUE, &piStream );
                             if( SUCCEEDED(hr) && piStream )
                             {
                                 IXMLDOMDocument *pDoc = nullptr;
 
                                 // Load the XML into a IXMLDOMDocument object
-                                hr = CoCreateInstance( CLSID_DOMDocument, nullptr, CLSCTX_INPROC_SERVER, 
+                                hr = CoCreateInstance( CLSID_DOMDocument, nullptr, CLSCTX_INPROC_SERVER,
                                                        IID_IXMLDOMDocument, (void**)&pDoc );
-                                if( SUCCEEDED(hr) ) 
+                                if( SUCCEEDED(hr) )
                                 {
                                     IPersistStreamInit* pPersistStreamInit = nullptr;
                                     hr = pDoc->QueryInterface( IID_IPersistStreamInit, (void**) &pPersistStreamInit );
-                                    if( SUCCEEDED(hr) ) 
+                                    if( SUCCEEDED(hr) )
                                     {
                                         hr = pPersistStreamInit->Load( piStream );
-                                        if( SUCCEEDED(hr) ) 
+                                        if( SUCCEEDED(hr) )
                                         {
-                                            // Get the root node to the XML doc and store it 
+                                            // Get the root node to the XML doc and store it
                                             pDoc->QueryInterface( IID_IXMLDOMNode, (void**)&m_pRootNode );
                                         }
                                         SAFE_RELEASE( pPersistStreamInit );
@@ -104,9 +104,9 @@ HRESULT CRatingsDB::LoadDB()
                         GlobalFree( hgResourceCopy );
                     }
                 }
-            } 
-        } 
-    } 
+            }
+        }
+    }
 
     if( m_pRootNode )
         return S_OK;
@@ -128,7 +128,7 @@ HRESULT CRatingsDB::GetRatingSystemName( WCHAR* strRatingSystemGUID, WCHAR* strD
     wcscpy_s( strRatingSystemGUIDUpper, 512, strRatingSystemGUID );
     _wcsupr_s( strRatingSystemGUIDUpper );
 
-    swprintf_s( str, 512, L"//Ratings/RatingSystem[ @ID = \"%s\" ]", strRatingSystemGUIDUpper );    
+    swprintf_s( str, 512, L"//Ratings/RatingSystem[ @ID = \"%s\" ]", strRatingSystemGUIDUpper );
 
     hr = m_pRootNode->selectSingleNode( str, &pNode );
     if( SUCCEEDED(hr) && pNode )
@@ -218,7 +218,7 @@ HRESULT CRatingsDB::GetAttribFromNode( IXMLDOMNode* pNode, WCHAR* strAttrib, WCH
 {
     IXMLDOMNamedNodeMap *pIXMLDOMNamedNodeMap = nullptr;
     BSTR bstrAttributeName = ::SysAllocString( strAttrib );
-    IXMLDOMNode* pIXMLDOMNode = nullptr;    
+    IXMLDOMNode* pIXMLDOMNode = nullptr;
     bool bFound = false;
 
     HRESULT hr;

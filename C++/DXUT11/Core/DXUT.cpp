@@ -90,7 +90,7 @@ protected:
         bool                    m_DoNotStoreBufferSize;    // Do not store the buffer size on WM_SIZE messages
 
         // D3D11 specific
-        bool                    m_D3D11Available;          // if true, then D3D11 is available 
+        bool                    m_D3D11Available;          // if true, then D3D11 is available
         ID3D11Device*			m_D3D11Device;             // the D3D11 rendering device
         ID3D11DeviceContext*	m_D3D11DeviceContext;	   // the D3D11 immediate device context
         D3D_FEATURE_LEVEL		m_D3D11FeatureLevel;	   // the D3D11 feature level that this device supports
@@ -103,7 +103,7 @@ protected:
         HWND  m_HWNDFocus;                  // the main app focus window
         HWND  m_HWNDDeviceFullScreen;       // the main app device window in fullscreen mode
         HWND  m_HWNDDeviceWindowed;         // the main app device window in windowed mode
-        HMONITOR m_AdapterMonitor;          // the monitor of the adapter 
+        HMONITOR m_AdapterMonitor;          // the monitor of the adapter
         HMENU m_Menu;                       // handle to menu
 
         UINT m_FullScreenBackBufferWidthAtModeChange;  // back buffer size of fullscreen mode right before switching to windowed mode.  Used to restore to same resolution when toggling back to fullscreen
@@ -112,7 +112,7 @@ protected:
         UINT m_WindowBackBufferHeightAtModeChange; // back buffer size of windowed mode right before switching to fullscreen mode.  Used to restore to same resolution when toggling back to windowed mode
         DWORD m_WindowedStyleAtModeChange;  // window style
         WINDOWPLACEMENT m_WindowedPlacement;// record of windowed HWND position/show state/etc
-        bool  m_TopmostWhileWindowed;       // if true, the windowed HWND is topmost 
+        bool  m_TopmostWhileWindowed;       // if true, the windowed HWND is topmost
         bool  m_Minimized;                  // if true, the HWND is minimized
         bool  m_Maximized;                  // if true, the HWND is maximized
         bool  m_MinimizedWhileFullscreen;   // if true, the HWND is minimized due to a focus switch away when fullscreen mode
@@ -128,8 +128,8 @@ protected:
         float m_FPS;                        // frames per second
         int   m_CurrentFrameNumber;         // the current frame number
         HHOOK m_KeyboardHook;               // handle to keyboard hook
-        bool  m_AllowShortcutKeysWhenFullscreen; // if true, when fullscreen enable shortcut keys (Windows keys, StickyKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut) 
-        bool  m_AllowShortcutKeysWhenWindowed;   // if true, when windowed enable shortcut keys (Windows keys, StickyKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut) 
+        bool  m_AllowShortcutKeysWhenFullscreen; // if true, when fullscreen enable shortcut keys (Windows keys, StickyKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut)
+        bool  m_AllowShortcutKeysWhenWindowed;   // if true, when windowed enable shortcut keys (Windows keys, StickyKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut)
         bool  m_AllowShortcutKeys;          // if true, then shortcut keys are currently disabled (Windows key, etc)
         bool  m_CallDefWindowProc;          // if true, DXUTStaticWndProc will call DefWindowProc for unhandled messages. Applications rendering to a dialog may need to set this to false.
         STICKYKEYS m_StartupStickyKeys;     // StickyKey settings upon startup so they can be restored later
@@ -149,7 +149,7 @@ protected:
         bool  m_ShowCursorWhenFullScreen;   // if true, then DXUT will show a cursor when full screen
         bool  m_ConstantFrameTime;          // if true, then elapsed frame time will always be 0.05f seconds which is good for debugging or automated capture
         float m_TimePerFrame;               // the constant time per frame in seconds, only valid if m_ConstantFrameTime==true
-        bool  m_WireframeMode;              // if true, then D3DRS_FILLMODE==D3DFILL_WIREFRAME else D3DRS_FILLMODE==D3DFILL_SOLID 
+        bool  m_WireframeMode;              // if true, then D3DRS_FILLMODE==D3DFILL_WIREFRAME else D3DRS_FILLMODE==D3DFILL_SOLID
         bool  m_AutoChangeAdapter;          // if true, then the adapter will automatically change if the window is different monitor
         bool  m_WindowCreatedWithDefaultPositions; // if true, then CW_USEDEFAULT was used and the window should be moved to the right adapter
         int   m_ExitCode;                   // the exit code to be returned to the command line
@@ -176,13 +176,13 @@ protected:
         bool  m_Automation;                 // if true, automation is enabled
         bool  m_InSizeMove;                 // if true, app is inside a WM_ENTERSIZEMOVE
         UINT  m_TimerLastID;                // last ID of the DXUT timer
-        bool  m_MessageWhenD3D11NotAvailable; 
-        
+        bool  m_MessageWhenD3D11NotAvailable;
+
         D3D_FEATURE_LEVEL  m_OverrideForceFeatureLevel; // if != -1, then overrid to use a featurelevel
         WCHAR m_ScreenShotName[256];        // command line screen shot name
         bool m_SaveScreenShot;              // command line save screen shot
         bool m_ExitAfterScreenShot;         // command line exit after screen shot
-        
+
         int   m_OverrideForceAPI;               // if != -1, then override to use this Direct3D API version
         int   m_OverrideAdapterOrdinal;         // if != -1, then override to use this adapter ordinal
         bool  m_OverrideWindowed;               // if true, then force to start windowed
@@ -251,7 +251,7 @@ protected:
         bool m_MouseButtons[5];                          // array of mouse states
 
         CGrowableArray<DXUT_TIMER>*  m_TimerList;        // list of DXUT_TIMER structs
-        WCHAR m_StaticFrameStats[256];                   // static part of frames stats 
+        WCHAR m_StaticFrameStats[256];                   // static part of frames stats
         WCHAR m_FPSStats[64];                            // fps stats
         WCHAR m_FrameStats[256];                         // frame stats (fps, width, etc)
         WCHAR m_DeviceStats[256];                        // device stats (description, device type, etc)
@@ -300,7 +300,7 @@ public:
         DeleteCriticalSection( &g_cs );
     }
 
-    // Macros to define access functions for thread safe access into m_state 
+    // Macros to define access functions for thread safe access into m_state
     GET_SET_ACCESSOR( DXUTDeviceSettings*, CurrentDeviceSettings );
 
     // D3D9 specific
@@ -325,7 +325,7 @@ public:
     GET_SET_ACCESSOR( ID3D11DeviceContext*, D3D11DeviceContext );
     GET_SET_ACCESSOR( D3D_FEATURE_LEVEL, D3D11FeatureLevel );
     GET_SET_ACCESSOR( ID3D11Texture2D*, D3D11DepthStencil );
-    GET_SET_ACCESSOR( ID3D11DepthStencilView*, D3D11DepthStencilView );   
+    GET_SET_ACCESSOR( ID3D11DepthStencilView*, D3D11DepthStencilView );
     GET_SET_ACCESSOR( ID3D11RenderTargetView*, D3D11RenderTargetView );
     GET_SET_ACCESSOR( ID3D11RasterizerState*, D3D11RasterizerState );
 
@@ -334,7 +334,7 @@ public:
     GET_SET_ACCESSOR( HWND, HWNDDeviceFullScreen );
     GET_SET_ACCESSOR( HWND, HWNDDeviceWindowed );
     GET_SET_ACCESSOR( HMONITOR, AdapterMonitor );
-    GET_SET_ACCESSOR( HMENU, Menu );   
+    GET_SET_ACCESSOR( HMENU, Menu );
 
 
     GET_SET_ACCESSOR( UINT, FullScreenBackBufferWidthAtModeChange );
@@ -347,16 +347,16 @@ public:
     GET_SET_ACCESSOR( bool, Minimized );
     GET_SET_ACCESSOR( bool, Maximized );
     GET_SET_ACCESSOR( bool, MinimizedWhileFullscreen );
-    GET_SET_ACCESSOR( bool, IgnoreSizeChange );   
+    GET_SET_ACCESSOR( bool, IgnoreSizeChange );
 
     GET_SET_ACCESSOR( double, Time );
     GET_SET_ACCESSOR( double, AbsoluteTime );
     GET_SET_ACCESSOR( float, ElapsedTime );
 
     GET_SET_ACCESSOR( HINSTANCE, HInstance );
-    GET_SET_ACCESSOR( double, LastStatsUpdateTime );   
-    GET_SET_ACCESSOR( DWORD, LastStatsUpdateFrames );   
-    GET_SET_ACCESSOR( float, FPS );    
+    GET_SET_ACCESSOR( double, LastStatsUpdateTime );
+    GET_SET_ACCESSOR( DWORD, LastStatsUpdateFrames );
+    GET_SET_ACCESSOR( float, FPS );
     GET_SET_ACCESSOR( int, CurrentFrameNumber );
     GET_SET_ACCESSOR( HHOOK, KeyboardHook );
     GET_SET_ACCESSOR( bool, AllowShortcutKeysWhenFullscreen );
@@ -376,11 +376,11 @@ public:
     GET_SET_ACCESSOR( bool, HandlePause );
     GET_SET_ACCESSOR( bool, ShowMsgBoxOnError );
     GET_SET_ACCESSOR( bool, NoStats );
-    GET_SET_ACCESSOR( bool, ClipCursorWhenFullScreen );   
+    GET_SET_ACCESSOR( bool, ClipCursorWhenFullScreen );
     GET_SET_ACCESSOR( bool, ShowCursorWhenFullScreen );
     GET_SET_ACCESSOR( bool, ConstantFrameTime );
     GET_SET_ACCESSOR( float, TimePerFrame );
-    GET_SET_ACCESSOR( bool, WireframeMode );   
+    GET_SET_ACCESSOR( bool, WireframeMode );
     GET_SET_ACCESSOR( bool, AutoChangeAdapter );
     GET_SET_ACCESSOR( bool, WindowCreatedWithDefaultPositions );
     GET_SET_ACCESSOR( int, ExitCode );
@@ -413,7 +413,7 @@ public:
     GET_SET_ACCESSOR( bool, SaveScreenShot );
     GET_SET_ACCESSOR( bool, ExitAfterScreenShot );
 
-    
+
     GET_SET_ACCESSOR( int, OverrideForceAPI );
     GET_SET_ACCESSOR( int, OverrideAdapterOrdinal );
     GET_SET_ACCESSOR( bool, OverrideWindowed );
@@ -432,7 +432,7 @@ public:
     GET_SET_ACCESSOR( bool, OverrideRelaunchMCE );
     GET_SET_ACCESSOR( bool, ReleasingSwapChain );
     GET_SET_ACCESSOR( bool, IsInGammaCorrectMode );
-    
+
     GET_SET_ACCESSOR( LPDXUTCALLBACKMODIFYDEVICESETTINGS, ModifyDeviceSettingsFunc );
     GET_SET_ACCESSOR( LPDXUTCALLBACKDEVICEREMOVED, DeviceRemovedFunc );
     GET_SET_ACCESSOR( LPDXUTCALLBACKFRAMEMOVE, FrameMoveFunc );
@@ -482,13 +482,13 @@ public:
     GET_ACCESSOR( WCHAR*, StaticFrameStats );
     GET_ACCESSOR( WCHAR*, FPSStats );
     GET_ACCESSOR( WCHAR*, FrameStats );
-    GET_ACCESSOR( WCHAR*, DeviceStats );    
+    GET_ACCESSOR( WCHAR*, DeviceStats );
     GET_ACCESSOR( WCHAR*, WindowTitle );
 };
 
 
 //--------------------------------------------------------------------------------------
-// Global state 
+// Global state
 //--------------------------------------------------------------------------------------
 DXUTState*          g_pDXUTState = NULL;
 
@@ -519,7 +519,7 @@ public:
 DXUTState& GetDXUTState()
 {
     // This class will auto create the memory when its first accessed and delete it after the program exits WinMain.
-    // However the application can also call DXUTCreateState() & DXUTDestroyState() independantly if its wants 
+    // However the application can also call DXUTCreateState() & DXUTDestroyState() independantly if its wants
     static DXUTMemoryHelper memory;
     assert( g_pDXUTState != NULL );
     return *g_pDXUTState;
@@ -529,7 +529,7 @@ DXUTState& GetDXUTState()
 //--------------------------------------------------------------------------------------
 // Internal functions forward declarations
 //--------------------------------------------------------------------------------------
-void DXUTParseCommandLine( __inout WCHAR* strCommandLine, 
+void DXUTParseCommandLine( __inout WCHAR* strCommandLine,
                            bool bIgnoreFirstCommand = true );
 bool DXUTIsNextArg( __inout WCHAR*& strCmdLine, __in const WCHAR* strArg );
 bool DXUTGetCmdParam( __inout WCHAR*& strCmdLine, __out WCHAR* strFlag );
@@ -592,40 +592,40 @@ void DXUTUpdateD3D11DeviceStats( D3D_DRIVER_TYPE DeviceType, DXGI_ADAPTER_DESC* 
 
 
 //--------------------------------------------------------------------------------------
-// Internal helper functions 
+// Internal helper functions
 //--------------------------------------------------------------------------------------
 bool DXUTIsD3D9( DXUTDeviceSettings* pDeviceSettings )                          { return (pDeviceSettings && pDeviceSettings->ver == DXUT_D3D9_DEVICE ); };
 bool DXUTIsCurrentDeviceD3D9()                                                  { DXUTDeviceSettings* pDeviceSettings = GetDXUTState().GetCurrentDeviceSettings();  return DXUTIsD3D9(pDeviceSettings); };
-UINT DXUTGetBackBufferWidthFromDS( DXUTDeviceSettings* pNewDeviceSettings )     
-{ 
+UINT DXUTGetBackBufferWidthFromDS( DXUTDeviceSettings* pNewDeviceSettings )
+{
     if( DXUTIsD3D9( pNewDeviceSettings ) )
-        return pNewDeviceSettings->d3d9.pp.BackBufferWidth; 
+        return pNewDeviceSettings->d3d9.pp.BackBufferWidth;
     else
-        return pNewDeviceSettings->d3d11.sd.BufferDesc.Width; 
+        return pNewDeviceSettings->d3d11.sd.BufferDesc.Width;
 }
-UINT DXUTGetBackBufferHeightFromDS( DXUTDeviceSettings* pNewDeviceSettings )    
-{ 
+UINT DXUTGetBackBufferHeightFromDS( DXUTDeviceSettings* pNewDeviceSettings )
+{
     if( DXUTIsD3D9(pNewDeviceSettings) )
         return pNewDeviceSettings->d3d9.pp.BackBufferHeight;
     else
-        return pNewDeviceSettings->d3d11.sd.BufferDesc.Height; 
+        return pNewDeviceSettings->d3d11.sd.BufferDesc.Height;
 }
-bool DXUTGetIsWindowedFromDS( DXUTDeviceSettings* pNewDeviceSettings )          
-{ 
-    if (!pNewDeviceSettings) 
-        return true; 
-    
+bool DXUTGetIsWindowedFromDS( DXUTDeviceSettings* pNewDeviceSettings )
+{
+    if (!pNewDeviceSettings)
+        return true;
+
     if( DXUTIsD3D9(pNewDeviceSettings) )
         return pNewDeviceSettings->d3d9.pp.Windowed ? true : false;
     else
-        return pNewDeviceSettings->d3d11.sd.Windowed ? true : false; 
+        return pNewDeviceSettings->d3d11.sd.Windowed ? true : false;
 }
 
 
 //--------------------------------------------------------------------------------------
 // External state access functions
 //--------------------------------------------------------------------------------------
-BOOL WINAPI DXUTGetMSAASwapChainCreated() { 
+BOOL WINAPI DXUTGetMSAASwapChainCreated() {
     DXUTDeviceSettings *psettings = GetDXUTState().GetCurrentDeviceSettings();
     if (psettings->ver == DXUT_D3D11_DEVICE) {
         return psettings->d3d11.sd.SampleDesc.Count > 1;
@@ -708,19 +708,19 @@ void DXUTGetCallbackD3D11DeviceAcceptable( LPDXUTCALLBACKISD3D11DEVICEACCEPTABLE
 // Optionally parses the command line and sets if default hotkeys are handled
 //
 //       Possible command line parameters are:
-//          -forcefeaturelevel:fl     forces app to use a specified direct3D11 feature level    
+//          -forcefeaturelevel:fl     forces app to use a specified direct3D11 feature level
 //          -screenshotexit:filename save a screenshot to the filename.bmp and exit.
 //          -forceapi:#             forces app to use specified Direct3D API version (fails if the application doesn't support this API or if no device is found)
 //          -adapter:#              forces app to use this adapter # (fails if the adapter doesn't exist)
-//          -output:#               [D3D11 only] forces app to use a particular output on the adapter (fails if the output doesn't exist) 
+//          -output:#               [D3D11 only] forces app to use a particular output on the adapter (fails if the output doesn't exist)
 //          -windowed               forces app to start windowed
 //          -fullscreen             forces app to start full screen
 //          -forcehal               forces app to use HAL (fails if HAL doesn't exist)
 //          -forceref               forces app to use REF (fails if REF doesn't exist)
 //          -forcepurehwvp          [D3D9 only] forces app to use pure HWVP (fails if device doesn't support it)
 //          -forcehwvp              [D3D9 only] forces app to use HWVP (fails if device doesn't support it)
-//          -forceswvp              [D3D9 only] forces app to use SWVP 
-//          -forcevsync:#           if # is 0, then vsync is disabled 
+//          -forceswvp              [D3D9 only] forces app to use SWVP
+//          -forcevsync:#           if # is 0, then vsync is disabled
 //          -width:#                forces app to use # for width. for full screen, it will pick the closest possible supported mode
 //          -height:#               forces app to use # for height. for full screen, it will pick the closest possible supported mode
 //          -startx:#               forces app to use # for the x coord of the window position for windowed mode
@@ -730,11 +730,11 @@ void DXUTGetCallbackD3D11DeviceAcceptable( LPDXUTCALLBACKISD3D11DEVICEACCEPTABLE
 //          -noerrormsgboxes        prevents the display of message boxes generated by the framework so the application can be run without user interaction
 //          -nostats                prevents the display of the stats
 //          -relaunchmce            re-launches the MCE UI after the app exits
-//          -automation             a hint to other components that automation is active 
+//          -automation             a hint to other components that automation is active
 //--------------------------------------------------------------------------------------
-HRESULT WINAPI DXUTInit( bool bParseCommandLine, 
-                         bool bShowMsgBoxOnError, 
-                         __in_opt WCHAR* strExtraCommandLineParams, 
+HRESULT WINAPI DXUTInit( bool bParseCommandLine,
+                         bool bShowMsgBoxOnError,
+                         __in_opt WCHAR* strExtraCommandLineParams,
                          bool bThreadSafeDXUT )
 {
     g_bThreadSafe = bThreadSafeDXUT;
@@ -774,9 +774,9 @@ HRESULT WINAPI DXUTInit( bool bParseCommandLine,
 
 
 //--------------------------------------------------------------------------------------
-// Parses the command line for parameters.  See DXUTInit() for list 
+// Parses the command line for parameters.  See DXUTInit() for list
 //--------------------------------------------------------------------------------------
-void DXUTParseCommandLine(__inout WCHAR* strCommandLine, 
+void DXUTParseCommandLine(__inout WCHAR* strCommandLine,
                           bool bIgnoreFirstCommand  )
 {
     WCHAR* strCmdLine;
@@ -818,7 +818,7 @@ void DXUTParseCommandLine(__inout WCHAR* strCommandLine,
                     continue;
                 }
             }
-            
+
             if( DXUTIsNextArg( strCmdLine, L"forceapi" ) )
             {
                 if( DXUTGetCmdParam( strCmdLine, strFlag ) )
@@ -1015,7 +1015,7 @@ bool DXUTIsNextArg( WCHAR*& strCmdLine, const WCHAR* strArg )
 
 
 //--------------------------------------------------------------------------------------
-// Helper function for DXUTParseCommandLine.  Updates strCmdLine and strFlag 
+// Helper function for DXUTParseCommandLine.  Updates strCmdLine and strFlag
 //      Example: if strCmdLine=="-width:1024 -forceref"
 // then after: strCmdLine==" -forceref" and strFlag=="1024"
 //--------------------------------------------------------------------------------------
@@ -1045,10 +1045,10 @@ bool DXUTGetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag )
 
 
 //--------------------------------------------------------------------------------------
-// Creates a window with the specified window title, icon, menu, and 
+// Creates a window with the specified window title, icon, menu, and
 // starting position.  If DXUTInit() has not already been called, it will
-// call it with the default parameters.  Instead of calling this, you can 
-// call DXUTSetWindow() to use an existing window.  
+// call it with the default parameters.  Instead of calling this, you can
+// call DXUTSetWindow() to use an existing window.
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTCreateWindow( const WCHAR* strWindowTitle, HINSTANCE hInstance,
                                  HICON hIcon, HMENU hMenu, int x, int y )
@@ -1152,9 +1152,9 @@ HRESULT WINAPI DXUTCreateWindow( const WCHAR* strWindowTitle, HINSTANCE hInstanc
 
 
 //--------------------------------------------------------------------------------------
-// Sets a previously created window for the framework to use.  If DXUTInit() 
-// has not already been called, it will call it with the default parameters.  
-// Instead of calling this, you can call DXUTCreateWindow() to create a new window.  
+// Sets a previously created window for the framework to use.  If DXUTInit()
+// has not already been called, it will call it with the default parameters.
+// Instead of calling this, you can call DXUTCreateWindow() to create a new window.
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTSetWindow( HWND hWndFocus, HWND hWndDeviceFullScreen, HWND hWndDeviceWindowed, bool bHandleMessages )
 {
@@ -1214,11 +1214,11 @@ HRESULT WINAPI DXUTSetWindow( HWND hWndFocus, HWND hWndDeviceFullScreen, HWND hW
 
 
 //--------------------------------------------------------------------------------------
-// Handles window messages 
+// Handles window messages
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-    
+
     // Consolidate the keyboard messages and pass them to the app's keyboard callback
     if( uMsg == WM_KEYDOWN ||
         uMsg == WM_SYSKEYDOWN ||
@@ -1290,7 +1290,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                             xPos, yPos, GetDXUTState().GetMouseFuncUserContext() );
     }
 
-    // Pass all messages to the app's MsgProc callback, and don't 
+    // Pass all messages to the app's MsgProc callback, and don't
     // process further messages if the apps says not to.
     LPDXUTCALLBACKMSGPROC pCallbackMsgProc = GetDXUTState().GetWindowMsgFunc();
     if( pCallbackMsgProc )
@@ -1306,7 +1306,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
     {
         case WM_PAINT:
         {
-            
+
             // Handle paint messages when the app is paused
             if( DXUTIsRenderingPaused() &&
                 GetDXUTState().GetDeviceObjectsCreated() && GetDXUTState().GetDeviceObjectsReset() )
@@ -1334,18 +1334,18 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                         {
                             // When D3DERR_DRIVERINTERNALERROR is returned from Present(),
                             // the application can do one of the following:
-                            // 
-                            // - End, with the pop-up window saying that the application cannot continue 
-                            //   because of problems in the display adapter and that the user should 
+                            //
+                            // - End, with the pop-up window saying that the application cannot continue
+                            //   because of problems in the display adapter and that the user should
                             //   contact the adapter manufacturer.
                             //
-                            // - Attempt to restart by calling IDirect3DDevice9::Reset, which is essentially the same 
-                            //   path as recovering from a lost device. If IDirect3DDevice9::Reset fails with 
-                            //   D3DERR_DRIVERINTERNALERROR, the application should end immediately with the message 
+                            // - Attempt to restart by calling IDirect3DDevice9::Reset, which is essentially the same
+                            //   path as recovering from a lost device. If IDirect3DDevice9::Reset fails with
+                            //   D3DERR_DRIVERINTERNALERROR, the application should end immediately with the message
                             //   that the user should contact the adapter manufacturer.
-                            // 
+                            //
                             // The framework attempts the path of resetting the device
-                            // 
+                            //
                             GetDXUTState().SetDeviceLost( true );
                         }
                     }
@@ -1394,7 +1394,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
         }
 
         case WM_SIZE:
-            
+
            if( SIZE_MINIMIZED == wParam )
             {
                 DXUTPause( true, true ); // Pause while we're minimized
@@ -1409,7 +1409,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                 if( rcCurrentClient.top == 0 && rcCurrentClient.bottom == 0 )
                 {
                     // Rapidly clicking the task bar to minimize and restore a window
-                    // can cause a WM_SIZE message with SIZE_RESTORED when 
+                    // can cause a WM_SIZE message with SIZE_RESTORED when
                     // the window has actually become minimized due to rapid change
                     // so just ignore this message
                 }
@@ -1440,21 +1440,21 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                     }
                     else if( GetDXUTState().GetInSizeMove() )
                     {
-                        // If we're neither maximized nor minimized, the window size 
-                        // is changing by the user dragging the window edges.  In this 
-                        // case, we don't reset the device yet -- we wait until the 
+                        // If we're neither maximized nor minimized, the window size
+                        // is changing by the user dragging the window edges.  In this
+                        // case, we don't reset the device yet -- we wait until the
                         // user stops dragging, and a WM_EXITSIZEMOVE message comes.
                     }
                     else
                     {
-                        // This WM_SIZE come from resizing the window via an API like SetWindowPos() so 
+                        // This WM_SIZE come from resizing the window via an API like SetWindowPos() so
                         // resize and reset the device now.
                         DXUTCheckForWindowSizeChange();
                         DXUTCheckForWindowChangingMonitors();
                     }
                 }
             }
-            
+
             break;
 
 
@@ -1517,7 +1517,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
             break;
 
         case WM_ACTIVATEAPP:
-            if( wParam == TRUE && !DXUTIsActive() ) // Handle only if previously not active 
+            if( wParam == TRUE && !DXUTIsActive() ) // Handle only if previously not active
             {
                 GetDXUTState().SetActive( true );
 
@@ -1525,7 +1525,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                 DXUTEnableXInput( true );
 
                 // The GetMinimizedWhileFullscreen() varible is used instead of !DXUTIsWindowed()
-                // to handle the rare case toggling to windowed mode while the fullscreen application 
+                // to handle the rare case toggling to windowed mode while the fullscreen application
                 // is minimized and thus making the pause count wrong
                 if( GetDXUTState().GetMinimizedWhileFullscreen() )
                 {
@@ -1539,13 +1539,13 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                     }
                 }
 
-                // Upon returning to this app, potentially disable shortcut keys 
-                // (Windows key, accessibility shortcuts) 
+                // Upon returning to this app, potentially disable shortcut keys
+                // (Windows key, accessibility shortcuts)
                 DXUTAllowShortcutKeys( ( DXUTIsWindowed() ) ? GetDXUTState().GetAllowShortcutKeysWhenWindowed() :
                                        GetDXUTState().GetAllowShortcutKeysWhenFullscreen() );
 
             }
-            else if( wParam == FALSE && DXUTIsActive() ) // Handle only if previously active 
+            else if( wParam == FALSE && DXUTIsActive() ) // Handle only if previously active
             {
                 GetDXUTState().SetActive( false );
 
@@ -1554,7 +1554,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
                 if( !DXUTIsWindowed() )
                 {
-                    // Going from full screen to a minimized state 
+                    // Going from full screen to a minimized state
                     ClipCursor( NULL );      // don't limit the cursor anymore
                     if( DXUTIsD3D9( GetDXUTState().GetCurrentDeviceSettings() ) )
                         DXUTPause( true, true ); // Pause while we're minimized (take care not to pause twice by handling this message twice)
@@ -1563,8 +1563,8 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
                 // Restore shortcut keys (Windows key, accessibility shortcuts) to original state
                 //
-                // This is important to call here if the shortcuts are disabled, 
-                // because if this is not done then the Windows key will continue to 
+                // This is important to call here if the shortcuts are disabled,
+                // because if this is not done then the Windows key will continue to
                 // be disabled while this app is running which is very bad.
                 // If the app crashes, the Windows key will return to normal.
                 DXUTAllowShortcutKeys( true );
@@ -1644,7 +1644,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                 {
                     if( GetDXUTState().GetHandleAltEnter() && DXUTIsAppRenderingWithD3D9() )
                     {
-                        // Toggle full screen upon alt-enter 
+                        // Toggle full screen upon alt-enter
                         DWORD dwMask = ( 1 << 29 );
                         if( ( lParam & dwMask ) != 0 ) // Alt is down also
                         {
@@ -1655,7 +1655,7 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
                             return 0;
                         }
                     }
-                   
+
                 }
             }
             break;
@@ -1720,8 +1720,8 @@ LRESULT CALLBACK DXUTStaticWndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM 
 
 
 //--------------------------------------------------------------------------------------
-// Handles app's message loop and rendering when idle.  If DXUTCreateDevice() or DXUTSetD3D*Device() 
-// has not already been called, it will call DXUTCreateWindow() with the default parameters.  
+// Handles app's message loop and rendering when idle.  If DXUTCreateDevice() or DXUTSetD3D*Device()
+// has not already been called, it will call DXUTCreateWindow() with the default parameters.
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTMainLoop( HACCEL hAccel )
 {
@@ -1737,8 +1737,8 @@ HRESULT WINAPI DXUTMainLoop( HACCEL hAccel )
 
     GetDXUTState().SetInsideMainloop( true );
 
-    // If DXUTCreateDevice() or DXUTSetD3D*Device() has not already been called, 
-    // then call DXUTCreateDevice() with the default parameters.         
+    // If DXUTCreateDevice() or DXUTSetD3D*Device() has not already been called,
+    // then call DXUTCreateDevice() with the default parameters.
     if( !GetDXUTState().GetDeviceCreated() )
     {
         if( GetDXUTState().GetDeviceCreateCalled() )
@@ -1777,7 +1777,7 @@ HRESULT WINAPI DXUTMainLoop( HACCEL hAccel )
 
     while( WM_QUIT != msg.message )
     {
-        // Use PeekMessage() so we can use idle time to render the scene. 
+        // Use PeekMessage() so we can use idle time to render the scene.
         bGotMsg = ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) != 0 );
 
         if( bGotMsg )
@@ -1814,16 +1814,16 @@ HRESULT WINAPI DXUTMainLoop( HACCEL hAccel )
 //======================================================================================
 HRESULT WINAPI DXUTCreateDevice(D3D_FEATURE_LEVEL reqFL,  bool bWindowed, int nSuggestedWidth, int nSuggestedHeight) {
     HRESULT hr = S_OK;
-    
-   
+
+
     // Not allowed to call this from inside the device callbacks
     if( GetDXUTState().GetInsideDeviceCallback() )
         return DXUT_ERR_MSGBOX( L"DXUTCreateWindow", E_FAIL );
 
     GetDXUTState().SetDeviceCreateCalled( true );
 
-    // If DXUTCreateWindow() or DXUTSetWindow() has not already been called, 
-    // then call DXUTCreateWindow() with the default parameters.         
+    // If DXUTCreateWindow() or DXUTSetWindow() has not already been called,
+    // then call DXUTCreateWindow() with the default parameters.
     if( !GetDXUTState().GetWindowCreated() )
     {
         // If DXUTCreateWindow() or DXUTSetWindow() was already called and failed, then fail.
@@ -1831,13 +1831,13 @@ HRESULT WINAPI DXUTCreateDevice(D3D_FEATURE_LEVEL reqFL,  bool bWindowed, int nS
         if( GetDXUTState().GetWindowCreateCalled() )
             return E_FAIL;
 
-        // If DXUTCreateWindow() or DXUTSetWindow() hasn't been called, then 
+        // If DXUTCreateWindow() or DXUTSetWindow() hasn't been called, then
         // automatically call DXUTCreateWindow() with default params
         hr = DXUTCreateWindow();
         if( FAILED( hr ) )
             return hr;
     }
-    
+
     DXUTDeviceSettings deviceSettings ;
     DXUTApplyDefaultDeviceSettings(&deviceSettings);
     deviceSettings.MinimumFeatureLevel = reqFL;
@@ -1859,21 +1859,21 @@ HRESULT WINAPI DXUTCreateDevice(D3D_FEATURE_LEVEL reqFL,  bool bWindowed, int nS
         deviceSettings.ver = DXUT_D3D9_DEVICE;
     }
 
-    DXUTUpdateDeviceSettingsWithOverrides(&deviceSettings); 
+    DXUTUpdateDeviceSettingsWithOverrides(&deviceSettings);
 
-    // Change to a Direct3D device created from the new device settings.  
+    // Change to a Direct3D device created from the new device settings.
     // If there is an existing device, then either reset or recreated the scene
     hr = DXUTChangeDevice( &deviceSettings, NULL, NULL, false, true );
 
     if ( hr ==  DXUTERR_NODIRECT3D11 && GetDXUTState().GetMessageWhenD3D11NotAvailable() ) {
-        
+
         OSVERSIONINFOEX osv = { sizeof(osv) };
 #pragma warning(suppress : 4996)
         GetVersionEx( (LPOSVERSIONINFO)&osv );
-        
+
 
         if ( ( osv.dwMajorVersion > 6 )
-            || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 ) 
+            || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 )
             || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion == 0 && osv.dwBuildNumber > 6002 ) )
         {
 
@@ -1888,14 +1888,14 @@ HRESULT WINAPI DXUTCreateDevice(D3D_FEATURE_LEVEL reqFL,  bool bWindowed, int nS
             L" this version of Windows.\n"\
             L"For details see Microsoft Knowledge Base Article #971644\n"\
             L"http://go.microsoft.com/fwlink/?LinkId=160189", L"Error", MB_ICONEXCLAMATION );
-           
+
         }
         else if ( osv.dwMajorVersion == 6 && osv.dwMinorVersion == 0 )
         {
             MessageBox( 0, L"Direct3D 11 components were not found. Please install the latest Service Pack.\n"\
             L"For details see Microsoft Knowledge Base Article #935791\n"\
             L"http://support.microsoft.com/kb/935791/", L"Error", MB_ICONEXCLAMATION );
-            
+
         }
         else
         {
@@ -1909,15 +1909,15 @@ HRESULT WINAPI DXUTCreateDevice(D3D_FEATURE_LEVEL reqFL,  bool bWindowed, int nS
 
     if( FAILED( hr ) )
         return hr;
-    
+
     return hr;
 }
 
 //--------------------------------------------------------------------------------------
 // Tells the framework to change to a device created from the passed in device settings
-// If DXUTCreateWindow() has not already been called, it will call it with the 
-// default parameters.  Instead of calling this, you can call DXUTCreateDevice() 
-// or DXUTSetD3D*Device() 
+// If DXUTCreateWindow() has not already been called, it will call it with the
+// default parameters.  Instead of calling this, you can call DXUTCreateDevice()
+// or DXUTSetD3D*Device()
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTCreateDeviceFromSettings( DXUTDeviceSettings* pDeviceSettings, bool bPreserveInput,
                                              bool bClipWindowToSingleAdapter )
@@ -1926,8 +1926,8 @@ HRESULT WINAPI DXUTCreateDeviceFromSettings( DXUTDeviceSettings* pDeviceSettings
 
     GetDXUTState().SetDeviceCreateCalled( true );
 
-    // If DXUTCreateWindow() or DXUTSetWindow() has not already been called, 
-    // then call DXUTCreateWindow() with the default parameters.         
+    // If DXUTCreateWindow() or DXUTSetWindow() has not already been called,
+    // then call DXUTCreateWindow() with the default parameters.
     if( !GetDXUTState().GetWindowCreated() )
     {
         // If DXUTCreateWindow() or DXUTSetWindow() was already called and failed, then fail.
@@ -1935,16 +1935,16 @@ HRESULT WINAPI DXUTCreateDeviceFromSettings( DXUTDeviceSettings* pDeviceSettings
         if( GetDXUTState().GetWindowCreateCalled() )
             return E_FAIL;
 
-        // If DXUTCreateWindow() or DXUTSetWindow() hasn't been called, then 
+        // If DXUTCreateWindow() or DXUTSetWindow() hasn't been called, then
         // automatically call DXUTCreateWindow() with default params
         hr = DXUTCreateWindow();
         if( FAILED( hr ) )
             return hr;
     }
-    DXUTUpdateDeviceSettingsWithOverrides(pDeviceSettings); 
+    DXUTUpdateDeviceSettingsWithOverrides(pDeviceSettings);
 
-    
-    // Change to a Direct3D device created from the new device settings.  
+
+    // Change to a Direct3D device created from the new device settings.
     // If there is an existing device, then either reset or recreate the scene
     hr = DXUTChangeDevice( pDeviceSettings, NULL, NULL, false, bClipWindowToSingleAdapter );
     if( FAILED( hr ) )
@@ -1955,13 +1955,13 @@ HRESULT WINAPI DXUTCreateDeviceFromSettings( DXUTDeviceSettings* pDeviceSettings
 
 
 //--------------------------------------------------------------------------------------
-// All device changes are sent to this function.  It looks at the current 
-// device (if any) and the new device and determines the best course of action.  It 
+// All device changes are sent to this function.  It looks at the current
+// device (if any) and the new device and determines the best course of action.  It
 // also remembers and restores the window state if toggling between windowed and fullscreen
 // as well as sets the proper window and system state for switching to the new device.
 //--------------------------------------------------------------------------------------
 HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
-                          IDirect3DDevice9* pd3d9DeviceFromApp, 
+                          IDirect3DDevice9* pd3d9DeviceFromApp,
                           ID3D11Device* pd3d11DeviceFromApp,
                           bool bForceRecreate, bool bClipWindowToSingleAdapter )
 {
@@ -1978,7 +1978,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
     }
 
 
-    if ( pNewDeviceSettings->ver == DXUT_D3D9_DEVICE || 
+    if ( pNewDeviceSettings->ver == DXUT_D3D9_DEVICE ||
         ( FAILED( hr ) && DXUTDoesAppSupportD3D9() ) ) {
         hr = DXUTDelayLoadD3D9();
         pNewDeviceSettings->ver = DXUT_D3D9_DEVICE;
@@ -2007,7 +2007,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         return DXUT_ERR( L"DXUTFindValidDeviceSettings", hr );
     }
 
-    // If the ModifyDeviceSettings callback is non-NULL, then call it to let the app 
+    // If the ModifyDeviceSettings callback is non-NULL, then call it to let the app
     // change the settings or reject the device change by returning false.
     LPDXUTCALLBACKMODIFYDEVICESETTINGS pCallbackModifyDeviceSettings = GetDXUTState().GetModifyDeviceSettingsFunc();
     if( pCallbackModifyDeviceSettings && pd3d9DeviceFromApp == NULL )
@@ -2042,7 +2042,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
     DXUTPause( true, true );
 
     // When a WM_SIZE message is received, it calls DXUTCheckForWindowSizeChange().
-    // A WM_SIZE message might be sent when adjusting the window, so tell 
+    // A WM_SIZE message might be sent when adjusting the window, so tell
     // DXUTCheckForWindowSizeChange() to ignore size changes temporarily
     if( DXUTIsCurrentDeviceD3D9() )
         GetDXUTState().SetIgnoreSizeChange( true );
@@ -2097,8 +2097,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
 
             if( pOldDeviceSettings == NULL || ( pOldDeviceSettings && DXUTGetIsWindowedFromDS( pOldDeviceSettings ) ) )
             {
-                // Transistioning to full screen mode from a standard window so 
-                // save current window position/size/style now in case the user toggles to windowed mode later 
+                // Transistioning to full screen mode from a standard window so
+                // save current window position/size/style now in case the user toggles to windowed mode later
                 WINDOWPLACEMENT* pwp = GetDXUTState().GetWindowedPlacement();
                 ZeroMemory( pwp, sizeof( WINDOWPLACEMENT ) );
                 pwp->length = sizeof( WINDOWPLACEMENT );
@@ -2124,7 +2124,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             // Set FS window style
             SetWindowLong( DXUTGetHWNDDeviceFullScreen(), GWL_STYLE, WS_POPUP | WS_SYSMENU );
 
-            // If using the same window for windowed and fullscreen mode, save and remove menu 
+            // If using the same window for windowed and fullscreen mode, save and remove menu
             if( DXUTGetHWNDDeviceFullScreen() == DXUTGetHWNDDeviceWindowed() )
             {
                 HMENU hMenu = GetMenu( DXUTGetHWNDDeviceFullScreen() );
@@ -2138,8 +2138,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             GetWindowPlacement( DXUTGetHWNDDeviceFullScreen(), &wpFullscreen );
             if( ( wpFullscreen.flags & WPF_RESTORETOMAXIMIZED ) != 0 )
             {
-                // Restore the window to normal if the window was maximized then minimized.  This causes the 
-                // WPF_RESTORETOMAXIMIZED flag to be set which will cause SW_RESTORE to restore the 
+                // Restore the window to normal if the window was maximized then minimized.  This causes the
+                // WPF_RESTORETOMAXIMIZED flag to be set which will cause SW_RESTORE to restore the
                 // window from minimized to maxmized which isn't what we want
                 wpFullscreen.flags &= ~WPF_RESTORETOMAXIMIZED;
                 wpFullscreen.showCmd = SW_RESTORE;
@@ -2169,7 +2169,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             // Going to fullscreen mode
             if( pOldDeviceSettings == NULL || ( pOldDeviceSettings && DXUTGetIsWindowedFromDS( pOldDeviceSettings ) ) )
             {
-                // Transistioning to full screen mode from a standard window so 
+                // Transistioning to full screen mode from a standard window so
                 if( pOldDeviceSettings )
                 {
                     GetDXUTState().SetWindowBackBufferWidthAtModeChange( DXUTGetBackBufferWidthFromDS(
@@ -2201,7 +2201,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         return hr;
     }
 
-    // Enable/disable StickKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut, and Windows key 
+    // Enable/disable StickKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut, and Windows key
     // to prevent accidental task switching
     DXUTAllowShortcutKeys( ( DXUTGetIsWindowedFromDS( pNewDeviceSettings ) ) ?
                            GetDXUTState().GetAllowShortcutKeysWhenWindowed() :
@@ -2219,8 +2219,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         // Going from fullscreen -> windowed
 
         // Restore the show state, and positions/size of the window to what it was
-        // It is important to adjust the window size 
-        // after resetting the device rather than beforehand to ensure 
+        // It is important to adjust the window size
+        // after resetting the device rather than beforehand to ensure
         // that the monitor resolution is correct and does not limit the size of the new window.
         WINDOWPLACEMENT* pwp = GetDXUTState().GetWindowedPlacement();
         SetWindowPlacement( DXUTGetHWNDDeviceWindowed(), pwp );
@@ -2231,9 +2231,9 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
                       SWP_NOMOVE | SWP_NOREDRAW | SWP_NOSIZE );
     }
 
-    // Check to see if the window needs to be resized.  
+    // Check to see if the window needs to be resized.
     // Handle cases where the window is minimized and maxmimized as well.
- 
+
     bool bNeedToResize = false;
     if( DXUTGetIsWindowedFromDS( pNewDeviceSettings ) && // only resize if in windowed mode
         !bKeepCurrentWindowSize )                      // only resize if pp.BackbufferWidth/Height were not 0
@@ -2242,8 +2242,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         UINT nClientHeight;
         if( IsIconic( DXUTGetHWNDDeviceWindowed() ) )
         {
-            // Window is currently minimized. To tell if it needs to resize, 
-            // get the client rect of window when its restored the 
+            // Window is currently minimized. To tell if it needs to resize,
+            // get the client rect of window when its restored the
             // hard way using GetWindowPlacement()
             WINDOWPLACEMENT wp;
             ZeroMemory( &wp, sizeof( WINDOWPLACEMENT ) );
@@ -2253,8 +2253,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             if( ( wp.flags & WPF_RESTORETOMAXIMIZED ) != 0 && wp.showCmd == SW_SHOWMINIMIZED )
             {
                 // WPF_RESTORETOMAXIMIZED means that when the window is restored it will
-                // be maximized.  So maximize the window temporarily to get the client rect 
-                // when the window is maximized.  GetSystemMetrics( SM_CXMAXIMIZED ) will give this 
+                // be maximized.  So maximize the window temporarily to get the client rect
+                // when the window is maximized.  GetSystemMetrics( SM_CXMAXIMIZED ) will give this
                 // information if the window is on the primary but this will work on multimon.
                 ShowWindow( DXUTGetHWNDDeviceWindowed(), SW_RESTORE );
                 RECT rcClient;
@@ -2265,7 +2265,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             }
             else
             {
-                // Use wp.rcNormalPosition to get the client rect, but wp.rcNormalPosition 
+                // Use wp.rcNormalPosition to get the client rect, but wp.rcNormalPosition
                 // includes the window frame so subtract it
                 RECT rcFrame = {0};
                 AdjustWindowRect( &rcFrame, GetDXUTState().GetWindowedStyleAtModeChange(), GetDXUTState().GetMenu() != NULL );
@@ -2313,8 +2313,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             {
                 if( hWindowMonitor == hAdapterMonitor && IsZoomed( DXUTGetHWNDDeviceWindowed() ) )
                 {
-                    // If the window is maximized and on the same monitor as the adapter, then 
-                    // no need to clip to single adapter as the window is already clipped 
+                    // If the window is maximized and on the same monitor as the adapter, then
+                    // no need to clip to single adapter as the window is already clipped
                     // even though the rcWindow rect is outside of the miAdapter.rcWork
                 }
                 else
@@ -2325,7 +2325,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         }
     }
 
-    // Only resize window if needed 
+    // Only resize window if needed
 
     if( bNeedToResize )
     {
@@ -2390,8 +2390,8 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
                 rcResizedWindow.bottom = miAdapter.rcWork.top + nWindowOffsetY + nWindowHeight;
             }
 
-            // Resize the window.  It is important to adjust the window size 
-            // after resetting the device rather than beforehand to ensure 
+            // Resize the window.  It is important to adjust the window size
+            // after resetting the device rather than beforehand to ensure
             // that the monitor resolution is correct and does not limit the size of the new window.
             SetWindowPos( DXUTGetHWNDDeviceWindowed(), 0, rcResizedWindow.left, rcResizedWindow.top, nWindowWidth,
                           nWindowHeight, SWP_NOZORDER );
@@ -2404,16 +2404,16 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
             rcWindow.bottom = (long)( DXUTGetBackBufferHeightFromDS(pNewDeviceSettings) );
             AdjustWindowRect( &rcWindow, GetWindowLong( DXUTGetHWNDDeviceWindowed(), GWL_STYLE ), GetDXUTState().GetMenu() != NULL );
 
-            // Resize the window.  It is important to adjust the window size 
-            // after resetting the device rather than beforehand to ensure 
+            // Resize the window.  It is important to adjust the window size
+            // after resetting the device rather than beforehand to ensure
             // that the monitor resolution is correct and does not limit the size of the new window.
             int cx = ( int )( rcWindow.right - rcWindow.left );
             int cy = ( int )( rcWindow.bottom - rcWindow.top );
             SetWindowPos( DXUTGetHWNDDeviceWindowed(), 0, 0, 0, cx, cy, SWP_NOZORDER | SWP_NOMOVE );
         }
 
-        // Its possible that the new window size is not what we asked for.  
-        // No window can be sized larger than the desktop, so see if the Windows OS resized the 
+        // Its possible that the new window size is not what we asked for.
+        // No window can be sized larger than the desktop, so see if the Windows OS resized the
         // window to something smaller to fit on the desktop.  Also if WM_GETMINMAXINFO
         // will put a limit on the smallest/largest window size.
         RECT rcClient;
@@ -2423,10 +2423,10 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
         if( nClientWidth != DXUTGetBackBufferWidthFromDS( pNewDeviceSettings ) ||
             nClientHeight != DXUTGetBackBufferHeightFromDS( pNewDeviceSettings ) )
         {
-            // If its different, then resize the backbuffer again.  This time create a backbuffer that matches the 
+            // If its different, then resize the backbuffer again.  This time create a backbuffer that matches the
             // client rect of the current window w/o resizing the window.
             DXUTDeviceSettings deviceSettings = DXUTGetDeviceSettings();
-            if( DXUTIsD3D9( &deviceSettings ) ) deviceSettings.d3d9.pp.BackBufferWidth = 0; else deviceSettings.d3d11.sd.BufferDesc.Width = 0; 
+            if( DXUTIsD3D9( &deviceSettings ) ) deviceSettings.d3d9.pp.BackBufferWidth = 0; else deviceSettings.d3d11.sd.BufferDesc.Width = 0;
             if( DXUTIsD3D9( &deviceSettings ) ) deviceSettings.d3d9.pp.BackBufferHeight = 0; else deviceSettings.d3d11.sd.BufferDesc.Height = 0;
 
             hr = DXUTChangeDevice( &deviceSettings, NULL, NULL, false, bClipWindowToSingleAdapter );
@@ -2466,7 +2466,7 @@ HRESULT DXUTChangeDevice( DXUTDeviceSettings* pNewDeviceSettings,
 
 
 //--------------------------------------------------------------------------------------
-// Creates a DXGI factory object if one has not already been created  
+// Creates a DXGI factory object if one has not already been created
 //--------------------------------------------------------------------------------------
 HRESULT DXUTDelayLoadDXGI()
 {
@@ -2492,7 +2492,7 @@ HRESULT DXUTDelayLoadDXGI()
 
 
 //--------------------------------------------------------------------------------------
-// Creates a Direct3D object if one has not already been created  
+// Creates a Direct3D object if one has not already been created
 //--------------------------------------------------------------------------------------
 HRESULT DXUTDelayLoadD3D9()
 {
@@ -2517,7 +2517,7 @@ HRESULT DXUTDelayLoadD3D9()
 
 
 //--------------------------------------------------------------------------------------
-// Updates the device settings with default values..  
+// Updates the device settings with default values..
 //--------------------------------------------------------------------------------------
 void DXUTUpdateDeviceSettingsWithOverrides( DXUTDeviceSettings* pDeviceSettings )
 {
@@ -2584,7 +2584,7 @@ void DXUTUpdateDeviceSettingsWithOverrides( DXUTDeviceSettings* pDeviceSettings 
             pDeviceSettings->ver = DXUT_D3D11_DEVICE;
         }
     }
-    
+
     if (GetDXUTState().GetOverrideForceFeatureLevel() != 0) {
         pDeviceSettings->d3d11.DeviceFeatureLevel = (D3D_FEATURE_LEVEL)GetDXUTState().GetOverrideForceFeatureLevel();
     }
@@ -2604,7 +2604,7 @@ void WINAPI DXUTSetD3DVersionSupport( bool bAppCanUseD3D9,  bool bAppCanUseD3D11
 
 
 //--------------------------------------------------------------------------------------
-// Returns true if app has registered any D3D9 callbacks or 
+// Returns true if app has registered any D3D9 callbacks or
 // used the DXUTSetD3DVersionSupport API and passed true for bAppCanUseD3D9
 //--------------------------------------------------------------------------------------
 bool WINAPI DXUTDoesAppSupportD3D9()
@@ -2622,7 +2622,7 @@ bool WINAPI DXUTDoesAppSupportD3D9()
 
 
 //--------------------------------------------------------------------------------------
-// Returns true if app has registered any D3D11 callbacks or 
+// Returns true if app has registered any D3D11 callbacks or
 // used the DXUTSetD3DVersionSupport API and passed true for bAppCanUseD3D11
 //--------------------------------------------------------------------------------------
 bool WINAPI DXUTDoesAppSupportD3D11()
@@ -2647,10 +2647,10 @@ bool WINAPI DXUTDoesAppSupportD3D11()
 
 
 //--------------------------------------------------------------------------------------
-// Passes a previously created Direct3D9 device for use by the framework.  
-// If DXUTCreateWindow() has not already been called, it will call it with the 
-// default parameters.  Instead of calling this, you can call DXUTCreateDevice() or 
-// DXUTCreateDeviceFromSettings() 
+// Passes a previously created Direct3D9 device for use by the framework.
+// If DXUTCreateWindow() has not already been called, it will call it with the
+// default parameters.  Instead of calling this, you can call DXUTCreateDevice() or
+// DXUTCreateDeviceFromSettings()
 //--------------------------------------------------------------------------------------
 HRESULT WINAPI DXUTSetD3D9Device( IDirect3DDevice9* pd3dDevice )
 {
@@ -2665,8 +2665,8 @@ HRESULT WINAPI DXUTSetD3D9Device( IDirect3DDevice9* pd3dDevice )
 
     GetDXUTState().SetDeviceCreateCalled( true );
 
-    // If DXUTCreateWindow() or DXUTSetWindow() has not already been called, 
-    // then call DXUTCreateWindow() with the default parameters.         
+    // If DXUTCreateWindow() or DXUTSetWindow() has not already been called,
+    // then call DXUTCreateWindow() with the default parameters.
     if( !GetDXUTState().GetWindowCreated() )
     {
         // If DXUTCreateWindow() or DXUTSetWindow() was already called and failed, then fail.
@@ -2674,7 +2674,7 @@ HRESULT WINAPI DXUTSetD3D9Device( IDirect3DDevice9* pd3dDevice )
         if( GetDXUTState().GetWindowCreateCalled() )
             return E_FAIL;
 
-        // If DXUTCreateWindow() or DXUTSetWindow() hasn't been called, then 
+        // If DXUTCreateWindow() or DXUTSetWindow() hasn't been called, then
         // automatically call DXUTCreateWindow() with default params
         hr = DXUTCreateWindow();
         if( FAILED( hr ) )
@@ -2772,7 +2772,7 @@ HRESULT DXUTCreate3DEnvironment9( IDirect3DDevice9* pd3dDeviceFromApp )
     // Setup cursor based on current settings (window/fullscreen mode, show cursor state, clip cursor state)
     DXUTSetupCursor();
 
-    // Update GetDXUTState()'s copy of D3D caps 
+    // Update GetDXUTState()'s copy of D3D caps
     D3DCAPS9* pd3dCaps = GetDXUTState().GetCaps();
     pd3dDevice->GetDeviceCaps( pd3dCaps );
 
@@ -2825,11 +2825,11 @@ HRESULT DXUTCreate3DEnvironment9( IDirect3DDevice9* pd3dDeviceFromApp )
 
 //--------------------------------------------------------------------------------------
 // Resets the 3D environment by:
-//      - Calls the device lost callback 
+//      - Calls the device lost callback
 //      - Resets the device
 //      - Stores the back buffer description
 //      - Sets up the full screen Direct3D cursor if requested
-//      - Calls the device reset callback 
+//      - Calls the device reset callback
 //--------------------------------------------------------------------------------------
 HRESULT DXUTReset3DEnvironment9()
 {
@@ -2914,7 +2914,7 @@ void DXUTRender3DEnvironment9()
         Sleep( 50 );
     }
 
-    // If no device created yet because device was lost (ie. another fullscreen exclusive device exists), 
+    // If no device created yet because device was lost (ie. another fullscreen exclusive device exists),
     // then wait and try to create every so often.
     IDirect3DDevice9* pd3dDevice = DXUTGetD3D9Device();
     if( NULL == pd3dDevice )
@@ -2940,9 +2940,9 @@ void DXUTRender3DEnvironment9()
                 return;
             }
 
-            // If we are windowed, read the desktop format and 
-            // ensure that the Direct3D device is using the same format 
-            // since the user could have changed the desktop bitdepth 
+            // If we are windowed, read the desktop format and
+            // ensure that the Direct3D device is using the same format
+            // since the user could have changed the desktop bitdepth
             if( DXUTIsWindowed() )
             {
                 D3DDISPLAYMODE adapterDesktopDisplayMode;
@@ -2993,7 +2993,7 @@ void DXUTRender3DEnvironment9()
                 }
                 else
                 {
-                    // Reset failed, but the device wasn't lost so something bad happened, 
+                    // Reset failed, but the device wasn't lost so something bad happened,
                     // so recreate the device to try to recover
                     DXUTDeviceSettings* pDeviceSettings = GetDXUTState().GetCurrentDeviceSettings();
                     if( FAILED( DXUTChangeDevice( pDeviceSettings, NULL,  NULL, true, false ) ) )
@@ -3052,7 +3052,7 @@ void DXUTRender3DEnvironment9()
         }
 
 #if defined(DEBUG) || defined(_DEBUG)
-        // The back buffer should always match the client rect 
+        // The back buffer should always match the client rect
         // if the Direct3D backbuffer covers the entire window
         RECT rcClient;
         GetClientRect( DXUTGetHWND(), &rcClient );
@@ -3076,24 +3076,24 @@ void DXUTRender3DEnvironment9()
             {
                 // When D3DERR_DRIVERINTERNALERROR is returned from Present(),
                 // the application can do one of the following:
-                // 
-                // - End, with the pop-up window saying that the application cannot continue 
-                //   because of problems in the display adapter and that the user should 
+                //
+                // - End, with the pop-up window saying that the application cannot continue
+                //   because of problems in the display adapter and that the user should
                 //   contact the adapter manufacturer.
                 //
-                // - Attempt to restart by calling IDirect3DDevice9::Reset, which is essentially the same 
-                //   path as recovering from a lost device. If IDirect3DDevice9::Reset fails with 
-                //   D3DERR_DRIVERINTERNALERROR, the application should end immediately with the message 
+                // - Attempt to restart by calling IDirect3DDevice9::Reset, which is essentially the same
+                //   path as recovering from a lost device. If IDirect3DDevice9::Reset fails with
+                //   D3DERR_DRIVERINTERNALERROR, the application should end immediately with the message
                 //   that the user should contact the adapter manufacturer.
-                // 
+                //
                 // The framework attempts the path of resetting the device
-                // 
+                //
                 GetDXUTState().SetDeviceLost( true );
             }
         }
     }
 
-    // If the app called DXUTWasKeyPressed() then do the work 
+    // If the app called DXUTWasKeyPressed() then do the work
     // to store the current state of the keys in bLastKeys
     if( GetDXUTState().GetAppCalledWasKeyPressed() )
     {
@@ -3120,8 +3120,8 @@ void DXUTRender3DEnvironment9()
 
 //--------------------------------------------------------------------------------------
 // Cleans up the 3D environment by:
-//      - Calls the device lost callback 
-//      - Calls the device destroyed callback 
+//      - Calls the device lost callback
+//      - Calls the device destroyed callback
 //      - Releases the D3D device
 //--------------------------------------------------------------------------------------
 void DXUTCleanup3DEnvironment9( bool bReleaseSettings )
@@ -3151,7 +3151,7 @@ void DXUTCleanup3DEnvironment9( bool bReleaseSettings )
 
         GetDXUTState().SetInsideDeviceCallback( false );
 
-        // Release the D3D device and in debug configs, displays a message box if there 
+        // Release the D3D device and in debug configs, displays a message box if there
         // are unrelease objects.
         if( pd3dDevice )
         {
@@ -3295,8 +3295,8 @@ HRESULT DXUTSetD3D9DeviceCursor( IDirect3DDevice9* pd3dDevice, HCURSOR hCursor, 
             else
                 pBitmap[dwWidth * y + x] = 0x00000000;
 
-            // It may be helpful to make the D3D cursor look slightly 
-            // different from the Windows cursor so you can distinguish 
+            // It may be helpful to make the D3D cursor look slightly
+            // different from the Windows cursor so you can distinguish
             // between the two when developing/testing code.  When
             // bAddWatermark is TRUE, the following code adds some
             // small grey "D3D" characters to the upper-left corner of
@@ -3347,8 +3347,8 @@ End:
 
 
 //--------------------------------------------------------------------------------------
-// Internal helper function to return the adapter format from the first device settings 
-// combo that matches the passed adapter ordinal, device type, backbuffer format, and windowed.  
+// Internal helper function to return the adapter format from the first device settings
+// combo that matches the passed adapter ordinal, device type, backbuffer format, and windowed.
 //--------------------------------------------------------------------------------------
 HRESULT DXUTFindD3D9AdapterFormat( UINT AdapterOrdinal, D3DDEVTYPE DeviceType, D3DFORMAT BackBufferFormat,
                                    BOOL Windowed, D3DFORMAT* pAdapterFormat )
@@ -3489,7 +3489,7 @@ HRESULT DXUTCreate3DEnvironment11( ID3D11Device* pd3d11DeviceFromApp )
     IDXGISwapChain* pSwapChain = NULL;
     DXUTDeviceSettings* pNewDeviceSettings = GetDXUTState().GetCurrentDeviceSettings();
     assert( pNewDeviceSettings != NULL );
-        
+
     IDXGIFactory1* pDXGIFactory = DXUTGetDXGIFactory();
     assert( pDXGIFactory != NULL );
     hr = pDXGIFactory->MakeWindowAssociation( DXUTGetHWND(), 0  );
@@ -3502,21 +3502,21 @@ HRESULT DXUTCreate3DEnvironment11( ID3D11Device* pd3d11DeviceFromApp )
 
         hr = S_OK;
         D3D_DRIVER_TYPE ddt = pNewDeviceSettings->d3d11.DriverType;
-        if( pNewDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_HARDWARE ) 
+        if( pNewDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_HARDWARE )
         {
             hr = pDXGIFactory->EnumAdapters1( pNewDeviceSettings->d3d11.AdapterOrdinal, &pAdapter );
-            if ( FAILED( hr) ) 
+            if ( FAILED( hr) )
             {
                 return E_FAIL;
             }
-            ddt = D3D_DRIVER_TYPE_UNKNOWN;    
+            ddt = D3D_DRIVER_TYPE_UNKNOWN;
         }
-        else if (pNewDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_WARP) 
+        else if (pNewDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_WARP)
         {
-            ddt = D3D_DRIVER_TYPE_WARP;  
+            ddt = D3D_DRIVER_TYPE_WARP;
             pAdapter = NULL;
         }
-        else if (pNewDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_REFERENCE) 
+        else if (pNewDeviceSettings->d3d11.DriverType == D3D_DRIVER_TYPE_REFERENCE)
         {
             ddt = D3D_DRIVER_TYPE_REFERENCE;
             pAdapter = NULL;
@@ -3536,11 +3536,11 @@ HRESULT DXUTCreate3DEnvironment11( ID3D11Device* pd3d11DeviceFromApp )
                                                  &FeatureLevel,
                                                  &pd3dImmediateContext
                                                  );
-            
+
             if ( FAILED( hr ) ) {
                 pAdapter = NULL;
                 // Remote desktop does not allow you to enumerate the adapter.  In this case, we let D3D11 do the enumeration.
-                if ( ddt == D3D_DRIVER_TYPE_UNKNOWN ) { 
+                if ( ddt == D3D_DRIVER_TYPE_UNKNOWN ) {
                     hr = DXUT_Dynamic_D3D11CreateDevice( pAdapter,
                                                          D3D_DRIVER_TYPE_HARDWARE,
                                                          ( HMODULE )0,
@@ -3566,7 +3566,7 @@ HRESULT DXUTCreate3DEnvironment11( ID3D11Device* pd3d11DeviceFromApp )
             hr = pd3d11Device->QueryInterface( __uuidof( IDXGIDevice1 ), ( LPVOID* )&pDXGIDev );
             if( SUCCEEDED( hr ) && pDXGIDev )
             {
-                if ( pAdapter == NULL ) 
+                if ( pAdapter == NULL )
                 {
                     IDXGIAdapter *pTempAdapter;
                     pDXGIDev->GetAdapter( &pTempAdapter );
@@ -3596,7 +3596,7 @@ HRESULT DXUTCreate3DEnvironment11( ID3D11Device* pd3d11DeviceFromApp )
             TRUE,//BOOL DepthClipEnable;
             FALSE,//BOOL ScissorEnable;
             TRUE,//BOOL MultisampleEnable;
-            FALSE//BOOL AntialiasedLineEnable;        
+            FALSE//BOOL AntialiasedLineEnable;
         };
         ID3D11RasterizerState* pRS = NULL;
         hr = pd3d11Device->CreateRasterizerState(&drd, &pRS);
@@ -3715,11 +3715,11 @@ HRESULT DXUTCreate3DEnvironment11( ID3D11Device* pd3d11DeviceFromApp )
 
 //--------------------------------------------------------------------------------------
 // Resets the 3D environment by:
-//      - Calls the device lost callback 
+//      - Calls the device lost callback
 //      - Resets the device
 //      - Stores the back buffer description
 //      - Sets up the full screen Direct3D cursor if requested
-//      - Calls the device reset callback 
+//      - Calls the device reset callback
 //--------------------------------------------------------------------------------------
 HRESULT DXUTReset3DEnvironment11()
 {
@@ -3766,7 +3766,7 @@ HRESULT DXUTReset3DEnvironment11()
             // to the desired value.
 
             // SetFullscreenState causes a WM_SIZE message to be sent to the window.  The WM_SIZE message calls
-            // DXUTCheckForDXGIBufferChange which normally stores the new height and width in 
+            // DXUTCheckForDXGIBufferChange which normally stores the new height and width in
             // pDeviceSettings->d3d11.sd.BufferDesc.  SetDoNotStoreBufferSize tells DXUTCheckForDXGIBufferChange
             // not to store the height and width so that we have the correct values when calling ResizeTarget.
 
@@ -3796,7 +3796,7 @@ HRESULT DXUTReset3DEnvironment11()
     }
 
     // If no deferred DXGI actions are to take place, mark the device as reset.
-    // If there is a deferred DXGI action, then the device isn't reset until DXGI sends us a 
+    // If there is a deferred DXGI action, then the device isn't reset until DXGI sends us a
     // window message.  Only then can we mark the device as reset.
     if( !bDeferredDXGIAction )
         GetDXUTState().SetDeviceObjectsReset( true );
@@ -3875,21 +3875,21 @@ void DXUTRender3DEnvironment11()
         {
             pCallbackFrameRender( pd3dDevice, pd3dImmediateContext, fTime, fElapsedTime,
                                   GetDXUTState().GetD3D11FrameRenderFuncUserContext() );
-            
+
             pd3dDevice = DXUTGetD3D11Device();
             if( NULL == pd3dDevice ) // Handle DXUTShutdown from inside callback
                 return;
         }
 
 #if defined(DEBUG) || defined(_DEBUG)
-        // The back buffer should always match the client rect 
+        // The back buffer should always match the client rect
         // if the Direct3D backbuffer covers the entire window
         RECT rcClient;
         GetClientRect( DXUTGetHWND(), &rcClient );
         if( !IsIconic( DXUTGetHWND() ) )
         {
             GetClientRect( DXUTGetHWND(), &rcClient );
-            
+
             assert( DXUTGetDXGIBackBufferSurfaceDesc()->Width == (UINT)rcClient.right );
             assert( DXUTGetDXGIBackBufferSurfaceDesc()->Height == (UINT)rcClient.bottom );
         }
@@ -3933,7 +3933,7 @@ void DXUTRender3DEnvironment11()
             }
             else
             {
-                // Reset failed, but the device wasn't lost so something bad happened, 
+                // Reset failed, but the device wasn't lost so something bad happened,
                 // so recreate the device to try to recover
                 DXUTDeviceSettings* pDeviceSettings = GetDXUTState().GetCurrentDeviceSettings();
                 if( FAILED( DXUTChangeDevice( pDeviceSettings, NULL, NULL, true, false ) ) )
@@ -3948,7 +3948,7 @@ void DXUTRender3DEnvironment11()
     }
     else if( DXGI_ERROR_DEVICE_REMOVED == hr )
     {
-        // Use a callback to ask the app if it would like to find a new device.  
+        // Use a callback to ask the app if it would like to find a new device.
         // If no device removed callback is set, then look for a new device
         if( FAILED( DXUTHandleDeviceRemoved() ) )
         {
@@ -4044,8 +4044,8 @@ void ClearD3D11DeviceContext( ID3D11DeviceContext* pd3dDeviceContext )
 
 //--------------------------------------------------------------------------------------
 // Cleans up the 3D environment by:
-//      - Calls the device lost callback 
-//      - Calls the device destroyed callback 
+//      - Calls the device lost callback
+//      - Calls the device destroyed callback
 //      - Releases the D3D device
 //--------------------------------------------------------------------------------------
 void DXUTCleanup3DEnvironment11( bool bReleaseSettings )
@@ -4054,7 +4054,7 @@ void DXUTCleanup3DEnvironment11( bool bReleaseSettings )
 
     if( pd3dDevice != NULL )
     {
-        if (GetDXUTState().GetD3D11RasterizerState()!= NULL ) 
+        if (GetDXUTState().GetD3D11RasterizerState()!= NULL )
             GetDXUTState().GetD3D11RasterizerState()->Release();
 
         // Call ClearState to avoid tons of messy debug spew telling us that we're deleting bound objects
@@ -4076,7 +4076,7 @@ void DXUTCleanup3DEnvironment11( bool bReleaseSettings )
             GetDXUTState().SetDeviceObjectsReset( false );
         }
 
-        // Release our old depth stencil texture and view 
+        // Release our old depth stencil texture and view
         ID3D11Texture2D* pDS = GetDXUTState().GetD3D11DepthStencil();
         SAFE_RELEASE( pDS );
         GetDXUTState().SetD3D11DepthStencil( NULL );
@@ -4133,7 +4133,7 @@ void DXUTCleanup3DEnvironment11( bool bReleaseSettings )
         SAFE_RELEASE( pd3d11DeviceContext );
         GetDXUTState().SetD3D11DeviceContext( NULL );
 
-        // Release the D3D device and in debug configs, displays a message box if there 
+        // Release the D3D device and in debug configs, displays a message box if there
         // are unrelease objects.
         if( pd3dDevice )
         {
@@ -4162,11 +4162,11 @@ void DXUTCleanup3DEnvironment11( bool bReleaseSettings )
 
 
 //--------------------------------------------------------------------------------------
-// Low level keyboard hook to disable Windows key to prevent accidental task switching.  
+// Low level keyboard hook to disable Windows key to prevent accidental task switching.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK DXUTLowLevelKeyboardProc( int nCode, WPARAM wParam, LPARAM lParam )
 {
-    if( nCode < 0 || nCode != HC_ACTION )  // do not process message 
+    if( nCode < 0 || nCode != HC_ACTION )  // do not process message
         return CallNextHookEx( GetDXUTState().GetKeyboardHook(), nCode, wParam, lParam );
 
     bool bEatKeystroke = false;
@@ -4191,8 +4191,8 @@ LRESULT CALLBACK DXUTLowLevelKeyboardProc( int nCode, WPARAM wParam, LPARAM lPar
 
 
 //--------------------------------------------------------------------------------------
-// Controls how DXUT behaves when fullscreen and windowed mode with regard to 
-// shortcut keys (Windows keys, StickyKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut) 
+// Controls how DXUT behaves when fullscreen and windowed mode with regard to
+// shortcut keys (Windows keys, StickyKeys shortcut, ToggleKeys shortcut, FilterKeys shortcut)
 //--------------------------------------------------------------------------------------
 void WINAPI DXUTSetShortcutKeySettings( bool bAllowWhenFullscreen, bool bAllowWhenWindowed )
 {
@@ -4211,7 +4211,7 @@ void WINAPI DXUTSetShortcutKeySettings( bool bAllowWhenFullscreen, bool bAllowWh
 
 
 //--------------------------------------------------------------------------------------
-// Enables/disables Windows keys, and disables or restores the StickyKeys/ToggleKeys/FilterKeys 
+// Enables/disables Windows keys, and disables or restores the StickyKeys/ToggleKeys/FilterKeys
 // shortcut to help prevent accidental task switching
 //--------------------------------------------------------------------------------------
 void DXUTAllowShortcutKeys( bool bAllowKeys )
@@ -4220,7 +4220,7 @@ void DXUTAllowShortcutKeys( bool bAllowKeys )
 
     if( bAllowKeys )
     {
-        // Restore StickyKeys/etc to original state and enable Windows key      
+        // Restore StickyKeys/etc to original state and enable Windows key
         STICKYKEYS sk = GetDXUTState().GetStartupStickyKeys();
         TOGGLEKEYS tk = GetDXUTState().GetStartupToggleKeys();
         FILTERKEYS fk = GetDXUTState().GetStartupFilterKeys();
@@ -4253,7 +4253,7 @@ void DXUTAllowShortcutKeys( bool bAllowKeys )
             }
         }
 
-        // Disable StickyKeys/etc shortcuts but if the accessibility feature is on, 
+        // Disable StickyKeys/etc shortcuts but if the accessibility feature is on,
         // then leave the settings alone as its probably being usefully used
 
         STICKYKEYS skOff = GetDXUTState().GetStartupStickyKeys();
@@ -4426,7 +4426,7 @@ void DXUTHandleTimers()
 
 
 //--------------------------------------------------------------------------------------
-// Display an custom error msg box 
+// Display an custom error msg box
 //--------------------------------------------------------------------------------------
 void DXUTDisplayErrorMessage( HRESULT hr )
 {
@@ -4445,12 +4445,12 @@ void DXUTDisplayErrorMessage( HRESULT hr )
                 wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Could not initialize Direct3D 9. Check that the latest version of DirectX is correctly installed on your system.  Also make sure that this program was compiled with header files that match the installed DirectX DLLs." );
             break;
         }
-        case DXUTERR_NOCOMPATIBLEDEVICES:    
-            nExitCode = 3; 
+        case DXUTERR_NOCOMPATIBLEDEVICES:
+            nExitCode = 3;
             if( GetSystemMetrics(0x1000) != 0 ) // SM_REMOTESESSION
-                wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Direct3D does not work over a remote session." ); 
+                wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Direct3D does not work over a remote session." );
             else
-                wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Could not find any compatible Direct3D devices." ); 
+                wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Could not find any compatible Direct3D devices." );
             break;
         case DXUTERR_MEDIANOTFOUND:          nExitCode = 4; wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Could not find required media." ); break;
         case DXUTERR_NONZEROREFCOUNT:        nExitCode = 5; wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"The Direct3D device has a non-zero reference count, meaning some objects were not released." ); break;
@@ -4458,11 +4458,11 @@ void DXUTDisplayErrorMessage( HRESULT hr )
         case DXUTERR_RESETTINGDEVICE:        nExitCode = 7; wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"Failed resetting the Direct3D device." ); break;
         case DXUTERR_CREATINGDEVICEOBJECTS:  nExitCode = 8; wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"An error occurred in the device create callback function." ); break;
         case DXUTERR_RESETTINGDEVICEOBJECTS: nExitCode = 9; wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"An error occurred in the device reset callback function." ); break;
-        // nExitCode 10 means the app exited using a REF device 
+        // nExitCode 10 means the app exited using a REF device
         case DXUTERR_DEVICEREMOVED:          nExitCode = 11; wcscpy_s( strBuffer, ARRAYSIZE(strBuffer), L"The Direct3D device was removed."  ); break;
         default: bFound = false; nExitCode = 1; break; // nExitCode 1 means the API was incorrectly called
 
-    }   
+    }
 
     GetDXUTState().SetExitCode(nExitCode);
 
@@ -4512,7 +4512,7 @@ HRESULT WINAPI DXUTToggleFullScreen()
     HRESULT hr;
     DXUTDeviceSettings deviceSettings = DXUTGetDeviceSettings();
     DXUTDeviceSettings orginalDeviceSettings = DXUTGetDeviceSettings();
-    
+
     if (deviceSettings.ver == DXUT_D3D11_DEVICE) {
         deviceSettings.d3d11.sd.Windowed = !deviceSettings.d3d11.sd.Windowed; // datut
         if (!deviceSettings.d3d11.sd.Windowed) {
@@ -4521,8 +4521,8 @@ HRESULT WINAPI DXUTToggleFullScreen()
                 800, 600, { 60, 1 }, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB
             };
             DXUTGetD3D11AdapterDisplayMode( deviceSettings.d3d11.AdapterOrdinal, 0, &adapterDesktopDisplayMode );
-            
-            
+
+
             deviceSettings.d3d11.sd.BufferDesc = adapterDesktopDisplayMode;
         }else {
             RECT r = DXUTGetWindowClientRectAtModeChange();
@@ -4530,7 +4530,7 @@ HRESULT WINAPI DXUTToggleFullScreen()
             deviceSettings.d3d11.sd.BufferDesc.Width = r.right;
         }
     }else if (deviceSettings.ver == DXUT_D3D9_DEVICE){
-        deviceSettings.d3d9.pp.Windowed = !deviceSettings.d3d9.pp.Windowed; 
+        deviceSettings.d3d9.pp.Windowed = !deviceSettings.d3d9.pp.Windowed;
         if (!deviceSettings.d3d9.pp.Windowed) {
                 D3DDISPLAYMODE adapterDesktopDisplayMode;
                 IDirect3D9* pD3D = DXUTGetD3D9Object();
@@ -4598,11 +4598,11 @@ HRESULT WINAPI DXUTToggleWARP () {
         else if( deviceSettings.d3d11.DriverType == D3D_DRIVER_TYPE_REFERENCE || deviceSettings.d3d11.DriverType == D3D_DRIVER_TYPE_WARP )
             deviceSettings.d3d11.DriverType = D3D_DRIVER_TYPE_HARDWARE;
     }
-    
+
     hr = DXUTSnapDeviceSettingsToEnumDevice(&deviceSettings, false);
     if( SUCCEEDED( hr ) )
     {
-        // Create a Direct3D device using the new device settings.  
+        // Create a Direct3D device using the new device settings.
         // If there is an existing device, then it will either reset or recreate the scene.
         hr = DXUTChangeDevice( &deviceSettings, NULL,  NULL, false, false );
 
@@ -4657,11 +4657,11 @@ HRESULT WINAPI DXUTToggleREF()
         else if( deviceSettings.d3d11.DriverType == D3D_DRIVER_TYPE_REFERENCE )
             deviceSettings.d3d11.DriverType = D3D_DRIVER_TYPE_HARDWARE;
     }
-    
+
     hr = DXUTSnapDeviceSettingsToEnumDevice(&deviceSettings, false);
     if( SUCCEEDED( hr ) )
     {
-        // Create a Direct3D device using the new device settings.  
+        // Create a Direct3D device using the new device settings.
         // If there is an existing device, then it will either reset or recreate the scene.
         hr = DXUTChangeDevice( &deviceSettings, NULL,  NULL, false, false );
 
@@ -4740,7 +4740,7 @@ void DXUTResizeDXGIBuffers( UINT Width, UINT Height, BOOL bFullScreen )
         cbSwapChainReleasing( GetDXUTState().GetD3D11SwapChainResizedFuncUserContext() );
     GetDXUTState().SetInsideDeviceCallback( false );
 
-    // Release our old depth stencil texture and view 
+    // Release our old depth stencil texture and view
     ID3D11Texture2D* pDS = GetDXUTState().GetD3D11DepthStencil();
     SAFE_RELEASE( pDS );
     GetDXUTState().SetD3D11DepthStencil( NULL );
@@ -4850,7 +4850,7 @@ void DXUTCheckForDXGIBufferChange()
 void DXUTCheckForWindowSizeChange()
 {
     // Skip the check for various reasons
-          
+
     if( GetDXUTState().GetIgnoreSizeChange() || !GetDXUTState().GetDeviceCreated() ||
         ( DXUTIsCurrentDeviceD3D9() && !DXUTIsWindowed() )  )
         return;
@@ -4866,7 +4866,7 @@ void DXUTCheckForWindowSizeChange()
         {
             // A new window size will require a new backbuffer size size
             // Tell DXUTChangeDevice and D3D to size according to the HWND's client rect
-            if( DXUTIsD3D9( &deviceSettings ) ) deviceSettings.d3d9.pp.BackBufferWidth = 0; else deviceSettings.d3d11.sd.BufferDesc.Width = 0; 
+            if( DXUTIsD3D9( &deviceSettings ) ) deviceSettings.d3d9.pp.BackBufferWidth = 0; else deviceSettings.d3d11.sd.BufferDesc.Width = 0;
             if( DXUTIsD3D9( &deviceSettings ) ) deviceSettings.d3d9.pp.BackBufferHeight = 0; else deviceSettings.d3d11.sd.BufferDesc.Height = 0;
 
             DXUTChangeDevice( &deviceSettings, NULL, NULL, false, false );
@@ -4880,7 +4880,7 @@ void DXUTCheckForWindowSizeChange()
 
 
 //--------------------------------------------------------------------------------------
-// Checks to see if the HWND changed monitors, and if it did it creates a device 
+// Checks to see if the HWND changed monitors, and if it did it creates a device
 // from the monitor's adapter and recreates the scene.
 //--------------------------------------------------------------------------------------
 void DXUTCheckForWindowChangingMonitors()
@@ -4915,7 +4915,7 @@ void DXUTCheckForWindowChangingMonitors()
             hr = DXUTSnapDeviceSettingsToEnumDevice( &deviceSettings, false );
             if( SUCCEEDED( hr ) )
             {
-                // Create a Direct3D device using the new device settings.  
+                // Create a Direct3D device using the new device settings.
                 // If there is an existing device, then it will either reset or recreate the scene.
                 hr = DXUTChangeDevice( &deviceSettings, NULL, NULL, false, false );
 
@@ -5160,7 +5160,7 @@ void DXUTSetupCursor()
 {
     if( DXUTIsCurrentDeviceD3D9() )
     {
-        // Show the cursor again if returning to fullscreen 
+        // Show the cursor again if returning to fullscreen
         IDirect3DDevice9* pd3dDevice = DXUTGetD3D9Device();
         if( !DXUTIsWindowed() && pd3dDevice )
         {
@@ -5337,7 +5337,7 @@ void DXUTUpdateFrameStats()
 
 //--------------------------------------------------------------------------------------
 // Returns a string describing the current device.  If bShowFPS is true, then
-// the string contains the frames/sec.  If "-nostats" was used in 
+// the string contains the frames/sec.  If "-nostats" was used in
 // the command line, the string will be blank
 //--------------------------------------------------------------------------------------
 LPCWSTR WINAPI DXUTGetFrameStats( bool bShowFPS )
@@ -5350,7 +5350,7 @@ LPCWSTR WINAPI DXUTGetFrameStats( bool bShowFPS )
 
 
 //--------------------------------------------------------------------------------------
-// Updates the string which describes the device 
+// Updates the string which describes the device
 //--------------------------------------------------------------------------------------
 void DXUTUpdateD3D9DeviceStats( D3DDEVTYPE DeviceType, DWORD BehaviorFlags,
                                 D3DADAPTER_IDENTIFIER9* pAdapterIdentifier )
@@ -5369,8 +5369,8 @@ void DXUTUpdateD3D9DeviceStats( D3DDEVTYPE DeviceType, DWORD BehaviorFlags,
 
     if( DeviceType == D3DDEVTYPE_HAL )
     {
-        // Be sure not to overflow m_strDeviceStats when appending the adapter 
-        // description, since it can be long.  
+        // Be sure not to overflow m_strDeviceStats when appending the adapter
+        // description, since it can be long.
         wcscat_s( pstrDeviceStats, 256, L": " );
 
         // Try to get a unique description from the CD3D9EnumDeviceSettingsCombo
@@ -5400,7 +5400,7 @@ void DXUTUpdateD3D9DeviceStats( D3DDEVTYPE DeviceType, DWORD BehaviorFlags,
 
 
 //--------------------------------------------------------------------------------------
-// Updates the string which describes the device 
+// Updates the string which describes the device
 //--------------------------------------------------------------------------------------
 void DXUTUpdateD3D11DeviceStats( D3D_DRIVER_TYPE DeviceType, DXGI_ADAPTER_DESC* pAdapterDesc )
 {
@@ -5420,8 +5420,8 @@ void DXUTUpdateD3D11DeviceStats( D3D_DRIVER_TYPE DeviceType, DXGI_ADAPTER_DESC* 
 
     if( DeviceType == D3D_DRIVER_TYPE_HARDWARE )
     {
-        // Be sure not to overflow m_strDeviceStats when appending the adapter 
-        // description, since it can be long.  
+        // Be sure not to overflow m_strDeviceStats when appending the adapter
+        // description, since it can be long.
         wcscat_s( pstrDeviceStats, 256, L": " );
 
         // Try to get a unique description from the CD3D11EnumDeviceSettingsCombo
@@ -5566,7 +5566,7 @@ void WINAPI DXUTSetConstantFrameTime( bool bEnabled, float fTimePerFrame )
 
 
 //--------------------------------------------------------------------------------------
-// Resets the state associated with DXUT 
+// Resets the state associated with DXUT
 //--------------------------------------------------------------------------------------
 void WINAPI DXUTResetFrameworkState()
 {
@@ -5589,12 +5589,12 @@ void WINAPI DXUTShutdown( int nExitCode )
     DXUTCleanup3DEnvironment( true );
 
     // Restore shortcut keys (Windows key, accessibility shortcuts) to original state
-    // This is important to call here if the shortcuts are disabled, 
+    // This is important to call here if the shortcuts are disabled,
     // because accessibility setting changes are permanent.
-    // This means that if this is not done then the accessibility settings 
-    // might not be the same as when the app was started. 
+    // This means that if this is not done then the accessibility settings
+    // might not be the same as when the app was started.
     // If the app crashes without restoring the settings, this is also true so it
-    // would be wise to backup/restore the settings from a file so they can be 
+    // would be wise to backup/restore the settings from a file so they can be
     // restored when the crashed app is run again.
     DXUTAllowShortcutKeys( true );
 
@@ -5662,7 +5662,7 @@ void DXUTApplyDefaultDeviceSettings(DXUTDeviceSettings *modifySettings) {
     modifySettings->d3d9.pp.BackBufferCount = 1;
     modifySettings->d3d9.pp.BackBufferFormat = D3DFMT_X8R8G8B8;
     modifySettings->d3d9.pp.BackBufferHeight = 480;
-    modifySettings->d3d9.pp.BackBufferWidth = 640; 
+    modifySettings->d3d9.pp.BackBufferWidth = 640;
     modifySettings->d3d9.pp.EnableAutoDepthStencil = 1;
     modifySettings->d3d9.pp.Flags = 2;
     modifySettings->d3d9.pp.FullScreen_RefreshRateInHz = 0;
@@ -5686,7 +5686,7 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
     if( GetSystemMetrics(0x1000) != 0 ) {// SM_REMOTESESSION
         pDeviceSettings->d3d11.sd.Windowed = 1;
         pDeviceSettings->d3d9.pp.Windowed = 1;
-    }   
+    }
     int bestModeIndex=0;
     int bestMSAAIndex=0;
 
@@ -5698,7 +5698,7 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
 
         pEnum = DXUTGetD3D11Enumeration( forceEnum, false, forceFL);
 
-        CD3D11EnumAdapterInfo* pAdapterInfo = NULL; 
+        CD3D11EnumAdapterInfo* pAdapterInfo = NULL;
         CGrowableArray <CD3D11EnumAdapterInfo*>* pAdapterList = pEnum->GetAdapterInfoList();
         CD3D11EnumAdapterInfo* tempAdapterInfo = pAdapterList->GetAt( 0 );
         for( int iAdapter = 0; iAdapter < pAdapterList->GetSize(); iAdapter++ )
@@ -5714,7 +5714,7 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
         for( int iDeviceCombo = 0; iDeviceCombo < pAdapterInfo->deviceSettingsComboList.GetSize(); iDeviceCombo++ )
         {
             CD3D11EnumDeviceSettingsCombo* tempDeviceSettingsCombo = pAdapterInfo->deviceSettingsComboList.GetAt( iDeviceCombo );
-    
+
             DXGI_MODE_DESC adapterDisplayMode;
             DXUTGetD3D11AdapterDisplayMode( pAdapterInfo->AdapterOrdinal, 0, &adapterDisplayMode );
 
@@ -5728,7 +5728,7 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
                 bestModeIndex = bestMode;
                 bestMSAAIndex = bestMSAA;
             }
-               
+
         }
         if (NULL == pDeviceSettingsCombo ) {
             return E_FAIL; // no settigns found.
@@ -5737,11 +5737,11 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
         pDeviceSettings->d3d11.AdapterOrdinal = pDeviceSettingsCombo->AdapterOrdinal;
         pDeviceSettings->d3d11.DriverType = pDeviceSettingsCombo->DeviceType;
         pDeviceSettings->d3d11.Output = pDeviceSettingsCombo->Output;
-    
+
         pDeviceSettings->d3d11.sd.Windowed = pDeviceSettingsCombo->Windowed;
         if( GetSystemMetrics(0x1000) != 0 ) {// SM_REMOTESESSION
             pDeviceSettings->d3d11.sd.Windowed = 1;
-        }   
+        }
         if (pDeviceSettingsCombo->pOutputInfo != NULL) {
             DXGI_MODE_DESC bestDisplayMode;
             bestDisplayMode = pDeviceSettingsCombo->pOutputInfo->displayModeList.GetAt(bestModeIndex);
@@ -5757,14 +5757,14 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
         }
         if (pDeviceSettings->d3d11.DeviceFeatureLevel == 0)
             pDeviceSettings->d3d11.DeviceFeatureLevel = pDeviceSettingsCombo->pDeviceInfo->SelectedLevel;
-        
 
 
-        
+
+
         pDeviceSettings->d3d11.sd.SampleDesc.Count = pDeviceSettingsCombo->multiSampleCountList.GetAt(bestMSAAIndex);
         if (pDeviceSettings->d3d11.sd.SampleDesc.Quality > pDeviceSettingsCombo->multiSampleQualityList.GetAt(bestMSAAIndex) - 1)
             pDeviceSettings->d3d11.sd.SampleDesc.Quality = pDeviceSettingsCombo->multiSampleQualityList.GetAt(bestMSAAIndex) - 1;
-        
+
         pDeviceSettings->d3d11.sd.BufferDesc.Format = pDeviceSettingsCombo->BackBufferFormat;
 
         return S_OK;
@@ -5790,7 +5790,7 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
         {
             CD3D9EnumAdapterInfo* pAdapterInfo = pAdapterList->GetAt( iAdapter );
 
-            // Get the desktop display mode of adapter 
+            // Get the desktop display mode of adapter
             pD3D->GetAdapterDisplayMode( pAdapterInfo->AdapterOrdinal, &adapterDesktopDisplayMode );
 
             // Enum all the device types supported by this adapter to find the best device settings
@@ -5798,14 +5798,14 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
             {
                 CD3D9EnumDeviceInfo* pDeviceInfo = pAdapterInfo->deviceInfoList.GetAt( iDeviceInfo );
 
-                // Enum all the device settings combinations.  A device settings combination is 
+                // Enum all the device settings combinations.  A device settings combination is
                 // a unique set of an adapter format, back buffer format, and IsWindowed.
                 for( int iDeviceCombo = 0; iDeviceCombo < pDeviceInfo->deviceSettingsComboList.GetSize(); iDeviceCombo++ )
                 {
                     CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo = pDeviceInfo->deviceSettingsComboList.GetAt(
                         iDeviceCombo );
 
-                    // If windowed mode the adapter format has to be the same as the desktop 
+                    // If windowed mode the adapter format has to be the same as the desktop
                     // display mode format so skip any that don't match
                     if( pDeviceSettingsCombo->Windowed &&
                         ( pDeviceSettingsCombo->AdapterFormat != adapterDesktopDisplayMode.Format ) )
@@ -5835,7 +5835,7 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
         if( pBestDeviceSettingsCombo == NULL )
             return DXUTERR_NOCOMPATIBLEDEVICES;
 
-        // Using the best device settings combo found, build valid device settings taking heed of 
+        // Using the best device settings combo found, build valid device settings taking heed of
         // the match options and the input device settings
         pDeviceSettings->d3d9.AdapterFormat = pBestDeviceSettingsCombo->AdapterFormat;//D3DFMT_X8R8G8B8;
         pDeviceSettings->d3d9.AdapterOrdinal = pBestDeviceSettingsCombo->AdapterOrdinal ;//0;
@@ -5843,17 +5843,17 @@ HRESULT DXUTSnapDeviceSettingsToEnumDevice( DXUTDeviceSettings* pDeviceSettings,
         pDeviceSettings->d3d9.pp.BackBufferFormat = pBestDeviceSettingsCombo->BackBufferFormat;//D3DFMT_X8R8G8B8;
         if( GetSystemMetrics(0x1000) != 0 ) {// SM_REMOTESESSION
             pDeviceSettings->d3d9.pp.Windowed = 1;
-        }          
+        }
         if (!pBestDeviceSettingsCombo->Windowed) {
             D3DDISPLAYMODE displayMode = pBestDeviceSettingsCombo->pAdapterInfo->displayModeList.GetAt( bestModeIndex );
             pDeviceSettings->d3d9.pp.BackBufferHeight = displayMode.Height;
-            pDeviceSettings->d3d9.pp.BackBufferWidth = displayMode.Width; 
+            pDeviceSettings->d3d9.pp.BackBufferWidth = displayMode.Width;
             pDeviceSettings->d3d9.pp.FullScreen_RefreshRateInHz = displayMode.RefreshRate;
         }
          pDeviceSettings->d3d9.pp.hDeviceWindow = pBestDeviceSettingsCombo->Windowed ? DXUTGetHWNDDeviceWindowed() : DXUTGetHWNDDeviceFullScreen();
         if (pDeviceSettings->d3d9.pp.MultiSampleQuality > pBestDeviceSettingsCombo->multiSampleQualityList.GetAt(bestMSAAIndex) - 1)
             pDeviceSettings->d3d9.pp.MultiSampleQuality = pBestDeviceSettingsCombo->multiSampleQualityList.GetAt( bestMSAAIndex )-1;
-        
+
         pDeviceSettings->d3d9.pp.MultiSampleType = pBestDeviceSettingsCombo->multiSampleTypeList.GetAt( bestMSAAIndex );;
         pDeviceSettings->d3d9.pp.Windowed = pBestDeviceSettingsCombo->Windowed;
         return S_OK;

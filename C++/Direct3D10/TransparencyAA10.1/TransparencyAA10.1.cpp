@@ -2,7 +2,7 @@
 // File: TransparencyAA10.1.cpp
 //
 // This code sample demonstrates the use of DX10.1 fixed MSAA sample patterns, to perform
-// sub sample accurate alpha testing - also known as Transparency AA. 
+// sub sample accurate alpha testing - also known as Transparency AA.
 //
 // Contributed by AMD Corporation
 //
@@ -23,8 +23,8 @@
 #include "Magnify.h"
 #include "MagnifyTool.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug D3D9 vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug D3D9 pixel shaders
 
 //--------------------------------------------------------------------------------------
 // Structures
@@ -62,9 +62,9 @@ CDXUTDialog                 g_HUD;                  // dialog for standard contr
 CDXUTDialog                 g_SampleUI;             // dialog for sample specific controls
 
 // Direct3D 10 resources
-ID3DX10Font*                g_pFont10 = NULL;       
-ID3DX10Sprite*              g_pSprite10 = NULL;     
-ID3D10Effect*               g_pEffect10 = NULL;     
+ID3DX10Font*                g_pFont10 = NULL;
+ID3DX10Sprite*              g_pSprite10 = NULL;
+ID3D10Effect*               g_pEffect10 = NULL;
 ID3D10EffectMatrixVariable* g_pmWorldViewProj = NULL;
 ID3D10EffectMatrixVariable* g_pmWorld = NULL;
 ID3D10EffectScalarVariable* g_pfTime = NULL;
@@ -109,7 +109,7 @@ static float                                g_fAlphaRef = 0.5f;
 #define IDC_SLIDER_ALPHA_REF    15
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing, void* pUserContext );
 void    CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext );
@@ -129,7 +129,7 @@ void    RenderText();
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -139,7 +139,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
 #endif
 
-    // DXUT will create and use the best device (either D3D9 or D3D10) 
+    // DXUT will create and use the best device (either D3D9 or D3D10)
     // that is available on the system depending on which D3D callbacks are set below
 
     // Set DXUT callbacks
@@ -167,17 +167,17 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
     g_SettingsDlg.Init( &g_DialogResourceManager );
     g_HUD.Init( &g_DialogResourceManager );
     g_SampleUI.Init( &g_DialogResourceManager );
-    
+
     D3DCOLOR DlgColor = 0x88888888;
 
-    g_HUD.SetCallback( OnGUIEvent ); int iY = 10; 
+    g_HUD.SetCallback( OnGUIEvent ); int iY = 10;
     g_HUD.SetBackgroundColors( DlgColor );
     g_HUD.EnableCaption( true );
     g_HUD.SetCaptionText( L"-- Direct3D --" );
@@ -189,7 +189,7 @@ void InitApp()
     g_SampleUI.SetBackgroundColors( DlgColor );
     g_SampleUI.EnableCaption( true );
     g_SampleUI.SetCaptionText( L"-- Rendering Settings --" );
-    
+
     g_SampleUI.AddStatic( IDC_STATIC_TECHNIQUE, L"Technique:", 5, iY, 55, 24 );
     CDXUTComboBox *pCombo;
     g_SampleUI.AddComboBox( IDC_COMBOBOX_TECHNIQUE, 5, iY += 25, 160, 24, 0, false, &pCombo );
@@ -200,7 +200,7 @@ void InitApp()
         pCombo->AddItem( L"Alpha To Coverage", (LPVOID)0x12121212 );
     }
     g_SampleUI.SetControlEnabled( IDC_COMBOBOX_TECHNIQUE, true );
-    
+
     g_SampleUI.AddStatic( IDC_STATIC_TEXTURE, L"Alpha Texture:", 5, iY += 25, 75, 24 );
     g_SampleUI.AddComboBox( IDC_COMBOBOX_TEXTURE, 5, iY += 25, 160, 24, 0, false, &pCombo );
     if( pCombo )
@@ -220,17 +220,17 @@ void InitApp()
     g_MagnifyTool.GetMagnifyUI()->SetCallback( OnGUIEvent );
 
     // This sample doesn't need all functionality from the MagnifyTool
-    g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_DEPTH )->SetVisible( false );        
-    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MIN )->SetVisible( false );    
-    g_MagnifyTool.GetMagnifyUI()->GetSlider( IDC_MAGNIFY_SLIDER_DEPTH_MIN )->SetVisible( false );    
-    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MAX )->SetVisible( false );    
+    g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_DEPTH )->SetVisible( false );
+    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MIN )->SetVisible( false );
+    g_MagnifyTool.GetMagnifyUI()->GetSlider( IDC_MAGNIFY_SLIDER_DEPTH_MIN )->SetVisible( false );
+    g_MagnifyTool.GetMagnifyUI()->GetStatic( IDC_MAGNIFY_STATIC_DEPTH_MAX )->SetVisible( false );
     g_MagnifyTool.GetMagnifyUI()->GetSlider( IDC_MAGNIFY_SLIDER_DEPTH_MAX )->SetVisible( false );
     g_MagnifyTool.GetMagnifyUI()->GetCheckBox( IDC_MAGNIFY_CHECKBOX_SUB_SAMPLES )->SetVisible( false );
 }
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
@@ -239,18 +239,18 @@ void RenderText()
     g_pTxtHelper->SetInsertionPos( 5, 5 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
 
-    if( NULL != DXUTGetD3D10Device1() ) 
+    if( NULL != DXUTGetD3D10Device1() )
     {
-        g_pTxtHelper->DrawTextLine( L"Direct3D 10.1 Device Detected" );  
+        g_pTxtHelper->DrawTextLine( L"Direct3D 10.1 Device Detected" );
     }
     else
     {
         g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 0.0f, 0.0f, 1.0f ) );
-        g_pTxtHelper->DrawTextLine( L"Please Run On Direct3D 10.1 Hardware To Access All Features Of This Sample!!" );  
+        g_pTxtHelper->DrawTextLine( L"Please Run On Direct3D 10.1 Hardware To Access All Features Of This Sample!!" );
         g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     }
 
-    g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );  
+    g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     g_pTxtHelper->DrawTextLine( DXUTGetDeviceStats() );
     g_pTxtHelper->End();
 }
@@ -278,13 +278,13 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     V_RETURN( D3DX10CreateSprite( pd3dDevice, 500, &g_pSprite10 ) );
     V_RETURN( g_DialogResourceManager.OnD3D10CreateDevice( pd3dDevice ) );
     V_RETURN( g_SettingsDlg.OnD3D10CreateDevice( pd3dDevice ) );
-    V_RETURN( D3DX10CreateFont( pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET, 
-                                OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE, 
+    V_RETURN( D3DX10CreateFont( pd3dDevice, 15, 0, FW_BOLD, 1, FALSE, DEFAULT_CHARSET,
+                                OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                                 L"Arial", &g_pFont10 ) );
     g_pTxtHelper = new CDXUTTextHelper( NULL, NULL, g_pFont10, g_pSprite10, 15 );
 
     // Check to see if we have a DX10.1 device
-    if( NULL == DXUTGetD3D10Device1() ) 
+    if( NULL == DXUTGetD3D10Device1() )
     {
         pszTarget = "fx_4_0";
         pShaderMacros = NULL;
@@ -322,15 +322,15 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
             }
         }
     }
-    
+
     // Read the D3DX effect file
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"TransparencyAA10.1.fx" ) );
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
     #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -344,10 +344,10 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     g_pmWorld = g_pEffect10->GetVariableByName( "g_m4x4World" )->AsMatrix();
     g_pfTime = g_pEffect10->GetVariableByName( "g_fTime" )->AsScalar();
     g_pTextureVariable = g_pEffect10->GetVariableByName( "g_AlphaTexture" )->AsShaderResource();
-    g_pMaterialAmbientColor = g_pEffect10->GetVariableByName( "g_v4MaterialAmbientColor" )->AsVector();     
-    g_pMaterialDiffuseColor = g_pEffect10->GetVariableByName( "g_v4MaterialDiffuseColor" )->AsVector();     
-    g_pLightDir = g_pEffect10->GetVariableByName( "g_v3LightDir" )->AsVector();                 
-    g_pLightDiffuse = g_pEffect10->GetVariableByName( "g_v4LightDiffuse" )->AsVector();        
+    g_pMaterialAmbientColor = g_pEffect10->GetVariableByName( "g_v4MaterialAmbientColor" )->AsVector();
+    g_pMaterialDiffuseColor = g_pEffect10->GetVariableByName( "g_v4MaterialDiffuseColor" )->AsVector();
+    g_pLightDir = g_pEffect10->GetVariableByName( "g_v3LightDir" )->AsVector();
+    g_pLightDiffuse = g_pEffect10->GetVariableByName( "g_v4LightDiffuse" )->AsVector();
     g_pAlphaRef = g_pEffect10->GetVariableByName( "g_fAlphaRef" )->AsScalar();
 
     // Setup the camera's view parameters
@@ -415,7 +415,7 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     V_RETURN( DXUTFindDXSDKMediaFileCch( strPath, MAX_PATH, L"TransparencyAA\\Foliage.dds" ) );
     hr = D3DX10CreateShaderResourceViewFromFile( pd3dDevice, strPath, NULL, NULL, &g_pFoliageAlphaTextureView, NULL );
     assert( D3D_OK == hr );
-    
+
     // Setup lighting variables.
     D3DXCOLOR MaterialAmbientColor( 0.3f, 0.3f, 0.3f, 1.0f );
     D3DXCOLOR MaterialDiffuseColor( 1.0f, 1.0f, 1.0f, 1.0f );
@@ -455,12 +455,12 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
     g_SampleUI.SetLocation( pBackBufferSurfaceDesc->Width-180, 135 );
     g_SampleUI.SetSize( 170, 180 );
 
-    // Call the MagnifyTool hook function 
-    g_MagnifyTool.OnResizedSwapChain( pd3dDevice, pSwapChain, pBackBufferSurfaceDesc, pUserContext, 
+    // Call the MagnifyTool hook function
+    g_MagnifyTool.OnResizedSwapChain( pd3dDevice, pSwapChain, pBackBufferSurfaceDesc, pUserContext,
         pBackBufferSurfaceDesc->Width-180, 320 );
 
     // Pass the back buffer and primary depth buffer to the MagnifyTool,
-    // this is a once only operation, as the tool uses the hook functions to 
+    // this is a once only operation, as the tool uses the hook functions to
     // keep up with changing devices, and back buffers etc.
     static bool s_bFirstPass = true;
     if( s_bFirstPass )
@@ -469,7 +469,7 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
         ID3D10Resource* pTempRTResource;
         DXUTGetD3D10RenderTargetView()->GetResource( &pTempRTResource );
         DXUTGetD3D10RenderTargetView()->GetDesc( &RTDesc );
-        
+
         D3D10_DEPTH_STENCIL_VIEW_DESC DSDesc;
         ID3D10Resource* pTempDepthResource;
         g_MagnifyTool.GetDepthStencilView()->GetResource( &pTempDepthResource );
@@ -479,15 +479,15 @@ HRESULT CALLBACK OnD3D10ResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapCha
         g_MagnifyTool.SetSourceResources( pTempRTResource, RTDesc.Format, pTempDepthResource, DSDesc.Format,
                     DXUTGetDXGIBackBufferSurfaceDesc()->Width, DXUTGetDXGIBackBufferSurfaceDesc()->Height,
                     DXUTGetDXGIBackBufferSurfaceDesc()->SampleDesc.Count );
-        
+
         g_MagnifyTool.SetPixelRegion( 64 );
         g_MagnifyTool.SetScale( 5 );
 
         s_bFirstPass = false;
     }
 
-    
-    
+
+
     return S_OK;
 }
 
@@ -524,8 +524,8 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
     mView = *g_Camera.GetViewMatrix();
     mWorldViewProjection = mWorld * mView * mProj;
 
-    // Update the effect's variables.  Instead of using strings, it would 
-    // be more efficient to cache a handle to the parameter by calling 
+    // Update the effect's variables.  Instead of using strings, it would
+    // be more efficient to cache a handle to the parameter by calling
     // ID3DXEffect::GetParameterByName
     g_pmWorldViewProj->SetMatrix( (float*)&mWorldViewProjection );
     g_pmWorld->SetMatrix( (float*)&mWorld );
@@ -571,36 +571,36 @@ void CALLBACK OnD3D10FrameRender( ID3D10Device* pd3dDevice, double fTime, float 
             g_pAlphaToCoverageTechnique->GetPassByIndex( 0 )->Apply( 0 );
             DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"Alpha To Coverage" );
             break;
-        case TECHNIQUE_TYPE_TRANSPARENCY_AA:    
+        case TECHNIQUE_TYPE_TRANSPARENCY_AA:
             g_pTransparencyAATechnique->GetPassByIndex( 0 )->Apply( 0 );
             DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"Transparency AA" );
             break;
     }
-    
+
     // Render
     pd3dDevice->Draw( 6, 0 );
 
     DXUT_EndPerfEvent();
-    
+
        DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"Magnify Tool" );
-   
+
     g_MagnifyTool.Render();
-    
+
     DXUT_EndPerfEvent();
 
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );
 
     RenderText();
-    g_HUD.OnRender( fElapsedTime ); 
+    g_HUD.OnRender( fElapsedTime );
     g_SampleUI.OnRender( fElapsedTime );
-    g_MagnifyTool.GetMagnifyUI()->OnRender( fElapsedTime );    
+    g_MagnifyTool.GetMagnifyUI()->OnRender( fElapsedTime );
 
     DXUT_EndPerfEvent();
 }
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10ResizedSwapChain 
+// Release D3D10 resources created in OnD3D10ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 {
@@ -611,7 +611,7 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnD3D10CreateDevice 
+// Release D3D10 resources created in OnD3D10CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
@@ -642,7 +642,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         D3DCAPS9 Caps;
         pD3D->GetDeviceCaps( pDeviceSettings->d3d9.AdapterOrdinal, pDeviceSettings->d3d9.DeviceType, &Caps );
 
-        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
         // then switch to SWVP.
         if( (Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT) == 0 ||
             Caps.VertexShaderVersion < D3DVS_VERSION(1,1) )
@@ -650,13 +650,13 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
             pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 
-        // Debugging vertex shaders requires either REF or software vertex processing 
-        // and debugging pixel shaders requires REF.  
+        // Debugging vertex shaders requires either REF or software vertex processing
+        // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
         if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
         {
             pDeviceSettings->d3d9.BehaviorFlags &= ~D3DCREATE_HARDWARE_VERTEXPROCESSING;
-            pDeviceSettings->d3d9.BehaviorFlags &= ~D3DCREATE_PUREDEVICE;                            
+            pDeviceSettings->d3d9.BehaviorFlags &= ~D3DCREATE_PUREDEVICE;
             pDeviceSettings->d3d9.BehaviorFlags |= D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 #endif
@@ -691,7 +691,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
@@ -756,19 +756,19 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 {
     int nSelectedIndex = 0;
     WCHAR szTemp[256];
-    
+
     switch( nControlID )
     {
-        case IDC_TOGGLEFULLSCREEN: 
-            DXUTToggleFullScreen(); 
-            break;
-        
-        case IDC_TOGGLEREF:        
-            DXUTToggleREF(); 
+        case IDC_TOGGLEFULLSCREEN:
+            DXUTToggleFullScreen();
             break;
 
-        case IDC_CHANGEDEVICE:     
-            g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() ); 
+        case IDC_TOGGLEREF:
+            DXUTToggleREF();
+            break;
+
+        case IDC_CHANGEDEVICE:
+            g_SettingsDlg.SetActive( !g_SettingsDlg.IsActive() );
             break;
 
         case IDC_COMBOBOX_TECHNIQUE:

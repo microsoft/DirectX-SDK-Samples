@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL10.fx
 //
-// The effect file for the BasicHLSL sample.  
-// 
+// The effect file for the BasicHLSL sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -19,13 +19,13 @@ cbuffer cbInstancedGlobals
 
 cbuffer cbPerFrame
 {
-	float  g_fTime;   
+	float  g_fTime;
 	float3 g_LightDir;
 	float3 g_vEyePt;
 	float3 g_vRight;
 	float3 g_vUp;
 	float3 g_vForward;
-	float4x4 g_mWorldViewProjection;   
+	float4x4 g_mWorldViewProjection;
 	float4x4 g_mInvViewProj;
 	float4x4 g_mWorld;
 };
@@ -147,7 +147,7 @@ struct VS_PARTICLEINPUT
 {
 	float4 Position   : POSITION;
 	float2 TextureUV  : TEXCOORD0;
-	float  fLife      : LIFE; 
+	float  fLife      : LIFE;
 	float  fRot	      : THETA;
 	float4 Color	  : COLOR0;
 };
@@ -169,7 +169,7 @@ struct VS_MESHOUTPUT
 
 struct VS_PARTICLEOUTPUT
 {
-    float4 Position   : SV_POSITION; // vertex position 
+    float4 Position   : SV_POSITION; // vertex position
     float3 TextureUVI : TEXCOORD0;   // vertex texture coords
     float3 SinCosThetaLife : TEXCOORD1;
     float4 Color	  : COLOR0;
@@ -177,7 +177,7 @@ struct VS_PARTICLEOUTPUT
 
 struct VS_SCREENOUTPUT
 {
-    float4 Position   : SV_POSITION; // vertex position  
+    float4 Position   : SV_POSITION; // vertex position
 };
 
 //--------------------------------------------------------------------------------------
@@ -186,12 +186,12 @@ struct VS_SCREENOUTPUT
 VS_PARTICLEOUTPUT RenderParticlesVS( VS_PARTICLEINPUT input )
 {
     VS_PARTICLEOUTPUT Output;
-    
+
     // Standard transform
     Output.Position = mul(input.Position, g_mWorldViewProjection);
-    Output.TextureUVI.xy = input.TextureUV; 
+    Output.TextureUVI.xy = input.TextureUV;
     Output.Color = input.Color;
-    
+
     // Get the world position
     float3 WorldPos = mul( input.Position, g_mWorld ).xyz;
 
@@ -211,14 +211,14 @@ VS_PARTICLEOUTPUT RenderParticlesVS( VS_PARTICLEINPUT input )
 		Output.Color += intensity * g_vGlowLightColor[i];
 	}
 	Output.TextureUVI.z = runningintensity;
-    
+
     // Rotate our texture coordinates
     float fRot = -input.fRot;
     Output.SinCosThetaLife.x = sin( fRot );
     Output.SinCosThetaLife.y = cos( fRot );
     Output.SinCosThetaLife.z = input.fLife;
-    
-    return Output;    
+
+    return Output;
 }
 
 //--------------------------------------------------------------------------------------
@@ -231,7 +231,7 @@ struct PBUFFER_OUTPUT
 };
 
 PBUFFER_OUTPUT RenderParticlesDeferredPS( VS_PARTICLEOUTPUT input )
-{ 
+{
 	PBUFFER_OUTPUT output;
 	
 	float4 diffuse = g_txMeshTexture.Sample( g_samLinear, input.TextureUVI.xy );
@@ -294,9 +294,9 @@ float4 RenderParticlesPS( VS_PARTICLEOUTPUT input ) : SV_TARGET
     worldnorm = -norm.x * g_vRight;
     worldnorm += norm.y * g_vUp;
     worldnorm += -norm.z * g_vForward;
-    
+
     float lighting = max( 0.1, dot( worldnorm, g_LightDir ) );
-    
+
     float3 flashcolor = input.Color.xyz * intensity;
     float3 lightcolor = input.Color.xyz * lighting;
     float3 lerpcolor = lerp( lightcolor, flashcolor, intensity );
@@ -313,8 +313,8 @@ VS_SCREENOUTPUT CompositeParticlesVS( float4 Position : POSITION )
     VS_SCREENOUTPUT Output;
 
     Output.Position = Position;
-    
-    return Output;    
+
+    return Output;
 }
 
 //--------------------------------------------------------------------------------------
@@ -326,7 +326,7 @@ float4 CompositeParticlesPS( VS_SCREENOUTPUT input ) : SV_TARGET
 	float3 loadpos = float3(input.Position.xy,0);
     float4 particlebuffer = g_txMeshTexture.Load( loadpos );
     float4 particlecolor = g_txParticleColor.Load( loadpos );
-    
+
     // Recreate z-component of the normal
     float nz = sqrt( 1 - particlebuffer.x*particlebuffer.x + particlebuffer.y*particlebuffer.y );
     float3 normal = float3( particlebuffer.xy, nz );
@@ -337,15 +337,15 @@ float4 CompositeParticlesPS( VS_SCREENOUTPUT input ) : SV_TARGET
     worldnorm = -normal.x * g_vRight;
     worldnorm += normal.y * g_vUp;
     worldnorm += -normal.z * g_vForward;
-    
+
     // light
     float lighting = max( 0.1, dot( worldnorm, g_LightDir ) );
-    
+
     float3 flashcolor = particlecolor.xyz * intensity;
     float3 lightcolor = particlecolor.xyz * lighting;
     float3 lerpcolor = lerp( lightcolor, flashcolor, intensity );
     float4 color = float4( lerpcolor, particlebuffer.a );
-    
+
     return color;
 }
 
@@ -360,8 +360,8 @@ VS_MESHOUTPUT MeshVS( VS_MESHINPUT input )
     Output.wPos = mul( input.Position, g_mWorld );
     Output.Normal = mul( input.Normal, (float3x3)g_mWorld );
     Output.TextureUV = input.TextureUV;
-    
-    return Output;    
+
+    return Output;
 }
 
 VS_MESHOUTPUT MeshInstVS( VS_MESHINPUT input, uint instanceID : SV_INSTANCEID )
@@ -373,8 +373,8 @@ VS_MESHOUTPUT MeshInstVS( VS_MESHINPUT input, uint instanceID : SV_INSTANCEID )
 	Output.wPos = wPos;
     Output.Normal = mul( input.Normal, (float3x3)g_mWorldInst[instanceID] );
     Output.TextureUV = input.TextureUV;
-    
-    return Output;    
+
+    return Output;
 }
 
 float4 MeshPS( VS_MESHOUTPUT input ) : SV_TARGET

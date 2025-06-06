@@ -106,10 +106,10 @@ cbuffer cbImmutable
         float3( -1, -1, 0 ),
         float3( 1, -1, 0 ),
     };
-    
-    float2 g_texcoords[4] = 
-    { 
-        float2(0,0), 
+
+    float2 g_texcoords[4] =
+    {
+        float2(0,0),
         float2(1,0),
         float2(0,1),
         float2(1,1),
@@ -123,18 +123,18 @@ cbuffer cbImmutable
         float3( 1.0f ,1.0f  ,0.0f  ),
         float3( 1.0f ,-1.0f ,0.0f  ),
     };
-    
-    float2 v_texcoords[6] = 
-    { 
-        float2(0,0), 
+
+    float2 v_texcoords[6] =
+    {
+        float2(0,0),
         float2(1,0),
         float2(0,1),
         float2(0,1),
         float2(1,0),
         float2(1,1),
     };
-    
-    
+
+
 };
 
 Texture2D		g_txDiffuse;
@@ -214,7 +214,7 @@ DepthStencilState DisableDepth
 VSParticleDrawOut VSParticleDraw(VSParticleIn input)
 {
     VSParticleDrawOut output;
-    
+
     // Lookup the particle position
     int4 texcoord;
     texcoord.x = input.id % g_iTexSize;
@@ -223,11 +223,11 @@ VSParticleDrawOut VSParticleDraw(VSParticleIn input)
     texcoord.w = 0; // mip level
 
     output.pos = g_txParticleData.Load(texcoord).xyz;
-    
+
     float3 force = g_txForce.Load(texcoord).xyz;
     float mag = length(force)/900000000;
     output.color = lerp( float4(1,0.1,0.1,1), input.color, mag );
-    
+
     return output;
 }
 
@@ -238,7 +238,7 @@ VSParticleDrawOut VSParticleDraw(VSParticleIn input)
 void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSParticleDrawOut> SpriteStream)
 {
     GSParticleDrawOut output;
-    
+
     //
     // Emit two new triangles
     //
@@ -247,7 +247,7 @@ void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSPar
         float3 position = g_positions[i]*g_fParticleRad;
         position = mul( position, (float3x3)g_mInvView ) + input[0].pos;
         output.pos = mul( float4(position,1.0), g_mWorldViewProj );
-        
+
         output.color = input[0].color;
         output.tex = g_texcoords[i];
         SpriteStream.Append(output);
@@ -259,7 +259,7 @@ void GSParticleDraw(point VSParticleDrawOut input[1], inout TriangleStream<GSPar
 // PS for drawing particles
 //
 float4 PSParticleDraw(PSParticleDrawIn input) : SV_Target
-{   
+{
     return g_txDiffuse.Sample( g_samLinear, input.tex ) * input.color;
 }
 
@@ -271,7 +271,7 @@ float4 PSParticleDraw(PSParticleDrawIn input) : SV_Target
 GSForceOut VSForce(VSSplatIn input)
 {
     GSForceOut output;
- 
+
     // pass the id as the row of positions to bew processed
     uint id = input.id / 6;
     float3 texcoord;
@@ -279,13 +279,13 @@ GSForceOut VSForce(VSSplatIn input)
     texcoord.y = (float)id / (float)g_iTexSize;
     texcoord.z = 0;
     uint vertid = input.id % 6;
-    
+
     output.pos = texcoord;
     output.tex = v_texcoords[vertid];
     output.clippos = float4(v_positions[vertid],1);
-    
-        
-    
+
+
+
     return output;
 }
 
@@ -293,10 +293,10 @@ GSForceOut VSForce(VSSplatIn input)
 // PS for particles
 //
 float4 PSForce(PSForceIn input) : SV_Target
-{   
+{
     float3 texcoord = float3( input.tex, 0 );
     float3 inplacePos = g_txParticleData.SampleLevel( g_samPoint, texcoord, 0 );
-    
+
     // use the law of gravitation to calculate the force of the input particle on the particle
     // we're rasterizing across at this moment
     float4 force = float4(0,0,0,0);
@@ -304,22 +304,22 @@ float4 PSForce(PSForceIn input) : SV_Target
     scanlinetex.xy = input.pos.xy;
     for (unsigned int index = 0; index < tex_size  ; index++) {
         scanlinetex.x = (float)index *  step_size ;
-        
+
         float3 scanlinePos = g_txParticleData.SampleLevel( g_samPoint, scanlinetex, 0 );
-        
-         
+
+
         float3 delta = scanlinePos - inplacePos;
         float r2 = dot( delta, delta );
-        
+
         if( r2 > 0 )
         {
             float r = sqrt(r2);
             r = max( r, g_fParticleRad/10.0 );
             float3 dir = delta/r;
             float3 tempforce = dir * g_fG * ( ( g_fParticleMass * g_fParticleMass ) / r2 );
-            force.xyz += tempforce; 
+            force.xyz += tempforce;
         }
-    }    
+    }
     return force;
 }
 
@@ -330,9 +330,9 @@ float4 PSForce(PSForceIn input) : SV_Target
 VSAdvanceOut VSAdvance(VSParticleIn input)
 {
     VSAdvanceOut output;
-    
+
     output.pos = float3(0,0,0);
-    
+
     return output;
 }
 
@@ -343,7 +343,7 @@ VSAdvanceOut VSAdvance(VSParticleIn input)
 void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> SpriteStream)
 {
     GSAdvanceOut output;
-    
+
     // position quad
     output.irt = 0;
     output.rtindex = 0;
@@ -351,11 +351,11 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
     {
         output.clippos = float4(g_positions[i],1);
         output.tex = g_texcoords[i];
-        
+
         SpriteStream.Append(output);
     }
     SpriteStream.RestartStrip();
-    
+
     // velocity quad
     output.irt = 1;
     output.rtindex = 1;
@@ -363,7 +363,7 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
     {
         output.clippos = float4(g_positions[i],1);
         output.tex = g_texcoords[i];
-        
+
         SpriteStream.Append(output);
     }
     SpriteStream.RestartStrip();
@@ -373,13 +373,13 @@ void GSAdvance(point VSAdvanceOut input[1], inout TriangleStream<GSAdvanceOut> S
 // PS for particles
 //
 float4 PSAdvance(PSAdvanceIn input) : SV_Target
-{   
+{
     float3 texcoord = float3( input.tex, 0 );
     float3 pos = g_txParticleData.SampleLevel( g_samPoint, texcoord, 0 );
     texcoord.z = 1;
     float3 vel = g_txParticleData.SampleLevel( g_samPoint, texcoord, 0 );
     float3 force = g_txForce.SampleLevel( g_samPoint, input.tex, 0 );
-    
+
     float3 data = float3(0,0,0);
     float3 accel = force / g_fParticleMass;
     vel += accel * g_fElapsedTime;
@@ -391,9 +391,9 @@ float4 PSAdvance(PSAdvanceIn input) : SV_Target
     else
     {
         // position
-        data = pos + vel * g_fElapsedTime; 
+        data = pos + vel * g_fElapsedTime;
     }
-    
+
     return float4(data,0);
 }
 
@@ -407,10 +407,10 @@ technique10 RenderParticles
         SetVertexShader( CompileShader( vs_4_0, VSParticleDraw() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSParticleDraw() ) );
         SetPixelShader( CompileShader( ps_4_0, PSParticleDraw() ) );
-        
+
         SetBlendState( ParticleBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 
@@ -424,10 +424,10 @@ technique10 AccumulateForces
         SetVertexShader( CompileShader( vs_4_0, VSForce() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSForce() ) );
-        
+
         SetBlendState( AdditiveBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -440,8 +440,8 @@ technique10 AdvanceParticles
         SetVertexShader( CompileShader( vs_4_0, VSAdvance() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSAdvance() ) );
         SetPixelShader( CompileShader( ps_4_0, PSAdvance() ) );
-        
+
         SetBlendState( AdvanceBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }

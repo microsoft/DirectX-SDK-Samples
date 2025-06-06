@@ -58,7 +58,7 @@ struct PS_INPUT
 PS_INPUT VS( VS_INPUT input, uniform bool bSpecular )
 {
     PS_INPUT output;
-    
+
     // Transform the position into world space for lighting, and projected space
     // for display
     float4 vPosWorld = mul( float4(input.vPosObject,1), g_mWorld );

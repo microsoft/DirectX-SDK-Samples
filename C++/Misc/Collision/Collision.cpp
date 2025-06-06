@@ -123,7 +123,7 @@ XMVECTOR g_CameraOrigins[CAMERA_COUNT];
 #define IDC_GROUP               5
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
                           void* pUserContext );
@@ -162,7 +162,7 @@ void DrawRay( FXMVECTOR Origin, FXMVECTOR Direction, bool bNormalize, FXMVECTOR 
 void DrawTriangle( FXMVECTOR PointA, FXMVECTOR PointB, FXMVECTOR PointC, CXMVECTOR color );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
@@ -213,7 +213,7 @@ int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance,
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -351,7 +351,7 @@ void Animate( double fTime )
     g_SecondarySpheres[1].sphere.Center.x = 8 * sinf( 2.9f * t ) + camera1OriginX;
     g_SecondarySpheres[1].sphere.Center.y = 8 * cosf( 4.6f * t );
     g_SecondarySpheres[1].sphere.Center.z = 8 * cosf( 1.6f * t );
-  
+
     // animate oriented box 1 around the aligned box
     g_SecondaryOrientedBoxes[1].obox.Center.x = 8 * sinf( 3.2f * t ) + camera1OriginX;
     g_SecondaryOrientedBoxes[1].obox.Center.y = 8 * cosf( 2.1f * t );
@@ -723,7 +723,7 @@ void DrawFrustum( const BoundingFrustum& frustum, FXMVECTOR color )
     g_Batch->Begin();
 
     g_Batch->Draw( D3D11_PRIMITIVE_TOPOLOGY_LINELIST, verts, _countof( verts ) );
-    
+
     g_Batch->End();
 }
 
@@ -1027,7 +1027,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     {
         g_SettingsDlg.OnRender( fElapsedTime );
         return;
-    }       
+    }
 
     auto pRTV = DXUTGetD3D11RenderTargetView();
     pd3dImmediateContext->ClearRenderTargetView( pRTV, Colors::MidnightBlue );
@@ -1057,7 +1057,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
     static ULONGLONG timefirst = GetTickCount64();
     if ( GetTickCount64() - timefirst > 5000 )
-    {    
+    {
         OutputDebugString( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
         OutputDebugString( L"\n" );
         timefirst = GetTickCount64();
@@ -1066,7 +1066,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -1075,7 +1075,7 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1112,7 +1112,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
     // Compute collisions
     Collide();
 
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 

@@ -32,9 +32,9 @@ public:
     virtual BOOL InstallGame();
     virtual BOOL LaunchGame();
 
-    // Accessors.    
+    // Accessors.
     const Settings & GetSettings() const { return m_Settings; };
-    
+
 protected:
 
     // Internal methods.

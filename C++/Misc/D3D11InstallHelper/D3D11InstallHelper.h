@@ -82,10 +82,10 @@ typedef void (*D3D11UPDATEPROGRESSCB)( UINT phase, UINT progress, void *pContext
 
 //--------------------------------------------------------------------------------------
 // Desc: Checks the system for the current status of Direct3D 11.
-// 
+//
 // Params: [out] pStatus - see D3D11IH_STATUS enumeration for values
 //
-// Remark: If Direct3D 11 is available, you can assume that DXGI 1.1, 
+// Remark: If Direct3D 11 is available, you can assume that DXGI 1.1,
 //         10level9, WARP10, and the updated Direct3D 10.1 should also be present.
 //
 // Returns: S_OK, E_INVALIDARG, or Win32 Error HRESULT.

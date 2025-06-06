@@ -410,10 +410,10 @@ HRESULT OnPlaySound( HWND hDlg )
 
         return S_FALSE;
     }
-    
+
     if( g_pSound == NULL )
         return E_FAIL;
-    
+
     // Query IDirectSoundBuffer8 interface
     pDSB = g_pSound->GetBuffer( 0 );
     if( pDSB == NULL )

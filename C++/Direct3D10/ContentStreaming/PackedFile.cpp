@@ -98,7 +98,7 @@ UINT64 FillToGranularity( HANDLE hFile, UINT64 CurrentOffset, UINT64 Granularity
 // a mappable window that can be accessed by MapViewOfFile.  Since MapViewOfFile can
 // only map a view onto a file in 64k granularities, each chunk must start on a 64k
 // boundary.  The packed file also creates an index.  This index is loaded into memory
-// at startup and is not memory mapped.  The index is used to find the locations of 
+// at startup and is not memory mapped.  The index is used to find the locations of
 // resource files within the packed file.
 //--------------------------------------------------------------------------------------
 struct STRING
@@ -636,7 +636,7 @@ bool CPackedFile::GetPackedFile( char* szFile, BYTE** ppData, UINT* pDataBytes )
 }
 
 //--------------------------------------------------------------------------------------
-// Finds the location of a resource in a packed file and returns its contents in 
+// Finds the location of a resource in a packed file and returns its contents in
 // *ppData.
 //--------------------------------------------------------------------------------------
 bool CPackedFile::GetPackedFile( WCHAR* szFile, BYTE** ppData, UINT* pDataBytes )

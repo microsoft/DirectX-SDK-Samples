@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL11_PS.hlsl
 //
-// The pixel shader file for the BasicHLSL11 sample.  
-// 
+// The pixel shader file for the BasicHLSL11 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

@@ -11,7 +11,7 @@
 #include "MultiDeviceContextDXUTMesh.h"
 
 //--------------------------------------------------------------------------------------
-HRESULT CMultiDeviceContextDXUTMesh::Create( ID3D11Device* pDev11, LPCTSTR szFileName, bool bCreateAdjacencyIndices, 
+HRESULT CMultiDeviceContextDXUTMesh::Create( ID3D11Device* pDev11, LPCTSTR szFileName, bool bCreateAdjacencyIndices,
                                             MDC_SDKMESH_CALLBACKS11* pCallbacks )
 {
     if ( pCallbacks != NULL )
@@ -72,7 +72,7 @@ void CMultiDeviceContextDXUTMesh::RenderFrame( UINT iFrame,
         }
         else
         {
-            m_pRenderMeshCallback( this, 
+            m_pRenderMeshCallback( this,
                 m_pFrameArray[iFrame].Mesh,
                 bAdjacent,
                 pd3dDeviceContext,
@@ -84,12 +84,12 @@ void CMultiDeviceContextDXUTMesh::RenderFrame( UINT iFrame,
 
     // Render our children
     if( m_pFrameArray[iFrame].ChildFrame != INVALID_FRAME )
-        RenderFrame( m_pFrameArray[iFrame].ChildFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot, 
+        RenderFrame( m_pFrameArray[iFrame].ChildFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot,
         iNormalSlot, iSpecularSlot );
 
     // Render our siblings
     if( m_pFrameArray[iFrame].SiblingFrame != INVALID_FRAME )
-        RenderFrame( m_pFrameArray[iFrame].SiblingFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot, 
+        RenderFrame( m_pFrameArray[iFrame].SiblingFrame, bAdjacent, pd3dDeviceContext, iDiffuseSlot,
         iNormalSlot, iSpecularSlot );
 }
 

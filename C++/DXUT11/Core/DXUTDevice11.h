@@ -15,7 +15,7 @@ void DXUTApplyDefaultDeviceSettings(DXUTDeviceSettings *modifySettings);
 //--------------------------------------------------------------------------------------
 // Functions to get bit depth from formats
 //--------------------------------------------------------------------------------------
-HRESULT WINAPI DXUTGetD3D11AdapterDisplayMode( UINT AdapterOrdinal, UINT Output, DXGI_MODE_DESC* pModeDesc ); 
+HRESULT WINAPI DXUTGetD3D11AdapterDisplayMode( UINT AdapterOrdinal, UINT Output, DXGI_MODE_DESC* pModeDesc );
 
 
 
@@ -46,11 +46,11 @@ struct CD3D11EnumDeviceSettingsCombo;
 class CD3D11Enumeration
 {
 public:
-    // These should be called before Enumerate(). 
+    // These should be called before Enumerate().
     //
-    // Use these calls and the IsDeviceAcceptable to control the contents of 
+    // Use these calls and the IsDeviceAcceptable to control the contents of
     // the enumeration object, which affects the device selection and the device settings dialog.
-    void SetResolutionMinMax( UINT nMinWidth, UINT nMinHeight, UINT nMaxWidth, UINT nMaxHeight );  
+    void SetResolutionMinMax( UINT nMinWidth, UINT nMinHeight, UINT nMaxWidth, UINT nMaxHeight );
     void SetRefreshMinMax( UINT nMin, UINT nMax );
     void SetForceFeatureLevel( D3D_FEATURE_LEVEL forceFL) {
         g_forceFL = forceFL;
@@ -59,7 +59,7 @@ public:
     CGrowableArray<D3DFORMAT>* GetPossibleDepthStencilFormatList();
     void ResetPossibleDepthStencilFormats();
     void SetEnumerateAllAdapterFormats( bool bEnumerateAllAdapterFormats );
-    
+
     // Call Enumerate() to enumerate available D3D11 adapters, devices, modes, etc.
     bool HasEnumerated() { return m_bHasEnumerated; }
     HRESULT Enumerate( LPDXUTCALLBACKISD3D11DEVICEACCEPTABLE IsD3D11DeviceAcceptableFunc,
@@ -104,7 +104,7 @@ private:
     HRESULT EnumerateDevices( CD3D11EnumAdapterInfo *pAdapterInfo );
     HRESULT EnumerateDeviceCombos( IDXGIFactory1 *pFactory, CD3D11EnumAdapterInfo* pAdapterInfo );
     HRESULT EnumerateDeviceCombosNoAdapter( CD3D11EnumAdapterInfo* pAdapterInfo );
-    
+
     HRESULT EnumerateDisplayModes( CD3D11EnumOutputInfo *pOutputInfo );
     void BuildMultiSampleQualityList( DXGI_FORMAT fmt, CD3D11EnumDeviceSettingsCombo* pDeviceCombo );
     void ClearAdapterInfoList();
@@ -116,7 +116,7 @@ CD3D11Enumeration* WINAPI DXUTGetD3D11Enumeration(bool bForceEnumerate = false, 
 #define DXGI_MAX_DEVICE_IDENTIFIER_STRING 128
 
 //--------------------------------------------------------------------------------------
-// A class describing an adapter which contains a unique adapter ordinal 
+// A class describing an adapter which contains a unique adapter ordinal
 // that is installed on the system
 //--------------------------------------------------------------------------------------
 class CD3D11EnumAdapterInfo
@@ -134,7 +134,7 @@ public:
 
     CGrowableArray<CD3D11EnumOutputInfo*> outputInfoList; // Array of CD3D11EnumOutputInfo*
     CGrowableArray<CD3D11EnumDeviceInfo*> deviceInfoList; // Array of CD3D11EnumDeviceInfo*
-    // List of CD3D11EnumDeviceSettingsCombo* with a unique set 
+    // List of CD3D11EnumDeviceSettingsCombo* with a unique set
     // of BackBufferFormat, and Windowed
     CGrowableArray<CD3D11EnumDeviceSettingsCombo*> deviceSettingsComboList;
 };
@@ -157,7 +157,7 @@ public:
 
 
 //--------------------------------------------------------------------------------------
-// A class describing a Direct3D10 device that contains a 
+// A class describing a Direct3D10 device that contains a
 //       unique supported driver type
 //--------------------------------------------------------------------------------------
 class CD3D11EnumDeviceInfo
@@ -176,8 +176,8 @@ public:
 
 
 //--------------------------------------------------------------------------------------
-// A struct describing device settings that contains a unique combination of 
-// adapter format, back buffer format, and windowed that is compatible with a 
+// A struct describing device settings that contains a unique combination of
+// adapter format, back buffer format, and windowed that is compatible with a
 // particular Direct3D device and the app.
 //--------------------------------------------------------------------------------------
 struct CD3D11EnumDeviceSettingsCombo
@@ -196,9 +196,9 @@ struct CD3D11EnumDeviceSettingsCombo
     CD3D11EnumOutputInfo* pOutputInfo;
 };
 
-float   DXUTRankD3D11DeviceCombo( CD3D11EnumDeviceSettingsCombo* pDeviceSettingsCombo, 
-                                 DXUTD3D11DeviceSettings* pOptimalDeviceSettings, 
-                                 DXGI_MODE_DESC* pAdapterDisplayMode, 
+float   DXUTRankD3D11DeviceCombo( CD3D11EnumDeviceSettingsCombo* pDeviceSettingsCombo,
+                                 DXUTD3D11DeviceSettings* pOptimalDeviceSettings,
+                                 DXGI_MODE_DESC* pAdapterDisplayMode,
                                  int &bestModeIndex,
                                  int &bestMSAAIndex
                                  );

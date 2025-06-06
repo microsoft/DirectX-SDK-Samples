@@ -6,15 +6,15 @@
 //--------------------------------------------------------------------------------------
 struct VSQuadStackIn
 {
-    float3 pos          : POSITION;         
-    float2 tex          : TEXTURE;          
+    float3 pos          : POSITION;
+    float2 tex          : TEXTURE;
 };
 
 struct VSSceneRefIn
 {
-    uint uiVertexRef    : REFERENCE;        
-    float2 tex          : TEXTURE;          
-    
+    uint uiVertexRef    : REFERENCE;
+    float2 tex          : TEXTURE;
+
     float4 redblock     : COEFFSET0;
     float4 greenblock   : COEFFSET1;
     float4 blueblock    : COEFFSET2;
@@ -24,22 +24,22 @@ struct VSSceneRefIn
 
 struct VSSceneIn
 {
-    float3 pos          : POSITION;         
-    float3 norm         : NORMAL;           
-    float2 tex          : TEXTURE;          
+    float3 pos          : POSITION;
+    float3 norm         : NORMAL;
+    float2 tex          : TEXTURE;
 };
 
 struct VSQuadOut
 {
-    float4 pos          : SV_POSITION;     
-    float3 tex          : TEXCOORD;     
+    float4 pos          : SV_POSITION;
+    float3 tex          : TEXCOORD;
 };
 
 struct GSQuadOut
 {
-    float4 pos          : SV_POSITION;     
-    float3 tex          : TEXCOORD;      
-    float3 maxdelta		: TEXCOORD1; 
+    float4 pos          : SV_POSITION;
+    float3 tex          : TEXCOORD;
+    float3 maxdelta		: TEXCOORD1;
     uint RTIndex        : SV_RenderTargetArrayIndex;
 };
 
@@ -56,7 +56,7 @@ struct GSRefMeshIn
     float3 wTan         : TEXTURE1;
     float3 wNorm        : TEXTURE2;
     float3 posOrig      : TEXTURE3;
-    
+
     float4 redblock     : TEXTURE4;
     float4 greenblock   : TEXTURE5;
     float4 blueblock    : TEXTURE6;
@@ -71,7 +71,7 @@ struct PSRefMeshIn
     float3 wTan         : TEXTURE1;
     float3 wNorm        : TEXTURE2;
     float wrinkle       : WRINKLE;
-    
+
     float4 redblock     : TEXTURE3;
     float4 greenblock   : TEXTURE4;
     float4 blueblock    : TEXTURE5;
@@ -81,9 +81,9 @@ struct PSRefMeshIn
 
 struct PSSceneIn
 {
-    float4 pos          : SV_Position;      
-    float3 norm         : NORMAL;               
-    float2 tex          : TEXTURE;          
+    float4 pos          : SV_Position;
+    float3 norm         : NORMAL;
+    float2 tex          : TEXTURE;
 };
 
 cbuffer cbOnce
@@ -261,7 +261,7 @@ VSQuadOut VSGrid( VSQuadStackIn input )
     output.pos.xy = input.pos.xy;   // Input comes in [-1..1] range
     output.pos.z = 0.5f;
     output.pos.w = 1;
-    
+
     output.tex = float3(input.tex,0);
     return output;
 }
@@ -277,7 +277,7 @@ VSQuadOut VSG2DShow( VSQuadStackIn input )
     output.pos.xy = input.pos.xy;   // Input comes in [-1..1] range
     output.pos.z = 0.5f;
     output.pos.w = 1;
-    
+
     output.tex = float3(input.tex,g_RT);
     return output;
 }
@@ -297,36 +297,36 @@ GSRefMeshIn VSRefScenemain(VSSceneRefIn input)
     dataTexcoord += float4(0.5,0.5,0,0);
     dataTexcoord.x /= (float)g_DataTexSize;
     dataTexcoord.y /= (float)g_DataTexSize;
-    
+
     // Find our original position (used later for the wrinkle map)
     float3 OrigPos = g_txVertDataOrig.SampleLevel( g_samPointClamp, dataTexcoord, 0 );
     dataTexcoord.y = 1.0f - dataTexcoord.y;
-    
+
     // Find our position, normal, and tangent
     float3 pos = g_txVertData.SampleLevel( g_samPointClamp, dataTexcoord, 0 );
     dataTexcoord.z = 1.0f;
     float3 norm = g_txVertData.SampleLevel( g_samPointClamp, dataTexcoord, 0 );
     dataTexcoord.z = 2.0f;
     float3 tangent = g_txVertData.SampleLevel( g_samPointClamp, dataTexcoord, 0 );
-    
+
     // Output our final positions in clipspace
     output.pos = mul( float4( pos, 1 ), g_mWorldViewProj );
     output.posOrig = mul( float4( OrigPos, 1 ), g_mWorldViewProj );
-    
+
     // Normal and tangent in world space
     output.wNorm = normalize( mul( norm, (float3x3)g_mWorld ) );
     output.wTan = normalize( mul( tangent, (float3x3)g_mWorld ) );
-    
+
     // Just copy ldprt coefficients
     output.redblock = input.redblock;
     output.greenblock = input.greenblock;
     output.blueblock = input.blueblock;
     output.rgrest = input.rgrest;
     output.brest = input.brest;
-    
-    // Prop texture coordinates  
+
+    // Prop texture coordinates
     output.tex = input.tex;
-    
+
     return output;
 }
 
@@ -334,11 +334,11 @@ GSRefMeshIn VSRefScenemain(VSSceneRefIn input)
 PSSceneIn VSScenemain( VSSceneIn input )
 {
     PSSceneIn output;
-    
+
     output.pos = mul( float4(input.pos,1), g_mWorldViewProj );
     output.norm = mul( input.norm, g_mWorld );
     output.tex = input.tex;
-    
+
     return output;
 }
 
@@ -367,10 +367,10 @@ void GSCalcWrinkles( triangle GSRefMeshIn input[3], inout TriangleStream<PSRefMe
     // Find the area of our triangle
     float3 vortho = cross( input[1].pos-input[0].pos, input[2].pos-input[0].pos );
     float areaNow = length( vortho ) / 2.0;
-    
+
     vortho = cross( input[1].posOrig-input[0].posOrig, input[2].posOrig-input[0].posOrig );
     float areaOrig = length( vortho ) / 2.0;
-    
+
     for(int v=0; v<3; v++)
     {
         PSRefMeshIn output;
@@ -383,15 +383,15 @@ void GSCalcWrinkles( triangle GSRefMeshIn input[3], inout TriangleStream<PSRefMe
         output.blueblock = input[v].blueblock;
         output.rgrest = input[v].rgrest;
         output.brest = input[v].brest;
-    
+
         float w = ((areaOrig-areaNow)/ areaOrig)*1.0;
         if( w < 0 )
             w *= 0.005f;
         output.wrinkle = saturate( 0.3 + w );
-        
+
         RefStream.Append(output);
     }
-    
+
     RefStream.RestartStrip();
 }
 
@@ -399,7 +399,7 @@ void GSCalcWrinkles( triangle GSRefMeshIn input[3], inout TriangleStream<PSRefMe
 // PS for 2D render to texture operations
 //
 float4 PS2DRTT(GSQuadOut input) : SV_Target
-{   
+{
     float3 texel = g_txVertData.Sample( g_samPointClamp, input.tex );
     texel.x *= input.maxdelta.x;
     texel.y *= input.maxdelta.y;
@@ -412,7 +412,7 @@ float4 PS2DRTT(GSQuadOut input) : SV_Target
 // PS for showing a 2d texture
 //
 float4 PSShow2D(VSQuadOut input) : SV_Target
-{   
+{
     float3 color = g_txVertData.Sample( g_samPointClamp, input.tex ) / g_fBlendAmt;
     return float4(color,1);
 }
@@ -420,63 +420,63 @@ float4 PSShow2D(VSQuadOut input) : SV_Target
 float4 GetLDPRTColor( float3 wNorm, float4 redblock, float4 greenblock, float4 blueblock, float4 rgrest, float2 brest )
 {
     float4 clrOut=1; // output color
-    
+
     //float4 vNrm = float4(normalize(In.Normal),1);
     float4 CLin = CLinBF.Sample(g_samLDPRTFilter,wNorm);
-    
+
     clrOut.r = dot(CLin*redblock.xyyy,RLight[0]);
     clrOut.g = dot(CLin*greenblock.xyyy,GLight[0]);
-    clrOut.b = dot(CLin*blueblock.xyyy,BLight[0]); 
-    
+    clrOut.b = dot(CLin*blueblock.xyyy,BLight[0]);
+
     float4 QuadCubeA,QuadCubeB,QuadCubeC;
-    
+
     // sample the cube maps for quadratic/cubic...
     QuadCubeA = QuadBF.Sample(g_samLDPRTFilter,wNorm);
     QuadCubeB = CubeBFA.Sample(g_samLDPRTFilter,wNorm);
     QuadCubeC = CubeBFB.Sample(g_samLDPRTFilter,wNorm);
-    
+
     clrOut.r += dot(QuadCubeA*redblock.z,RLight[1]);
     clrOut.g += dot(QuadCubeA*greenblock.z,GLight[1]);
     clrOut.b += dot(QuadCubeA*blueblock.z,BLight[1]);
-    
+
     clrOut.r += dot(QuadCubeB*redblock.zwww,RLight[2]);
     clrOut.g += dot(QuadCubeB*greenblock.zwww,GLight[2]);
     clrOut.b += dot(QuadCubeB*greenblock.zwww,BLight[2]);
-    
+
     clrOut.r += dot(QuadCubeC*redblock.w,RLight[3]);
     clrOut.g += dot(QuadCubeC*greenblock.w,GLight[3]);
-    clrOut.b += dot(QuadCubeC*blueblock.w,BLight[3]);    
+    clrOut.b += dot(QuadCubeC*blueblock.w,BLight[3]);
 
     clrOut.a = 1.0;
-    return clrOut; 
+    return clrOut;
 }
 
 //
 // PS for rendering the reference mesh
 //
 float4 PSRefMeshmain( uniform bool bNdotL, PSRefMeshIn input ) : SV_Target
-{       
+{
     //diffuse
     float4 diffuse = g_txDiffuse.Sample( g_samLinearWrap, input.tex );
-    
+
     //bump
     float3 bump = g_txNormal.Sample( g_samLinearWrap, input.tex );
     bump.xyz *= 2.0;
     bump.xyz -= float3(1,1,1);
-    
+
     //move bump into world space for LDPRT lighting
     float3 binorm = normalize( cross( input.wNorm, input.wTan ) );
     float3x3 wtanMatrix = float3x3( binorm, input.wTan, input.wNorm );
     bump = mul( bump, wtanMatrix ); //world space bump
-    
+
     //now lerp between world normal and bump map norml using the wrinkle amount
     float3 norm = lerp( input.wNorm, bump, input.wrinkle );
-    
+
     //lighting
     float4 color;
     float4 specular;
     float specMap = diffuse.a;
-    
+
     if(bNdotL)
     {
         color = dot(g_vLightDir,norm);
@@ -488,11 +488,11 @@ float4 PSRefMeshmain( uniform bool bNdotL, PSRefMeshIn input ) : SV_Target
         color = GetLDPRTColor( norm, input.redblock, input.greenblock, input.blueblock, input.rgrest, input.brest );
         float3 I = -normalize(g_vCameraPos);
         float3 wR = I - 2.0f * dot( I, norm ) * norm;
-        specular = saturate(g_fOily*specMap*g_txEnvMap.SampleLevel( g_samLinearCube, wR, 6 )); 
+        specular = saturate(g_fOily*specMap*g_txEnvMap.SampleLevel( g_samLinearCube, wR, 6 ));
     }
-    
-    
-    
+
+
+
     //combined
     return diffuse*(color + specular);
 }
@@ -501,21 +501,21 @@ float4 PSRefMeshmain( uniform bool bNdotL, PSRefMeshIn input ) : SV_Target
 // PS for scene
 //
 float4 PSScenemain(PSSceneIn input) : SV_Target
-{       
+{
     //normal
     float3 norm = input.norm;
-    
+
     //lighting
     float4 color = dot(g_vLightDir,norm);
-    
+
     //specular
     float3 I = -normalize(g_vCameraPos);
     float3 wR = I - 2.0f * dot( I, norm ) * norm;
     float4 specular = 0.2f*saturate(g_txEnvMap.Sample( g_samLinearCube, wR ));
-    
+
     //diffuse
     float4 diffuse = g_txDiffuse.Sample( g_samLinearWrap, input.tex );
-    
+
     //etc
     return diffuse*color + specular;
 }
@@ -530,11 +530,11 @@ technique10 RenderReferencedObject
         SetVertexShader( CompileShader( vs_4_0, VSRefScenemain() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSCalcWrinkles() ) );
         SetPixelShader( CompileShader( ps_4_0, PSRefMeshmain( false ) ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepth, 0 );
         SetRasterizerState( EnableCulling );
-    }  
+    }
 }
 
 //
@@ -547,11 +547,11 @@ technique10 Render2DQuad
         SetVertexShader( CompileShader( vs_4_0, VSGrid() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSReplicateRTs() ) );
         SetPixelShader( CompileShader( ps_4_0, PS2DRTT() ) );
-        
+
         SetBlendState( AdditiveBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }
 
 //
@@ -564,11 +564,11 @@ technique10 Render2DQuadNoAlpha
         SetVertexShader( CompileShader( vs_4_0, VSGrid() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSReplicateRTs() ) );
         SetPixelShader( CompileShader( ps_4_0, PS2DRTT() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }
 
 //
@@ -581,11 +581,11 @@ technique10 Show2DQuad
         SetVertexShader( CompileShader( vs_4_0, VSG2DShow() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSShow2D() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }
 
 //
@@ -598,10 +598,10 @@ technique10 RenderScene
         SetVertexShader( CompileShader( vs_4_0, VSScenemain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSScenemain() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( EnableDepth, 0 );
         SetRasterizerState( EnableCulling );
-    }  
+    }
 }
 

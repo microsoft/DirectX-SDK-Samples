@@ -38,7 +38,7 @@ struct SIMULATOR_OPTIONS
     D3DXSHCOMPRESSQUALITYTYPE Quality;
     DWORD dwNumPCA;
 
-    // Mesh Tessellation 
+    // Mesh Tessellation
     bool bEnableTessellation;
     bool bRobustMeshRefine;
     float fRobustMeshRefineMinEdgeLength;

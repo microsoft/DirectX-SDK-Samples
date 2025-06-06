@@ -2,7 +2,7 @@
 // File: lightprobe.fx
 //
 // Desc: Rendering a cubic light probe LightProbe
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -76,10 +76,10 @@ RasterizerState DisableCulling
 LightProbeVS_Output LightProbeVS( LightProbeVS_Input Input )
 {
     LightProbeVS_Output Output;
-    
+
     Output.Pos = Input.Pos;
     Output.Tex = normalize( mul( Input.Pos, g_mInvWorldViewProjection) );
-    
+
     return Output;
 }
 
@@ -97,7 +97,7 @@ technique10 LightProbe
 		SetVertexShader( CompileShader( vs_4_0, LightProbeVS() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, LightProbePS() ) );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetRasterizerState( DisableCulling );

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: EffectParam.fx
 //
-// The effect file for the EffectParam sample.  
-// 
+// The effect file for the EffectParam sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

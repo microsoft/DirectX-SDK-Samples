@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: ScanCS.hlsl
 //
-// A simple inclusive prefix sum(scan) implemented in CS4.0, 
+// A simple inclusive prefix sum(scan) implemented in CS4.0,
 // using a typical up sweep and down sweep scheme
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
@@ -18,22 +18,22 @@ void CSScan( uint3 DTid, uint GI, uint2 x )         // Change the type of x here
 {
     // since CS40 can only support one shared memory for one shader, we use .xy and .zw as ping-ponging buffers
     // if scan a single element type like int, search and replace all .xy to .x and .zw to .y below
-    bucket[GI].xy = x; 
+    bucket[GI].xy = x;
     bucket[GI].zw = 0;
 
-    // Up sweep    
+    // Up sweep
     [unroll]
     for ( uint stride = 2; stride <= groupthreads; stride <<= 1 )
     {
         GroupMemoryBarrierWithGroupSync();
-        
+
         if ( (GI & (stride - 1)) == (stride - 1) )
         {
             bucket[GI].xy += bucket[GI - stride/2].xy;
         }
     }
 
-    if ( GI == (groupthreads - 1) ) 
+    if ( GI == (groupthreads - 1) )
     {
         bucket[GI].xy = 0;
     }
@@ -57,7 +57,7 @@ void CSScan( uint3 DTid, uint GI, uint2 x )         // Change the type of x here
             if ( (GI & a) == a )
             {
                 bucket[GI].zw = bucket[GI+stride].xy;
-            } else        
+            } else
             {
                 bucket[GI].zw = bucket[GI].xy;
             }
@@ -70,14 +70,14 @@ void CSScan( uint3 DTid, uint GI, uint2 x )         // Change the type of x here
             if ( (GI & a) == a )
             {
                 bucket[GI].xy = bucket[GI+stride].zw;
-            } else        
+            } else
             {
                 bucket[GI].xy = bucket[GI].zw;
             }
         }
-        
+
         n = !n;
-    }    
+    }
 
     Result[DTid.x] = bucket[GI].zw + x;
 }
@@ -86,7 +86,7 @@ void CSScan( uint3 DTid, uint GI, uint2 x )         // Change the type of x here
 [numthreads( groupthreads, 1, 1 )]
 void CSScanInBucket( uint3 DTid : SV_DispatchThreadID, uint3 GTid : SV_GroupThreadID, uint GI: SV_GroupIndex )
 {
-    uint2 x = Input[DTid.x];                    // Change the type of x here if scan other types 
+    uint2 x = Input[DTid.x];                    // Change the type of x here if scan other types
     CSScan( DTid, GI, x );
 }
 

@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: Pick10.fx
 //
-// The effect file for the Pick10 sample.  
-// 
+// The effect file for the Pick10 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -58,37 +58,37 @@ SamplerState MeshTextureSampler
 //--------------------------------------------------------------------------------------
 struct VS_OUTPUT
 {
-    float4 Position   : SV_POSITION;   // vertex position 
+    float4 Position   : SV_POSITION;   // vertex position
     float4 Diffuse    : COLOR0;     // vertex diffuse color (note that COLOR0 is clamped from 0..1)
-    float2 TextureUV  : TEXCOORD0;  // vertex texture coords 
+    float2 TextureUV  : TEXCOORD0;  // vertex texture coords
 };
 
 
 //--------------------------------------------------------------------------------------
 // This shader computes standard transform and lighting
 //--------------------------------------------------------------------------------------
-VS_OUTPUT RenderSceneVS( float4 vPos : POSITION, 
+VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
                          float3 vNormal : NORMAL,
                          float2 vTexCoord0 : TEXCOORD0 )
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-    
+
     // Transform the position from object space to homogeneous projection space
     Output.Position = mul(vPos, g_mWorldViewProjection);
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     vNormalWorldSpace = normalize(mul(vNormal, (float3x3)g_mWorld)); // normal (world space)
 
-    // Calc diffuse color    
-    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) + 
-                         g_MaterialAmbientColor;   
-    Output.Diffuse.a = 1.0f; 
-    
+    // Calc diffuse color
+    Output.Diffuse.rgb = g_MaterialDiffuseColor * g_LightDiffuse * max(0,dot(vNormalWorldSpace, g_LightDir)) +
+                         g_MaterialAmbientColor;
+    Output.Diffuse.a = 1.0f;
+
     // Just copy the texture coordinate through
-    Output.TextureUV = vTexCoord0; 
-    
-    return Output;    
+    Output.TextureUV = vTexCoord0;
+
+    return Output;
 }
 
 
@@ -97,7 +97,7 @@ VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
 //--------------------------------------------------------------------------------------
 struct PS_OUTPUT
 {
-    float4 RGBColor : SV_TARGET;  // Pixel color    
+    float4 RGBColor : SV_TARGET;  // Pixel color
 };
 
 
@@ -105,8 +105,8 @@ struct PS_OUTPUT
 // This shader outputs the pixel's color by modulating the texture's
 // color with diffuse material color
 //--------------------------------------------------------------------------------------
-PS_OUTPUT RenderScenePS( VS_OUTPUT In ) 
-{ 
+PS_OUTPUT RenderScenePS( VS_OUTPUT In )
+{
     PS_OUTPUT Output;
 
     // Lookup mesh texture and modulate it with diffuse
@@ -117,12 +117,12 @@ PS_OUTPUT RenderScenePS( VS_OUTPUT In )
 
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique10 RenderScene
 {
     pass P0
-    {          
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneVS(  ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderScenePS( ) ) );
@@ -133,12 +133,12 @@ technique10 RenderScene
 }
 
 //--------------------------------------------------------------------------------------
-// Renders scene 
+// Renders scene
 //--------------------------------------------------------------------------------------
 technique10 RenderSceneWireframe
 {
     pass P0
-    {          
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneVS(  ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderScenePS( ) ) );
