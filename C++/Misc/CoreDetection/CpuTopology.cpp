@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------
 // CpuTopology.cpp
-// 
+//
 // CpuToplogy class implementation.
 //
 // Copyright (c) Microsoft Corporation.
@@ -234,7 +234,7 @@ private:
             // This platform doesn't support the function
             return nullptr;
         }
-    
+
         // VerifyVersionInfo function pointer
         typedef BOOL ( WINAPI* VviFnPtr )( LPOSVERSIONINFOEX,
                                            DWORD,
@@ -825,7 +825,7 @@ public:
 
                 if( bSupported && ( dwSystemAffinity > 1 ) )
                 {
-                    // Attempt to set the thread affinity 
+                    // Attempt to set the thread affinity
                     HANDLE hThread = GetCurrentThread();
                     DWORD_PTR dwThreadAffinity = SetThreadAffinityMask( hThread, dwProcessAffinity );
                     if( dwThreadAffinity )

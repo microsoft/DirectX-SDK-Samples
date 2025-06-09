@@ -109,11 +109,11 @@ RasterizerState CullNone
 PSUVIn VSRenderToUV(VSSceneIn input)
 {
     PSUVIn output = (PSUVIn)0;
-    
+
     float2 screenTex = input.Tex*float2(2,2) - float2(1,1);
     output.Pos = float4( screenTex, 0.5, 1 );
     output.wPos = mul( float4(input.Pos,1), g_mWorld );
-    
+
     return output;
 }
 
@@ -123,13 +123,13 @@ PSUVIn VSRenderToUV(VSSceneIn input)
 PSUVIn VSRenderAnimToUV(VSAnimIn input)
 {
     PSUVIn output = (PSUVIn)0;
-    
+
     SkinnedInfo vSkinned = SkinVert( input );
-    
+
     float2 screenTex = input.Tex*2 - float2(1,1);
     output.Pos = float4( screenTex, 0.5, 1 );
     output.wPos = vSkinned.Pos;
-   
+
     return output;
 }
 
@@ -137,7 +137,7 @@ PSUVIn VSRenderAnimToUV(VSAnimIn input)
 // Pixel shader for drawing the scene into UV
 //
 float4 PSRenderToUV(PSUVIn input) : SV_Target
-{   
+{
     return input.wPos;
 }
 
@@ -147,10 +147,10 @@ float4 PSRenderToUV(PSUVIn input) : SV_Target
 PSQuadIn VSQuad(VSQuadIn input)
 {
     PSQuadIn output = (PSQuadIn)0;
-    
+
     output.Pos = float4(input.Pos,1);
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -179,7 +179,7 @@ float4 PSPaint(PSQuadIn input) : SV_Target
 			alpha += particleColor.a;
 		}
     }
-   
+
     return saturate( float4(color,alpha) );
 }
 
@@ -193,11 +193,11 @@ technique10 RenderToUV
         SetVertexShader( CompileShader( vs_4_0, VSRenderToUV() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSRenderToUV() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullNone );
-    }  
+    }
 }
 
 
@@ -211,11 +211,11 @@ technique10 RenderAnimToUV
         SetVertexShader( CompileShader( vs_4_0, VSRenderAnimToUV() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSRenderToUV() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullNone );
-    }  
+    }
 }
 
 
@@ -229,9 +229,9 @@ technique10 Paint
         SetVertexShader( CompileShader( vs_4_0, VSQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSPaint() ) );
-        
+
         SetBlendState( PaintBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullNone );
-    }  
+    }
 }

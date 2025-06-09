@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------
 // CoreDetection.cpp
-// 
+//
 // Main program execution.
 //
 // Copyright (c) Microsoft Corporation.

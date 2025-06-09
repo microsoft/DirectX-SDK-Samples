@@ -69,7 +69,7 @@ WCHAR g_szFullscreenName[] = { L"MultiMon10 - Fullscreen" };
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 HRESULT OnD3D10CreateDevice( DEVICE_OBJECT* pDeviceObj );
 void OnD3D10FrameRender( WINDOW_OBJECT* pWindowObj, double fTime, float fElapsedTime );
@@ -92,7 +92,7 @@ void RenderToAllMonitors( double fTime, float fElapsedTime );
 void PresentToAllMonitors();
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -149,7 +149,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
     while( WM_QUIT != msg.message )
     {
-        // Use PeekMessage() so we can use idle time to render the scene. 
+        // Use PeekMessage() so we can use idle time to render the scene.
         bGotMsg = ( PeekMessage( &msg, NULL, 0U, 0U, PM_REMOVE ) != 0 );
 
         if( bGotMsg )
@@ -197,8 +197,8 @@ HRESULT OnD3D10CreateDevice( DEVICE_OBJECT* pDeviceObj )
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -898,7 +898,7 @@ void FullCleanup()
 }
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText( WINDOW_OBJECT* pWindowObj )

@@ -22,7 +22,7 @@ void CSNumVerticesIndices( uint3 DTid : SV_DispatchThreadID )
     if (DTid.x < g_param.x)
     {
         float4 edge_factor = InputEdgeFactor[DTid.x];
-        
+
         PROCESSED_TESS_FACTORS_TRI processedTessFactors;
         int num_points = TriProcessTessFactors(edge_factor, processedTessFactors, g_partitioning);
 

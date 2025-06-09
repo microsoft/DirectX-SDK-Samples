@@ -17,17 +17,17 @@
 #define GRID_OPTIMIZE_VERTICES
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 void GridOptimizeIndices( WORD* pIndexBuffer, int nNumIndex, int nNumVertex );
-void GridOptimizeVertices( WORD* pIndexBuffer, void *pVertex, DWORD dwVertexSize, 
+void GridOptimizeVertices( WORD* pIndexBuffer, void *pVertex, DWORD dwVertexSize,
                            int nNumIndex, int nNumVertex );
 
 
 //--------------------------------------------------------------------------------------
 // FillGrid_NonIndexed
 // Creates a regular grid of non-indexed triangles.
-// The w coordinate of each vertex contains its index (vertex number). 
+// The w coordinate of each vertex contains its index (vertex number).
 //
 // Parameters:
 //
@@ -40,8 +40,8 @@ void GridOptimizeVertices( WORD* pIndexBuffer, void *pVertex, DWORD dwVertexSize
 // OUT
 // lplpVB:                      A pointer to the vertex buffer containing grid vertices
 //--------------------------------------------------------------------------------------
-void FillGrid_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                          float fGridSizeX, float fGridSizeZ, 
+void FillGrid_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                          float fGridSizeX, float fGridSizeZ,
                           DWORD uDummyStartVertices, DWORD uDummyEndVertices,
                           ID3D11Buffer** lplpVB )
 {
@@ -49,7 +49,7 @@ void FillGrid_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLengt
     DWORD   nNumVertex = 3 * 2 * dwWidth * dwLength;
     float   fStepX = fGridSizeX / dwWidth;
     float   fStepZ = fGridSizeZ / dwLength;
-    
+
     // Allocate memory for buffer of vertices in system memory
     SIMPLEVERTEX*    pVertexBuffer = new SIMPLEVERTEX[nNumVertex + uDummyStartVertices + uDummyEndVertices];
     SIMPLEVERTEX*    pVertex = &pVertexBuffer[0];
@@ -152,8 +152,8 @@ void FillGrid_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLengt
 // lplpVB:                    A pointer to the vertex buffer containing grid vertices
 // lplpIB:                    A pointer to the index buffer containing grid indices
 //--------------------------------------------------------------------------------------
-void FillGrid_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                       float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                       float fGridSizeX, float fGridSizeZ,
                        ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB )
 {
     HRESULT      hr;
@@ -161,7 +161,7 @@ void FillGrid_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
     DWORD        nNumIndex = 3 * 2 * dwWidth * dwLength;
     float        fStepX = fGridSizeX / dwWidth;
     float        fStepZ = fGridSizeZ / dwLength;
-    
+
     // Allocate memory for buffer of vertices in system memory
     SIMPLEVERTEX*    pVertexBuffer = new SIMPLEVERTEX[nNumVertex];
     SIMPLEVERTEX*    pVertex = &pVertexBuffer[0];
@@ -179,7 +179,7 @@ void FillGrid_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
             pVertex++;
         }
     }
-    
+
     // Set initial data info
     D3D11_SUBRESOURCE_DATA InitData;
     InitData.pSysMem = pVertexBuffer;
@@ -226,7 +226,7 @@ void FillGrid_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
     // Fill DX11 vertex buffer description
     bd.ByteWidth = sizeof( WORD ) * nNumIndex;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    
+
     // Create DX11 index buffer specifying initial data
     hr = pd3dDevice->CreateBuffer( &bd, &InitData, lplpIB );
     if( FAILED( hr ) )
@@ -275,8 +275,8 @@ D3DXVECTOR3 CalculateTriangleNormal( D3DXVECTOR3 *pP1, D3DXVECTOR3 *pP2, D3DXVEC
 // lplpVB:                   A pointer to the vertex buffer containing grid vertices
 // lplpIB:                   A pointer to the index buffer containing grid indices
 //--------------------------------------------------------------------------------------
-void FillGrid_WithNormals_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                                   float fGridSizeX, float fGridSizeZ, 
+void FillGrid_WithNormals_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                                   float fGridSizeX, float fGridSizeZ,
                                    ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB )
 {
     HRESULT      hr;
@@ -284,7 +284,7 @@ void FillGrid_WithNormals_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWOR
     DWORD        nNumIndex = 3 * 2 * dwWidth * dwLength;
     float        fStepX = fGridSizeX / dwWidth;
     float        fStepZ = fGridSizeZ / dwLength;
-    
+
     // Allocate memory for buffer of vertices in system memory
     EXTENDEDVERTEX*    pVertexBuffer = new EXTENDEDVERTEX[nNumVertex];
     EXTENDEDVERTEX*    pVertex = &pVertexBuffer[0];
@@ -336,7 +336,7 @@ void FillGrid_WithNormals_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWOR
     bd.BindFlags =       D3D11_BIND_INDEX_BUFFER;
     bd.CPUAccessFlags =  0;
     bd.MiscFlags =       0;
-    
+
     // Create DX11 index buffer specifying initial data
     hr = pd3dDevice->CreateBuffer( &bd, &InitData, lplpIB );
     if( FAILED( hr ) )
@@ -355,8 +355,8 @@ void FillGrid_WithNormals_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWOR
         WORD i1 = pIndexBuffer[3*i + 0];
         WORD i2 = pIndexBuffer[3*i + 1];
         WORD i3 = pIndexBuffer[3*i + 2];
-        D3DXVECTOR3 Normal = CalculateTriangleNormal( (D3DXVECTOR3 *)&pVertexBuffer[i1].x, 
-                                                      (D3DXVECTOR3 *)&pVertexBuffer[i2].x, 
+        D3DXVECTOR3 Normal = CalculateTriangleNormal( (D3DXVECTOR3 *)&pVertexBuffer[i1].x,
+                                                      (D3DXVECTOR3 *)&pVertexBuffer[i2].x,
                                                       (D3DXVECTOR3 *)&pVertexBuffer[i3].x );
 
         // Add normal to each vertex for this triangle
@@ -415,8 +415,8 @@ void FillGrid_WithNormals_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWOR
 // lplpVB:                      A pointer to the vertex buffer containing grid vertices
 //
 //--------------------------------------------------------------------------------------
-void FillGrid_Quads_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                             float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Quads_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                             float fGridSizeX, float fGridSizeZ,
                              ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB )
 {
     HRESULT      hr;
@@ -424,7 +424,7 @@ void FillGrid_Quads_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLe
     DWORD        nNumIndex = 4 * dwWidth * dwLength;
     float        fStepX = fGridSizeX / dwWidth;
     float        fStepZ = fGridSizeZ / dwLength;
-    
+
     // Allocate memory for buffer of vertices in system memory
     SIMPLEVERTEX*    pVertexBuffer = new SIMPLEVERTEX[nNumVertex];
     SIMPLEVERTEX*    pVertex = &pVertexBuffer[0];
@@ -442,7 +442,7 @@ void FillGrid_Quads_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLe
             pVertex++;
         }
     }
-    
+
     // Set initial data info
     D3D11_SUBRESOURCE_DATA InitData;
     InitData.pSysMem = pVertexBuffer;
@@ -490,7 +490,7 @@ void FillGrid_Quads_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLe
     // Fill DX11 vertex buffer description
     bd.ByteWidth = sizeof( WORD ) * nNumIndex;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    
+
     // Create DX11 index buffer specifying initial data
     hr = pd3dDevice->CreateBuffer( &bd, &InitData, lplpIB );
     if( FAILED( hr ) )
@@ -519,8 +519,8 @@ void FillGrid_Quads_Indexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLe
 // lplpVB:                    A pointer to the vertex buffer containing grid vertices
 //
 //--------------------------------------------------------------------------------------
-void FillGrid_Quads_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                                float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Quads_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                                float fGridSizeX, float fGridSizeZ,
                                 ID3D11Buffer** lplpVB )
 {
     HRESULT  hr;
@@ -528,7 +528,7 @@ void FillGrid_Quads_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD d
     DWORD    nNumVertex = 4 * nNumQuads;
     float    fStepX = fGridSizeX / dwWidth;
     float    fStepZ = fGridSizeZ / dwLength;
-    
+
     // Allocate memory for buffer of vertices in system memory
     SIMPLEVERTEX*    pVertexBuffer = new SIMPLEVERTEX[nNumVertex];
     SIMPLEVERTEX*    pVertex = &pVertexBuffer[0];
@@ -570,7 +570,7 @@ void FillGrid_Quads_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD d
             pVertex++;
         }
     }
-    
+
     // Set initial data info
     D3D11_SUBRESOURCE_DATA InitData;
     InitData.pSysMem = pVertexBuffer;
@@ -613,8 +613,8 @@ void FillGrid_Quads_NonIndexed( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD d
 // lplpVB:                       A pointer to the vertex buffer containing grid vertices
 // lplpIB:                       A pointer to the index buffer containing grid indices
 //--------------------------------------------------------------------------------------
-void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                                        float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                                        float fGridSizeX, float fGridSizeZ,
                                         ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB )
 {
     HRESULT hr;
@@ -622,7 +622,7 @@ void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth,
     DWORD   nNumIndex = 3 * 2 * dwWidth * dwLength;
     float   fStepX = fGridSizeX / dwWidth;
     float   fStepZ = fGridSizeZ / dwLength;
-    
+
     // Allocate memory for buffer of vertices in system memory
     TANGENTSPACEVERTEX*    pVertexBuffer = new TANGENTSPACEVERTEX[nNumVertex];
     TANGENTSPACEVERTEX*    pVertex = &pVertexBuffer[0];
@@ -638,7 +638,7 @@ void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth,
             pVertex->u = 0.0f + ( (float)j / dwWidth  );
             pVertex->v = 0.0f + ( (float)i / dwLength );
 
-            // Flat grid so tangent space is very basic; with more complex geometry 
+            // Flat grid so tangent space is very basic; with more complex geometry
             // you would have to export calculated tangent space vectors
             pVertex->nx = 0.0f;
             pVertex->ny = 1.0f;
@@ -652,7 +652,7 @@ void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth,
             pVertex++;
         }
     }
-    
+
     // Allocate memory for buffer of indices in system memory
     WORD*    pIndexBuffer = new WORD [nNumIndex];
     WORD*    pIndex = &pIndexBuffer[0];
@@ -677,7 +677,7 @@ void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth,
 #endif
 
 #ifdef GRID_OPTIMIZE_VERTICES
-    GridOptimizeVertices(pIndexBuffer, pVertexBuffer, sizeof(TANGENTSPACEVERTEX), 
+    GridOptimizeVertices(pIndexBuffer, pVertexBuffer, sizeof(TANGENTSPACEVERTEX),
                          nNumIndex, nNumVertex);
 #endif
 
@@ -713,7 +713,7 @@ void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth,
     // Fill DX11 vertex buffer description
     bd.ByteWidth = sizeof( WORD ) * nNumIndex;
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-    
+
     // Create DX11 index buffer specifying initial data
     hr = pd3dDevice->CreateBuffer( &bd, &InitData, lplpIB );
     if( FAILED( hr ) )
@@ -732,7 +732,7 @@ void FillGrid_Indexed_WithTangentSpace( ID3D11Device* pd3dDevice, DWORD dwWidth,
 
 
 //--------------------------------------------------------------------------------------
-// Optimize grid indices for post-vertex cache 
+// Optimize grid indices for post-vertex cache
 //--------------------------------------------------------------------------------------
 void GridOptimizeIndices( WORD* pIndexBuffer, int nNumIndex, int nNumVertex )
 {
@@ -743,7 +743,7 @@ void GridOptimizeIndices( WORD* pIndexBuffer, int nNumIndex, int nNumVertex )
     // Allocate temporary index buffer and copy current indices into it
     WORD* pTmpIndexBuffer = new WORD [nNumIndex];
     memcpy( pTmpIndexBuffer, pIndexBuffer, nNumIndex * sizeof( WORD ) );
-    
+
     // Remap triangles
     for ( int i=0; i < (int)nNumIndex/3; ++i )
     {
@@ -759,9 +759,9 @@ void GridOptimizeIndices( WORD* pIndexBuffer, int nNumIndex, int nNumVertex )
 
 
 //--------------------------------------------------------------------------------------
-// Optimize grid vertices and indices for pre-vertex cache 
+// Optimize grid vertices and indices for pre-vertex cache
 //--------------------------------------------------------------------------------------
-void GridOptimizeVertices( WORD* pIndexBuffer, void *pVertexBuffer, DWORD dwVertexSize, 
+void GridOptimizeVertices( WORD* pIndexBuffer, void *pVertexBuffer, DWORD dwVertexSize,
                            int nNumIndex, int nNumVertex )
 {
     // Optimize vertices for pre-transform cache
@@ -776,9 +776,9 @@ void GridOptimizeVertices( WORD* pIndexBuffer, void *pVertexBuffer, DWORD dwVert
     for ( int i=0; i < (int)nNumVertex; ++i )
     {
         int newVertexIndex = (int)pRemappedVertices[i];
-        
-        memcpy( (BYTE *)pVertexBuffer+newVertexIndex*dwVertexSize, 
-                (BYTE *)pTmpVertexBuffer + (i*dwVertexSize), 
+
+        memcpy( (BYTE *)pVertexBuffer+newVertexIndex*dwVertexSize,
+                (BYTE *)pTmpVertexBuffer + (i*dwVertexSize),
                 dwVertexSize );
     }
 

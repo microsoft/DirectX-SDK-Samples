@@ -187,7 +187,7 @@ float4 PSFFTInner( PSQuadIn input ) : SV_Target
 //
 float4 PSSimple( PSQuadIn input ) : SV_Target
 {
-	float2 tex = (float2)input.tex/g_TextureSize; 
+	float2 tex = (float2)input.tex/g_TextureSize;
 	return abs(float4(g_txSource.Sample( g_samPointClamp, tex ).xy,0,0));
 }
 
@@ -201,11 +201,11 @@ technique10 Reverse
         SetVertexShader( CompileShader( vs_4_0, VSQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSReverse() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }
 
 //
@@ -218,11 +218,11 @@ technique10 FFTInner
         SetVertexShader( CompileShader( vs_4_0, VSQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSFFTInner() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }
 
 //
@@ -235,9 +235,9 @@ technique10 RenderQuad
         SetVertexShader( CompileShader( vs_4_0, VSQuad() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSSimple() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( DisableCulling );
-    }  
+    }
 }

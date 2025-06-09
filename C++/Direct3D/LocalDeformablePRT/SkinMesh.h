@@ -30,7 +30,7 @@ struct D3DXFRAME_DERIVED : public D3DXFRAME
 //--------------------------------------------------------------------------------------
 struct D3DXMESHCONTAINER_DERIVED : public D3DXMESHCONTAINER
 {
-    // SkinMesh info             
+    // SkinMesh info
     LPD3DXATTRIBUTERANGE pAttributeTable;
     DWORD NumAttributeGroups;
     DWORD NumInfl;

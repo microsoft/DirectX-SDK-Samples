@@ -133,7 +133,7 @@ HRESULT CSHFunctionViewer::OnCreateDevice( LPDIRECT3DDEVICE9 pd3dDevice )
     m_pSphereMesh->UnlockVertexBuffer();
     m_pSphereMesh->UnlockIndexBuffer();
 
-    // Load effects 
+    // Load effects
     HRESULT hr;
     WCHAR str[MAX_PATH];
     V( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, TEXT( "SHFuncView.fx" ) ) );
@@ -383,7 +383,7 @@ void CSHFunctionViewer::Render( IDirect3DDevice9* pd3dDevice, float fObjectRadiu
 
 
 //-----------------------------------------------------------------------------
-// Updates the transfer visualization data under the currently selected vertex 
+// Updates the transfer visualization data under the currently selected vertex
 //-----------------------------------------------------------------------------
 void CSHFunctionViewer::UpdateDataForActiveVertex( CPRTMesh* pPRTMesh, int nAppTechnique, bool bUpdateData )
 {
@@ -405,7 +405,7 @@ void CSHFunctionViewer::UpdateDataForActiveVertex( CPRTMesh* pPRTMesh, int nAppT
 
 
 //-----------------------------------------------------------------------------
-// Updates the transfer visualization data under the currently selected vertex 
+// Updates the transfer visualization data under the currently selected vertex
 //-----------------------------------------------------------------------------
 void CSHFunctionViewer::GetVertexUnderMouse( CPRTMesh* pPRTMesh, int nAppTechnique, const D3DXMATRIX* pmProj,
                                              const D3DXMATRIX* pmView, const D3DXMATRIX* pmWorld )

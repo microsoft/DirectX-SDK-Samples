@@ -2,7 +2,7 @@
 // File: lightprobe.fx
 //
 // Desc: Rendering a cubic light probe LightProbe
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -18,7 +18,7 @@ float g_fScale;
 texture g_EnvironmentTexture;
 
 sampler EnvironmentSampler = sampler_state
-{ 
+{
     Texture = (g_EnvironmentTexture);
     MipFilter = LINEAR;
     MinFilter = LINEAR;
@@ -43,10 +43,10 @@ struct LightProbeVS_Output
 LightProbeVS_Output LightProbeVS( LightProbeVS_Input Input )
 {
     LightProbeVS_Output Output;
-    
+
     Output.Pos = Input.Pos;
     Output.Tex = normalize( mul(Input.Pos, g_mInvWorldViewProjection) );
-    
+
     return Output;
 }
 

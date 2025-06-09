@@ -44,7 +44,7 @@ HRESULT GetDXVersion( DWORD* pdwDirectXVersionMajor, DWORD* pdwDirectXVersionMin
     *pdwDirectXVersionMinor = 0;
     *pcDirectXVersionLetter = ' ';
 
-    // First, try to use dxdiag's COM interface to get the DirectX version.  
+    // First, try to use dxdiag's COM interface to get the DirectX version.
     // The only downside is this will only work on DX9 or later.
     if( SUCCEEDED( GetDirectXVersionViaDxDiag( pdwDirectXVersionMajor, pdwDirectXVersionMinor,
                                                pcDirectXVersionLetter ) ) )
@@ -52,7 +52,7 @@ HRESULT GetDXVersion( DWORD* pdwDirectXVersionMajor, DWORD* pdwDirectXVersionMin
 
     if( !bGotDirectXVersion )
     {
-        // Getting the DirectX version info from DxDiag failed, 
+        // Getting the DirectX version info from DxDiag failed,
         // so most likely we are on DX8.x or earlier
         if( SUCCEEDED( GetDirectXVersionViaFileVersions( pdwDirectXVersionMajor, pdwDirectXVersionMinor,
                                                          pcDirectXVersionLetter ) ) )
@@ -63,7 +63,7 @@ HRESULT GetDXVersion( DWORD* pdwDirectXVersionMajor, DWORD* pdwDirectXVersionMin
     if( !bGotDirectXVersion )
         return E_FAIL;
 
-    // Set the output values to what we got and return       
+    // Set the output values to what we got and return
     *pcDirectXVersionLetter = ( char )tolower( *pcDirectXVersionLetter );
 
     return S_OK;
@@ -87,7 +87,7 @@ HRESULT GetDirectXVersionViaDxDiag( DWORD* pdwDirectXVersionMajor,
     bool bSuccessGettingMinor = false;
     bool bSuccessGettingLetter = false;
 
-    // Init COM.  COM may fail if its already been inited with a different 
+    // Init COM.  COM may fail if its already been inited with a different
     // concurrency model.  And if it fails you shouldn't release it.
     hr = CoInitialize( NULL );
     bCleanupCOM = SUCCEEDED( hr );

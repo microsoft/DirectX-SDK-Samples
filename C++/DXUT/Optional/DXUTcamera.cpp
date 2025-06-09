@@ -275,7 +275,7 @@ VOID CBaseCamera::SetViewParams( D3DXVECTOR3* pvEyePt, D3DXVECTOR3* pvLookatPt )
     D3DXMATRIX mInvView;
     D3DXMatrixInverse( &mInvView, NULL, &m_mView );
 
-    // The axis basis vectors and camera position are stored inside the 
+    // The axis basis vectors and camera position are stored inside the
     // position matrix in the 4 rows of the camera's world matrix.
     // To figure out the yaw/pitch of the camera, we just need the Z basis vector
     D3DXVECTOR3* pZBasis = ( D3DXVECTOR3* )&mInvView._31;
@@ -370,7 +370,7 @@ LRESULT CBaseCamera::HandleMessages( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM
                     m_bMouseRButtonDown = true; m_nCurrentButtonMask |= MOUSE_RIGHT_BUTTON;
                 }
 
-                // Capture the mouse, so if the mouse button is 
+                // Capture the mouse, so if the mouse button is
                 // released outside the window, we'll get the WM_LBUTTONUP message
                 SetCapture( hWnd );
                 GetCursorPos( &m_ptLastMousePosition );
@@ -533,10 +533,10 @@ void CBaseCamera::UpdateMouseDelta()
 
     if( m_bResetCursorAfterMove && DXUTIsActive() )
     {
-        // Set position of camera to center of desktop, 
+        // Set position of camera to center of desktop,
         // so it always has room to move.  This is very useful
-        // if the cursor is hidden.  If this isn't done and cursor is hidden, 
-        // then invisible cursor will hit the edge of the screen 
+        // if the cursor is hidden.  If this isn't done and cursor is hidden,
+        // then invisible cursor will hit the edge of the screen
         // and the user can't tell what happened
         POINT ptCenter;
 
@@ -550,7 +550,7 @@ void CBaseCamera::UpdateMouseDelta()
         m_ptLastMousePosition = ptCenter;
     }
 
-    // Smooth the relative mouse data over a few frames so it isn't 
+    // Smooth the relative mouse data over a few frames so it isn't
     // jerky when moving slowly at low frame rates.
     float fPercentOfNew = 1.0f / m_fFramesToSmoothMouseData;
     float fPercentOfOld = 1.0f - fPercentOfNew;
@@ -574,7 +574,7 @@ void CBaseCamera::UpdateVelocity( float fElapsedTime )
 
     D3DXVECTOR3 vAccel = m_vKeyboardDirection + m_vGamePadLeftThumb;
 
-    // Normalize vector so if moving 2 dirs (left & forward), 
+    // Normalize vector so if moving 2 dirs (left & forward),
     // the camera doesn't move faster than if moving in 1 dir
     D3DXVec3Normalize( &vAccel, &vAccel );
 
@@ -587,7 +587,7 @@ void CBaseCamera::UpdateVelocity( float fElapsedTime )
         if( D3DXVec3LengthSq( &vAccel ) > 0 )
         {
             // If so, then this means the user has pressed a movement key\
-            // so change the velocity immediately to acceleration 
+            // so change the velocity immediately to acceleration
             // upon keyboard input.  This isn't normal physics
             // but it will give a quick response to keyboard input
             m_vVelocity = vAccel;
@@ -625,7 +625,7 @@ void CBaseCamera::UpdateVelocity( float fElapsedTime )
 //--------------------------------------------------------------------------------------
 void CBaseCamera::ConstrainToBoundary( D3DXVECTOR3* pV )
 {
-    // Constrain vector to a bounding box 
+    // Constrain vector to a bounding box
     pV->x = __max( pV->x, m_vMinBoundary.x );
     pV->y = __max( pV->y, m_vMinBoundary.y );
     pV->z = __max( pV->z, m_vMinBoundary.z );
@@ -643,7 +643,7 @@ void CBaseCamera::ConstrainToBoundary( D3DXVECTOR3* pV )
 //--------------------------------------------------------------------------------------
 D3DUtil_CameraKeys CBaseCamera::MapKey( UINT nKey )
 {
-    // This could be upgraded to a method that's user-definable but for 
+    // This could be upgraded to a method that's user-definable but for
     // simplicity, we'll use a hardcoded mapping.
     switch( nKey )
     {
@@ -747,7 +747,7 @@ VOID CFirstPersonCamera::FrameMove( FLOAT fElapsedTime )
     // Simple euler method to calculate position delta
     D3DXVECTOR3 vPosDelta = m_vVelocity * fElapsedTime;
 
-    // If rotating the camera 
+    // If rotating the camera
     if( ( m_nActiveButtonMask & m_nCurrentButtonMask ) ||
         m_bRotateWithoutButtonDown ||
         m_vGamePadRightThumb.x != 0 ||
@@ -780,7 +780,7 @@ VOID CFirstPersonCamera::FrameMove( FLOAT fElapsedTime )
     D3DXVec3TransformCoord( &vWorldUp, &vLocalUp, &mCameraRot );
     D3DXVec3TransformCoord( &vWorldAhead, &vLocalAhead, &mCameraRot );
 
-    // Transform the position delta by the camera's rotation 
+    // Transform the position delta by the camera's rotation
     D3DXVECTOR3 vPosDeltaWorld;
     if( !m_bEnableYAxisMovement )
     {
@@ -790,12 +790,12 @@ VOID CFirstPersonCamera::FrameMove( FLOAT fElapsedTime )
     }
     D3DXVec3TransformCoord( &vPosDeltaWorld, &vPosDelta, &mCameraRot );
 
-    // Move the eye position 
+    // Move the eye position
     m_vEye += vPosDeltaWorld;
     if( m_bClipToBoundary )
         ConstrainToBoundary( &m_vEye );
 
-    // Update the lookAt position based on the eye position 
+    // Update the lookAt position based on the eye position
     m_vLookAt = m_vEye + vWorldAhead;
 
     // Update the view matrix
@@ -818,7 +818,7 @@ void CFirstPersonCamera::SetRotateButtons( bool bLeft, bool bMiddle, bool bRight
 
 
 //--------------------------------------------------------------------------------------
-// Constructor 
+// Constructor
 //--------------------------------------------------------------------------------------
 CModelViewerCamera::CModelViewerCamera()
 {
@@ -845,7 +845,7 @@ CModelViewerCamera::CModelViewerCamera()
 
 
 //--------------------------------------------------------------------------------------
-// Update the view matrix & the model's world matrix based 
+// Update the view matrix & the model's world matrix based
 //       on user input & elapsed time
 //--------------------------------------------------------------------------------------
 VOID CModelViewerCamera::FrameMove( FLOAT fElapsedTime )
@@ -859,9 +859,9 @@ VOID CModelViewerCamera::FrameMove( FLOAT fElapsedTime )
         return;
     m_bDragSinceLastUpdate = false;
 
-    //// If no mouse button is held down, 
+    //// If no mouse button is held down,
     //// Get the mouse movement (if any) if the mouse button are down
-    //if( m_nCurrentButtonMask != 0 ) 
+    //if( m_nCurrentButtonMask != 0 )
     //    UpdateMouseDelta( fElapsedTime );
 
     GetInput( m_bEnablePositionMovement, m_nCurrentButtonMask != 0, true, false );
@@ -890,11 +890,11 @@ VOID CModelViewerCamera::FrameMove( FLOAT fElapsedTime )
     D3DXVec3TransformCoord( &vWorldUp, &vLocalUp, &mCameraRot );
     D3DXVec3TransformCoord( &vWorldAhead, &vLocalAhead, &mCameraRot );
 
-    // Transform the position delta by the camera's rotation 
+    // Transform the position delta by the camera's rotation
     D3DXVECTOR3 vPosDeltaWorld;
     D3DXVec3TransformCoord( &vPosDeltaWorld, &vPosDelta, &mCameraRot );
 
-    // Move the lookAt position 
+    // Move the lookAt position
     m_vLookAt += vPosDeltaWorld;
     if( m_bClipToBoundary )
         ConstrainToBoundary( &m_vLookAt );
@@ -930,7 +930,7 @@ VOID CModelViewerCamera::FrameMove( FLOAT fElapsedTime )
 
     m_mModelLastRot = mModelRot;
 
-    // Since we're accumulating delta rotations, we need to orthonormalize 
+    // Since we're accumulating delta rotations, we need to orthonormalize
     // the matrix to prevent eventual matrix skew
     D3DXVECTOR3* pXBasis = ( D3DXVECTOR3* )&m_mModelRot._11;
     D3DXVECTOR3* pYBasis = ( D3DXVECTOR3* )&m_mModelRot._21;
@@ -1199,14 +1199,14 @@ HRESULT CDXUTDirectionWidget::StaticOnD3D9CreateDevice( IDirect3DDevice9* pd3dDe
     s_hWorldViewProjection = s_pD3D9Effect->GetParameterByName( NULL, "g_mWorldViewProjection" );
 
     // Load the mesh with D3DX and get back a ID3DXMesh*.  For this
-    // sample we'll ignore the X file's embedded materials since we know 
+    // sample we'll ignore the X file's embedded materials since we know
     // exactly the model we're loading.  See the mesh samples such as
     // "OptimizedMesh" for a more generic mesh loading example.
     V_RETURN( DXUTCreateArrowMeshFromInternalArray( s_pd3d9Device, &s_pD3D9Mesh ) );
 
-    // Optimize the mesh for this graphics card's vertex cache 
-    // so when rendering the mesh's triangle list the vertices will 
-    // cache hit more often so it won't have to re-execute the vertex shader 
+    // Optimize the mesh for this graphics card's vertex cache
+    // so when rendering the mesh's triangle list the vertices will
+    // cache hit more often so it won't have to re-execute the vertex shader
     // on those vertices so it will improve perf.
     DWORD* rgdwAdjacency = new DWORD[s_pD3D9Mesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
@@ -1516,7 +1516,7 @@ HRESULT CDXUTDirectionWidget::UpdateLightDir()
     // Note that per-frame delta rotations could be problematic over long periods of time.
     m_mRot *= m_mView * mLastRotInv * mRot * mInvView;
 
-    // Since we're accumulating delta rotations, we need to orthonormalize 
+    // Since we're accumulating delta rotations, we need to orthonormalize
     // the matrix to prevent eventual matrix skew
     D3DXVECTOR3* pXBasis = ( D3DXVECTOR3* )&m_mRot._11;
     D3DXVECTOR3* pYBasis = ( D3DXVECTOR3* )&m_mRot._21;

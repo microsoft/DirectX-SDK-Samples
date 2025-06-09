@@ -52,7 +52,7 @@ public:
 
     inline CONST
     D3DVERTEXELEMENT9* GetSemanticElement( UINT Usage, UINT UsageIndex );
-    //simple function that gives part of the decl back 
+    //simple function that gives part of the decl back
     inline CONST
     D3DVERTEXELEMENT9* GetIndexElement( UINT Index );
 
@@ -140,7 +140,7 @@ const BYTE x_rgcbFields[] =
     3, // D3DDECLTYPE_UDEC3,         // 3D unsigned 10 10 10 format expanded to (value, value, value, 1)
     3, // D3DDECLTYPE_DEC3N,         // 3D signed 10 10 10 format normalized and expanded to (v[0]/511.0, v[1]/511.0, v[2]/511.0, 1)
     2, // D3DDECLTYPE_FLOAT16_2,     // 2D 16 bit float expanded to (value, value, 0, 1 )
-    4, // D3DDECLTYPE_FLOAT16_4,     // 4D 16 bit float 
+    4, // D3DDECLTYPE_FLOAT16_4,     // 4D 16 bit float
     0, // D3DDECLTYPE_UNKNOWN,       // Unknown
 };
 
@@ -225,7 +225,7 @@ const BYTE x_rgcbTypeSizes[] =
     4, // D3DDECLTYPE_UDEC3,         // 3D unsigned 10 10 10 format expanded to (value, value, value, 1)
     4, // D3DDECLTYPE_DEC3N,         // 3D signed 10 10 10 format normalized and expanded to (v[0]/511.0, v[1]/511.0, v[2]/511.0, 1)
     4, // D3DDECLTYPE_FLOAT16_2,     // 2D 16 bit float expanded to (value, value, 0, 1 )
-    8, // D3DDECLTYPE_FLOAT16_4,     // 4D 16 bit float 
+    8, // D3DDECLTYPE_FLOAT16_4,     // 4D 16 bit float
     0, // D3DDECLTYPE_UNUSED,        // Unused
 };
 

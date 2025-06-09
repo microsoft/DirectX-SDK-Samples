@@ -41,7 +41,7 @@ HRESULT CGPUBC6HEncoder::Initialize( ID3D11Device* pDevice, ID3D11DeviceContext*
     m_pDevice = pDevice;
     m_pContext = pContext;
 
-    // Compile and create Compute Shader 
+    // Compile and create Compute Shader
     printf( "\tCreating Compute Shaders..." );
     V_RETURN( CreateComputeShaderCached( L"BC6HEncode.hlsl", "TryModeG10CS", "cs_4_0", m_pDevice, &m_pTryModeG10CS ) );
     V_RETURN( CreateComputeShaderCached( L"BC6HEncode.hlsl", "TryModeLE10CS", "cs_4_0", m_pDevice, &m_pTryModeLE10CS ) );
@@ -68,7 +68,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncodeAndSave( ID3D11Texture2D* pSourceTexture,
 
     printf( "\tEncoding to BC6H..." );
     V_RETURN( GPU_BC6HEncode( m_pDevice, m_pContext,
-                              pSourceTexture, 
+                              pSourceTexture,
                               fmtEncode, &m_pEncodedTextureAsBuf ) );
     printf( "done\n" );
 
@@ -82,7 +82,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncodeAndSave( ID3D11Texture2D* pSourceTexture,
 }
 
 HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceContext* pContext,
-                                         ID3D11Texture2D* pSrcTexture, 
+                                         ID3D11Texture2D* pSrcTexture,
                                          DXGI_FORMAT dstFormat, ID3D11Buffer** ppDstTextureAsBufOut )
 {
     ID3D11ShaderResourceView* pSRV = NULL;
@@ -90,9 +90,9 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
     ID3D11UnorderedAccessView* pUAV = NULL;
     ID3D11UnorderedAccessView* pErrBestModeUAV[2] = { NULL, NULL };
     ID3D11ShaderResourceView* pErrBestModeSRV[2] = { NULL, NULL };
-    ID3D11Buffer* pCBCS = NULL;        
+    ID3D11Buffer* pCBCS = NULL;
 
-    if ( !(dstFormat == DXGI_FORMAT_BC6H_SF16 || dstFormat == DXGI_FORMAT_BC6H_UF16) || 
+    if ( !(dstFormat == DXGI_FORMAT_BC6H_SF16 || dstFormat == DXGI_FORMAT_BC6H_UF16) ||
          ppDstTextureAsBufOut == NULL )
         return E_INVALIDARG;
 
@@ -108,7 +108,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
         SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_TEXTURE2D;
         SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
         SRVDesc.Texture2D.MipLevels = 1;
-        SRVDesc.Texture2D.MostDetailedMip = 0;        
+        SRVDesc.Texture2D.MostDetailedMip = 0;
         V_GOTO( pDevice->CreateShaderResourceView( pSrcTexture, &SRVDesc, &pSRV ) )
 #if defined(DEBUG) || defined(PROFILE)
         if ( pSRV )
@@ -140,7 +140,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
 #endif
     }
 
-    // Create UAV of the output resources    
+    // Create UAV of the output resources
     {
         D3D11_UNORDERED_ACCESS_VIEW_DESC UAVDesc;
         ZeroMemory( &UAVDesc, sizeof( UAVDesc ) );
@@ -169,7 +169,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
         SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
         SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
         SRVDesc.Buffer.FirstElement = 0;
-        SRVDesc.Buffer.NumElements = sbOutDesc.ByteWidth / sbOutDesc.StructureByteStride;     
+        SRVDesc.Buffer.NumElements = sbOutDesc.ByteWidth / sbOutDesc.StructureByteStride;
         V_GOTO( pDevice->CreateShaderResourceView( pErrBestModeBuffer[0], &SRVDesc, &pErrBestModeSRV[0] ) );
         V_GOTO( pDevice->CreateShaderResourceView( pErrBestModeBuffer[1], &SRVDesc, &pErrBestModeSRV[1] ) );
 
@@ -195,7 +195,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
         if ( pCBCS )
             pCBCS->SetPrivateData( WKPDID_D3DDebugObjectName, sizeof( "BC6HEncode" ) - 1, "BC6HEncode" );
 #endif
-    }       
+    }
 
     const INT MAX_BLOCK_BATCH = 64;
 	INT num_total_blocks = texSrcDesc.Width / BLOCK_SIZE_X * texSrcDesc.Height / BLOCK_SIZE_Y;
@@ -205,7 +205,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
     {
         INT n = __min( num_blocks, MAX_BLOCK_BATCH );
         UINT uThreadGroupCount = n;
-        
+
         {
             D3D11_MAPPED_SUBRESOURCE cbMapped;
             pContext->Map( pCBCS, 0, D3D11_MAP_WRITE_DISCARD, 0, &cbMapped );
@@ -250,7 +250,7 @@ HRESULT CGPUBC6HEncoder::GPU_BC6HEncode( ID3D11Device* pDevice, ID3D11DeviceCont
 
         start_block_id += n;
         num_blocks -= n;
-    }   
+    }
 
 quit:
     SAFE_RELEASE(pSRV);
@@ -277,9 +277,9 @@ HRESULT CGPUBC6HEncoder::GPU_SaveToFile( ID3D11Device* pDevice, ID3D11DeviceCont
     // As BC6H or BC7 can only be managed by feature level 11 device
     ID3D11Device* pDeviceFL11 = NULL;
     ID3D11DeviceContext* pContextFL11 = NULL;
-    
+
     ID3D11Texture2D* pDstTexture = NULL;
-    
+
     if ( pDevice->GetFeatureLevel() >= D3D_FEATURE_LEVEL_11_0 )
     {
         // If we are already on a FL11 device, use it directly
@@ -309,7 +309,7 @@ HRESULT CGPUBC6HEncoder::GPU_SaveToFile( ID3D11Device* pDevice, ID3D11DeviceCont
                                         D3D11_SDK_VERSION,           // SDK version
                                         &pDeviceFL11,                // Device out
                                         &flOut,                      // Actual feature level created
-                                        &pContextFL11 );             // Context out 
+                                        &pContextFL11 );             // Context out
         if ( FAILED( hr ) )
             return hr;
     }
@@ -333,7 +333,7 @@ HRESULT CGPUBC6HEncoder::GPU_SaveToFile( ID3D11Device* pDevice, ID3D11DeviceCont
     D3D11_MAPPED_SUBRESOURCE mappedDst;
 
     pContext->Map( pReadbackbuf, 0, D3D11_MAP_READ, 0, &mappedSrc );
-    pContextFL11->Map( pDstTexture, 0, D3D11_MAP_WRITE, 0, &mappedDst );    
+    pContextFL11->Map( pDstTexture, 0, D3D11_MAP_WRITE, 0, &mappedDst );
     memcpy( mappedDst.pData, mappedSrc.pData, desc.Height * desc.Width * sizeof(BufferBC6H) / BLOCK_SIZE );
     pContext->Unmap( pReadbackbuf, 0 );
     pContextFL11->Unmap( pDstTexture, 0 );
@@ -356,7 +356,7 @@ HRESULT CGPUBC6HDecoder::Initialize( ID3D11Device* pDevice, ID3D11DeviceContext*
     m_pDevice = pDevice;
     m_pContext = pContext;
 
-    // Compile and create Compute Shader 
+    // Compile and create Compute Shader
     printf( "\tCreating Compute Shaders..." );
     V_RETURN( CreateComputeShaderCached( L"BC6HDecode.hlsl", "main", "cs_4_0", m_pDevice, &m_pCS ) );
     printf( "done\n" );
@@ -383,7 +383,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSave( ID3D11Texture2D* pSourceTexture,
     // Since pSourceTexture is a BC6H file, and CS4x cannot sample from it, we have to convert
     // it to a resource type which can be accessed
     ID3D11Buffer* pBufferInput = NULL;
-    ID3D11Device* pSrcTexDevice = NULL;    
+    ID3D11Device* pSrcTexDevice = NULL;
     ID3D11DeviceContext* pSrcTexContext = NULL;
     pSourceTexture->GetDevice( &pSrcTexDevice ); pSrcTexDevice->Release();
     pSrcTexDevice->GetImmediateContext( &pSrcTexContext ); pSrcTexContext->Release();
@@ -394,7 +394,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSave( ID3D11Texture2D* pSourceTexture,
         D3D11_BUFFER_DESC sbInputDesc;
         ZeroMemory( &sbInputDesc, sizeof( sbInputDesc ) );
         sbInputDesc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
-        sbInputDesc.CPUAccessFlags = 0;                
+        sbInputDesc.CPUAccessFlags = 0;
         sbInputDesc.MiscFlags = D3D11_RESOURCE_MISC_BUFFER_STRUCTURED;
         sbInputDesc.StructureByteStride = sizeof( BufferBC6H );
         sbInputDesc.ByteWidth = texSrcDesc.Height * texSrcDesc.Width / BLOCK_SIZE * sbInputDesc.StructureByteStride;
@@ -440,14 +440,14 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextur
     pSrcTextureAsBuf->GetDesc( &sbInputDesc );
 
     // Create a SRV of the input buffer
-    
+
     D3D11_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-    {        
+    {
         ZeroMemory( &SRVDesc, sizeof( SRVDesc ) );
         SRVDesc.Buffer.FirstElement = 0;
         SRVDesc.Buffer.NumElements = sbInputDesc.ByteWidth / sizeof( BufferBC6H );
         SRVDesc.Format = DXGI_FORMAT_UNKNOWN;
-        SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;        
+        SRVDesc.ViewDimension = D3D11_SRV_DIMENSION_BUFFER;
         V_GOTO( m_pDevice->CreateShaderResourceView( pSrcTextureAsBuf, &SRVDesc, &pSRV ) );
 
 #if defined(DEBUG) || defined(PROFILE)
@@ -456,7 +456,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextur
 #endif
     }
 
-    // Create output buffer     
+    // Create output buffer
     D3D11_BUFFER_DESC sbOutDesc;
     {
         ZeroMemory( &sbOutDesc, sizeof( sbOutDesc ) );
@@ -474,7 +474,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextur
 #endif
     }
 
-    // Create a UAV of the output buffer    
+    // Create a UAV of the output buffer
     {
         D3D11_UNORDERED_ACCESS_VIEW_DESC UAVDesc;
         ZeroMemory( &UAVDesc, sizeof( UAVDesc ) );
@@ -497,7 +497,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextur
         cbDesc.Usage = D3D11_USAGE_DYNAMIC;
         cbDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
         cbDesc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-        cbDesc.MiscFlags = 0;    
+        cbDesc.MiscFlags = 0;
         cbDesc.ByteWidth = sizeof( UINT ) * 8;
         V_GOTO( m_pDevice->CreateBuffer( &cbDesc, NULL, &pCBCS ) );
 
@@ -554,7 +554,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextur
 		for ( UINT i = 0; i < uHeight; i ++ )
 			for ( UINT j = 0; j < uWidth; j ++ )
 				for (UINT k = 0; k < NCHAN; k ++)
-					aFloat16[(i * uWidth + j) * NCHAN + k] 
+					aFloat16[(i * uWidth + j) * NCHAN + k]
 						= *(reinterpret_cast<D3DXFLOAT16*>(&((pData[i * uWidth + j].color[k]))));
 
 		m_pContext->Unmap( pBufferDump, 0 );
@@ -578,7 +578,7 @@ HRESULT CGPUBC6HDecoder::GPU_BC6HDecodeAndSaveInternal( ID3D11Buffer* pSrcTextur
 
 		V_GOTO( m_pContext->Map( m_pRestoredTexture, 0, D3D11_MAP_WRITE, 0, &mappedResource) );
         for ( UINT i = 0; i < uHeight; ++i )
-		    memcpy( (BYTE*)mappedResource.pData + i * mappedResource.RowPitch, (BYTE*)aFloat16 + i * uWidth * sizeof(D3DXFLOAT16) * 4, 
+		    memcpy( (BYTE*)mappedResource.pData + i * mappedResource.RowPitch, (BYTE*)aFloat16 + i * uWidth * sizeof(D3DXFLOAT16) * 4,
                     uWidth * sizeof(D3DXFLOAT16) * 4);
 		m_pContext->Unmap( m_pRestoredTexture, 0 );
 

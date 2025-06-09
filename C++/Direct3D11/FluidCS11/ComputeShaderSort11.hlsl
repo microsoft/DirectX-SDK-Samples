@@ -2,7 +2,7 @@
 // File: ComputeShaderSort11.hlsl
 //
 // This file contains the compute shaders to perform GPU sorting using DirectX 11.
-// 
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -33,15 +33,15 @@ RWStructuredBuffer<unsigned int> Data : register( u0 );
 groupshared unsigned int shared_data[BITONIC_BLOCK_SIZE];
 
 [numthreads(BITONIC_BLOCK_SIZE, 1, 1)]
-void BitonicSort( uint3 Gid : SV_GroupID, 
-                  uint3 DTid : SV_DispatchThreadID, 
-                  uint3 GTid : SV_GroupThreadID, 
+void BitonicSort( uint3 Gid : SV_GroupID,
+                  uint3 DTid : SV_DispatchThreadID,
+                  uint3 GTid : SV_GroupThreadID,
                   uint GI : SV_GroupIndex )
 {
     // Load shared data
     shared_data[GI] = Data[DTid.x];
     GroupMemoryBarrierWithGroupSync();
-    
+
     // Sort the shared data
     for (unsigned int j = g_iLevel >> 1 ; j > 0 ; j >>= 1)
     {
@@ -50,7 +50,7 @@ void BitonicSort( uint3 Gid : SV_GroupID,
         shared_data[GI] = result;
         GroupMemoryBarrierWithGroupSync();
     }
-    
+
     // Store shared data
     Data[DTid.x] = shared_data[GI];
 }
@@ -61,9 +61,9 @@ void BitonicSort( uint3 Gid : SV_GroupID,
 groupshared unsigned int transpose_shared_data[TRANSPOSE_BLOCK_SIZE * TRANSPOSE_BLOCK_SIZE];
 
 [numthreads(TRANSPOSE_BLOCK_SIZE, TRANSPOSE_BLOCK_SIZE, 1)]
-void MatrixTranspose( uint3 Gid : SV_GroupID, 
-                      uint3 DTid : SV_DispatchThreadID, 
-                      uint3 GTid : SV_GroupThreadID, 
+void MatrixTranspose( uint3 Gid : SV_GroupID,
+                      uint3 DTid : SV_DispatchThreadID,
+                      uint3 GTid : SV_GroupThreadID,
                       uint GI : SV_GroupIndex )
 {
     transpose_shared_data[GI] = Input[DTid.y * g_iWidth + DTid.x];

@@ -66,7 +66,7 @@
 
 
 //--------------------------------------------------------------------------------------
-// Dialog for selection of device settings 
+// Dialog for selection of device settings
 // Use DXUTGetD3DSettingsDialog() to access global instance
 // To control the contents of the dialog, use the CD3D9Enumeration class.
 //--------------------------------------------------------------------------------------

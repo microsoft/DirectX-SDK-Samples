@@ -93,7 +93,7 @@ void RenderScenePS( float4 Diffuse : COLOR,
     // Output pixel color
     //
     oCol = tex2D( g_samScene, Tex ) * Diffuse;
-    
+
     //
     // Output normal
     //
@@ -117,7 +117,7 @@ void RenderScenePS_ColorNormal( float4 Diffuse : COLOR,
     // Output pixel color
     //
     oCol = tex2D( g_samScene, Tex ) * Diffuse;
-    
+
     //
     // Output normal
     //

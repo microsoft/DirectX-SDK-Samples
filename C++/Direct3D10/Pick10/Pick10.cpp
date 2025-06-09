@@ -11,8 +11,8 @@
 #include "SDKmisc.h"
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 //--------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ struct INTERSECTION
     FLOAT tu, tv;                 // texture coords of intersection
 };
 
-// For simplicity's sake, we limit the number of simultaneously intersected 
+// For simplicity's sake, we limit the number of simultaneously intersected
 // triangles to 16
 #define MAX_INTERSECTIONS 16
 #define CAMERA_DISTANCE 3.5f
@@ -91,7 +91,7 @@ CDXUTDialog                 g_SampleUI;             // dialog for sample specifi
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( UINT Adapter, UINT Output, D3D10_DRIVER_TYPE DeviceType,
                                        DXGI_FORMAT BackBufferFormat, bool bWindowed, void* pUserContext );
@@ -118,7 +118,7 @@ bool IntersectTriangle( const D3DXVECTOR3& orig, const D3DXVECTOR3& dir,
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -129,12 +129,12 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 #endif
 
     // Set the callback functions. These functions allow DXUT to notify
-    // the application about device changes, user input, and windows messages.  The 
-    // callbacks are optional so you need only set callbacks for events you're interested 
-    // in. However, if you don't handle the device reset/lost callbacks then the sample 
-    // framework won't be able to reset your device since the application must first 
-    // release all device resources before resetting.  Likewise, if you don't handle the 
-    // device created/destroyed callbacks then DXUT won't be able to 
+    // the application about device changes, user input, and windows messages.  The
+    // callbacks are optional so you need only set callbacks for events you're interested
+    // in. However, if you don't handle the device reset/lost callbacks then the sample
+    // framework won't be able to reset your device since the application must first
+    // release all device resources before resetting.  Likewise, if you don't handle the
+    // device created/destroyed callbacks then DXUT won't be able to
     // recreate your device resources.
 
     DXUTSetCallbackD3D10DeviceAcceptable( IsDeviceAcceptable );
@@ -154,7 +154,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
     InitApp();
 
-    // Initialize DXUT and create the desired Win32 window and Direct3D 
+    // Initialize DXUT and create the desired Win32 window and Direct3D
     // device for the application. Calling each of these functions is optional, but they
     // allow you to set several options which control the behavior of the framework.
     DXUTInit( true, true ); // Parse the command line and show msgboxes
@@ -162,8 +162,8 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     DXUTCreateWindow( L"Pick10" );
     DXUTCreateDevice( true, 640, 480 );
 
-    // Pass control to DXUT for handling the message pump and 
-    // dispatching render calls. DXUT will call your FrameMove 
+    // Pass control to DXUT for handling the message pump and
+    // dispatching render calls. DXUT will call your FrameMove
     // and FrameRender callback when there is idle time between handling window messages.
     DXUTMainLoop();
 
@@ -175,7 +175,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -264,8 +264,8 @@ HRESULT CALLBACK OnCreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFACE_DE
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
@@ -297,7 +297,7 @@ HRESULT CALLBACK OnCreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFACE_DE
     V_RETURN( g_pMaterialDiffuseColor->SetFloatVector( ( float* )&colorMtrl ) );
     V_RETURN( g_pLightDir->SetRawValue( (float*)&vLightDir, 0, sizeof( D3DXVECTOR3) ) );
     V_RETURN( g_pLightDiffuse->SetFloatVector( (float*)&vLightDiffuse ) );
-    
+
      // Create our vertex input layout
     const D3D10_INPUT_ELEMENT_DESC layout[] =
     {
@@ -306,8 +306,8 @@ HRESULT CALLBACK OnCreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFACE_DE
         { "TEXCOORD",  0, DXGI_FORMAT_R32G32_FLOAT,    0, 24, D3D10_INPUT_PER_VERTEX_DATA, 0 },
     };
 
-    // Create a D3DX10 mesh to demonstrate intersection using D3DX.  We still use the 
-    // DXUTSDKMesh for rendering as it is better suited for that purpose, and we can optionally 
+    // Create a D3DX10 mesh to demonstrate intersection using D3DX.  We still use the
+    // DXUTSDKMesh for rendering as it is better suited for that purpose, and we can optionally
     // use the vertex information from the DXUTSDKMesh for intersecting manually.
     D3DX10CreateMesh( pd3dDevice, layout, 3, layout[0].SemanticName, (UINT)g_Mesh.GetNumVertices(0,0), (UINT)g_Mesh.GetNumIndices(0)/3, D3DX10_MESH_32_BIT, &g_pD3DXMesh);
     g_pD3DXMesh->SetVertexData(0, (D3DVERTEX*)g_Mesh.GetRawVerticesAt(0) );
@@ -344,7 +344,7 @@ HRESULT CALLBACK OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain* p
 
     V_RETURN( g_DialogResourceManager.OnD3D10ResizedSwapChain( pd3dDevice, pBackBufferSurfaceDesc ) );
     V_RETURN( g_SettingsDlg.OnD3D10ResizedSwapChain( pd3dDevice, pBackBufferSurfaceDesc ) );
-    
+
     // Create a sprite to help batch calls when drawing many lines of text
     V_RETURN( D3DX10CreateSprite( pd3dDevice, 512, &g_pTextSprite ) );
 
@@ -364,9 +364,9 @@ HRESULT CALLBACK OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain* p
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
@@ -384,9 +384,9 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called at the end of every frame to perform all the 
-// rendering calls for the scene, and it will also be called if the window needs to be 
-// repainted. 
+// This callback function will be called at the end of every frame to perform all the
+// rendering calls for the scene, and it will also be called if the window needs to be
+// repainted.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameRender( ID3D10Device* pd3dDevice, double fTime, float fElapsedTime, void* pUserContext )
 {
@@ -407,7 +407,7 @@ void CALLBACK OnFrameRender( ID3D10Device* pd3dDevice, double fTime, float fElap
     // Check for picked triangles
     Pick();
 
-    // Clear the render target and the zbuffer 
+    // Clear the render target and the zbuffer
     float ClearColor[4] = { 0.0f, 0.25f, 0.25f, 0.55f };
     ID3D10RenderTargetView* pRTV = DXUTGetD3D10RenderTargetView();
     pd3dDevice->ClearRenderTargetView( pRTV, ClearColor );
@@ -440,7 +440,7 @@ void CALLBACK OnFrameRender( ID3D10Device* pd3dDevice, double fTime, float fElap
         UINT Offsets[1];
         Strides[0] = sizeof(D3DVERTEX);
         Offsets[0] = 0;
-     
+
         pd3dDevice->IASetVertexBuffers(0, 1, &g_pVB, Strides, Offsets);
         pd3dDevice->IASetPrimitiveTopology( D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
         pd3dDevice->Draw( 3*g_nNumIntersections, 0 );
@@ -448,7 +448,7 @@ void CALLBACK OnFrameRender( ID3D10Device* pd3dDevice, double fTime, float fElap
         // Set render mode to wireframe
         g_pTechRenderSceneWireframe->GetPassByIndex( 0 )->Apply( 0 );
     }
- 
+
     UINT Strides[1];
     UINT Offsets[1];
     ID3D10Buffer* pVB[1];
@@ -493,27 +493,27 @@ void CALLBACK OnFrameRender( ID3D10Device* pd3dDevice, double fTime, float fElap
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
 {
     // The helper object simply helps keep track of text position, and color
     // and then it calls pFont->DrawText( m_pSprite, strMsg, -1, &rc, DT_NOCLIP, m_clr );
-    // If NULL is passed in as the sprite object, then it will work however the 
+    // If NULL is passed in as the sprite object, then it will work however the
     // pFont->DrawText() will not be batched together.  Batching calls will improves performance.
     CDXUTTextHelper txtHelper( g_pFont, g_pTextSprite, 15 );
-     
+
     // Output statistics
     txtHelper.Begin();
-     
+
     txtHelper.SetInsertionPos( 5, 5 );
     txtHelper.SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     txtHelper.DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
     txtHelper.DrawTextLine( DXUTGetDeviceStats() );
-    
+
     txtHelper.SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 1.0f, 1.0f ) );
-    
+
     if( g_nNumIntersections < 1 )
     {
         txtHelper.DrawTextLine( L"Use mouse to pick a polygon" );
@@ -539,8 +539,8 @@ void RenderText()
 
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -573,7 +573,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
     {
         case WM_LBUTTONDOWN:
         {
-            // Capture the mouse, so if the mouse button is 
+            // Capture the mouse, so if the mouse button is
             // released outside the window, we'll get the WM_LBUTTONUP message
             DXUTGetGlobalTimer()->Stop();
             SetCapture( hWnd );
@@ -605,7 +605,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 //--------------------------------------------------------------------------------------
 // As a convenience, DXUT inspects the incoming windows messages for
 // keystroke messages and decodes the message parameters to pass relevant keyboard
-// messages to the application.  The framework does not remove the underlying keystroke 
+// messages to the application.  The framework does not remove the underlying keystroke
 // messages, which are still passed to the application's MsgProc callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK KeyboardProc( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext )
@@ -645,7 +645,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D10 resources created in OnResizedSwapChain 
+// Release D3D10 resources created in OnResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnReleasingSwapChain( void* pUserContext )
 {
@@ -654,10 +654,10 @@ void CALLBACK OnReleasingSwapChain( void* pUserContext )
 }
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
-// been destroyed, which generally happens as a result of application termination or 
-// windowed/full screen toggles. Resources created in the OnCreateDevice callback 
-// should be released here. 
+// This callback function will be called immediately after the Direct3D device has
+// been destroyed, which generally happens as a result of application termination or
+// windowed/full screen toggles. Resources created in the OnCreateDevice callback
+// should be released here.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {
@@ -733,7 +733,7 @@ HRESULT Pick()
         if( g_bUseD3DXIntersect )
         {
             // When calling D3DXIntersect, one can get just the closest intersection and not
-            // need to work with a D3DXBUFFER.  Or, to get all intersections between the ray and 
+            // need to work with a D3DXBUFFER.  Or, to get all intersections between the ray and
             // the mesh, one can use a D3DXBUFFER to receive all intersections.  We show both
             // methods.
             if( !g_bAllHits )
@@ -854,7 +854,7 @@ HRESULT Pick()
 
 
         SAFE_RELEASE( pMesh );
-        
+
     }
 
     return S_OK;
@@ -863,7 +863,7 @@ HRESULT Pick()
 
 //--------------------------------------------------------------------------------------
 // Given a ray origin (orig) and direction (dir), and three vertices of a triangle, this
-// function returns TRUE and the interpolated texture coordinates if the ray intersects 
+// function returns TRUE and the interpolated texture coordinates if the ray intersects
 // the triangle
 //--------------------------------------------------------------------------------------
 bool IntersectTriangle( const D3DXVECTOR3& orig, const D3DXVECTOR3& dir,

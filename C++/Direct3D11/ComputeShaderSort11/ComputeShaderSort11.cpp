@@ -90,7 +90,7 @@ HRESULT InitDevice()
                                  L"Compute Shader Sort", MB_ICONQUESTION | MB_YESNO );
         if( result == IDNO )
             return E_FAIL;
-        
+
         // Create a reference device if hardware is not available
         // This DXUT helper calls D3D11CreateDevice via LoadLibrary
         hr = DXUT_Dynamic_D3D11CreateDevice( NULL, D3D_DRIVER_TYPE_REFERENCE, NULL, createDeviceFlags,
@@ -120,14 +120,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, NULL, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -306,7 +306,7 @@ void GPUSort()
         g_pd3dImmediateContext->CSSetShader( g_pComputeShaderBitonic, NULL, 0 );
         g_pd3dImmediateContext->Dispatch( NUM_ELEMENTS / BITONIC_BLOCK_SIZE, 1, 1 );
     }
-    
+
     // Then sort the rows and columns for the levels > than the block size
     // Transpose. Sort the Columns. Transpose. Sort the Rows.
     for( UINT level = (BITONIC_BLOCK_SIZE * 2) ; level <= NUM_ELEMENTS ; level = level * 2 )
@@ -340,9 +340,9 @@ void GPUSort()
     }
 
     // Download the data
-    D3D11_MAPPED_SUBRESOURCE MappedResource = {0}; 
+    D3D11_MAPPED_SUBRESOURCE MappedResource = {0};
     g_pd3dImmediateContext->CopyResource( g_pReadBackBuffer, g_pBuffer1 );
-    g_pd3dImmediateContext->Map( g_pReadBackBuffer, 0, D3D11_MAP_READ, 0, &MappedResource );       
+    g_pd3dImmediateContext->Map( g_pReadBackBuffer, 0, D3D11_MAP_READ, 0, &MappedResource );
     memcpy( &results[0], MappedResource.pData, NUM_ELEMENTS * sizeof(UINT) );
     g_pd3dImmediateContext->Unmap( g_pReadBackBuffer, 0 );
 }
@@ -376,7 +376,7 @@ int __cdecl wmain()
     HRESULT hr = InitDevice();
     if ( FAILED (hr) )
     {
-        if ( hr ==  DXUTERR_NODIRECT3D11 ) 
+        if ( hr ==  DXUTERR_NODIRECT3D11 )
         {
             OSVERSIONINFOEX osv;
             memset( &osv, 0, sizeof(osv) );
@@ -384,7 +384,7 @@ int __cdecl wmain()
             GetVersionEx( (LPOSVERSIONINFO)&osv );
 
             if ( ( osv.dwMajorVersion > 6 )
-                || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 ) 
+                || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 )
                 || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion == 0 && osv.dwBuildNumber > 6002 ) )
             {
                 MessageBox( 0, L"Direct3D 11 components were not found.", L"Error", MB_ICONEXCLAMATION );

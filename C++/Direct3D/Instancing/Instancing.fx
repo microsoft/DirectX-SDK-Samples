@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: Instancing.fx
 //
-// The effect file for the Instancing sample.  
-// 
+// The effect file for the Instancing sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

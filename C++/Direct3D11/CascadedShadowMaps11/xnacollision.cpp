@@ -1,8 +1,8 @@
 //-------------------------------------------------------------------------------------
 // XNACollision.cpp
-//  
+//
 // An opimtized collision library based on XNAMath
-//  
+//
 // Microsoft XNA Developer Connection
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //-------------------------------------------------------------------------------------

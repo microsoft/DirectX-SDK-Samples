@@ -466,7 +466,7 @@ bool RayCastForDecalPosition( Ray ray, Model model, D3DXVECTOR3* pLocation, Tria
     float tMin = maxRayDistance;
     Intersection rayTriIntersection;
     rayTriIntersection.valid = false;
-    
+
     // test for a ray/triangle intersection with the mesh polys
     for( UINT i = 0; i < model.triCount; i++ )
     {
@@ -573,7 +573,7 @@ bool RayCastForDecalPosition( Ray ray, Model model, D3DXVECTOR3* pLocation, Tria
 }
 
 //--------------------------------------------------------------------------------------
-// Given an input vector, creates an orthonormal basis which can be used as a 
+// Given an input vector, creates an orthonormal basis which can be used as a
 // tangent space
 //--------------------------------------------------------------------------------------
 void CreateOrthonormalBasis( D3DXVECTOR3* v, D3DXVECTOR3* vNormal, D3DXVECTOR3* vBinormal, D3DXVECTOR3* vTangent )
@@ -683,7 +683,7 @@ void ConvertSDKMeshToModel( CDXUTSDKMesh* pCMesh, Model* pModel )
     {
         pModel->textured = false;
     }
-  
+
     UINT IndexCount = ( UINT )pSubset->IndexCount;
     UINT IndexStart = ( UINT )pSubset->IndexStart;
 
@@ -695,7 +695,7 @@ void ConvertSDKMeshToModel( CDXUTSDKMesh* pCMesh, Model* pModel )
     D3DXVECTOR3 vLower = pMesh->BoundingBoxCenter - pMesh->BoundingBoxExtents;
     pModel->bounds.bottomLeft = pMesh->BoundingBoxCenter - pMesh->BoundingBoxExtents;
     pModel->bounds.topRight = pMesh->BoundingBoxCenter + pMesh->BoundingBoxExtents;
-    
+
     Triangle* pTri = pModel->triArray;
     Vertex* pVBData = (Vertex*)pCMesh->GetRawVerticesAt( 0 );
     D3DXVECTOR3 vEdge1;

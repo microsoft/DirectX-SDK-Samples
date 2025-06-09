@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: sysinfo.h
 //
-// Desc: 
+// Desc:
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -73,7 +73,7 @@ struct SysInfo
     LONG m_nDSoundDebugLevel;
     LONG m_nDShowDebugLevel;
 
-    // English only or un-localizable strings 
+    // English only or un-localizable strings
     WCHAR                       m_szWindowsDir[MAX_PATH];             // location of windows dir
     WCHAR                       m_szBuildLab[100];                    // Win2k build lab (not localizable)
     WCHAR                       m_szDxDiagVersion[100];               // DxDiag version (not localizable)
@@ -87,8 +87,8 @@ struct SysInfo
     WCHAR                       m_szDirectXVersionEnglish[100];       // DirectX version (english)
     WCHAR                       m_szDirectXVersionLongEnglish[100];   // long DirectX version (english)
 
-    // strings localized to OS language 
-    WCHAR                       m_szMachineNameLocalized[200];        // machine name 
+    // strings localized to OS language
+    WCHAR                       m_szMachineNameLocalized[200];        // machine name
     WCHAR                       m_szOSLocalized[100];                 // Formatted version of platform (localized)
     WCHAR                       m_szOSExLocalized[100];               // Formatted version of platform, version, build num (localized)
     WCHAR                       m_szOSExLongLocalized[300];           // Formatted version of platform, version, build num, patch, lab (localized)
@@ -96,16 +96,16 @@ struct SysInfo
     WCHAR                       m_szPageFileLocalized[100];           // Formatted version of pagefile (localized)
     WCHAR                       m_szTimeLocalized[100];               // Date/time, localized for UI (localized)
 
-    // strings localized to english 
-    WCHAR                       m_szMachineNameEnglish[200];          // machine name 
+    // strings localized to english
+    WCHAR                       m_szMachineNameEnglish[200];          // machine name
     WCHAR                       m_szOSEnglish[100];                   // Formatted version of platform (english)
     WCHAR                       m_szOSExEnglish[100];                 // Formatted version of platform, version, build num (english)
     WCHAR                       m_szOSExLongEnglish[300];             // Formatted version of platform, version, build num, patch, lab (english)
-    WCHAR                       m_szLanguagesEnglish[200];            // Formatted version of m_szLanguage, m_szLanguageRegional (english) 
+    WCHAR                       m_szLanguagesEnglish[200];            // Formatted version of m_szLanguage, m_szLanguageRegional (english)
     WCHAR                       m_szPageFileEnglish[100];             // Formatted version of pagefile (english)
     WCHAR                       m_szTimeEnglish[100];                 // Date/time, dd/mm/yyyy hh:mm:ss for saved report (english)
 
-    CPUExtendedFunctionBitmask  m_ExtFuncBitmasks[16];  // 128-bit CPU Extended Function Bitmasks (array of 16-byte structs) 
+    CPUExtendedFunctionBitmask  m_ExtFuncBitmasks[16];  // 128-bit CPU Extended Function Bitmasks (array of 16-byte structs)
 
     DWORD m_nElementCount;
 };

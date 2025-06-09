@@ -63,7 +63,7 @@ void VS( in  float3 pos      : POSITION,
     // Calculate the tangent matrix
     float3x3 matTSpace = transpose(float3x3( Tangent_w, Binormal_w, Normal_w  ));
 
-    // The Eye Position in World space is the last row of the 
+    // The Eye Position in World space is the last row of the
     // full-inverse of the view transform
     float3 EyePos_w = matViewInv[3];
     float3 ToEye_w = normalize( EyePos_w - (float3)Pos_w );
@@ -108,7 +108,7 @@ float4 PS( in  float2 iT0      : TEXCOORD0,
 {
 	// Sample the diffuse color from the texture
     float3 DiffuseT = tex2D( diffuse_sampler, iT0 );
-    
+
 	// Read the normal direction from the texture, unpack from 0,1 to -1,1
     float3 Normal  = tex2D( normal_sampler, iT1 ) * 2 - 1;
 
@@ -129,7 +129,7 @@ float4 PS( in  float2 iT0      : TEXCOORD0,
 	// Modulate the Diffuse and Specular colors by the material properties
 	float3 DiffuseC = (NdotL * I_d + I_a) * DiffuseT;
 	float3 SpecularC = (float3)Specular * NdotH;
-    
+
     // Pass the vertex color through as pixel color
     return float4( DiffuseC + SpecularC, 1.f);
 }

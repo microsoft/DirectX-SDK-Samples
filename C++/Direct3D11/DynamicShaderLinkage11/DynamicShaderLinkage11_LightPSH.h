@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: DynamicShaderLinkage11_LightPSH.h
 //
-// The pixel shader light header file for the DynamicShaderLinkage11 sample.  
-// 
+// The pixel shader light header file for the DynamicShaderLinkage11 sample.
+//
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 
@@ -12,11 +12,11 @@
 interface iBaseLight
 {
    float3 IlluminateAmbient(float3 vNormal);
-   
+
    float3 IlluminateDiffuse(float3 vNormal);
 
    float3 IlluminateSpecular(float3 vNormal, int specularPower );
-   
+
 };
 
 //--------------------------------------------------------------------------------------
@@ -24,18 +24,18 @@ interface iBaseLight
 //--------------------------------------------------------------------------------------
 class cAmbientLight : iBaseLight
 {
-   float3	m_vLightColor;     
+   float3	m_vLightColor;
    bool     m_bEnable;
-   
+
    float3 IlluminateAmbient(float3 vNormal);
-      
+
    float3 IlluminateDiffuse(float3 vNormal)
-   { 
+   {
       return (float3)0;
    }
 
    float3 IlluminateSpecular(float3 vNormal, int specularPower )
-   { 
+   {
       return (float3)0;
    }
 };
@@ -47,14 +47,14 @@ class cHemiAmbientLight : cAmbientLight
    float4   m_vDirUp;
 
    float3 IlluminateAmbient(float3 vNormal);
-   
+
 };
 
 class cDirectionalLight : cAmbientLight
 {
    // inherited float4 m_vLightColor is the LightColor
    float4 m_vLightDir;
-   
+
    float3 IlluminateDiffuse( float3 vNormal );
 
    float3 IlluminateSpecular( float3 vNormal, int specularPower );
@@ -64,10 +64,10 @@ class cDirectionalLight : cAmbientLight
 class cOmniLight : cAmbientLight
 {
    float3	m_vLightPosition;
-   float    radius;   
-   
+   float    radius;
+
    float3 IlluminateDiffuse( float3 vNormal );
-  
+
 };
 
 class cSpotLight : cAmbientLight
@@ -78,7 +78,7 @@ class cSpotLight : cAmbientLight
 
 class cEnvironmentLight : cAmbientLight
 {
-   float3  IlluminateSpecular( float3 vNormal, int specularPower );  
+   float3  IlluminateSpecular( float3 vNormal, int specularPower );
 };
 
 

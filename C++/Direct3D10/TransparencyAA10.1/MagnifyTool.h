@@ -35,8 +35,8 @@ public:
     ~MagnifyTool();
 
     // Set methods
-    void SetSourceResources( ID3D10Resource* pSourceRTResource, DXGI_FORMAT RTFormat, 
-        ID3D10Resource* pSourceDepthResource, DXGI_FORMAT DepthFormat, int nWidth, 
+    void SetSourceResources( ID3D10Resource* pSourceRTResource, DXGI_FORMAT RTFormat,
+        ID3D10Resource* pSourceDepthResource, DXGI_FORMAT DepthFormat, int nWidth,
         int nHeight, int nSamples );
     void SetPixelRegion( int nPixelRegion ) { m_Magnify.SetPixelRegion( nPixelRegion ); }
     void SetScale( int nScale ) { m_Magnify.SetScale( nScale ); }
@@ -48,8 +48,8 @@ public:
     // Hooks for the DX SDK Framework
     void InitApp( CDXUTDialogResourceManager* pResourceManager );
     HRESULT OnCreateDevice( ID3D10Device* pd3dDevice );
-    void OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain, 
-        const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext, 
+    void OnResizedSwapChain( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain,
+        const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext,
         int nPositionX, int nPositionY );
     void OnDestroyDevice();
     void OnReleasingSwapChain();
@@ -65,7 +65,7 @@ public:
 private:
 
     // Ensures the depth buffer is bindable as a shader resource
-    void CreateDepthStencil( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain, 
+    void CreateDepthStencil( ID3D10Device* pd3dDevice, IDXGISwapChain *pSwapChain,
         const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext );
 
     // UI helper methods

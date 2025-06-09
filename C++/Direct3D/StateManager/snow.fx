@@ -62,11 +62,11 @@ void VS( in  float3 pos      : POSITION,
     // Calculate the tangent matrix
     float3x3 matTSpace = transpose(float3x3( Tangent_w, Binormal_w, Normal_w  ));
 
-    // The Eye Position in World space is the last row of the 
+    // The Eye Position in World space is the last row of the
     // full-inverse of the view transform
     float3 EyePos_w = matViewInv[3];
     float3 ToEye_w = normalize( EyePos_w - (float3)Pos_w );
-    
+
     // Half Vector for the sparkly refections
     // The sparkles are computed by masking per-pixel specular with a specular mask
     // in the texture alpha channel.
@@ -102,7 +102,7 @@ float4 PS( in  float2 iT0      : TEXCOORD0,
 {
 	// Read the normal direction from the texture
 	float4 NormalMap = tex2D( normal_sampler, iT0 );
-    
+
     // Unpack the Normal, Light, and Half-Vector from 0,1 to -1,1
     float3 Normal  = NormalMap * 2 - 1;
     float3 ToLight = iToLight * 2 - 1;
@@ -110,7 +110,7 @@ float4 PS( in  float2 iT0      : TEXCOORD0,
 
     // Calculate the diffuse coefficient
     float NdotL = dot( Normal.rgb, ToLight);
-    
+
     // Calcuate the specular coefficient
     float NdotH = dot( Normal.rgb, Half );
     NdotH *= NdotH;
@@ -121,7 +121,7 @@ float4 PS( in  float2 iT0      : TEXCOORD0,
 	float3 DiffuseC = Diffuse* NdotL * I_d + I_a * Ambient;
 	float3 SpecularC = (float3)Specular * NdotH * NormalMap.a;
 
-	// Return the final color    
+	// Return the final color
     return float4( DiffuseC+SpecularC, 1.f);
 }
 

@@ -19,7 +19,7 @@ Comments:
 ******************************************************************************/
 #include <sas\sas.fxh>
 
-int GlobalParameter : SasGlobal                                                             
+int GlobalParameter : SasGlobal
 <
     int3 SasVersion = {1, 1, 0};
     bool SasUiVisible = false;
@@ -27,27 +27,27 @@ int GlobalParameter : SasGlobal
 
 
 /************* UN-TWEAKABLES **************/
-float4x4 World 
+float4x4 World
 <
-	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]"; 
-	bool SasUiVisible = false;
->;         
-
-float4x4 View 
-<
-	string SasBindAddress = "Sas.Camera.WorldToView"; 
+	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";
 	bool SasUiVisible = false;
 >;
 
-float4x4 Projection 
+float4x4 View
 <
-	string SasBindAddress = "Sas.Camera.Projection"; 
+	string SasBindAddress = "Sas.Camera.WorldToView";
 	bool SasUiVisible = false;
 >;
 
-SasPointLight PointLight 
+float4x4 Projection
 <
-	string SasBindAddress = "Sas.PointLight[0]"; 
+	string SasBindAddress = "Sas.Camera.Projection";
+	bool SasUiVisible = false;
+>;
+
+SasPointLight PointLight
+<
+	string SasBindAddress = "Sas.PointLight[0]";
 	bool SasUiVisible = false;
 >;
 
@@ -61,21 +61,21 @@ SasPointLight PointLight
 
 float3 DiffColor <
 	string SasUiLabel = "Primary Color";
-	string SasUiControl = "ColorPicker"; 
+	string SasUiControl = "ColorPicker";
 > = {0.5f, 0.5f, 0.5f};
 
 float3 SpecColor <
-	string SasUiControl = "ColorPicker"; 
+	string SasUiControl = "ColorPicker";
 	string SasUiLabel = "Fuzz";
 > = {0.7f, 0.7f, 0.75f};
 
 float3 SubColor <
-	string SasUiControl = "ColorPicker"; 
+	string SasUiControl = "ColorPicker";
 	string SasUiLabel = "Under-Color";
 > = {0.2f, 0.2f, 1.0f};
 
 float RollOff <	
-	string SasUiControl = "Slider"; 
+	string SasUiControl = "Slider";
     float UIMin = 0.0;
     float UIMax = 1.0;
     float UIStep = 0.05;
@@ -87,7 +87,7 @@ float RollOff <
 texture2D ColorTexture
 <
 	string SasUiLabel = "Color Texture";
-	string SasUiControl = "FilePicker"; 
+	string SasUiControl = "FilePicker";
 >;
 
 sampler2D ColorSampler = sampler_state
@@ -156,7 +156,7 @@ shadedVertexOutput velvetVS(appdata IN)
 
 vertexOutput simpleVS(appdata IN) {
     vertexOutput OUT;
-    
+
     float4x4 WorldIT = transpose(inverse(World));
     float4x4 ViewI = inverse(View);
     float4x4 WorldViewProj = mul(World, mul(View, Projection));
@@ -235,7 +235,7 @@ technique Textured
     }
 }
 
-technique Untextured 
+technique Untextured
 {
     pass p0
     {		

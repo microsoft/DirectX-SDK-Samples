@@ -36,7 +36,7 @@ VS_OUTPUT VSMain( VS_INPUT Input )
 }
 
 
-float2 PSMain (VS_OUTPUT Input) : SV_TARGET 
+float2 PSMain (VS_OUTPUT Input) : SV_TARGET
 {
     float2 rt;
     rt.x = Input.vPosition.z;

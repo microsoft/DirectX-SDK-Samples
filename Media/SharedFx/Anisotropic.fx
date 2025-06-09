@@ -30,7 +30,7 @@ float4x4 Projection : PROJECTION
 <
 	bool SasUiVisible = false;
 	string SasBindAddress = "Sas.Camera.Projection";
->; 
+>;
 
 
 //-----------------------------------------------------------------------------
@@ -43,8 +43,8 @@ float3 LightDir
 > = {0.577, -0.577, 0.577};
 
 // UI slider for the PowerU
-float Nu 
-< 
+float Nu
+<
 	string SasUiLabel = "PowerU";
 	string SasUiControl = "Slider";
 	float SasUiMin = 1;
@@ -53,8 +53,8 @@ float Nu
 > = 800;
 
 // UI slider for the PowerV
-float Nv 
-< 
+float Nv
+<
 	string SasUiLabel = "PowerV";
 	string SasUiControl = "Slider";
 	float SasUiMin = 1;
@@ -82,9 +82,9 @@ bool UseNormalMap = false;
 //-----------------------------------------------------------------------------
 sampler2D NormalsSampler
 < bool SasUiVisible = false; > = sampler_state
-{ 
+{
     Texture = (NormalTexture);
-    MipFilter = LINEAR; 
+    MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
 };
@@ -98,7 +98,7 @@ sampler2D NormalsSampler
 // Desc: Texture containing normals for model
 //-----------------------------------------------------------------------------
 
-texture2D MaterialTexture 
+texture2D MaterialTexture
 <
 	string SasUiLabel = "Diffuse Map";
 	string SasUiControl = "FilePicker";
@@ -109,7 +109,7 @@ bool IsMaterialTextured = false;
 
 float3 MaterialDiffuseColor
 <
-	string SasUiControl = "ColorPicker"; 
+	string SasUiControl = "ColorPicker";
 > = { 0.6f, 0.6f, 0.6f };
 
 
@@ -120,9 +120,9 @@ float3 MaterialDiffuseColor
 //-----------------------------------------------------------------------------
 sampler2D DiffuseSampler
 < bool SasUiVisible = false; > = sampler_state
-{ 
+{
     Texture = (MaterialTexture);
-    MipFilter = LINEAR; 
+    MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
 };
@@ -143,8 +143,8 @@ bool UseGlossMap = false;
 
 float3 MaterialSpecularColor
 <
-	string SasUiControl = "ColorPicker"; 
-> = { 0.1f, 0.1f, 0.1f }; 
+	string SasUiControl = "ColorPicker";
+> = { 0.1f, 0.1f, 0.1f };
 
 //-----------------------------------------------------------------------------
 // Name: GlossSampler
@@ -153,9 +153,9 @@ float3 MaterialSpecularColor
 //-----------------------------------------------------------------------------
 sampler2D GlossSampler
 < bool SasUiVisible = false; > = sampler_state
-{ 
+{
     Texture = (GlossTexture);
-    MipFilter = LINEAR; 
+    MipFilter = LINEAR;
     MinFilter = LINEAR;
     MagFilter = LINEAR;
 };
@@ -189,7 +189,7 @@ struct VS_OUTPUT
 //-----------------------------------------------------------------------------
 // Name: AnisoVS
 // Type: Vertex shader
-// Desc: Transforms the vertex position into screen space and 
+// Desc: Transforms the vertex position into screen space and
 //       transforms the light and view vector into tangent space
 //-----------------------------------------------------------------------------
 VS_OUTPUT AnisoVS( VS_INPUT Input )
@@ -202,7 +202,7 @@ VS_OUTPUT AnisoVS( VS_INPUT Input )
 
     // Transform the vertex position into screen space
     Output.Position = mul(Input.Position, WorldViewProjection);
-    
+
     // Copy through the texture coordinates
     Output.TexCoord = Input.TexCoord;
 
@@ -212,19 +212,19 @@ VS_OUTPUT AnisoVS( VS_INPUT Input )
     // In camera space the camera is at <0,0,0>, therefore
     // then the direction towards the camera is <0,0,0> - Pos, normalized.
     float3 ViewDir = -normalize(Pos);
-    
+
     // Setup the inverse transform matrix
     float3 ViewSpaceNormal  = mul( Input.Normal, (float3x3)WorldView );
     float3 ViewSpaceTangent = mul( Input.Tangent, (float3x3)WorldView );
     float3 Binorm = cross( ViewSpaceNormal, ViewSpaceTangent );
     float3x3 InvTrans = float3x3( ViewSpaceTangent, Binorm, ViewSpaceNormal );
-    
+
     // Traspose the matrix
     InvTrans = transpose(InvTrans);
 
     // Transform the light dir and view dir by the matrix
     Output.LightVec = mul(-LightDir,InvTrans);
-    Output.ViewVec  = mul(ViewDir,InvTrans); 
+    Output.ViewVec  = mul(ViewDir,InvTrans);
 
     return Output;
 }
@@ -233,7 +233,7 @@ VS_OUTPUT AnisoVS( VS_INPUT Input )
 //-----------------------------------------------------------------------------
 // Name: Pd
 // Type: function
-// Desc: Diffuse term for the Ashikhmin-Shirley model 
+// Desc: Diffuse term for the Ashikhmin-Shirley model
 //-----------------------------------------------------------------------------
 float3 Pd(float3 N, float3 L, float3 V, float3 H, float3 Rd, float3 Rs)
 {
@@ -245,27 +245,27 @@ float3 Pd(float3 N, float3 L, float3 V, float3 H, float3 Rd, float3 Rs)
     float3 value = (28/(23*PI)) * Rd * (1-Rs) *      // Color calculation
                    (1 - pow(1-dot(N,V)/2,5))  *      // View dependent term
                    (1 - pow(1-dot(N,L)/2,5));        // Light dependent term
-                   
+
     return value;
-} 
+}
 
 
 //-----------------------------------------------------------------------------
 // Name: F
 // Type: function
-// Desc: helper function to implement Ps.  This is the Shlick Fresnel 
+// Desc: helper function to implement Ps.  This is the Shlick Fresnel
 //       approximation
 //-----------------------------------------------------------------------------
 float3 F(float CosTerm, float3 Rs)
 {
-    return (Rs + (1 - Rs)*pow(1 - CosTerm,1));   
+    return (Rs + (1 - Rs)*pow(1 - CosTerm,1));
 }
 
 
 //-----------------------------------------------------------------------------
 // Name: E
 // Type: function
-// Desc: helper function to to implement Ps. 
+// Desc: helper function to to implement Ps.
 //       This is the exponent function which is the heart of Anisotropic lighting.
 //-----------------------------------------------------------------------------
 float E(float3 N, float3 H, float3 TU, float3 TV)
@@ -280,7 +280,7 @@ float E(float3 N, float3 H, float3 TU, float3 TV)
 //-----------------------------------------------------------------------------
 // Name: Ps
 // Type: function
-// Desc: Specular term for the Ashikhmin-Shirley model 
+// Desc: Specular term for the Ashikhmin-Shirley model
 //-----------------------------------------------------------------------------
 float3 Ps(float3 N, float3 H, float3 L, float3 V,float3 TU, float3 TV, float3 Rs)
 {
@@ -290,8 +290,8 @@ float3 Ps(float3 N, float3 H, float3 L, float3 V,float3 TU, float3 TV, float3 Rs
     //
     // Suggestions:
     //      You will need to use the sqrt(), pow(), and max() intrisic functions.
-    //      The functions for E() and F() have already been supplied for you above.  
-    //      Note that the <A,B> notation that appears on the slide means dot(A,B)    
+    //      The functions for E() and F() have already been supplied for you above.
+    //      Note that the <A,B> notation that appears on the slide means dot(A,B)
 
     float3 LeftSide = sqrt( (Nu + 1) * (Nv + 1) ) / (8*PI);
 
@@ -313,7 +313,7 @@ float4 AnisoPS( VS_OUTPUT Input ) : COLOR
 {
     float3 Normal = {0,0,1};
     if(UseNormalMap)
-		Normal = tex2D(NormalsSampler, Input.TexCoord) * 2 - 1 ; 
+		Normal = tex2D(NormalsSampler, Input.TexCoord) * 2 - 1 ;
 
     float3 GlossMap = MaterialSpecularColor;
 	if(UseGlossMap)
@@ -330,13 +330,13 @@ float4 AnisoPS( VS_OUTPUT Input ) : COLOR
     float3 Binormal = cross(Normal, Tangent);
 
     float3 LightColor = float3(5.0f,5.0f,5.0f);
-    float3 Rd = Albedo;               // Diffuse reflectance 
+    float3 Rd = Albedo;               // Diffuse reflectance
     float3 Rs = float3(0.2,0.2,0.2);  // Specular reflectance
 
-    // Compute Anisotropic BRDF using the Ashikhmin-Shirley model 
-    float3 Color = Ps(Normal, Half, Input.LightVec, Input.ViewVec, Tangent, Binormal, Rs) * GlossMap + 
-                   Pd(Normal, Input.LightVec, Input.ViewVec, Half, Rd, Rs);  
-                   
+    // Compute Anisotropic BRDF using the Ashikhmin-Shirley model
+    float3 Color = Ps(Normal, Half, Input.LightVec, Input.ViewVec, Tangent, Binormal, Rs) * GlossMap +
+                   Pd(Normal, Input.LightVec, Input.ViewVec, Half, Rd, Rs);
+
     // All BRDFs must multiplied by dot(N,L)
     Color *= saturate(dot(Normal, Input.LightVec)) * LightColor;
 
@@ -346,7 +346,7 @@ float4 AnisoPS( VS_OUTPUT Input ) : COLOR
 
 //-----------------------------------------------------------------------------
 // Name: Aniso
-// Type: Technique                                     
+// Type: Technique
 // Desc: Technique that renders with Anisotropic BRDF
 //-----------------------------------------------------------------------------
 technique Aniso
@@ -355,8 +355,8 @@ technique Aniso
     {
         vertexshader = compile vs_2_0 AnisoVS();
         pixelshader  = compile ps_2_0 AnisoPS();
-        
-        AlphaBlendEnable = FALSE;       
+
+        AlphaBlendEnable = FALSE;
     }
 }
 

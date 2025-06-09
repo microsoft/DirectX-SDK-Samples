@@ -105,15 +105,15 @@ CD3D9Enumeration::~CD3D9Enumeration()
 
 
 //--------------------------------------------------------------------------------------
-// Enumerate for each adapter all of the supported display modes, 
-// device types, adapter formats, back buffer formats, window/full screen support, 
+// Enumerate for each adapter all of the supported display modes,
+// device types, adapter formats, back buffer formats, window/full screen support,
 // depth stencil formats, multisampling types/qualities, and presentations intervals.
 //
 // For each combination of device type (HAL/REF), adapter format, back buffer format, and
 // IsWindowed it will call the app's ConfirmDevice callback.  This allows the app
-// to reject or allow that combination based on its caps/etc.  It also allows the 
-// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP 
-// if supported otherwise it will default to SWVP, however the app can change this 
+// to reject or allow that combination based on its caps/etc.  It also allows the
+// app to change the BehaviorFlags.  The BehaviorFlags defaults non-pure HWVP
+// if supported otherwise it will default to SWVP, however the app can change this
 // through the ConfirmDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CD3D9Enumeration::Enumerate( LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE IsD3D9DeviceAcceptableFunc,
@@ -157,7 +157,7 @@ HRESULT CD3D9Enumeration::Enumerate( LPDXUTCALLBACKISD3D9DEVICEACCEPTABLE IsD3D9
         pAdapterInfo->AdapterOrdinal = adapterOrdinal;
         pD3D->GetAdapterIdentifier( adapterOrdinal, 0, &pAdapterInfo->AdapterIdentifier );
 
-        // Get list of all display modes on this adapter.  
+        // Get list of all display modes on this adapter.
         // Also build a temporary list of all display adapter formats.
         adapterFormatList.RemoveAll();
 
@@ -303,7 +303,7 @@ HRESULT CD3D9Enumeration::EnumerateDevices( CD3D9EnumAdapterInfo* pAdapterInfo,
 
         if( pDeviceInfo->DeviceType != D3DDEVTYPE_HAL )
         {
-            // Create a temp device to verify that it is really possible to create a REF device 
+            // Create a temp device to verify that it is really possible to create a REF device
             // [the developer DirectX redist has to be installed]
             D3DDISPLAYMODE Mode;
             m_pD3D->GetAdapterDisplayMode( 0, &Mode );
@@ -335,7 +335,7 @@ HRESULT CD3D9Enumeration::EnumerateDevices( CD3D9EnumAdapterInfo* pAdapterInfo,
             continue;
         }
 
-        // If at least one devicecombo for this device is found, 
+        // If at least one devicecombo for this device is found,
         // add the deviceInfo to the list
         if( pDeviceInfo->deviceSettingsComboList.GetSize() > 0 )
             pAdapterInfo->deviceInfoList.Add( pDeviceInfo );
@@ -388,7 +388,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
                 if( m_bRequirePostPixelShaderBlending )
                 {
                     // If the backbuffer format doesn't support D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING
-                    // then alpha test, pixel fog, render-target blending, color write enable, and dithering. 
+                    // then alpha test, pixel fog, render-target blending, color write enable, and dithering.
                     // are not supported.
                     if( FAILED( m_pD3D->CheckDeviceFormat( pAdapterInfo->AdapterOrdinal, pDeviceInfo->DeviceType,
                                                            adapterFormat, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING,
@@ -408,7 +408,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
                 }
 
                 // At this point, we have an adapter/device/adapterformat/backbufferformat/iswindowed
-                // DeviceCombo that is supported by the system and acceptable to the app. We still 
+                // DeviceCombo that is supported by the system and acceptable to the app. We still
                 // need to find one or more suitable depth/stencil buffer format,
                 // multisample type, and present interval.
                 CD3D9EnumDeviceSettingsCombo* pDeviceCombo = new CD3D9EnumDeviceSettingsCombo;
@@ -445,7 +445,7 @@ HRESULT CD3D9Enumeration::EnumerateDeviceCombos( CD3D9EnumAdapterInfo* pAdapterI
 
 
 //--------------------------------------------------------------------------------------
-// Adds all depth/stencil formats that are compatible with the device 
+// Adds all depth/stencil formats that are compatible with the device
 //       and app to the given D3DDeviceCombo.
 //--------------------------------------------------------------------------------------
 void CD3D9Enumeration::BuildDepthStencilFormatList( CD3D9EnumDeviceSettingsCombo* pDeviceCombo )
@@ -526,7 +526,7 @@ void CD3D9Enumeration::BuildDSMSConflictList( CD3D9EnumDeviceSettingsCombo* pDev
 
 
 //--------------------------------------------------------------------------------------
-// Adds all present intervals that are compatible with the device and app 
+// Adds all present intervals that are compatible with the device and app
 //       to the given D3DDeviceCombo.
 //--------------------------------------------------------------------------------------
 void CD3D9Enumeration::BuildPresentIntervalList( CD3D9EnumDeviceInfo* pDeviceInfo,
@@ -576,8 +576,8 @@ void CD3D9Enumeration::ClearAdapterInfoList()
 
 
 //--------------------------------------------------------------------------------------
-// Call GetAdapterInfoList() after Enumerate() to get a STL vector of 
-//       CD3D9EnumAdapterInfo* 
+// Call GetAdapterInfoList() after Enumerate() to get a STL vector of
+//       CD3D9EnumAdapterInfo*
 //--------------------------------------------------------------------------------------
 CGrowableArray <CD3D9EnumAdapterInfo*>* CD3D9Enumeration::GetAdapterInfoList()
 {
@@ -619,7 +619,7 @@ CD3D9EnumDeviceInfo* CD3D9Enumeration::GetDeviceInfo( UINT AdapterOrdinal, D3DDE
 
 
 //--------------------------------------------------------------------------------------
-// 
+//
 //--------------------------------------------------------------------------------------
 CD3D9EnumDeviceSettingsCombo* CD3D9Enumeration::GetDeviceSettingsCombo( UINT AdapterOrdinal, D3DDEVTYPE DeviceType,
                                                                         D3DFORMAT AdapterFormat,
@@ -968,12 +968,12 @@ void CD3D9Enumeration::SetMultisampleQualityMax( UINT nMax )
 
 
 //--------------------------------------------------------------------------------------
-// Returns a ranking number that describes how closely this device 
+// Returns a ranking number that describes how closely this device
 // combo matches the optimal combo based on the match options and the optimal device settings
 //--------------------------------------------------------------------------------------
 float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsCombo,
                                DXUTD3D9DeviceSettings* pOptimalDeviceSettings,
-                               D3DDISPLAYMODE* pAdapterDesktopDisplayMode, 
+                               D3DDISPLAYMODE* pAdapterDesktopDisplayMode,
                                int &bestModeIndex,
                                int &bestMSAAIndex
                                )
@@ -1004,7 +1004,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
     //---------------------
     if( pDeviceSettingsCombo->DeviceType == pOptimalDeviceSettings->DeviceType )
         fCurRanking += fDeviceTypeWeight;
-    // Slightly prefer HAL 
+    // Slightly prefer HAL
     if( pDeviceSettingsCombo->DeviceType == D3DDEVTYPE_HAL )
         fCurRanking += 0.1f;
 
@@ -1075,8 +1075,8 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
             displayMode.Height == pOptimalDeviceSettings->pp.BackBufferHeight )
             bResolutionFound = true;
 
-        unsigned int current = 
-            (UINT) abs ((int)displayMode.Width  - (int)pOptimalDeviceSettings->pp.BackBufferWidth) + 
+        unsigned int current =
+            (UINT) abs ((int)displayMode.Width  - (int)pOptimalDeviceSettings->pp.BackBufferWidth) +
             (UINT) abs ((int)displayMode.Height - (int)pOptimalDeviceSettings->pp.BackBufferHeight );
         if (current < best) {
             best = current;
@@ -1104,7 +1104,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
         fCurRanking += fScale * fBackBufferFormatWeight;
     }
 
-    // Check if this back buffer format is the same as 
+    // Check if this back buffer format is the same as
     // the adapter format since this is preferred.
     bool bAdapterMatchesBB = ( pDeviceSettingsCombo->BackBufferFormat == pDeviceSettingsCombo->AdapterFormat );
     if( bAdapterMatchesBB )
@@ -1141,7 +1141,7 @@ float DXUTRankD3D9DeviceCombo( CD3D9EnumDeviceSettingsCombo* pDeviceSettingsComb
     // No caps for swap effects
 
     //---------------------
-    // Depth stencil 
+    // Depth stencil
     //---------------------
     if( pDeviceSettingsCombo->depthStencilFormatList.Contains( pOptimalDeviceSettings->pp.AutoDepthStencilFormat ) )
         fCurRanking += fDepthStencilWeight;

@@ -161,7 +161,7 @@ const UINT              g_uUIEffectFileSize = sizeof( g_strUIEffectFile );
 
 // DXUT_MAX_EDITBOXLENGTH is the maximum string length allowed in edit boxes,
 // including the NULL terminator.
-// 
+//
 // Uniscribe does not support strings having bigger-than-16-bits length.
 // This means that the string must be less than 65536 characters long,
 // including the NULL terminator.
@@ -315,8 +315,8 @@ void CDXUTDialog::Init( CDXUTDialogResourceManager* pManager, bool bRegisterDial
 void CDXUTDialog::SetCallback( PCALLBACKDXUTGUIEVENT pCallback, void* pUserContext )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1039,8 +1039,8 @@ int CDXUTDialogResourceManager::AddFont( LPCWSTR strFaceName, LONG height, LONG 
 HRESULT CDXUTDialog::SetFont( UINT index, LPCWSTR strFaceName, LONG height, LONG weight )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1164,8 +1164,8 @@ int CDXUTDialogResourceManager::AddTexture( LPCWSTR strResourceName, HMODULE hRe
 HRESULT CDXUTDialog::SetTexture( UINT index, LPCWSTR strFilename )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix this, call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1186,8 +1186,8 @@ HRESULT CDXUTDialog::SetTexture( UINT index, LPCWSTR strFilename )
 HRESULT CDXUTDialog::SetTexture( UINT index, LPCWSTR strResourceName, HMODULE hResourceModule )
 {
     // If this assert triggers, you need to call CDXUTDialog::Init() first.  This change
-    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The 
-    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility 
+    // was made so that the DXUT's GUI could become seperate and optional from DXUT's core.  The
+    // creation and interfacing with CDXUTDialogResourceManager is now the responsibility
     // of the application if it wishes to use DXUT's GUI.
     assert( m_pManager != NULL && L"To fix this, call CDXUTDialog::Init() first.  See comments for details." );
 
@@ -1391,7 +1391,7 @@ bool CDXUTDialog::MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
         case WM_XBUTTONDBLCLK:
         case WM_MOUSEWHEEL:
             {
-                // If not accepting mouse input, return false to indicate the message should still 
+                // If not accepting mouse input, return false to indicate the message should still
                 // be handled by the application (usually to move the camera).
                 if( !m_bMouseInput )
                     return false;
@@ -3215,7 +3215,7 @@ void CDXUTStatic::Render( float fElapsedTime )
 
 
 //--------------------------------------------------------------------------------------
-HRESULT CDXUTStatic::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest, 
+HRESULT CDXUTStatic::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest,
                                   UINT bufferCount )
 {
     // Validate incoming parameters
@@ -5797,7 +5797,7 @@ void CDXUTEditBox::SetText( LPCWSTR wszText, bool bSelected )
 
 
 //--------------------------------------------------------------------------------------
-HRESULT CDXUTEditBox::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest, 
+HRESULT CDXUTEditBox::GetTextCopy( __out_ecount(bufferCount) LPWSTR strDest,
                                    UINT bufferCount )
 {
     assert( strDest );
@@ -6109,7 +6109,7 @@ bool CDXUTEditBox::MsgProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
 
     switch( uMsg )
     {
-            // Make sure that while editing, the keyup and keydown messages associated with 
+            // Make sure that while editing, the keyup and keydown messages associated with
             // WM_CHAR messages don't go to any non-focused controls or cameras
         case WM_KEYUP:
         case WM_KEYDOWN:
@@ -6201,7 +6201,7 @@ bool CDXUTEditBox::MsgProc( UINT uMsg, WPARAM wParam, LPARAM lParam )
                 case 16:  // Ctrl P
                 case 27:  // Ctrl [
                 case 29:  // Ctrl ]
-                case 28:  // Ctrl \ 
+                case 28:  // Ctrl \
                     break;
 
                 default:

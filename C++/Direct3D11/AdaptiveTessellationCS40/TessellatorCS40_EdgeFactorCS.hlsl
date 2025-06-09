@@ -197,7 +197,7 @@ void CSEdgeFactor( uint3 DTid : SV_DispatchThreadID )
         p2 = p2 / p2.w;
 
         float4 factor;
-        // Only triangles which are completely inside or intersect with the view frustum are taken into account 
+        // Only triangles which are completely inside or intersect with the view frustum are taken into account
         if ( triBoxOverlap( float3(0, 0, 0.5), float3(1.02, 1.02, 0.52), p0.xyz, p1.xyz, p2.xyz ) )
         {
             factor.x = length((p0.xy - p2.xy) * g_tess_edge_length_scale);

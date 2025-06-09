@@ -23,7 +23,7 @@ Comments:
 
 #include <sas\sas.fxh>
 
-int GlobalParameter : SasGlobal                                                             
+int GlobalParameter : SasGlobal
 <
     int3 SasVersion = {1, 1, 0};
     bool SasUiVisible = false;
@@ -32,27 +32,27 @@ int GlobalParameter : SasGlobal
 
 /************* TWEAKABLES **************/
 
-float4x4 World 
+float4x4 World
 <
-	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]"; 
-	bool SasUiVisible = false;
->;         
-
-float4x4 View 
-<
-	string SasBindAddress = "Sas.Camera.WorldToView"; 
+	string SasBindAddress = "Sas.Skeleton.MeshToJointToWorld[0]";
 	bool SasUiVisible = false;
 >;
 
-float4x4 Projection 
+float4x4 View
 <
-	string SasBindAddress = "Sas.Camera.Projection"; 
+	string SasBindAddress = "Sas.Camera.WorldToView";
 	bool SasUiVisible = false;
 >;
 
-float Timer 
-< 
-	string SasBindAddress = "Sas.Time.Now"; 
+float4x4 Projection
+<
+	string SasBindAddress = "Sas.Camera.Projection";
+	bool SasUiVisible = false;
+>;
+
+float Timer
+<
+	string SasBindAddress = "Sas.Time.Now";
 >;
 
 float4 DarkColor <
@@ -115,17 +115,17 @@ float Fader <
 > = 1.0f;
 
 
-texture3D NoiseTex  
+texture3D NoiseTex
 <
 	string SasResourceAddress = "../Misc/Noise3D.dds";
 	bool SasUiVisible = false;
 >;
 
 // samplers
-sampler NoiseSamp = sampler_state 
+sampler NoiseSamp = sampler_state
 {
     texture = <NoiseTex>;
-    AddressU  = WRAP;        
+    AddressU  = WRAP;
     AddressV  = WRAP;
     AddressW  = WRAP;
     MIPFILTER = LINEAR;
@@ -170,9 +170,9 @@ float4 zapPS(vertexOutput IN) : COLOR {
 
 /*** TECHNIQUES **********/
 
-technique Zap 
+technique Zap
 {
-    pass p0 
+    pass p0
 	{		
 	    VertexShader = compile vs_1_1 zapVS();
 	    ZEnable = true;

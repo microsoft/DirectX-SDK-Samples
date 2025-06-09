@@ -37,9 +37,9 @@ cbuffer cbUserChanges
 
 struct VS_INPUT
 {
-    float3 Pos          : POSITION;        
-    float3 Norm         : NORMAL;          
-    float2 Tex          : TEXCOORD0;       
+    float3 Pos          : POSITION;
+    float3 Norm         : NORMAL;
+    float2 Tex          : TEXCOORD0;
 };
 
 struct PS_INPUT
@@ -72,16 +72,16 @@ BlendState NoBlending
 PS_INPUT VS( VS_INPUT input )
 {
     PS_INPUT output = (PS_INPUT)0;
-    
+
     output.Pos = mul( float4(input.Pos,1), World );
-    
+
     output.Pos.x += sin( output.Pos.y*0.1f + Time )*Waviness;
-    
+
     output.Pos = mul( output.Pos, View );
     output.Pos = mul( output.Pos, Projection );
     output.Norm = mul( input.Norm, World );
     output.Tex = input.Tex;
-    
+
     return output;
 }
 
@@ -108,7 +108,7 @@ technique11 Render
     {
         SetVertexShader( CompileShader( vs_4_0, VS() ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, PS() ) );        
+        SetPixelShader( CompileShader( ps_4_0, PS() ) );
 
         SetDepthStencilState( EnableDepth, 0 );
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );

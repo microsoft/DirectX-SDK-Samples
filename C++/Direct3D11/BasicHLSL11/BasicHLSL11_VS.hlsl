@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL11_VS.hlsl
 //
-// The vertex shader file for the BasicHLSL11 sample.  
-// 
+// The vertex shader file for the BasicHLSL11 sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

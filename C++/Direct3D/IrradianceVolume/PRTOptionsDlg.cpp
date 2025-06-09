@@ -47,7 +47,7 @@ struct PREDEFINED_MATERIALS
 
 //--------------------------------------------------------------------------------------
 // Subsurface scattering parameters from:
-// "A Practical Model for Subsurface Light Transport", 
+// "A Practical Model for Subsurface Light Transport",
 // Henrik Wann Jensen, Steve R. Marschner, Marc Levoy, Pat Hanrahan.
 // SIGGRAPH 2001
 //--------------------------------------------------------------------------------------
@@ -731,7 +731,7 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
 
 //-----------------------------------------------------------------------------
 // Name: EnumChildProc
-// Desc: Helper function to add tooltips to all the children (buttons/etc) 
+// Desc: Helper function to add tooltips to all the children (buttons/etc)
 //       of the dialog box
 //-----------------------------------------------------------------------------
 BOOL CALLBACK CPRTOptionsDlg::EnumChildProc( HWND hwndChild, LPARAM lParam )
@@ -785,7 +785,7 @@ LRESULT CALLBACK CPRTOptionsDlg::GetMsgProc( int nCode, WPARAM wParam, LPARAM lP
 
 
 //-----------------------------------------------------------------------------
-// Returns the tooltip text for the control 
+// Returns the tooltip text for the control
 //-----------------------------------------------------------------------------
 void CPRTOptionsDlg::GetToolTipText( int nDlgId, NMTTDISPINFO* pNMTDI )
 {
@@ -1433,18 +1433,18 @@ INT_PTR CALLBACK CPRTAdaptiveOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wP
 
                     GetGlobalOptions().dwRobustMeshRefineMaxSubdiv = ( DWORD )LOWORD( SendMessage( GetDlgItem( hDlg,
                                                                                                                IDC_RMR_MAX_SUBD_SPIN
-                                                                                                               
+
                                                                                                                ),
                                                                                                    UDM_GETPOS, 0,
                                                                                                    0 ) );
                     GetGlobalOptions().dwAdaptiveDLMaxSubdiv = ( DWORD )LOWORD( SendMessage( GetDlgItem( hDlg,
                                                                                                          IDC_DL_MAX_SUBD_SPIN
-                                                                                                         
+
                                                                                                          ),
                                                                                              UDM_GETPOS, 0, 0 ) );
                     GetGlobalOptions().dwAdaptiveBounceMaxSubdiv = ( DWORD )LOWORD( SendMessage( GetDlgItem( hDlg,
                                                                                                              IDC_AB_MAX_SUBD_SPIN
-                                                                                                             
+
                                                                                                              ),
                                                                                                  UDM_GETPOS, 0, 0 ) );
 

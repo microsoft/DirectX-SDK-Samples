@@ -70,11 +70,11 @@ void VS( in  float3 pos      : POSITION,
     // Calculate the normal (in world-space)
     // Assumes inverse( transpose( matWorld ) ) == matWorld
     float3 norm_w = normalize( mul( norm, (float3x3)matWorld ) );
-    
+
     // Calculate the diffuse lighting coefficient
     // The Pine Primitives are 2-Sided, and may be illuminated from either direction
     float dotResult = abs( dot( -lightDir, norm_w ) );
-    
+
     // Simple Diffuse/Ambient Lighting
     ocolor = saturate( dotResult * Diffuse * I_d + Ambient * I_a );
 
@@ -91,7 +91,7 @@ void PS( in  float4 color   : COLOR,
 {
     // Sample the Texture
     float4 tex_color = tex2D( s0, texcord );
-    
+
     // Modulate the texture color by the vertex lighting
     ocolor = tex_color * color;
 }

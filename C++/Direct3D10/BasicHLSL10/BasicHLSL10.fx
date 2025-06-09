@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL10.fx
 //
-// The effect file for the BasicHLSL sample.  
-// 
+// The effect file for the BasicHLSL sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -51,9 +51,9 @@ SamplerState MeshTextureSampler
 //--------------------------------------------------------------------------------------
 struct VS_OUTPUT
 {
-    float4 Position   : SV_POSITION; // vertex position 
+    float4 Position   : SV_POSITION; // vertex position
     float4 Diffuse    : COLOR0;      // vertex diffuse color (note that COLOR0 is clamped from 0..1)
-    float2 TextureUV  : TEXCOORD0;   // vertex texture coords 
+    float2 TextureUV  : TEXCOORD0;   // vertex texture coords
 };
 
 
@@ -69,35 +69,35 @@ VS_OUTPUT RenderSceneVS( float4 vPos : POSITION,
 {
     VS_OUTPUT Output;
     float3 vNormalWorldSpace;
-  
+
     float4 vAnimatedPos = vPos;
-    
+
     // Animation the vertex based on time and the vertex's object space position
     if( bAnimate )
 		vAnimatedPos += float4(vNormal, 0) * (sin(g_fTime+5.5)+0.5)*5;
-    
+
     // Transform the position from object space to homogeneous projection space
     Output.Position = mul(vAnimatedPos, g_mWorldViewProjection);
-    
-    // Transform the normal from object space to world space    
+
+    // Transform the normal from object space to world space
     vNormalWorldSpace = normalize(mul(vNormal, (float3x3)g_mWorld)); // normal (world space)
-    
+
     // Compute simple directional lighting equation
     float3 vTotalLightDiffuse = float3(0,0,0);
     for(int i=0; i<nNumLights; i++ )
         vTotalLightDiffuse += g_LightDiffuse[i] * max(0,dot(vNormalWorldSpace, g_LightDir[i]));
-        
-    Output.Diffuse.rgb = g_MaterialDiffuseColor * vTotalLightDiffuse + 
-                         g_MaterialAmbientColor * g_LightAmbient;   
-    Output.Diffuse.a = 1.0f; 
-    
+
+    Output.Diffuse.rgb = g_MaterialDiffuseColor * vTotalLightDiffuse +
+                         g_MaterialAmbientColor * g_LightAmbient;
+    Output.Diffuse.a = 1.0f;
+
     // Just copy the texture coordinate through
-    if( bTexture ) 
-        Output.TextureUV = vTexCoord0; 
+    if( bTexture )
+        Output.TextureUV = vTexCoord0;
     else
-        Output.TextureUV = 0; 
-    
-    return Output;    
+        Output.TextureUV = 0;
+
+    return Output;
 }
 
 
@@ -115,8 +115,8 @@ struct PS_OUTPUT
 //       color with diffuse material color
 //--------------------------------------------------------------------------------------
 PS_OUTPUT RenderScenePS( VS_OUTPUT In,
-                         uniform bool bTexture ) 
-{ 
+                         uniform bool bTexture )
+{
     PS_OUTPUT Output;
 
     // Lookup mesh texture and modulate it with diffuse
@@ -147,11 +147,11 @@ technique10 RenderSceneWithTexture1Light
 technique10 RenderSceneWithTexture2Light
 {
     pass P0
-    {          
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 2, true, true ) ) );
         SetGeometryShader( NULL );
-        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( true ) ) ); 
-        
+        SetPixelShader( CompileShader( ps_4_0, RenderScenePS( true ) ) );
+
         SetDepthStencilState( EnableDepth, 0 );
     }
 }
@@ -159,7 +159,7 @@ technique10 RenderSceneWithTexture2Light
 technique10 RenderSceneWithTexture3Light
 {
     pass P0
-    {          
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 3, true, true ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderScenePS( true ) ) );
@@ -171,7 +171,7 @@ technique10 RenderSceneWithTexture3Light
 technique10 RenderSceneNoTexture
 {
     pass P0
-    {          
+    {
         SetVertexShader( CompileShader( vs_4_0, RenderSceneVS( 1, true, true ) ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, RenderScenePS( false ) ) );

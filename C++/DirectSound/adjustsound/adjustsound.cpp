@@ -54,12 +54,12 @@ CSound*        g_pSound = NULL;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, INT nCmdShow )
 {
-    // Init the common control dll 
+    // Init the common control dll
     InitCommonControls();
 
     // Display the main dialog box.
@@ -79,7 +79,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_COMMAND:
             switch( LOWORD(wParam) )
@@ -97,7 +97,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     {
                         DXTRACE_ERR_MSGBOX( TEXT("OnPlaySound"), hr );
                         MessageBox( hDlg, L"Error playing DirectSound buffer."
-                                    L"Sample will now exit.", L"DirectSound Sample", 
+                                    L"Sample will now exit.", L"DirectSound Sample",
                                     MB_OK | MB_ICONERROR );
                         EndDialog( hDlg, IDABORT );
                     }
@@ -140,10 +140,10 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 
         case WM_DESTROY:
             // Cleanup everything
-            KillTimer( hDlg, 1 );    
+            KillTimer( hDlg, 1 );
             SAFE_DELETE( g_pSound );
             SAFE_DELETE( g_pSoundManager );
-            break; 
+            break;
 
         default:
             return FALSE; // Didn't handle message
@@ -171,8 +171,8 @@ VOID OnInitDialog( HWND hDlg )
 #endif
     HICON hIcon = LoadIcon( hInst, MAKEINTRESOURCE( IDR_MAINFRAME ) );
 
-    // Create a static IDirectSound in the CSound class.  
-    // Set coop level to DSSCL_PRIORITY, and set primary buffer 
+    // Create a static IDirectSound in the CSound class.
+    // Set coop level to DSSCL_PRIORITY, and set primary buffer
     // format to stereo, 22kHz and 16-bit output.
     g_pSoundManager = new CSoundManager();
     if( NULL == g_pSoundManager )
@@ -185,16 +185,16 @@ VOID OnInitDialog( HWND hDlg )
     if( FAILED( hr = g_pSoundManager->Initialize( hDlg, DSSCL_PRIORITY ) ) )
     {
         DXTRACE_ERR_MSGBOX( TEXT("Initialize"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                           L"DirectSound Sample", MB_OK | MB_ICONERROR );
         EndDialog( hDlg, IDABORT );
         return;
     }
-    
+
     if( FAILED( hr = g_pSoundManager->SetPrimaryBufferFormat( 2, 22050, 16 ) ) )
     {
         DXTRACE_ERR_MSGBOX( TEXT("SetPrimaryBufferFormat"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                           L"DirectSound Sample", MB_OK | MB_ICONERROR );
         EndDialog( hDlg, IDABORT );
         return;
@@ -215,19 +215,19 @@ VOID OnInitDialog( HWND hDlg )
     // Set the focus to normal by default
     CheckRadioButton( hDlg, IDC_FOCUS_NORMAL, IDC_FOCUS_NORMAL, IDC_FOCUS_NORMAL );
 
-    // Set the buffer mixing to default 
+    // Set the buffer mixing to default
     CheckRadioButton( hDlg, IDC_MIX_DEFAULT, IDC_MIX_SOFTWARE, IDC_MIX_DEFAULT );
 
-    // Set the range and position of the freq slider from 
+    // Set the range and position of the freq slider from
     // DSBFREQUENCY_MIN and DSBFREQUENCY_MAX are DirectSound constants
     PostMessage( hFreqSlider, TBM_SETRANGEMAX, TRUE, DSBFREQUENCY_MAX );
     PostMessage( hFreqSlider, TBM_SETRANGEMIN, TRUE, DSBFREQUENCY_MIN );
 
-    // Set the range and position of the pan slider from 
+    // Set the range and position of the pan slider from
     PostMessage( hPanSlider, TBM_SETRANGEMAX, TRUE, ( 10000L/500L) );
     PostMessage( hPanSlider, TBM_SETRANGEMIN, TRUE, (-10000L/500L) );
 
-    // Set the range and position of the volume slider 
+    // Set the range and position of the volume slider
     PostMessage( hVolumeSlider, TBM_SETRANGEMAX, TRUE, 0L );
     PostMessage( hVolumeSlider, TBM_SETRANGEMIN, TRUE, (-5000L/100L) );
 
@@ -247,7 +247,7 @@ VOID OnInitDialog( HWND hDlg )
 // Name: OnOpenSoundFile()
 // Desc: Called when the user requests to open a sound file
 //-----------------------------------------------------------------------------
-VOID OnOpenSoundFile( HWND hDlg ) 
+VOID OnOpenSoundFile( HWND hDlg )
 {
     static WCHAR strFileName[MAX_PATH] = TEXT("");
     static WCHAR strPath[MAX_PATH] = TEXT("");
@@ -312,7 +312,7 @@ VOID OnOpenSoundFile( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: ValidateWaveFile()
-// Desc: Open the wave file with the helper 
+// Desc: Open the wave file with the helper
 //       class CWaveFile to make sure it is valid
 //-----------------------------------------------------------------------------
 VOID ValidateWaveFile( HWND hDlg, TCHAR* strFileName )
@@ -326,7 +326,7 @@ VOID ValidateWaveFile( HWND hDlg, TCHAR* strFileName )
     if( hFile != NULL )
     {
         // If you try to open a 100MB wav file, you could run out of system memory with this
-        // sample cause it puts all of it into a large buffer.  If you need to do this, then 
+        // sample cause it puts all of it into a large buffer.  If you need to do this, then
         // see the "StreamData" sample to stream the data from the file into a sound buffer.
         DWORD dwFileSizeHigh = 0;
         DWORD dwFileSize = GetFileSize( hFile, &dwFileSizeHigh );
@@ -374,7 +374,7 @@ VOID ValidateWaveFile( HWND hDlg, TCHAR* strFileName )
 // Name: OnPlaySound()
 // Desc: User hit the "Play" button
 //-----------------------------------------------------------------------------
-HRESULT OnPlaySound( HWND hDlg ) 
+HRESULT OnPlaySound( HWND hDlg )
 {
     HRESULT hr;
     DWORD dwCreationFlags;
@@ -405,8 +405,8 @@ HRESULT OnPlaySound( HWND hDlg )
     // Free any previous sound
     SAFE_DELETE( g_pSound );
 
-    // Since the user can change the focus before the sound is played, 
-    // we need to create the sound buffer every time the play button is pressed 
+    // Since the user can change the focus before the sound is played,
+    // we need to create the sound buffer every time the play button is pressed
 
     // Load the wave file into a DirectSound buffer
     if( FAILED( hr = g_pSoundManager->Create( &g_pSound, m_strWaveFileName, dwCreationFlags, GUID_NULL ) ) )
@@ -414,13 +414,13 @@ HRESULT OnPlaySound( HWND hDlg )
         // Not a critical failure, so just update the status
         DXTRACE_ERR( TEXT("Create"), hr );
         SetDlgItemText( hDlg, IDC_STATUS, TEXT("Could not create sound buffer.") );
-        return S_FALSE; 
+        return S_FALSE;
     }
 
     // Set the buffer options to what the sliders are set to
     OnSliderChanged( hDlg );
 
-    // Only if the sound buffer was created perfectly should we update the UI 
+    // Only if the sound buffer was created perfectly should we update the UI
     // and play the sound
 
     // Get the position of the sliders
@@ -449,15 +449,15 @@ HRESULT OnPlaySound( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: OnTimer()
-// Desc: When we think the sound is playing this periodically checks to see if 
+// Desc: When we think the sound is playing this periodically checks to see if
 //       the sound has stopped.  If it has then updates the dialog.
 //-----------------------------------------------------------------------------
-VOID OnTimer( HWND hDlg ) 
+VOID OnTimer( HWND hDlg )
 {
     if( IsWindowEnabled( GetDlgItem( hDlg, IDC_STOP ) ) )
     {
         // We think the sound is playing, so see if it has stopped yet.
-        if( !g_pSound->IsSoundPlaying() ) 
+        if( !g_pSound->IsSoundPlaying() )
         {
             // Update the UI controls to show the sound as stopped
             EnablePlayUI( hDlg, TRUE );
@@ -470,7 +470,7 @@ VOID OnTimer( HWND hDlg )
 
 
 //-----------------------------------------------------------------------------
-// Name: OnSliderChanged()  
+// Name: OnSliderChanged()
 // Desc: Called when the dialog's slider bars are changed by the user, or need
 //       updating
 //-----------------------------------------------------------------------------
@@ -511,23 +511,23 @@ VOID OnSliderChanged( HWND hDlg )
                 ZeroMemory( &dscaps, sizeof(DSCAPS) );
                 dscaps.dwSize = sizeof(DSCAPS);
                 g_pSoundManager->GetDirectSound()->GetCaps( &dscaps );
-                
+
                 DSBCAPS dsbcaps;
                 ZeroMemory( &dsbcaps, sizeof(DSBCAPS) );
                 dsbcaps.dwSize = sizeof(DSBCAPS);
                 pDSB->GetCaps( &dsbcaps );
 
-                // Try to guess why it failed 
-                if( (dsbcaps.dwFlags & DSBCAPS_LOCHARDWARE) && 
+                // Try to guess why it failed
+                if( (dsbcaps.dwFlags & DSBCAPS_LOCHARDWARE) &&
                     (DWORD)lFrequency > dscaps.dwMaxSecondarySampleRate )
-                {                    
+                {
                     // Hardware buffers don't support >dwMaxSecondarySampleRate
-                    SetDlgItemText( hDlg, IDC_STATUS, TEXT("Hardware buffers don't support greater") 
+                    SetDlgItemText( hDlg, IDC_STATUS, TEXT("Hardware buffers don't support greater")
                                                       TEXT("than dscaps.dwMaxSecondarySampleRate") );
                 }
                 else if( lFrequency > 100000 )
                 {
-                    // Some platforms (pre-WinXP SP1) do not support 
+                    // Some platforms (pre-WinXP SP1) do not support
                     // >100k Hz so they will fail when setting it higher
                     SetDlgItemText( hDlg, IDC_STATUS, TEXT("Some OS platforms do not support >100k Hz") );
                 }
@@ -537,14 +537,14 @@ VOID OnSliderChanged( HWND hDlg )
                 }
 
                 // Reset to the last valid freq
-                pDSB->SetFrequency( g_dwLastValidFreq );                  
-                PostMessage( hFreqSlider, TBM_SETPOS, TRUE, g_dwLastValidFreq );               
+                pDSB->SetFrequency( g_dwLastValidFreq );
+                PostMessage( hFreqSlider, TBM_SETPOS, TRUE, g_dwLastValidFreq );
             }
             else
             {
                 g_dwLastValidFreq = lFrequency;
             }
-            
+
             pDSB->SetPan( lPan );
             pDSB->SetVolume( lVolume );
         }
@@ -575,7 +575,7 @@ VOID UpdateBehaviorText( HWND hDlg )
                              L"if the user switches to another application not using "
                              L"DirectSound.  However, if the user switches to another "
                              L"DirectSound application, all normal-focus and sticky-focus "
-                             L"buffers in the previous application are muted." ); 
+                             L"buffers in the previous application are muted." );
 
     }
     else if( bFocusGlobal )
@@ -601,18 +601,18 @@ VOID UpdateBehaviorText( HWND hDlg )
                              L"be forced to use hardware mixing. If the device does "
                              L"not support hardware mixing or if the required "
                              L"hardware resources are not available, the call to the "
-                             L"IDirectSound::CreateSoundBuffer method will fail." ); 
+                             L"IDirectSound::CreateSoundBuffer method will fail." );
     }
     else if( bMixSoftware )
     {
         wcscat_s( strExcepted, 1024, L"\n\nWith the software mixing flag, the new buffer will use "
                              L"software mixing, even if hardware resources are available." );
     }
-    else 
+    else
     {
         // Default mixing
         wcscat_s( strExcepted, 1024, L"\n\nWith default mixing, the new buffer will use hardware "
-                             L"mixing if available, otherwise software mixing will be used." ); 
+                             L"mixing if available, otherwise software mixing will be used." );
     }
 
     // Tell the user what to expect
@@ -624,7 +624,7 @@ VOID UpdateBehaviorText( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: EnablePlayUI()
-// Desc: Enables or disables the Play UI controls 
+// Desc: Enables or disables the Play UI controls
 //-----------------------------------------------------------------------------
 VOID EnablePlayUI( HWND hDlg, BOOL bEnable )
 {

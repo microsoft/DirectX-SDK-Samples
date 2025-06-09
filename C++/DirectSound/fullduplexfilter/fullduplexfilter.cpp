@@ -1,7 +1,7 @@
 //----------------------------------------------------------------------------
 // File: FullDuplexFilter.cpp
 //
-// Desc: The FullDuplexFilter sample shows how to use DirectSound to implement 
+// Desc: The FullDuplexFilter sample shows how to use DirectSound to implement
 //       full duplex audio.
 //
 // Copyright (c) Microsoft Corporation.
@@ -58,8 +58,8 @@ LPDIRECTSOUNDBUFFER        g_pDSBOutput     = NULL;
 LPDIRECTSOUNDCAPTUREBUFFER g_pDSBCapture    = NULL;
 LPDIRECTSOUNDNOTIFY        g_pDSNotify      = NULL;
 
-DSBPOSITIONNOTIFY    g_aPosNotify[ NUM_PLAY_NOTIFICATIONS ];  
-HANDLE               g_hNotificationEvent; 
+DSBPOSITIONNOTIFY    g_aPosNotify[ NUM_PLAY_NOTIFICATIONS ];
+HANDLE               g_hNotificationEvent;
 BOOL                 g_abOutputFormatSupported[20];
 BOOL                 g_abInputFormatSupported[20];
 DWORD                g_dwOutputBufferSize;
@@ -75,10 +75,10 @@ BOOL                 g_bRecording;
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, 
+INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
                       INT nCmdShow )
 {
     DWORD   dwResult;
@@ -86,7 +86,7 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
     BOOL    bDone;
     HRESULT hr;
     HWND    hDlg;
-    
+
     g_hNotificationEvent = CreateEvent( NULL, FALSE, FALSE, NULL );
 
     // Display the main dialog box.
@@ -100,14 +100,14 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
         {
             MessageBox( hDlg, L"Full duplex audio failed. "
                         L"Make sure the sound card supports this operation. "
-                        L"The sample will now exit.", L"DirectSound Sample", 
+                        L"The sample will now exit.", L"DirectSound Sample",
                         MB_OK | MB_ICONERROR );
             EndDialog( hDlg, IDABORT );
         }
         else
         {
             MessageBox( hDlg, L"Error initializing DirectSound. "
-                        L"The sample will now exit.", L"DirectSound Sample", 
+                        L"The sample will now exit.", L"DirectSound Sample",
                         MB_OK | MB_ICONERROR );
             EndDialog( hDlg, IDABORT );
         }
@@ -119,7 +119,7 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 
     if( dwResult != IDOK )
     {
-        // The user canceled, so stop message pump, 
+        // The user canceled, so stop message pump,
         // and fall through to the cleanup code
         PostQuitMessage( 0 );
     }
@@ -129,7 +129,7 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
         {
             DXTRACE_ERR_MSGBOX( TEXT("CreateOutputBuffer"), hr );
             MessageBox( hDlg, L"Error creating output buffer. "
-                       L"The sample will now exit.", L"DirectSound Sample", 
+                       L"The sample will now exit.", L"DirectSound Sample",
                        MB_OK | MB_ICONERROR );
             EndDialog( hDlg, IDABORT );
         }
@@ -138,27 +138,27 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 
         g_bRecording = FALSE;
 
-        ShowWindow( hDlg, SW_SHOW ); 
+        ShowWindow( hDlg, SW_SHOW );
     }
 
     bDone = FALSE;
-    while( !bDone ) 
-    { 
-        dwResult = MsgWaitForMultipleObjects( 1, &g_hNotificationEvent, 
+    while( !bDone )
+    {
+        dwResult = MsgWaitForMultipleObjects( 1, &g_hNotificationEvent,
                                               FALSE, INFINITE, QS_ALLEVENTS );
         switch( dwResult )
         {
             case WAIT_OBJECT_0 + 0:
                 // g_hNotificationEvent is signaled
 
-                // This means that DirectSound just finished playing 
-                // a piece of the buffer, so we need to fill the circular 
+                // This means that DirectSound just finished playing
+                // a piece of the buffer, so we need to fill the circular
                 // buffer with new sound from the wav file
                 if( FAILED( hr = HandleNotification() ) )
                 {
                     DXTRACE_ERR_MSGBOX( TEXT("HandleNotification"), hr );
                     MessageBox( hDlg, L"Error handling DirectSound notifications. "
-                               L"The sample will now exit.", L"DirectSound Sample", 
+                               L"The sample will now exit.", L"DirectSound Sample",
                                MB_OK | MB_ICONERROR );
                     bDone = TRUE;
                 }
@@ -167,12 +167,12 @@ INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
 
             case WAIT_OBJECT_0 + 1:
                 // Messages are available
-                while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) ) 
-                { 
-                    if( !IsDialogMessage( hDlg, &msg ) )  
+                while( PeekMessage( &msg, NULL, 0, 0, PM_REMOVE ) )
+                {
+                    if( !IsDialogMessage( hDlg, &msg ) )
                     {
-                        TranslateMessage( &msg ); 
-                        DispatchMessage( &msg ); 
+                        TranslateMessage( &msg );
+                        DispatchMessage( &msg );
                     }
 
                     if( msg.message == WM_QUIT )
@@ -202,7 +202,7 @@ HRESULT InitDirectSound( HWND hDlg )
     HRESULT             hr;
     DSBUFFERDESC        dsbdesc;
 
-    ZeroMemory( &g_aPosNotify, sizeof(DSBPOSITIONNOTIFY) * 
+    ZeroMemory( &g_aPosNotify, sizeof(DSBPOSITIONNOTIFY) *
                                (NUM_PLAY_NOTIFICATIONS) );
     g_dwOutputBufferSize  = 0;
     g_dwCaptureBufferSize = 0;
@@ -221,7 +221,7 @@ HRESULT InitDirectSound( HWND hDlg )
     if( FAILED( hr = g_pDS->SetCooperativeLevel( hDlg, DSSCL_PRIORITY ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("SetCooperativeLevel"), hr );
 
-    // Obtain primary buffer 
+    // Obtain primary buffer
     ZeroMemory( &dsbdesc, sizeof(DSBUFFERDESC) );
     dsbdesc.dwSize  = sizeof(DSBUFFERDESC);
     dsbdesc.dwFlags = DSBCAPS_PRIMARYBUFFER;
@@ -241,7 +241,7 @@ HRESULT InitDirectSound( HWND hDlg )
 
 //-----------------------------------------------------------------------------
 // Name: FreeDirectSound()
-// Desc: Releases DirectSound 
+// Desc: Releases DirectSound
 //-----------------------------------------------------------------------------
 HRESULT FreeDirectSound()
 {
@@ -252,8 +252,8 @@ HRESULT FreeDirectSound()
     SAFE_RELEASE( g_pDSBOutput );
     SAFE_RELEASE( g_pDSBCapture );
 
-    SAFE_RELEASE( g_pDSCapture ); 
-    SAFE_RELEASE( g_pDS ); 
+    SAFE_RELEASE( g_pDSCapture );
+    SAFE_RELEASE( g_pDS );
 
     // Release COM
     CoUninitialize();
@@ -272,14 +272,14 @@ INT_PTR CALLBACK FormatsDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_INITDIALOG:
             if( FAILED( hr = OnInitFormatsDialog( hDlg ) ) )
             {
                 DXTRACE_ERR_MSGBOX( TEXT("OnInitFormatsDialog"), hr );
                 MessageBox( hDlg, L"Error scanning DirectSound formats. "
-                            L"The sample will now exit.", L"DirectSound Sample", 
+                            L"The sample will now exit.", L"DirectSound Sample",
                             MB_OK | MB_ICONERROR );
                 EndDialog( hDlg, IDABORT );
             }
@@ -300,13 +300,13 @@ INT_PTR CALLBACK FormatsDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
                         {
                             MessageBox( hDlg, L"Full duplex audio failed. "
                                         L"Make sure the sound card supports this operation. "
-                                        L"The sample will now exit.", L"DirectSound Sample", 
+                                        L"The sample will now exit.", L"DirectSound Sample",
                                         MB_OK | MB_ICONERROR );
                         }
                         else
                         {
                             MessageBox( hDlg, L"Error accepting DirectSound formats. "
-                                        L"The sample will now exit.", L"DirectSound Sample", 
+                                        L"The sample will now exit.", L"DirectSound Sample",
                                         MB_OK | MB_ICONERROR );
                         }
                         EndDialog( hDlg, IDABORT );
@@ -316,18 +316,18 @@ INT_PTR CALLBACK FormatsDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lPar
                 case IDC_FORMATS_INPUT_LISTBOX:
                     OnInputFormatBoxSelected( hDlg );
                     break;
-            
+
                 case IDC_FORMATS_OUTPUT_LISTBOX:
                     if( HIWORD(wParam) == LBN_SELCHANGE )
                     {
                         OnOutputFormatBoxSelected( hDlg );
                     }
-    
+
                     break;
 
                 default:
                     return FALSE; // Didn't handle message
-            }   
+            }
             break;
 
         default:
@@ -363,7 +363,7 @@ HRESULT OnInitFormatsDialog( HWND hDlg )
 //-----------------------------------------------------------------------------
 // Name: ScanAvailableOutputFormats()
 // Desc: Tests to see if 20 different standard wave formats are supported by
-//       the playback device 
+//       the playback device
 //-----------------------------------------------------------------------------
 HRESULT ScanAvailableOutputFormats()
 {
@@ -371,24 +371,24 @@ HRESULT ScanAvailableOutputFormats()
     WAVEFORMATEX wfxSet;
     HRESULT      hr;
     HCURSOR      hCursor;
-    
+
     // This might take a second or two, so throw up the hourglass
     hCursor = GetCursor();
     SetCursor( LoadCursor( NULL, IDC_WAIT ) );
-    
+
     ZeroMemory( &wfxSet, sizeof(wfxSet) );
     wfxSet.wFormatTag = WAVE_FORMAT_PCM;
 
     ZeroMemory( &wfx, sizeof(wfx) );
     wfx.wFormatTag = WAVE_FORMAT_PCM;
-    
+
     // Try 20 different standard format to see if they are supported
     for( INT iIndex = 0; iIndex < 20; iIndex++ )
     {
         GetWaveFormatFromIndex( iIndex, &wfx );
 
-        // To test if a playback format is supported, try to set the format 
-        // using a specific format.  If it works then the format is 
+        // To test if a playback format is supported, try to set the format
+        // using a specific format.  If it works then the format is
         // supported, otherwise not.
         if( FAILED( hr = g_pDSBPrimary->SetFormat( &wfx ) ) )
         {
@@ -396,17 +396,17 @@ HRESULT ScanAvailableOutputFormats()
         }
         else
         {
-            // Get the format that was just set, and see if it 
-            // is actually supported since SetFormat() sometimes returns DS_OK 
+            // Get the format that was just set, and see if it
+            // is actually supported since SetFormat() sometimes returns DS_OK
             // even if the format was not supported
-            if( FAILED( hr = g_pDSBPrimary->GetFormat( &wfxSet, sizeof(wfxSet), 
+            if( FAILED( hr = g_pDSBPrimary->GetFormat( &wfxSet, sizeof(wfxSet),
                                                        NULL ) ) )
                 return DXTRACE_ERR_MSGBOX( TEXT("GetFormat"), hr );
 
             if( memcmp( &wfx, &wfxSet, sizeof(wfx) ) == 0 )
                 g_abOutputFormatSupported[ iIndex ] = TRUE;
             else
-                g_abOutputFormatSupported[ iIndex ] = FALSE;    
+                g_abOutputFormatSupported[ iIndex ] = FALSE;
         }
     }
 
@@ -470,7 +470,7 @@ HRESULT FillFormatListBox( HWND hListBox, BOOL* aFormatSupported )
             GetWaveFormatFromIndex( iIndex, &wfx );
             ConvertWaveFormatToString( &wfx, strFormatName, 255 );
 
-            dwStringIndex = (DWORD)SendMessage( hListBox, LB_ADDSTRING, 0, 
+            dwStringIndex = (DWORD)SendMessage( hListBox, LB_ADDSTRING, 0,
                                                 (LPARAM) (LPCTSTR) strFormatName );
 
             SendMessage( hListBox, LB_SETITEMDATA, dwStringIndex, iIndex );
@@ -490,9 +490,9 @@ HRESULT FillFormatListBox( HWND hListBox, BOOL* aFormatSupported )
 VOID ConvertWaveFormatToString( WAVEFORMATEX* pwfx, TCHAR* strFormatName, int cchFormatName )
 {
     swprintf_s( strFormatName, cchFormatName,
-              TEXT("%u Hz, %u-bit %s"), 
-              pwfx->nSamplesPerSec, 
-              pwfx->wBitsPerSample, 
+              TEXT("%u Hz, %u-bit %s"),
+              pwfx->nSamplesPerSec,
+              pwfx->wBitsPerSample,
               ( pwfx->nChannels == 1 ) ? TEXT("Mono") : TEXT("Stereo") );
 }
 
@@ -544,7 +544,7 @@ HRESULT OnOutputFormatBoxSelected( HWND hDlg )
 //-----------------------------------------------------------------------------
 // Name: ScanAvailableInputFormats()
 // Desc: Tests to see if 20 different standard wave formats are supported by
-//       the capture device 
+//       the capture device
 //-----------------------------------------------------------------------------
 HRESULT ScanAvailableInputFormats()
 {
@@ -553,11 +553,11 @@ HRESULT ScanAvailableInputFormats()
     HCURSOR       hCursor;
     DSCBUFFERDESC dscbd;
     LPDIRECTSOUNDCAPTUREBUFFER pDSCaptureBuffer = NULL;
-    
+
     // This might take a second or two, so throw up the hourglass
     hCursor = GetCursor();
     SetCursor( LoadCursor( NULL, IDC_WAIT ) );
-    
+
     ZeroMemory( &wfx, sizeof(wfx) );
     wfx.wFormatTag = WAVE_FORMAT_PCM;
 
@@ -569,14 +569,14 @@ HRESULT ScanAvailableInputFormats()
     {
         GetWaveFormatFromIndex( iIndex, &wfx );
 
-        // To test if a capture format is supported, try to create a 
+        // To test if a capture format is supported, try to create a
         // new capture buffer using a specific format.  If it works
         // then the format is supported, otherwise not.
         dscbd.dwBufferBytes = wfx.nAvgBytesPerSec;
         dscbd.lpwfxFormat = &wfx;
-        
-        if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd, 
-                                                            &pDSCaptureBuffer, 
+
+        if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd,
+                                                            &pDSCaptureBuffer,
                                                             NULL ) ) )
             g_abInputFormatSupported[ iIndex ] = FALSE;
         else
@@ -666,21 +666,21 @@ HRESULT OnFormatsOK( HWND hDlg )
 // Name: SetBufferFormats()
 // Desc: Sets the buffer formats for the primary buffer, and the capture buffer
 //-----------------------------------------------------------------------------
-HRESULT SetBufferFormats( WAVEFORMATEX* pwfxInput, 
+HRESULT SetBufferFormats( WAVEFORMATEX* pwfxInput,
                           WAVEFORMATEX* pwfxOutput )
 {
     HRESULT hr;
 
-    // Set the format of the primary buffer 
+    // Set the format of the primary buffer
     // to the format of the output buffer
     if( FAILED( hr = g_pDSBPrimary->SetFormat( pwfxOutput ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("SetFormat"), hr );
 
     // Set the notification size
     g_dwNotifySize = MAX( 4096, pwfxInput->nAvgBytesPerSec / 8 );
-    g_dwNotifySize -= g_dwNotifySize % pwfxInput->nBlockAlign;   
+    g_dwNotifySize -= g_dwNotifySize % pwfxInput->nBlockAlign;
 
-    // Set the buffer sizes 
+    // Set the buffer sizes
     g_dwOutputBufferSize  = NUM_BUFFERS * g_dwNotifySize / 2;
     g_dwCaptureBufferSize = g_dwNotifySize * NUM_BUFFERS;
 
@@ -693,8 +693,8 @@ HRESULT SetBufferFormats( WAVEFORMATEX* pwfxInput,
     dscbd.dwBufferBytes = g_dwCaptureBufferSize;
     dscbd.lpwfxFormat   = pwfxInput; // Set the format during creatation
 
-    if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd, 
-                                                        &g_pDSBCapture, 
+    if( FAILED( hr = g_pDSCapture->CreateCaptureBuffer( &dscbd,
+                                                        &g_pDSBCapture,
                                                         NULL ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("CreateCaptureBuffer"), hr );
 
@@ -729,10 +729,10 @@ HRESULT SetMainDialogText( HWND hDlg )
     ConvertWaveFormatToString( &wfxInput, strInputFormat, 255 );
     ConvertWaveFormatToString( &wfxOutputPri, strOutputPriFormat, 255 );
     ConvertWaveFormatToString( &wfxOutputSec, strOutputSecFormat, 255 );
-    
+
     HWND hInputFormatText     = GetDlgItem( hDlg, IDC_MAIN_INPUTFORMAT_TEXT );
     HWND hPrimaryOutputText   = GetDlgItem( hDlg, IDC_MAIN_PRIMARYFORMAT_TEXT );
-    HWND hSecondaryOutputText = GetDlgItem( hDlg, IDC_MAIN_SECONDARYFORMAT_TEXT );    
+    HWND hSecondaryOutputText = GetDlgItem( hDlg, IDC_MAIN_SECONDARYFORMAT_TEXT );
 
     SetWindowText( hInputFormatText, strInputFormat );
     SetWindowText( hPrimaryOutputText, strOutputPriFormat );
@@ -751,20 +751,20 @@ HRESULT SetMainDialogText( HWND hDlg )
 //-----------------------------------------------------------------------------
 HRESULT CreateOutputBuffer()
 {
-    HRESULT hr; 
+    HRESULT hr;
     WAVEFORMATEX wfxInput;
 
-    // This sample works by creating notification events which 
-    // are signaled when the capture buffer reachs specific offsets 
+    // This sample works by creating notification events which
+    // are signaled when the capture buffer reachs specific offsets
     // WinMain() waits for the associated event to be signaled, and
-    // when it is, it calls HandleNotifications() which copy the 
+    // when it is, it calls HandleNotifications() which copy the
     // data from the capture buffer into the output buffer
 
     ZeroMemory( &wfxInput, sizeof(wfxInput) );
     g_pDSBCapture->GetFormat( &wfxInput, sizeof(wfxInput), NULL );
 
-    // Create the direct sound buffer using the same format as the 
-    // capture buffer. 
+    // Create the direct sound buffer using the same format as the
+    // capture buffer.
     DSBUFFERDESC dsbd;
     ZeroMemory( &dsbd, sizeof(DSBUFFERDESC) );
     dsbd.dwSize          = sizeof(DSBUFFERDESC);
@@ -773,12 +773,12 @@ HRESULT CreateOutputBuffer()
     dsbd.guid3DAlgorithm = GUID_NULL;
     dsbd.lpwfxFormat     = &wfxInput;
 
-    // Create the DirectSound buffer 
+    // Create the DirectSound buffer
     if( FAILED( hr = g_pDS->CreateSoundBuffer( &dsbd, &g_pDSBOutput, NULL ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("CreateSoundBuffer"), hr );
 
     // Create a notification event, for when the sound stops playing
-    if( FAILED( hr = g_pDSBCapture->QueryInterface( IID_IDirectSoundNotify, 
+    if( FAILED( hr = g_pDSBCapture->QueryInterface( IID_IDirectSoundNotify,
                                                     (VOID**)&g_pDSNotify ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("QueryInterface"), hr );
 
@@ -786,12 +786,12 @@ HRESULT CreateOutputBuffer()
     for( INT i = 0; i < NUM_PLAY_NOTIFICATIONS; i++ )
     {
         g_aPosNotify[i].dwOffset = (g_dwNotifySize * i) + g_dwNotifySize - 1;
-        g_aPosNotify[i].hEventNotify = g_hNotificationEvent;             
+        g_aPosNotify[i].hEventNotify = g_hNotificationEvent;
     }
-    
-    // Tell DirectSound when to notify us. the notification will come in the from 
+
+    // Tell DirectSound when to notify us. the notification will come in the from
     // of signaled events that are handled in WinMain()
-    if( FAILED( hr = g_pDSNotify->SetNotificationPositions( NUM_PLAY_NOTIFICATIONS, 
+    if( FAILED( hr = g_pDSNotify->SetNotificationPositions( NUM_PLAY_NOTIFICATIONS,
                                                             g_aPosNotify ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("SetNotificationPositions"), hr );
 
@@ -809,7 +809,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_INITDIALOG:
             OnInitMainDialog( hDlg );
@@ -821,7 +821,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                 case IDCANCEL:
                     PostQuitMessage( 0 );
                     EndDialog( hDlg, IDCANCEL );
-                    break; 
+                    break;
 
                 case IDC_RECORD:
                     g_bRecording = !g_bRecording;
@@ -831,8 +831,8 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                         if( FAILED( hr = StartBuffers() ) )
                         {
                             DXTRACE_ERR_MSGBOX( TEXT("StartBuffers"), hr );
-                            MessageBox( hDlg, L"Error starting DirectSound buffers. "                            
-                                        L"The sample will now exit.", L"DirectSound Sample", 
+                            MessageBox( hDlg, L"Error starting DirectSound buffers. "
+                                        L"The sample will now exit.", L"DirectSound Sample",
                                         MB_OK | MB_ICONERROR );
                             PostQuitMessage( 0 );
                             EndDialog( hDlg, IDABORT );
@@ -869,8 +869,8 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     if( FAILED( hr = StartBuffers() ) )
                     {
                         DXTRACE_ERR_MSGBOX( TEXT("StartBuffers"), hr );
-                        MessageBox( hDlg, L"Error starting DirectSound buffers. "                            
-                                    L"The sample will now exit.", L"DirectSound Sample", 
+                        MessageBox( hDlg, L"Error starting DirectSound buffers. "
+                                    L"The sample will now exit.", L"DirectSound Sample",
                                     MB_OK | MB_ICONERROR );
                         PostQuitMessage( 0 );
                         EndDialog( hDlg, IDABORT );
@@ -934,8 +934,8 @@ HRESULT StartBuffers()
     // Reset the buffers
     g_dwNextOutputOffset = 0;
     g_pDSBOutput->SetCurrentPosition( 0 );
-    
-    // Find out where the capture buffer is right now, then write data 
+
+    // Find out where the capture buffer is right now, then write data
     // some extra amount forward to make sure we're ahead of the write cursor
     g_pDSBCapture->GetCurrentPosition( &g_dwNextCaptureOffset, NULL );
     g_dwNextCaptureOffset -= g_dwNextCaptureOffset % g_dwNotifySize;
@@ -945,7 +945,7 @@ HRESULT StartBuffers()
 
     // Tell the capture buffer to start recording
     g_pDSBCapture->Start( DSCBSTART_LOOPING );
-    
+
     // Rewind the output buffer, fill it with silence, and play it
     g_pDSBOutput->SetCurrentPosition( g_dwNextOutputOffset );
 
@@ -960,15 +960,15 @@ HRESULT StartBuffers()
     // Fill the output buffer with silence at first
     // As capture data arrives, HandleNotifications() will fill
     // the output buffer with wave data.
-    if( FAILED( hr = g_pDSBOutput->Lock( 0, g_dwOutputBufferSize, 
-                                         &pDSLockedBuffer, &dwDSLockedBufferSize, 
+    if( FAILED( hr = g_pDSBOutput->Lock( 0, g_dwOutputBufferSize,
+                                         &pDSLockedBuffer, &dwDSLockedBufferSize,
                                          NULL, NULL, 0 ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("Lock"), hr );
-    FillMemory( (BYTE*) pDSLockedBuffer, dwDSLockedBufferSize, 
+    FillMemory( (BYTE*) pDSLockedBuffer, dwDSLockedBufferSize,
                 (BYTE)( wfxOutput.wBitsPerSample == 8 ? 128 : 0 ) );
-    g_pDSBOutput->Unlock( pDSLockedBuffer, dwDSLockedBufferSize, NULL, NULL ); 
+    g_pDSBOutput->Unlock( pDSLockedBuffer, dwDSLockedBufferSize, NULL, NULL );
 
-    // Play the output buffer 
+    // Play the output buffer
     g_pDSBOutput->Play( 0, 0, DSBPLAY_LOOPING );
 
     return S_OK;
@@ -979,7 +979,7 @@ HRESULT StartBuffers()
 
 //-----------------------------------------------------------------------------
 // Name: RestoreBuffer()
-// Desc: Restores a lost buffer. *pbWasRestored returns TRUE if the buffer was 
+// Desc: Restores a lost buffer. *pbWasRestored returns TRUE if the buffer was
 //       restored.  It can also NULL if the information is not needed.
 //-----------------------------------------------------------------------------
 HRESULT RestoreBuffer( LPDIRECTSOUNDBUFFER pDSBuffer, BOOL* pbRestored )
@@ -999,10 +999,10 @@ HRESULT RestoreBuffer( LPDIRECTSOUNDBUFFER pDSBuffer, BOOL* pbRestored )
     if( dwStatus & DSBSTATUS_BUFFERLOST )
     {
         // Since the app could have just been activated, then
-        // DirectSound may not be giving us control yet, so 
-        // the restoring the buffer may fail.  
+        // DirectSound may not be giving us control yet, so
+        // the restoring the buffer may fail.
         // If it does, sleep until DirectSound gives us control.
-        do 
+        do
         {
             hr = pDSBuffer->Restore();
             if( hr == DSERR_BUFFERLOST )
@@ -1026,20 +1026,20 @@ HRESULT RestoreBuffer( LPDIRECTSOUNDBUFFER pDSBuffer, BOOL* pbRestored )
 
 //-----------------------------------------------------------------------------
 // Name: HandleNotification()
-// Desc: Handle the notification that tells us to copy data from the 
-//       capture buffer to the output buffer 
+// Desc: Handle the notification that tells us to copy data from the
+//       capture buffer to the output buffer
 //-----------------------------------------------------------------------------
-HRESULT HandleNotification() 
+HRESULT HandleNotification()
 {
     HRESULT hr;
     VOID* pDSCaptureLockedBuffer    = NULL;
     VOID* pDSOutputLockedBuffer     = NULL;
     DWORD dwDSCaptureLockedBufferSize;
     DWORD dwDSOutputLockedBufferSize;
-   
+
     DWORD dwStatus;
 
-    // Make sure buffers were not lost, if the were we need 
+    // Make sure buffers were not lost, if the were we need
     // to start the capture again
     if( FAILED( hr = g_pDSBOutput->GetStatus( &dwStatus ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("GetStatus"), hr );
@@ -1053,43 +1053,43 @@ HRESULT HandleNotification()
     }
 
     // Lock the capture buffer down
-    if( FAILED( hr = g_pDSBCapture->Lock( g_dwNextCaptureOffset, g_dwNotifySize, 
-                                          &pDSCaptureLockedBuffer, 
-                                          &dwDSCaptureLockedBufferSize, 
+    if( FAILED( hr = g_pDSBCapture->Lock( g_dwNextCaptureOffset, g_dwNotifySize,
+                                          &pDSCaptureLockedBuffer,
+                                          &dwDSCaptureLockedBufferSize,
                                           NULL, NULL, 0L ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("Lock"), hr );
 
     // Lock the output buffer down
-    if( FAILED( hr = g_pDSBOutput->Lock( g_dwNextOutputOffset, g_dwNotifySize, 
-                                         &pDSOutputLockedBuffer, 
-                                         &dwDSOutputLockedBufferSize, 
+    if( FAILED( hr = g_pDSBOutput->Lock( g_dwNextOutputOffset, g_dwNotifySize,
+                                         &pDSOutputLockedBuffer,
+                                         &dwDSOutputLockedBufferSize,
                                          NULL, NULL, 0L ) ) )
         return DXTRACE_ERR_MSGBOX( TEXT("Lock"), hr );
 
     // These should be equal
     if( dwDSOutputLockedBufferSize != dwDSCaptureLockedBufferSize )
-        return E_FAIL;  // Sanity check unhandled case 
+        return E_FAIL;  // Sanity check unhandled case
 
-    // Just copy the memory from the 
-    // capture buffer to the playback buffer 
-    CopyMemory( pDSOutputLockedBuffer, 
-                pDSCaptureLockedBuffer, 
+    // Just copy the memory from the
+    // capture buffer to the playback buffer
+    CopyMemory( pDSOutputLockedBuffer,
+                pDSCaptureLockedBuffer,
                 dwDSOutputLockedBufferSize );
 
     // Unlock the play buffer
-    g_pDSBOutput->Unlock( pDSOutputLockedBuffer, dwDSOutputLockedBufferSize, 
+    g_pDSBOutput->Unlock( pDSOutputLockedBuffer, dwDSOutputLockedBufferSize,
                           NULL, 0 );
 
     // Unlock the capture buffer
-    g_pDSBCapture->Unlock( pDSCaptureLockedBuffer, dwDSCaptureLockedBufferSize, 
+    g_pDSBCapture->Unlock( pDSCaptureLockedBuffer, dwDSCaptureLockedBufferSize,
                            NULL, 0 );
 
     // Move the capture offset along
-    g_dwNextCaptureOffset += dwDSCaptureLockedBufferSize; 
+    g_dwNextCaptureOffset += dwDSCaptureLockedBufferSize;
     g_dwNextCaptureOffset %= g_dwCaptureBufferSize; // Circular buffer
 
     // Move the playback offset along
-    g_dwNextOutputOffset += dwDSOutputLockedBufferSize; 
+    g_dwNextOutputOffset += dwDSOutputLockedBufferSize;
     g_dwNextOutputOffset %= g_dwOutputBufferSize; // Circular buffer
 
     return S_OK;

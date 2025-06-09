@@ -79,19 +79,19 @@ cbuffer cbImmutable
         float3( -1.5, 0, 0 ),
         float3( 1.5, 0, 0 ),
     };
-    float2 g_leaftexcoords[4] = 
-    { 
-        float2(0,0), 
+    float2 g_leaftexcoords[4] =
+    {
+        float2(0,0),
         float2(1,0),
         float2(0,1),
         float2(1,1),
     };
-    
+
     float3 g_vLightDir = {-0.3,0.9056,-0.3};
 };
 
 cbuffer cbUIUpdates
-{   
+{
     float g_fLifeSpan;
     float g_fLifeSpanVar;
     float g_fRadiusMin;
@@ -188,11 +188,11 @@ VSPipeIn VSPassThrough(VSPipeIn input)
 PSSceneIn VSScene( VSSceneIn input )
 {
     PSSceneIn output;
-    
+
     output.pos = mul( float4(input.pos,1), g_mWorldViewProj );
     output.color = float4(0,0,0,1);
     output.tex = float3(input.tex, 0);
-    
+
     return output;
 }
 
@@ -202,17 +202,17 @@ PSSceneIn VSScene( VSSceneIn input )
 PSSkyIn VSSkymain(VSSkyIn input)
 {
     PSSkyIn output;
-    
+
     //
     // Transform the vert to view-space
     //
     float4 v4Position = mul(float4(input.pos, 1), g_mWorldViewProj);
     output.pos = v4Position;
-    
+
     //determine which face of the cube we're on
     uint iFace = input.VertexID/uint(6);
     output.tex = float3(input.tex, float(iFace) );
-    
+
     return output;
 }
 
@@ -233,37 +233,37 @@ float3 FixDir( float3 dir, float3 currentNorm )
 }
 
 void GSHandleStart(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputStream)
-{   
+{
     VSPipeIn output = input;
-    
+
     if(input.timerNtype.x == 0)
     {
         output.pos = g_triCenterBuffer.Load( input.currentFace*2 );
         output.dir = g_triCenterBuffer.Load( input.currentFace*2 + 1);
         output.targetdir = output.dir;
-        
+
         float3 newNorm = normalize(RandomDir( input.currentFace ));
         output.norm = FixDir( newNorm, output.dir );
-        
+
         float3 rand = normalize(RandomDir( input.currentFace + 100 ));
         float LifeVar = 10.0*rand.x;
         output.timerNtype.x = g_fLifeSpan+1.0;
         output.timerNtype.y = PT_GROW;
         output.currentFace = input.currentFace;
-        output.pipelife = -LifeVar; 
+        output.pipelife = -LifeVar;
     }
     else
         output.timerNtype.x --;
-        
+
     PointOutputStream.Append(output);
 }
 
 void GSHandleGrow(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputStream)
-{   
+{
     VSPipeIn output = input;
     float3 normRand;
-    
-    if(output.dir.x != output.targetdir.x || 
+
+    if(output.dir.x != output.targetdir.x ||
        output.dir.y != output.targetdir.y ||
        output.dir.z != output.targetdir.z )
     {
@@ -282,19 +282,19 @@ void GSHandleGrow(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputStream)
         {
             //if so, pick a new direction
             output.targetdir = normalize( RandomDir( 0 ) );
-        }   
+        }
     }
-            
+
     output.pos += output.dir*g_fStepSize;
     output.norm = FixDir( output.norm, output.dir );
     output.timerNtype.x = g_fLifeSpan;
-    output.leaves = 0;  
+    output.leaves = 0;
     output.pipelife ++;
 
     normRand = normalize( RandomDir( output.currentFace+100 ) );
     if( abs(normRand.x) < g_fLeafRate )
         output.leaves = abs(normRand.y)*2000;
-    
+
     if( output.pipelife > g_fLifeSpan )
     {
         output.timerNtype.x = 0;
@@ -302,7 +302,7 @@ void GSHandleGrow(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputStream)
         output.timerNtype.y = PT_START;
         output.currentFace = abs(normRand.z)*g_uMaxFaces;
     }
-        
+
     PointOutputStream.Append(output);
 }
 
@@ -317,10 +317,10 @@ void GSAdvancePipesMain(point VSPipeIn input[1], inout PointStream<VSPipeIn> Poi
         GSHandleStart( input[0], PointOutputStream );
     }
     else
-    {       
+    {
         if( PT_GROW == input[0].timerNtype.y )
             GSHandleGrow( input[0], PointOutputStream );
-            
+
         //emit us as a static
         VSPipeIn output = input[0];
         output.timerNtype.y = PT_STATIC;
@@ -337,28 +337,28 @@ void GSAdvancePipesMain(point VSPipeIn input[1], inout PointStream<VSPipeIn> Poi
 ////////////////////////////////
 
 void GSCrawlHandleStart(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputStreamCrawl )
-{   
+{
     VSPipeIn output = input;
-    
+
     if(input.timerNtype.x == 0)
     {
         output.pos = g_triCenterBuffer.Load( input.currentFace*2 );
         output.norm = g_triCenterBuffer.Load( input.currentFace*2 + 1);
         output.targetdir = output.pos;
-        
+
         float3 newDir = normalize(RandomDir( input.currentFace ));
         output.dir = FixDir( newDir, output.norm );
-        
+
         float3 rand = normalize(RandomDir( input.currentFace + 100 ));
         float LifeVar = 10.0*rand.x;
         output.timerNtype.x = g_fLifeSpan+1.0;
         output.timerNtype.y = PT_GROW;
         output.currentFace = input.currentFace;
-        output.pipelife = -LifeVar; 
+        output.pipelife = -LifeVar;
     }
     else
         output.timerNtype.x --;
-        
+
     PointOutputStreamCrawl.Append(output);
 }
 
@@ -366,42 +366,42 @@ void GSCrawlPicNewTarget( VSPipeIn input, inout PointStream<VSPipeIn> PointOutpu
 {
     VSPipeIn output = input;
     output.pos = output.targetdir;
-    
+
     float neighbor1 = g_adjBuffer.Load( output.currentFace*3     );
     float neighbor2 = g_adjBuffer.Load( output.currentFace*3 + 1 );
     float neighbor3 = g_adjBuffer.Load( output.currentFace*3 + 2 );
-    
+
     float3 center1 = g_triCenterBuffer.Load( neighbor1*2 );
     float3 normal1 = g_triCenterBuffer.Load( neighbor1*2 + 1 );
     float3 dir1 = center1 - output.pos;
-    
+
     float3 center2 = g_triCenterBuffer.Load( neighbor2*2 );
     float3 normal2 = g_triCenterBuffer.Load( neighbor2*2 + 1 );
     float3 dir2 = center2 - output.pos;
-    
+
     float3 center3 = g_triCenterBuffer.Load( neighbor3*2 );
     float3 normal3 = g_triCenterBuffer.Load( neighbor3*2 + 1 );
     float3 dir3 = center3 - output.pos;
-    
+
     float3 normRand = normalize( RandomDir( float(input.currentFace) ) );
     if( abs(normRand.x) < g_fTurnRate )
     {
         output.dir = RandomDir( 15 );
     }
-    
+
     float d1 = dot( output.dir, normalize(dir1) );
     float d2 = dot( output.dir, normalize(dir2) );
     float d3 = dot( output.dir, normalize(dir3) );
-    
+
     if( neighbor1 < 40000000 && d1 > d2 && d1 > d2 )
     {
-    
+
         output.dir = FixDir( output.dir, normal1 );
         output.norm = normal1;
         output.currentFace = neighbor1;
         output.targetdir = center1;
     }
-    
+
     else if( neighbor2 < 40000000 && d2 > d1 && d2 > d3 )
     {
         output.dir = FixDir( output.dir, normal2 );
@@ -409,7 +409,7 @@ void GSCrawlPicNewTarget( VSPipeIn input, inout PointStream<VSPipeIn> PointOutpu
         output.currentFace = neighbor2;
         output.targetdir = center2;
     }
-    
+
     else
     {
         output.dir = FixDir( output.dir, normal3 );
@@ -417,12 +417,12 @@ void GSCrawlPicNewTarget( VSPipeIn input, inout PointStream<VSPipeIn> PointOutpu
         output.currentFace = neighbor3;
         output.targetdir = center3;
     }
-    
+
     PointOutputStreamCrawl.Append( output );
 }
 
 void GSCrawlHandleGrow(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputStreamCrawl)
-{   
+{
     float fLen = length( input.pos - input.targetdir );
     if( fLen < g_fStepSize )
     {
@@ -439,12 +439,12 @@ void GSCrawlHandleGrow(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputSt
         output.pos += output.dir*g_fStepSize;
         output.norm = FixDir( output.norm, output.dir );
         output.timerNtype.x = g_fLifeSpan;
-        output.leaves = 0;  
-    
+        output.leaves = 0;
+
         float3 normRand = normalize( RandomDir( output.currentFace ) );
         if( abs(normRand.x) < g_fLeafRate )
             output.leaves = abs(normRand.y)*2000;
-    
+
         if( output.pipelife > g_fLifeSpan )
         {
             output.timerNtype.x = 0;
@@ -452,7 +452,7 @@ void GSCrawlHandleGrow(VSPipeIn input, inout PointStream<VSPipeIn> PointOutputSt
             output.timerNtype.y = PT_START;
             output.currentFace = abs(normRand.z)*g_uMaxFaces;
         }
-    
+
         PointOutputStreamCrawl.Append(output);
     }
 }
@@ -468,10 +468,10 @@ void GSCrawlPipesMain(point VSPipeIn input[1], inout PointStream<VSPipeIn> Point
         GSCrawlHandleStart( input[0], PointOutputStreamCrawl );
     }
     else
-    {       
+    {
         if( PT_GROW == input[0].timerNtype.y )
             GSCrawlHandleGrow( input[0], PointOutputStreamCrawl );
-            
+
         //emit us as a static
         VSPipeIn output = input[0];
         output.timerNtype.y = PT_STATIC;
@@ -487,13 +487,13 @@ float GetRadius( float fMinRad, float timer, float pipetime )
 {
     float fTime = saturate( (g_fLifeSpan-timer)/g_fGrowTime );
     float fRad = fMinRad + ((g_fRadiusMax - fMinRad)*(fTime));
-    
+
     //shrink amount
     if( g_fLifeSpan - pipetime < g_fShrinkTime )
     {
         fRad *= (g_fLifeSpan - pipetime)/g_fShrinkTime;
     }
-    
+
     return fRad;
 }
 
@@ -523,7 +523,7 @@ void GSOutputLeaf( float3x3 m, float3 inpos, float timer, float pipetime, uint l
     output.color.a = 1;
     uint iLeafTex = 1+ leaf - (leaf/(uint)5)*(uint)5;
     output.tex.z = float( iLeafTex );
-        
+
     // Emit two new triangles
     //loops cannot index constant buffers right now
     for(int i=0; i<4; i++)
@@ -534,7 +534,7 @@ void GSOutputLeaf( float3x3 m, float3 inpos, float timer, float pipetime, uint l
         output.tex.xy = g_leaftexcoords[i];
         TriangleOutputStream.Append(output);
     }
-    
+
     TriangleOutputStream.RestartStrip();
 }
 
@@ -556,7 +556,7 @@ void GSScenemain(line VSPipeIn input[2], inout TriangleStream<PSSceneIn> Triangl
 
         float3 pos0 = input[0].pos;
         float3 pos1 = input[1].pos;
-        
+
         //loops don't index constant buffers correctly yet
         for(int i=0; i<7; i++)
         {
@@ -564,7 +564,7 @@ void GSScenemain(line VSPipeIn input[2], inout TriangleStream<PSSceneIn> Triangl
             GSOutputPoint( m1, pos1, i, 1.0, input[1].timerNtype.x, input[1].pipelife, TriangleOutputStream );
         }
         TriangleOutputStream.RestartStrip();
-        
+
         //if we have leaves, draw them
         if( input[0].leaves > 0)
         {
@@ -577,7 +577,7 @@ void GSScenemain(line VSPipeIn input[2], inout TriangleStream<PSSceneIn> Triangl
 // PS for rendering texture * color
 //
 float4 PSScenemain(PSSceneIn input) : SV_Target
-{   
+{
     float4 color = g_tx2dArray.Sample( g_samLinear, input.tex )*input.color;
     if(color.a < 0.5)
         discard;
@@ -588,7 +588,7 @@ float4 PSScenemain(PSSceneIn input) : SV_Target
 // PS for rendering transparent non-textured materials
 //
 float4 PSAlphamain(PSSceneIn input) : SV_Target
-{   
+{
     float4 col = vMaterialDiff*input.color;
     col.a = 0.5;
     return col;
@@ -598,7 +598,7 @@ float4 PSAlphamain(PSSceneIn input) : SV_Target
 // PS for rendering white materials
 //
 float4 PSTextureOnlymain(PSSceneIn input) : SV_Target
-{   
+{
     float4 col = g_txDiffuse.Sample( g_samClamp, input.tex );
     return col;
 }
@@ -625,7 +625,7 @@ technique10 RenderPipes
 
         SetRasterizerState( DisableCulling );
         SetDepthStencilState( EnableDepthTestWrite, 0 );
-    }  
+    }
 }
 
 //
@@ -639,9 +639,9 @@ technique10 AdvancePipes
         SetVertexShader( CompileShader( vs_4_0, VSPassThrough() ) );
         SetGeometryShader( gsStreamOut );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -655,9 +655,9 @@ technique10 AdvancePipesCrawl
         SetVertexShader( CompileShader( vs_4_0, VSPassThrough() ) );
         SetGeometryShader( gsStreamOutCrawl );
         SetPixelShader( NULL );
-        
+
         SetDepthStencilState( DisableDepth, 0 );
-    }  
+    }
 }
 
 //
@@ -670,10 +670,10 @@ technique10 RenderMesh
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSTextureOnlymain() ) );
-        
+
         SetRasterizerState( EnableCulling );
         SetDepthStencilState( EnableDepthTestWrite, 0 );
-    }  
+    }
 }
 
 //
@@ -686,7 +686,7 @@ technique10 RenderSkybox
         SetVertexShader( CompileShader( vs_4_0, VSSkymain() ) );
         SetGeometryShader( NULL );
         SetPixelShader( CompileShader( ps_4_0, PSQuadmain() ) );
-        
+
         SetDepthStencilState( DisableDepthTestWrite, 0 );
-    }  
+    }
 }

@@ -9,7 +9,7 @@
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
 #include <d3d9.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 
@@ -38,8 +38,8 @@ HRESULT InitD3D( HWND hWnd )
     // Set up the structure used to create the D3DDevice. Most parameters are
     // zeroed out. We set Windowed to TRUE, since we want to do D3D in a
     // window, and then set the SwapEffect to "discard", which is the most
-    // efficient method of presenting the back buffer to the display.  And 
-    // we request a back buffer format that matches the current desktop display 
+    // efficient method of presenting the back buffer to the display.  And
+    // we request a back buffer format that matches the current desktop display
     // format.
     D3DPRESENT_PARAMETERS d3dpp;
     ZeroMemory( &d3dpp, sizeof( d3dpp ) );
@@ -50,9 +50,9 @@ HRESULT InitD3D( HWND hWnd )
     // Create the Direct3D device. Here we are using the default adapter (most
     // systems only have one, unless they have multiple graphics hardware cards
     // installed) and requesting the HAL (which is saying we want the hardware
-    // device rather than a software one). Software vertex processing is 
-    // specified since we know it will work on all cards. On cards that support 
-    // hardware vertex processing, though, we would see a big performance gain 
+    // device rather than a software one). Software vertex processing is
+    // specified since we know it will work on all cards. On cards that support
+    // hardware vertex processing, though, we would see a big performance gain
     // by specifying hardware vertex processing.
     if( FAILED( g_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
                                       D3DCREATE_SOFTWARE_VERTEXPROCESSING,

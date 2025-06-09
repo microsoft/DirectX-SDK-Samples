@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: PNTriangles11.cpp
 //
-// This code sample demonstrates the use of DX11 Hull & Domain shaders to implement the 
+// This code sample demonstrates the use of DX11 Hull & Domain shaders to implement the
 // PN-Triangles tessellation technique
 //
 // Contributed by the AMD Developer Relations Team
@@ -39,7 +39,7 @@ CDXUTDialog                 g_HUD;                      // Dialog for standard c
 CDXUTDialog                 g_SampleUI;                 // Dialog for sample specific controls
 CDXUTTextHelper*            g_pTxtHelper = NULL;
 
-// The scene meshes 
+// The scene meshes
 CDXUTSDKMesh                g_SceneMesh[MESH_TYPE_MAX];
 static ID3D11InputLayout*   g_pSceneVertexLayout = NULL;
 MESH_TYPE                   g_eMeshType = MESH_TYPE_TINY;
@@ -63,7 +63,7 @@ struct CB_PNTRIANGLES
 {
     D3DXMATRIX f4x4World;               // World matrix for object
     D3DXMATRIX f4x4ViewProjection;      // View * Projection matrix
-    D3DXMATRIX f4x4WorldViewProjection; // World * View * Projection matrix  
+    D3DXMATRIX f4x4WorldViewProjection; // World * View * Projection matrix
     float fLightDir[4];                 // Light direction vector
     float fEye[4];                      // Eye
     float fViewVector[4];               // View Vector
@@ -76,7 +76,7 @@ struct CB_PNTRIANGLES
 UINT                    g_iPNTRIANGLESCBBind = 0;
 
 // Various Constant buffers
-static ID3D11Buffer*    g_pcbPNTriangles = NULL;                 
+static ID3D11Buffer*    g_pcbPNTriangles = NULL;
 
 // State objects
 ID3D11RasterizerState*  g_pRasterizerStateWireframe = NULL;
@@ -102,10 +102,10 @@ static float g_fSilhoutteEpsilon = 0.25f;
 static float g_fRangeScale = 1.0f;
 
 // Edge scale (for screen space adaptive tessellation)
-static unsigned int g_uEdgeSize = 16; 
+static unsigned int g_uEdgeSize = 16;
 
 // Edge scale (for screen space adaptive tessellation)
-static float g_fResolutionScale = 1.0f; 
+static float g_fResolutionScale = 1.0f;
 
 // View frustum culling epsilon
 static float g_fViewFrustumCullEpsilon = 0.5f;
@@ -164,7 +164,7 @@ static CmdLineParams g_CmdLineParams;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext );
@@ -188,14 +188,14 @@ void InitApp();
 void RenderText();
 
 // Helper functions
-HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, 
+HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint,
                                LPCSTR szShaderModel, ID3DBlob** ppBlobOut, D3D_SHADER_MACRO* pDefines );
 bool IsNextArg( WCHAR*& strCmdLine, WCHAR* strArg );
 bool GetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag );
 void ParseCommandLine();
 void CaptureFrame();
-void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, 
-                 D3D11_PRIMITIVE_TOPOLOGY PrimType = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED, 
+void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh,
+                 D3D11_PRIMITIVE_TOPOLOGY PrimType = D3D11_PRIMITIVE_TOPOLOGY_UNDEFINED,
                  UINT uDiffuseSlot = INVALID_SAMPLER_SLOT, UINT uNormalSlot = INVALID_SAMPLER_SLOT,
                  UINT uSpecularSlot = INVALID_SAMPLER_SLOT );
 bool FileExists( WCHAR* pFileName );
@@ -204,7 +204,7 @@ void NormalizePlane( D3DXVECTOR4* pPlaneEquation );
 void ExtractPlanesFromFrustum( D3DXVECTOR4* pPlaneEquation, const D3DXMATRIX* pMatrix );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -221,7 +221,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     DXUTSetCallbackMsgProc( MsgProc );
     DXUTSetCallbackKeyboard( OnKeyboard );
     DXUTSetCallbackFrameMove( OnFrameMove );
-    
+
     DXUTSetCallbackD3D11DeviceAcceptable( IsD3D11DeviceAcceptable );
     DXUTSetCallbackD3D11DeviceCreated( OnD3D11CreateDevice );
     DXUTSetCallbackD3D11SwapChainResized( OnD3D11ResizedSwapChain );
@@ -232,7 +232,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
     ParseCommandLine();
 
     InitApp();
-    
+
     DXUTInit( true, true );                 // Use this line instead to try to create a hardware device
 
     DXUTSetCursorSettings( true, true );    // Show the cursor and clip it when in full screen
@@ -246,7 +246,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -255,12 +255,12 @@ void InitApp()
     g_SampleUI.Init( &g_DialogResourceManager );
     g_SampleUI.GetFont( 0 );
 
-    g_HUD.SetCallback( OnGUIEvent ); 
+    g_HUD.SetCallback( OnGUIEvent );
     int iY = 30;
     g_HUD.AddButton( IDC_TOGGLEFULLSCREEN, L"Toggle full screen", 0, iY, 170, 23 );
     g_HUD.AddButton( IDC_TOGGLEREF, L"Toggle REF (F3)", 0, iY += 26, 170, 23, VK_F3 );
     g_HUD.AddButton( IDC_CHANGEDEVICE, L"Change device (F2)", 0, iY += 26, 170, 23, VK_F2 );
-    
+
 
     g_SampleUI.SetCallback( OnGUIEvent );
     iY = 0;
@@ -282,48 +282,48 @@ void InitApp()
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_TEXTURED, L"Textured", 0, iY += 25, 140, 24, true );
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_TESSELLATION, L"Tessellation", 0, iY += 25, 140, 24, true );
     WCHAR szTemp[256];
-    
+
     // Tess factor
     swprintf_s( szTemp, L"%d", g_uTessFactor );
     g_SampleUI.AddStatic( IDC_STATIC_TESS_FACTOR, szTemp, 140, iY += 25, 108, 24 );
     g_SampleUI.AddSlider( IDC_SLIDER_TESS_FACTOR, 0, iY, 120, 24, 1, 5, 1 + ( g_uTessFactor - 1 ) / 2, false );
-    
+
     // Culling Techniques
     g_SampleUI.AddStatic( IDC_STATIC_CULLING_TECHNIQUES, L"-Culling Techniques-", 5, iY += 50, 108, 24 );
-    
+
     // Back face culling
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_BACK_FACE_CULL, L"Back Face Cull", 0, iY += 30, 140, 24, false );
     swprintf_s( szTemp, L"%.2f", g_fBackFaceCullEpsilon );
     g_SampleUI.AddStatic( IDC_STATIC_BACK_FACE_CULL_EPSILON, szTemp, 140, iY += 25, 108, 24 );
     g_SampleUI.AddSlider( IDC_SLIDER_BACK_FACE_CULL_EPSILON, 0, iY, 120, 24, 0, 100, (unsigned int)( g_fBackFaceCullEpsilon * 100.0f ), false );
-    
+
     // View frustum culling
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_VIEW_FRUSTUM_CULL, L"View Frustum Cull", 0, iY += 30, 140, 24, false );
     swprintf_s( szTemp, L"%.2f", g_fViewFrustumCullEpsilon );
     g_SampleUI.AddStatic( IDC_STATIC_VIEW_FRUSTUM_CULL_EPSILON, szTemp, 140, iY += 25, 108, 24 );
     g_SampleUI.AddSlider( IDC_SLIDER_VIEW_FRUSTUM_CULL_EPSILON, 0, iY, 120, 24, 0, 100, (unsigned int)( g_fViewFrustumCullEpsilon * 100.0f ), false );
-        
+
     // Adaptive Techniques
     g_SampleUI.AddStatic( IDC_STATIC_ADAPTIVE_TECHNIQUES, L"-Adaptive Techniques-", 5, iY += 50, 108, 24 );
-    
+
     // Screen space adaptive
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_SCREEN_SPACE_ADAPTIVE, L"Screen Space", 0, iY += 30, 140, 24, false ); 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_SCREEN_SPACE_ADAPTIVE, L"Screen Space", 0, iY += 30, 140, 24, false );
     swprintf_s( szTemp, L"%d", g_uEdgeSize );
     g_SampleUI.AddStatic( IDC_STATIC_EDGE_SIZE, szTemp, 140, iY += 25, 108, 24 );
     g_SampleUI.AddSlider( IDC_SLIDER_EDGE_SIZE, 0, iY, 120, 24, 0, 100, (unsigned int)( g_uEdgeSize ), false );
-    
+
     // Distance adaptive
-    g_SampleUI.AddCheckBox( IDC_CHECKBOX_DISTANCE_ADAPTIVE, L"Distance", 0, iY += 30, 140, 24, false ); 
+    g_SampleUI.AddCheckBox( IDC_CHECKBOX_DISTANCE_ADAPTIVE, L"Distance", 0, iY += 30, 140, 24, false );
     swprintf_s( szTemp, L"%.2f", g_fRangeScale );
     g_SampleUI.AddStatic( IDC_STATIC_RANGE_SCALE, szTemp, 140, iY += 25, 108, 24 );
     g_SampleUI.AddSlider( IDC_SLIDER_RANGE_SCALE, 0, iY, 120, 24, 0, 100, (unsigned int)( g_fRangeScale * 50.0f ), false );
-    
+
     // Screen resolution adaptive
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_SCREEN_RESOLUTION_ADAPTIVE, L"Screen Resolution", 0, iY += 30, 140, 24, false );
     swprintf_s( szTemp, L"%.2f", g_fResolutionScale );
     g_SampleUI.AddStatic( IDC_STATIC_SCREEN_RESOLUTION_SCALE, szTemp, 140, iY += 25, 108, 24 );
     g_SampleUI.AddSlider( IDC_SLIDER_SCREEN_RESOLUTION_SCALE, 0, iY, 120, 24, 0, 100, (unsigned int)( g_fResolutionScale * 50.0f ), false );
-    
+
     // Orientation adaptive
     g_SampleUI.AddCheckBox( IDC_CHECKBOX_ORIENTATION_ADAPTIVE, L"Orientation", 0, iY += 30, 140, 24, false );
     swprintf_s( szTemp, L"%.2f", g_fSilhoutteEpsilon );
@@ -333,12 +333,12 @@ void InitApp()
 
 
 //--------------------------------------------------------------------------------------
-// This callback function is called immediately before a device is created to allow the 
-// application to modify the device settings. The supplied pDeviceSettings parameter 
-// contains the settings that the framework has selected for the new device, and the 
-// application can make any desired changes directly to this structure.  Note however that 
-// DXUT will not correct invalid device settings so care must be taken 
-// to return valid device settings, otherwise CreateDevice() will fail.  
+// This callback function is called immediately before a device is created to allow the
+// application to modify the device settings. The supplied pDeviceSettings parameter
+// contains the settings that the framework has selected for the new device, and the
+// application can make any desired changes directly to this structure.  Note however that
+// DXUT will not correct invalid device settings so care must be taken
+// to return valid device settings, otherwise CreateDevice() will fail.
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
@@ -362,13 +362,13 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera[g_eMeshType].FrameMove( fElapsedTime );
     g_LightCamera.FrameMove( fElapsedTime );
 }
@@ -380,7 +380,7 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 void RenderText()
 {
     g_pTxtHelper->Begin();
-    
+
     g_pTxtHelper->SetInsertionPos( 2, 0 );
     g_pTxtHelper->SetForegroundColor( D3DXCOLOR( 1.0f, 1.0f, 0.0f, 1.0f ) );
     g_pTxtHelper->DrawTextLine( DXUTGetFrameStats( DXUTIsVsyncEnabled() ) );
@@ -395,8 +395,8 @@ void RenderText()
 
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -437,7 +437,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 {
     WCHAR szTemp[256];
     bool bEnable;
-    
+
     switch( nControlID )
     {
         case IDC_TOGGLEFULLSCREEN:
@@ -463,7 +463,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             if( MESH_TYPE_USER == g_eMeshType )
             {
                 g_SampleUI.GetCheckBox( IDC_CHECKBOX_TEXTURED )->SetEnabled( ( g_pDiffuseTextureSRV != NULL ) ? ( true ) : ( false ) );
-                g_SampleUI.GetCheckBox( IDC_CHECKBOX_TEXTURED )->SetChecked( ( g_pDiffuseTextureSRV != NULL ) ? 
+                g_SampleUI.GetCheckBox( IDC_CHECKBOX_TEXTURED )->SetChecked( ( g_pDiffuseTextureSRV != NULL ) ?
                     ( g_SampleUI.GetCheckBox( IDC_CHECKBOX_TEXTURED )->GetChecked() ) : ( false ) );
             }
             else
@@ -550,7 +550,7 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
             }
             CreateHullShader();
             break;
-    
+
         case IDC_SLIDER_BACK_FACE_CULL_EPSILON:
             g_fBackFaceCullEpsilon = (float)((CDXUTSlider*)pControl)->GetValue() / 100.0f;
             swprintf_s( szTemp, L"%.2f", g_fBackFaceCullEpsilon );
@@ -603,7 +603,7 @@ void CALLBACK OnKeyboard( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserC
     {
         switch( nChar )
         {
-            case VK_C:    
+            case VK_C:
                 swprintf_s( g_CmdLineParams.strCaptureFilename, L"FrameCapture%d.bmp", iCaptureNumber );
                 CaptureFrame();
                 iCaptureNumber++;
@@ -648,12 +648,12 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     ShaderMacros[1].Definition = "1";
     ShaderMacros[2].Definition = "1";
     ShaderMacros[3].Definition = "1";
-        
+
     // Main scene VS (no tessellation)
-    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "VS_RenderScene", "vs_4_0", &pBlob, NULL ) ); 
+    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "VS_RenderScene", "vs_4_0", &pBlob, NULL ) );
     V_RETURN( pd3dDevice->CreateVertexShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pSceneVS ) );
     DXUT_SetDebugName( g_pSceneVS, "VS_RenderScene" );
-    
+
     // Define our scene vertex data layout
     const D3D11_INPUT_ELEMENT_DESC SceneLayout[] =
     {
@@ -667,43 +667,43 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     DXUT_SetDebugName( g_pSceneVertexLayout, "Primary" );
 
     // Main scene VS (with tessellation)
-    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "VS_RenderSceneWithTessellation", "vs_4_0", &pBlob, NULL ) ); 
+    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "VS_RenderSceneWithTessellation", "vs_4_0", &pBlob, NULL ) );
     V_RETURN( pd3dDevice->CreateVertexShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pSceneWithTessellationVS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pSceneWithTessellationVS, "VS_RenderSceneWithTessellation" );
 
     // PNTriangles HS
     V_RETURN( CreateHullShader() );
-            
+
     // PNTriangles DS
-    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "DS_PNTriangles", "ds_5_0", &pBlob, NULL ) ); 
+    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "DS_PNTriangles", "ds_5_0", &pBlob, NULL ) );
     V_RETURN( pd3dDevice->CreateDomainShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pPNTrianglesDS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pPNTrianglesDS, "DS_PNTriangles" );
 
     // Main scene PS (no textures)
-    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "PS_RenderScene", "ps_4_0", &pBlob, NULL ) ); 
+    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "PS_RenderScene", "ps_4_0", &pBlob, NULL ) );
     V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pScenePS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pScenePS, "PS_RenderScene" );
-    
+
     // Main scene PS (textured)
-    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "PS_RenderSceneTextured", "ps_4_0", &pBlob, NULL ) ); 
+    V_RETURN( CompileShaderFromFile( L"PNTriangles11.hlsl", "PS_RenderSceneTextured", "ps_4_0", &pBlob, NULL ) );
     V_RETURN( pd3dDevice->CreatePixelShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, &g_pTexturedScenePS ) );
     SAFE_RELEASE( pBlob );
     DXUT_SetDebugName( g_pTexturedScenePS, "PS_RenderSceneTextured" );
-    
+
     // Setup constant buffer
     D3D11_BUFFER_DESC Desc;
     Desc.Usage = D3D11_USAGE_DYNAMIC;
     Desc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
     Desc.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
-    Desc.MiscFlags = 0;    
+    Desc.MiscFlags = 0;
     Desc.ByteWidth = sizeof( CB_PNTRIANGLES );
     V_RETURN( pd3dDevice->CreateBuffer( &Desc, NULL, &g_pcbPNTriangles ) );
     DXUT_SetDebugName( g_pcbPNTriangles, "CB_PNTRIANGLES" );
 
-    // Setup the camera for each scene   
+    // Setup the camera for each scene
     D3DXVECTOR3 vecEye( 0.0f, 0.0f, 0.0f );
     D3DXVECTOR3 vecAt ( 0.0f, 0.0f, 0.0f );
     // Tiny
@@ -738,12 +738,12 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
     D3DXMATRIXA16 mModelRotationY;
     D3DXMATRIXA16 mModelTranslation;
     // Tiny
-    D3DXMatrixRotationX( &mModelRotationX, -D3DX_PI / 2 ); 
-    D3DXMatrixRotationY( &mModelRotationY, D3DX_PI ); 
+    D3DXMatrixRotationX( &mModelRotationX, -D3DX_PI / 2 );
+    D3DXMatrixRotationY( &mModelRotationY, D3DX_PI );
     g_m4x4MeshMatrix[MESH_TYPE_TINY] = mModelRotationX * mModelRotationY;
     // Tiger
-    D3DXMatrixRotationX( &mModelRotationX, -D3DX_PI / 36 ); 
-    D3DXMatrixRotationY( &mModelRotationY, D3DX_PI / 4 ); 
+    D3DXMatrixRotationX( &mModelRotationX, -D3DX_PI / 36 );
+    D3DXMatrixRotationY( &mModelRotationY, D3DX_PI / 4 );
     g_m4x4MeshMatrix[MESH_TYPE_TIGER] = mModelRotationX * mModelRotationY;
     // Teapot
     D3DXMatrixIdentity( &g_m4x4MeshMatrix[MESH_TYPE_TEAPOT] );
@@ -765,7 +765,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"teapot\\teapot.sdkmesh" ) );
     V_RETURN( g_SceneMesh[MESH_TYPE_TEAPOT].Create( pd3dDevice, str ) );
-    
+
     // Load a user mesh and textures if present
     g_bUserMesh = false;
     g_pDiffuseTextureSRV = NULL;
@@ -784,7 +784,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
         V_RETURN( D3DX11CreateShaderResourceViewFromFile( pd3dDevice, L"media\\user\\diffuse.dds", NULL, NULL, &g_pDiffuseTextureSRV, NULL ) )
         DXUT_SetDebugName( g_pDiffuseTextureSRV, "user\\diffuse.dds" );
     }
-                        
+
     // Create sampler states for point and linear
     // Point
     D3D11_SAMPLER_DESC SamDesc;
@@ -845,7 +845,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     V_RETURN( g_DialogResourceManager.OnD3D11ResizedSwapChain( pd3dDevice, pBackBufferSurfaceDesc ) );
     V_RETURN( g_D3DSettingsDlg.OnD3D11ResizedSwapChain( pd3dDevice, pBackBufferSurfaceDesc ) );
 
-    // Setup the camera's projection parameters    
+    // Setup the camera's projection parameters
     float fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT )pBackBufferSurfaceDesc->Height;
     for( int iMeshType=0; iMeshType<MESH_TYPE_MAX; iMeshType++ )
     {
@@ -879,7 +879,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     TexDesc.ArraySize = 1;
     V_RETURN( pd3dDevice->CreateTexture2D( &TexDesc, NULL, &g_pCaptureTexture ) )
     DXUT_SetDebugName( g_pCaptureTexture, "Capture" );
-    
+
     return S_OK;
 }
 
@@ -902,7 +902,7 @@ ID3D11Buffer* CreateAndCopyToDebugBuf( ID3D11Device* pDevice, ID3D11DeviceContex
     DXUT_SetDebugName( debugbuf, "Debug" );
 
     pd3dImmediateContext->CopyResource( debugbuf, pBuffer );
-    
+
     return debugbuf;
 }
 
@@ -926,8 +926,8 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // Clear the render target & depth stencil
     float ClearColor[4] = { 0.176f, 0.196f, 0.667f, 0.0f };
     pd3dImmediateContext->ClearRenderTargetView( DXUTGetD3D11RenderTargetView(), ClearColor );
-    pd3dImmediateContext->ClearDepthStencilView( DXUTGetD3D11DepthStencilView(), D3D11_CLEAR_DEPTH, 1.0, 0 );    
-    
+    pd3dImmediateContext->ClearDepthStencilView( DXUTGetD3D11DepthStencilView(), D3D11_CLEAR_DEPTH, 1.0, 0 );
+
     // Get the projection & view matrix from the camera class
     D3DXMATRIXA16 mWorld;
     D3DXMATRIXA16 mView;
@@ -939,7 +939,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     mProj = *g_Camera[g_eMeshType].GetProjMatrix();
     mWorldViewProjection = mWorld * mView * mProj;
     mViewProjection = mView * mProj;
-    
+
     // Get the direction of the light.
     D3DXVECTOR3 v3LightDir = *g_LightCamera.GetEyePt() - *g_LightCamera.GetLookAtPt();
     D3DXVec3Normalize( &v3LightDir, &v3LightDir );
@@ -959,9 +959,9 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     D3DXMatrixTranspose( &pPNTrianglesCB->f4x4World, &mWorld );
     D3DXMatrixTranspose( &pPNTrianglesCB->f4x4ViewProjection, &mViewProjection );
     D3DXMatrixTranspose( &pPNTrianglesCB->f4x4WorldViewProjection, &mWorldViewProjection );
-    pPNTrianglesCB->fLightDir[0] = v3LightDir.x; 
-    pPNTrianglesCB->fLightDir[1] = v3LightDir.y; 
-    pPNTrianglesCB->fLightDir[2] = v3LightDir.z; 
+    pPNTrianglesCB->fLightDir[0] = v3LightDir.x;
+    pPNTrianglesCB->fLightDir[1] = v3LightDir.y;
+    pPNTrianglesCB->fLightDir[2] = v3LightDir.z;
     pPNTrianglesCB->fLightDir[3] = 0.0f;
     pPNTrianglesCB->fEye[0] = g_Camera[g_eMeshType].GetEyePt()->x;
     pPNTrianglesCB->fEye[1] = g_Camera[g_eMeshType].GetEyePt()->y;
@@ -981,10 +981,10 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     pPNTrianglesCB->fGUIParams1[3] = (float)g_uEdgeSize;
     pPNTrianglesCB->fGUIParams2[0] = g_fResolutionScale;
     pPNTrianglesCB->fGUIParams2[1] = ( ( g_fViewFrustumCullEpsilon * 2.0f ) - 1.0f ) * g_v3AdaptiveTessParams[g_eMeshType].z;
-    pPNTrianglesCB->f4ViewFrustumPlanes[0] = f4ViewFrustumPlanes[0]; 
-    pPNTrianglesCB->f4ViewFrustumPlanes[1] = f4ViewFrustumPlanes[1]; 
-    pPNTrianglesCB->f4ViewFrustumPlanes[2] = f4ViewFrustumPlanes[2]; 
-    pPNTrianglesCB->f4ViewFrustumPlanes[3] = f4ViewFrustumPlanes[3]; 
+    pPNTrianglesCB->f4ViewFrustumPlanes[0] = f4ViewFrustumPlanes[0];
+    pPNTrianglesCB->f4ViewFrustumPlanes[1] = f4ViewFrustumPlanes[1];
+    pPNTrianglesCB->f4ViewFrustumPlanes[2] = f4ViewFrustumPlanes[2];
+    pPNTrianglesCB->f4ViewFrustumPlanes[3] = f4ViewFrustumPlanes[3];
     pd3dImmediateContext->Unmap( g_pcbPNTriangles, 0 );
     pd3dImmediateContext->VSSetConstantBuffers( g_iPNTRIANGLESCBBind, 1, &g_pcbPNTriangles );
     pd3dImmediateContext->PSSetConstantBuffers( g_iPNTRIANGLESCBBind, 1, &g_pcbPNTriangles );
@@ -992,7 +992,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     // Based on app and GUI settings set a bunch of bools that guide the render
     bool bTessellation = g_SampleUI.GetCheckBox( IDC_CHECKBOX_TESSELLATION )->GetChecked();
     bool bTextured = g_SampleUI.GetCheckBox( IDC_CHECKBOX_TEXTURED )->GetChecked() && g_SampleUI.GetCheckBox( IDC_CHECKBOX_TEXTURED )->GetEnabled();
-        
+
     // VS
     if( bTessellation )
     {
@@ -1011,8 +1011,8 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         pd3dImmediateContext->HSSetConstantBuffers( g_iPNTRIANGLESCBBind, 1, &g_pcbPNTriangles );
         pHS = g_pPNTrianglesHS;
     }
-    pd3dImmediateContext->HSSetShader( pHS, NULL, 0 );    
-    
+    pd3dImmediateContext->HSSetShader( pHS, NULL, 0 );
+
     // DS
     ID3D11DomainShader* pDS = NULL;
     if( bTessellation )
@@ -1021,7 +1021,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
         pDS = g_pPNTrianglesDS;
     }
     pd3dImmediateContext->DSSetShader( pDS, NULL, 0 );
-    
+
     // GS
     pd3dImmediateContext->GSSetShader( NULL, NULL, 0 );
 
@@ -1062,12 +1062,12 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     {
         PrimitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
     }
-    // Render the meshes    
+    // Render the meshes
     for( int iMesh = 0; iMesh < (int)g_SceneMesh[g_eMeshType].GetNumMeshes(); iMesh++ )
     {
         RenderMesh( &g_SceneMesh[g_eMeshType], (UINT)iMesh, PrimitiveTopology, uDiffuseSlot );
     }
-    
+
     // Render GUI
     if( g_CmdLineParams.bRenderHUD )
     {
@@ -1075,11 +1075,11 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
         g_HUD.OnRender( fElapsedTime );
         g_SampleUI.OnRender( fElapsedTime );
-        
+
         DXUT_EndPerfEvent();
     }
 
-    // Always render text info 
+    // Always render text info
     RenderText();
 
     // Decrement the exit frame counter
@@ -1099,7 +1099,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -1119,13 +1119,13 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     SAFE_RELEASE( g_pPNTrianglesDS );
     SAFE_RELEASE( g_pScenePS );
     SAFE_RELEASE( g_pTexturedScenePS );
-        
+
     SAFE_RELEASE( g_pcbPNTriangles );
 
     SAFE_RELEASE( g_pCaptureTexture );
 
     SAFE_RELEASE( g_pSceneVertexLayout );
-    
+
     SAFE_RELEASE( g_pSamplePoint );
     SAFE_RELEASE( g_pSampleLinear );
 
@@ -1148,10 +1148,10 @@ void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// Helper function to compile an hlsl shader from file, 
+// Helper function to compile an hlsl shader from file,
 // its binary compiled code is returned
 //--------------------------------------------------------------------------------------
-HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, 
+HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint,
                                LPCSTR szShaderModel, ID3DBlob** ppBlobOut, D3D_SHADER_MACRO* pDefines )
 {
     HRESULT hr = S_OK;
@@ -1163,14 +1163,14 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint,
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
     ID3DBlob* pErrorBlob;
-    hr = D3DX11CompileFromFile( str, pDefines, NULL, szEntryPoint, szShaderModel, 
+    hr = D3DX11CompileFromFile( str, pDefines, NULL, szEntryPoint, szShaderModel,
         dwShaderFlags, 0, NULL, ppBlobOut, &pErrorBlob, NULL );
     if( FAILED(hr) )
     {
@@ -1193,8 +1193,8 @@ bool IsNextArg( WCHAR*& strCmdLine, WCHAR* strArg )
    int nArgLen = (int) wcslen(strArg);
    int nCmdLen = (int) wcslen(strCmdLine);
 
-   if( nCmdLen >= nArgLen && 
-      _wcsnicmp( strCmdLine, strArg, nArgLen ) == 0 && 
+   if( nCmdLen >= nArgLen &&
+      _wcsnicmp( strCmdLine, strArg, nArgLen ) == 0 &&
       (strCmdLine[nArgLen] == 0 || strCmdLine[nArgLen] == L':' || strCmdLine[nArgLen] == L'=' ) )
    {
       strCmdLine += nArgLen;
@@ -1206,14 +1206,14 @@ bool IsNextArg( WCHAR*& strCmdLine, WCHAR* strArg )
 
 
 //--------------------------------------------------------------------------------------
-// Helper function for command line retrieval.  Updates strCmdLine and strFlag 
+// Helper function for command line retrieval.  Updates strCmdLine and strFlag
 //      Example: if strCmdLine=="-width:1024 -forceref"
 // then after: strCmdLine==" -forceref" and strFlag=="1024"
 //--------------------------------------------------------------------------------------
 bool GetCmdParam( WCHAR*& strCmdLine, WCHAR* strFlag )
 {
    if( *strCmdLine == L':' || *strCmdLine == L'=' )
-   {       
+   {
       strCmdLine++; // Skip ':'
 
       // Place NULL terminator in strFlag after current token
@@ -1309,7 +1309,7 @@ void ParseCommandLine()
 }
 
 //--------------------------------------------------------------------------------------
-// Helper function to capture a frame and dump it to disk 
+// Helper function to capture a frame and dump it to disk
 //--------------------------------------------------------------------------------------
 void CaptureFrame()
 {
@@ -1349,7 +1349,7 @@ void CaptureFrame()
         D3DX11SaveTextureToFile(DXUTGetD3D11DeviceContext(), g_pCaptureTexture, D3DX11_IFF_BMP, g_CmdLineParams.strCaptureFilename );
 
         SAFE_RELEASE(pSingleSampleTexture);
-        
+
     }
     else
     {
@@ -1371,7 +1371,7 @@ void CaptureFrame()
 // Helper function that allows the app to render individual meshes of an sdkmesh
 // and override the primitive topology
 //--------------------------------------------------------------------------------------
-void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, D3D11_PRIMITIVE_TOPOLOGY PrimType, 
+void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, D3D11_PRIMITIVE_TOPOLOGY PrimType,
                 UINT uDiffuseSlot, UINT uNormalSlot, UINT uSpecularSlot )
 {
     #define MAX_D3D11_VERTEX_STREAMS D3D11_IA_VERTEX_INPUT_RESOURCE_SLOT_COUNT
@@ -1404,7 +1404,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, D3D11_PRIMITIVE_TOPOLOGY P
     ID3D11Buffer* pIB;
     pIB = pDXUTMesh->GetIB11( uMesh );
     DXGI_FORMAT ibFormat = pDXUTMesh->GetIBFormat11( uMesh );
-    
+
     DXUTGetD3D11DeviceContext()->IASetVertexBuffers( 0, pMesh->NumVertexBuffers, pVB, Strides, Offsets );
     DXUTGetD3D11DeviceContext()->IASetIndexBuffer( pIB, ibFormat, 0 );
 
@@ -1419,7 +1419,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, D3D11_PRIMITIVE_TOPOLOGY P
         {
             PrimType = pDXUTMesh->GetPrimitiveType11( ( SDKMESH_PRIMITIVE_TYPE )pSubset->PrimitiveType );
         }
-        
+
         DXUTGetD3D11DeviceContext()->IASetPrimitiveTopology( PrimType );
 
         pMat = pDXUTMesh->GetMaterial( pSubset->MaterialID );
@@ -1441,7 +1441,7 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, D3D11_PRIMITIVE_TOPOLOGY P
         UINT IndexCount = ( UINT )pSubset->IndexCount;
         UINT IndexStart = ( UINT )pSubset->IndexStart;
         UINT VertexStart = ( UINT )pSubset->VertexStart;
-        
+
         DXUTGetD3D11DeviceContext()->DrawIndexed( IndexCount, IndexStart, VertexStart );
     }
 }
@@ -1452,10 +1452,10 @@ void RenderMesh( CDXUTSDKMesh* pDXUTMesh, UINT uMesh, D3D11_PRIMITIVE_TOPOLOGY P
 //--------------------------------------------------------------------------------------
 bool FileExists( WCHAR* pFileName )
 {
-    DWORD fileAttr;    
-    fileAttr = GetFileAttributes(pFileName);    
-    if (0xFFFFFFFF == fileAttr)        
-        return false;    
+    DWORD fileAttr;
+    fileAttr = GetFileAttributes(pFileName);
+    if (0xFFFFFFFF == fileAttr)
+        return false;
     return true;
 }
 
@@ -1469,7 +1469,7 @@ HRESULT CreateHullShader()
 
     // Release any existing shader
     SAFE_RELEASE( g_pPNTrianglesHS );
-    
+
     // Create the shaders
     ID3DBlob* pBlob = NULL;
     D3D_SHADER_MACRO ShaderMacros[7];
@@ -1488,7 +1488,7 @@ HRESULT CreateHullShader()
     ShaderMacros[5].Definition = "1";
     ShaderMacros[6].Name = NULL;
     ShaderMacros[6].Definition = "1";
-    
+
     int i = 0;
 
     DWORD switches = 0;
@@ -1542,7 +1542,7 @@ HRESULT CreateHullShader()
     }
 
     // Create the shader
-    hr = CompileShaderFromFile( L"PNTriangles11.hlsl", "HS_PNTriangles", "hs_5_0", &pBlob, ShaderMacros ); 
+    hr = CompileShaderFromFile( L"PNTriangles11.hlsl", "HS_PNTriangles", "hs_5_0", &pBlob, ShaderMacros );
     if ( FAILED(hr) )
         return hr;
 
@@ -1567,11 +1567,11 @@ HRESULT CreateHullShader()
 void NormalizePlane( D3DXVECTOR4* pPlaneEquation )
 {
     float mag;
-    
-    mag = sqrtf( pPlaneEquation->x * pPlaneEquation->x + 
-                 pPlaneEquation->y * pPlaneEquation->y + 
+
+    mag = sqrtf( pPlaneEquation->x * pPlaneEquation->x +
+                 pPlaneEquation->y * pPlaneEquation->y +
                  pPlaneEquation->z * pPlaneEquation->z );
-    
+
     pPlaneEquation->x = pPlaneEquation->x / mag;
     pPlaneEquation->y = pPlaneEquation->y / mag;
     pPlaneEquation->z = pPlaneEquation->z / mag;
@@ -1589,37 +1589,37 @@ void ExtractPlanesFromFrustum( D3DXVECTOR4* pPlaneEquation, const D3DXMATRIX* pM
     pPlaneEquation[0].y = pMatrix->_24 + pMatrix->_21;
     pPlaneEquation[0].z = pMatrix->_34 + pMatrix->_31;
     pPlaneEquation[0].w = pMatrix->_44 + pMatrix->_41;
-    
+
     // Right clipping plane
     pPlaneEquation[1].x = pMatrix->_14 - pMatrix->_11;
     pPlaneEquation[1].y = pMatrix->_24 - pMatrix->_21;
     pPlaneEquation[1].z = pMatrix->_34 - pMatrix->_31;
     pPlaneEquation[1].w = pMatrix->_44 - pMatrix->_41;
-    
+
     // Top clipping plane
     pPlaneEquation[2].x = pMatrix->_14 - pMatrix->_12;
     pPlaneEquation[2].y = pMatrix->_24 - pMatrix->_22;
     pPlaneEquation[2].z = pMatrix->_34 - pMatrix->_32;
     pPlaneEquation[2].w = pMatrix->_44 - pMatrix->_42;
-    
+
     // Bottom clipping plane
     pPlaneEquation[3].x = pMatrix->_14 + pMatrix->_12;
     pPlaneEquation[3].y = pMatrix->_24 + pMatrix->_22;
     pPlaneEquation[3].z = pMatrix->_34 + pMatrix->_32;
     pPlaneEquation[3].w = pMatrix->_44 + pMatrix->_42;
-    
+
     // Near clipping plane
     pPlaneEquation[4].x = pMatrix->_13;
     pPlaneEquation[4].y = pMatrix->_23;
     pPlaneEquation[4].z = pMatrix->_33;
     pPlaneEquation[4].w = pMatrix->_43;
-    
+
     // Far clipping plane
     pPlaneEquation[5].x = pMatrix->_14 - pMatrix->_13;
     pPlaneEquation[5].y = pMatrix->_24 - pMatrix->_23;
     pPlaneEquation[5].z = pMatrix->_34 - pMatrix->_33;
     pPlaneEquation[5].w = pMatrix->_44 - pMatrix->_43;
-    
+
     // Normalize the plane equations, if requested
     NormalizePlane( &pPlaneEquation[0] );
     NormalizePlane( &pPlaneEquation[1] );

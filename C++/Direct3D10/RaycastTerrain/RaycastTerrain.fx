@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: BasicHLSL10.fx
 //
-// The effect file for the BasicHLSL sample.  
-// 
+// The effect file for the BasicHLSL sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------
@@ -24,11 +24,11 @@
 //--------------------------------------------------------------------------------------
 cbuffer cbOnRender
 {
-    float3		g_LightDir;     
-    float3		g_LightDirTex;    
-    float4		g_LightDiffuse;     
-    float4x4	g_mWorldViewProjection;   
-    float4x4	g_mWorld;                 
+    float3		g_LightDir;
+    float3		g_LightDirTex;
+    float4		g_LightDiffuse;
+    float4x4	g_mWorldViewProjection;
+    float4x4	g_mWorld;
     float3		g_vTextureEyePt;
     float4x4	g_mWorldToTerrain;
     float4x4	g_mTexToViewProj;
@@ -40,10 +40,10 @@ cbuffer cbConstant
 {
     float g_InvMapSize = 1.0/1024.0;
     float g_MapSize = 1024.0;
-    
+
     float g_InvDetailMapSize = 1.0/256.0;
     float g_DetailMapSize = 256.0;
-    
+
     float g_HeightRatio = 0.1;
 };
 
@@ -222,12 +222,12 @@ float CalculateShadowAmountRaycast( float3 vPosition )
 VS_MESHOUTPUT MeshVS( VS_MESHINPUT Input )
 {
     VS_MESHOUTPUT Output;
-    
+
     Output.vPosition = mul( float4( Input.vPosition, 1 ), g_mWorldViewProjection );
     Output.vNormal = mul( Input.vNormal, (float3x3)g_mWorld );
     Output.vTex = Input.vTex;
     Output.vWorldPos = mul( float4( Input.vPosition, 1 ), g_mWorld ).xyz;
-    
+
     return Output;
 }
 
@@ -235,13 +235,13 @@ float4 MeshPS( PS_MESHINPUT Input, uniform bool bShadow ) : SV_TARGET
 {
     float fLighting = dot( normalize( Input.vNormal ), g_LightDir );
     float4 vDiffuse = g_txDiffuse.Sample( g_samLinear, Input.vTex );
-    
+
     float fShadow = 1;
     if( bShadow )
     {
         fShadow = CalculateShadowAmount( Input.vWorldPos );
     }
-    
+
     return vDiffuse * max( 0.1, fLighting * fShadow );
 }
 
@@ -249,14 +249,14 @@ float4 GeometryTerrainPS( PS_MESHINPUT Input, uniform bool bShadow ) : SV_TARGET
 {
     float fLighting = dot( normalize( Input.vNormal ), g_LightDir );
     float4 vDiffuse = float4( 1, 1, 1, 1 );
-    
+
     float fShadow = 1;
-    
+
     if( bShadow )
     {
         fShadow = CalculateShadowAmount( Input.vWorldPos );
     }
-    
+
     return vDiffuse * max( 0.1, fLighting * fShadow );
 }
 
@@ -266,14 +266,14 @@ float4 GeometryTerrainPS( PS_MESHINPUT Input, uniform bool bShadow ) : SV_TARGET
 VS_RAYOUTPUT ShootRayVS( VS_QUADINPUT Input )
 {
     VS_RAYOUTPUT Output;
-    
+
     // Pass position through
     Output.vPosition = mul( float4( Input.vPosition, 1 ), g_mWorldViewProjection );
-    
+
     // Transform the ray into texture space
     Output.vTextureRayEnd = Input.vPosition.xzy;
-    
-    return Output;    
+
+    return Output;
 }
 
 //--------------------------------------------------------------------------------------
@@ -297,7 +297,7 @@ float SmoothSampleDetail( float2 tex, inout float4 value1, inout float4 mask )
     value1 = g_txHeight.SampleLevel( g_samLinearPoint, tex, 0 );
     mask = g_txMask.SampleLevel( g_samLinearPoint, tex, 0 );
     float4 value2 = g_txDetailHeight.SampleLevel( g_samWrap, tex * g_DetailRepeat, 0 );
-    
+
     float detailheight = dot( value2, mask );
     return value1.r - ( 1 - detailheight ) * g_DetailHeight;
 }
@@ -311,28 +311,28 @@ float3 Bisect( float3 vRayStart, float3 vRayDelta, inout float2 dduddv )
     float t = 0.5;
     float binaryStep = 0.25;
     float3 vBestPoint = vRayStart + vRayDelta;
-    
-    for ( int i=0; i<BINARY_STEPS; i++) 
-    { 
+
+    for ( int i=0; i<BINARY_STEPS; i++)
+    {
         // Get the middle of the ray
         float3 vMidPoint = vRayStart + t * vRayDelta;
-    
+
         // sample	
         float4 vValue = SmoothSample( vMidPoint.xy );
-        
+
         if( vMidPoint.z <= vValue.r )
-        { 
+        {
             // Step backwards
             t -= 2 * binaryStep;
             vBestPoint = vMidPoint;
             dduddv = vValue.zw;
-        } 
+        }
         // Step forwards
         t += binaryStep;
-        
+
         binaryStep *= 0.5;
     }
-    
+
     return vBestPoint;
 }
 
@@ -342,30 +342,30 @@ float3 BisectDetail( float3 vRayStart, float3 vRayDelta, inout float2 dduddv1, i
     float t = 0.5;
     float binaryStep = 0.25;
     float3 vBestPoint = vRayStart + vRayDelta;
-    
-    for ( int i=0; i<BINARY_STEPS; i++) 
-    { 
+
+    for ( int i=0; i<BINARY_STEPS; i++)
+    {
         // Get the middle of the ray
         float3 vMidPoint = vRayStart + t * vRayDelta;
-    
+
         // sample	
         float4 vValue1, vMask;
         float Height = SmoothSampleDetail( vMidPoint.xy, vValue1, vMask );
-        
+
         if( vMidPoint.z <= Height )
-        { 
+        {
             // Step backwards
             t -= 2 * binaryStep;
             vBestPoint = vMidPoint;
             dduddv1 = vValue1.zw;
             mask = vMask;
-        } 
+        }
         // Step forwards
         t += binaryStep;
-        
+
         binaryStep *= 0.5;
     }
-    
+
     return vBestPoint;
 }
 
@@ -435,21 +435,21 @@ float3 GetFirstSceneIntersection( float3 vRayO, float3 vRayDir )
 float3 ConeStepRayDetail( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1, inout float4 mask, uniform bool bBisect )
 {	
     float3 vRayDir = vRayEnd - vRayStart;
-    
+
     float fMaxLength = length( vRayDir );
     vRayDir /= fMaxLength;
-    
+
     float fIZ = sqrt( 1.0 - vRayDir.z * vRayDir.z );
-    
+
     float4 vHeightSample1;
-    
+
     float Height = SmoothSampleDetail( vRayStart.xy, vHeightSample1, mask );
     float fTotalStep = 0;
     float fStepSize = 0;
     int StepCounter = 0;
-    
+
     float fMinStep = ( g_InvDetailMapSize *  g_InvDetailRepeat );
-    
+
     // Linear step then bisect
     fStepSize = 4 * fMinStep;
     while( vRayStart.z > Height )
@@ -457,22 +457,22 @@ float3 ConeStepRayDetail( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1
         // Step the ray
         fTotalStep += fStepSize;
         vRayStart += vRayDir * fStepSize;
-        
+
         // Early out if necessary
         if( fTotalStep > fMaxLength || StepCounter > MAX_DETAIL_STEPS )
         {
             dduddv1 = vHeightSample1.zw;
             return vRayStart;
         }
-            
+
         // Sample the texture
         Height = SmoothSampleDetail( vRayStart.xy, vHeightSample1, mask );
-        
+
         StepCounter ++;
     }
-    
+
     dduddv1 = vHeightSample1.zw;
-    
+
     float3 vExactHit;
     if( bBisect )
     {
@@ -484,7 +484,7 @@ float3 ConeStepRayDetail( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1
     {
         vExactHit = vRayStart;
     }
-    
+
     return vExactHit;
 }
 
@@ -503,10 +503,10 @@ float3 ConeStepRay( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1, inou
         vRayStart = GetFirstSceneIntersection( vRayStart, vRayDir );
         vRayDir = vRayEnd - vRayStart;
     }
-    
+
     float fMaxLength = length( vRayDir );
     vRayDir /= fMaxLength;
-    
+
     // Do the actual cone step mapping
     float fIZ = sqrt( 1.0 - vRayDir.z * vRayDir.z );
     float4 vHeightSample = SmoothSample( vRayStart.xy );
@@ -519,24 +519,24 @@ float3 ConeStepRay( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1, inou
         float fConeRatio = vHeightSample.g * vHeightSample.g;
         float fStepRatio = 1.0 / ( ( fIZ / fConeRatio ) - vRayDir.z );
         fStepSize = max( g_InvMapSize, ( vRayStart.z - vHeightSample.r ) * fStepRatio );
-        
+
         // Step the ray
         fTotalStep += fStepSize;
         vRayStart += vRayDir * fStepSize;
-        
+
         // Early out if necessary
         if( fTotalStep > fMaxLength )
             return float3( -1, -1, -1 );
-            
+
         if( StepCounter > MAX_CONE_STEPS )
             return float3( -1, -1, -1 );
-            
+
         // Sample the texture
         vHeightSample = SmoothSample( vRayStart.xy );
-        
+
         StepCounter ++;
     }
-    
+
     // Do another cone step mapping if we're adding detail
     float3 vExactHit;
     dduddv1 = vHeightSample.zw;
@@ -545,12 +545,12 @@ float3 ConeStepRay( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1, inou
         float3 vToPoint = vRayStart - vOldStart;
         vToPoint.z *= g_HeightRatio;
         float fLenSq = dot( vToPoint, vToPoint );
-    
+
         if( fLenSq < g_DetailDistanceSq )
         {
             float3 vRayDelta = fStepSize * vRayDir;
             vExactHit = ConeStepRayDetail( vRayStart - vRayDelta, vRayEnd, dduddv1, mask, bBisect );
-            
+
             return vExactHit;
         }
         else
@@ -558,7 +558,7 @@ float3 ConeStepRay( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1, inou
             mask =  g_txMask.SampleLevel( g_samLinearPoint, vRayStart.xy, 0 );
         }
     }
-    
+
     // If we want an accurate intersection, use bisection to find the hit point
     if( bBisect )
     {
@@ -570,7 +570,7 @@ float3 ConeStepRay( float3 vRayStart, float3 vRayEnd, inout float2 dduddv1, inou
     {
         vExactHit = vRayStart;
     }
-    
+
     return vExactHit;
 }
 
@@ -586,22 +586,22 @@ struct PS_OUTPUT
 PS_OUTPUT ShootRayPS( PS_RAYINPUT Input, uniform bool bOutside, uniform bool bDetail, uniform bool bShadow, uniform bool bOrtho )
 {
     PS_OUTPUT Output;
-    
+
     float2 dduddv1 = float2( 0, 0 );
     float3 vEyePt = g_vTextureEyePt.xzy;
     float4 mask;
-    
+
     // Shoot rays differently for an orthographic projection vs a perspective projection
     if( bOrtho )
         vEyePt = Input.vTextureRayEnd + g_LightDirTex * 2.0;
     else
         vEyePt = g_vTextureEyePt.xzy;
-        
+
     // Find the intersection point
     float3 vIntersection = ConeStepRay( vEyePt, Input.vTextureRayEnd, dduddv1, mask, true, bOutside, bDetail );
-    
+
     float4 vColor = float4( 0, 0, 0, 0 );
-    
+
     // If we hit anything vIntersection.r will be greater than or equal to zero
     if( vIntersection.r >= 0 )
     {	
@@ -610,30 +610,30 @@ PS_OUTPUT ShootRayPS( PS_RAYINPUT Input, uniform bool bOutside, uniform bool bDe
         vNormal.xz = ( dduddv1.xy - 0.5 ) * 2;
         vNormal.y = sqrt( 1 - ( dduddv1.x * dduddv1.x ) - ( dduddv1.y * dduddv1.y ) ) * 0.5;
         vNormal = normalize( vNormal );
-        
+
         // Add detail if requested
         if( bDetail )
         {
             float2 texDetail = float2( vIntersection.x, 1-vIntersection.y ) * g_DetailRepeat;
             float4 redgreen = g_txDetailGrad_RedGreen.SampleLevel( g_samWrap, texDetail, 0 );
             float4 bluealpha = g_txDetailGrad_BlueAlpha.SampleLevel( g_samWrap, texDetail, 0 );
-        
+
             float2 dduddvDetail = redgreen.rg * mask.r + redgreen.ba * mask.g + bluealpha.rg * mask.b + bluealpha.ba * mask.a;
             float3 vNormal2;
             vNormal2.xz = ( dduddvDetail.xy - 0.5 ) * g_DetailMapSize * g_DetailRepeat * g_DetailHeight;
             vNormal2.y = 1 - g_DetailHeight;
             vNormal2.x *= -1;
             vNormal2 = normalize( vNormal2 );
-        
+
             vNormal = normalize( vNormal + vNormal2 * 0.5 );
         }
-        
+
         // Light
         float fLighting = saturate( dot( g_LightDir, vNormal ) );
-        
+
         // Set color equal to white
         vColor = float4( 1, 1, 1, 1 );
-        
+
         // Unless we're adding detail
         if( bDetail )
         {
@@ -644,27 +644,27 @@ PS_OUTPUT ShootRayPS( PS_RAYINPUT Input, uniform bool bOutside, uniform bool bDe
             vColorDetail +=       g_txDetailDiffuse[3].SampleLevel( g_samWrap, texDetail, 0 ) * mask.a;
             vColor = vColor * vColorDetail;
         }
-        
+
         // Do we want shadows?
         float fShadow = 1;
         if( bShadow )
         {
             fShadow = CalculateShadowAmountRaycast( vIntersection.xzy );
         }
-        
+
         vColor *= max( 0.1, fLighting * fShadow );
     }
     else
     {
         discard;
     }
-    
+
     Output.color = vColor;
-    
+
     // Convert the intersection point to a depth value
     float4 vProjPoint = mul( float4( vIntersection.xzy, 1 ), g_mTexToViewProj );
     Output.depth = vProjPoint.z / vProjPoint.w;
-    
+
     return Output;
 }
 

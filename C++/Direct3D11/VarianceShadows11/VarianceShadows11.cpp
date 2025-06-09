@@ -25,13 +25,13 @@
 VarianceShadowsManager      g_VarianceShadow;
 
 CDXUTDialogResourceManager  g_DialogResourceManager; // manager for shared resources of dialogs
-CFirstPersonCamera          g_ViewerCamera;          
-CFirstPersonCamera          g_LightCamera;         
+CFirstPersonCamera          g_ViewerCamera;
+CFirstPersonCamera          g_LightCamera;
 CFirstPersonCamera*         g_pActiveCamera = &g_ViewerCamera;
 
 CascadeConfig               g_CascadeConfig;
 // This enum is used to allow the user to select the number of cascades in the scene.
-enum CASCADE_LEVELS 
+enum CASCADE_LEVELS
 {
     L1COMBO,
     L2COMBO,
@@ -54,7 +54,7 @@ CDXUTComboBox*              g_FitToCascadesCombo;
 CDXUTComboBox*              g_FitToNearFarCombo;
 CDXUTComboBox*              g_CascadeSelectionCombo;
 CD3DSettingsDlg             g_D3DSettingsDlg;       // Device settings dialog
-CDXUTDialog                 g_HUD;                  // manages the 3D   
+CDXUTDialog                 g_HUD;                  // manages the 3D
 CDXUTDialog                 g_SampleUI;             // dialog for sample specific controls
 CDXUTTextHelper*            g_pTxtHelper = NULL;
 
@@ -64,7 +64,7 @@ bool                        g_bMoveLightTexelSize = TRUE;
 FLOAT                       g_fAspectRatio = 1.0f;
 CDXUTSDKMesh                g_MeshPowerPlant;
 CDXUTSDKMesh                g_MeshTestScene;
-CDXUTSDKMesh*               g_pSelectedMesh;                
+CDXUTSDKMesh*               g_pSelectedMesh;
 
 
 //--------------------------------------------------------------------------------------
@@ -116,7 +116,7 @@ CDXUTSDKMesh*               g_pSelectedMesh;
 #define IDC_BLEND_MAPS_SLIDER        35
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext );
 void CALLBACK OnFrameMove( double fTime, FLOAT fElapsedTime, void* pUserContext );
@@ -142,7 +142,7 @@ HRESULT CreateD3DComponents( ID3D11Device* pd3dDevice );
 void UpdateViewerCameraNearFar();
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, INT nCmdShow )
@@ -177,7 +177,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
         CompilingShadersDlg.ShowDialog( L"Compiling Shaders and loading models." );
     DXUTCreateDevice ( D3D_FEATURE_LEVEL_10_0, true, 800, 600 );
     CompilingShadersDlg.DestroyDialog();
-    
+
     DXUTMainLoop(); // Enter into the DXUT render loop
 
     return DXUTGetExitCode();
@@ -185,7 +185,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -225,14 +225,14 @@ void InitApp()
     g_CascadeConfig.m_ShadowBufferFormat = sbt;
 
     WCHAR desc[256];
-    swprintf_s( desc, L"Texture Size: %d ", g_CascadeConfig.m_iBufferSize ); 
+    swprintf_s( desc, L"Texture Size: %d ", g_CascadeConfig.m_iBufferSize );
 
     g_HUD.AddStatic( IDC_BUFFER_SIZETEXT, desc, 0, iY+26, 30, 10);
     g_HUD.AddSlider( IDC_BUFFER_SIZE, 0, iY+=46, 128, 15,1, 128, g_CascadeConfig.m_iBufferSize / 32 );
 
     g_HUD.AddStatic( IDC_SHADOW_BLUR_SIZETEXT, L"Shadow Blur: 3", 0, iY+16, 30, 10);
     g_HUD.AddSlider( IDC_SHADOW_BLUR_SIZE, 115, iY+=20, 28, 15,1, 7, g_VarianceShadow.m_iShadowBlurSize / 2 + 1 );
-    
+
     swprintf_s(desc, L"Cascade Blur %0.03f", g_VarianceShadow.m_fBlurBetweenCascadesAmount );
     bool bValue;
     if( g_VarianceShadow.m_iBlurBetweenCascades == 0 ) bValue = false;
@@ -244,7 +244,7 @@ void InitApp()
     iY+=26;
 
     WCHAR dta[60];
-    
+
     g_HUD.AddComboBox( IDC_SELECTED_SCENE, 0, iY+=26, 170, 23, VK_F8, false, &g_SceneSelectCombo );
     g_SceneSelectCombo->AddItem( L"Power Plant", ULongToPtr( POWER_PLANT_SCENE ) );
     g_SceneSelectCombo->AddItem( L"Test Scene", ULongToPtr( TEST_SCENE ) );
@@ -259,23 +259,23 @@ void InitApp()
 
     g_HUD.AddComboBox( IDC_SELECTED_CAMERA, 0, iY +=26,  170, 23, VK_F9, false, &g_CameraSelectCombo );
     swprintf_s( dta, L"Eye Camera", EYE_CAMERA + 1 );
-    g_CameraSelectCombo->AddItem(dta, ULongToPtr( EYE_CAMERA ) );     
+    g_CameraSelectCombo->AddItem(dta, ULongToPtr( EYE_CAMERA ) );
     swprintf_s( dta, L"Light Camera", LIGHT_CAMERA + 1 );
-    g_CameraSelectCombo->AddItem(dta, ULongToPtr( LIGHT_CAMERA) );     
-    for( int index=0; index < g_CascadeConfig.m_nCascadeLevels; ++index ) 
+    g_CameraSelectCombo->AddItem(dta, ULongToPtr( LIGHT_CAMERA) );
+    for( int index=0; index < g_CascadeConfig.m_nCascadeLevels; ++index )
     {
         swprintf_s( dta, L"Cascade Cam %d", index + 1 );
-        g_CameraSelectCombo->AddItem(dta, ULongToPtr( ORTHO_CAMERA1+index ) );     
+        g_CameraSelectCombo->AddItem(dta, ULongToPtr( ORTHO_CAMERA1+index ) );
     }
 
-    g_HUD.AddCheckBox( IDC_MOVE_LIGHT_IN_TEXEL_INC, L"Fit Light to Texels", 
+    g_HUD.AddCheckBox( IDC_MOVE_LIGHT_IN_TEXEL_INC, L"Fit Light to Texels",
         0, iY+=26, 170, 23, g_bMoveLightTexelSize, VK_F8 );
     g_VarianceShadow.m_bMoveLightTexelSize = g_bMoveLightTexelSize;
     g_HUD.AddComboBox( IDC_FIT_TO_CASCADE, 0, iY +=26,  170, 23, VK_F9, false, &g_FitToCascadesCombo );
     g_FitToCascadesCombo->AddItem( L"Fit Scene", ULongToPtr( FIT_TO_SCENE ) );
     g_FitToCascadesCombo->AddItem( L"Fit Cascades", ULongToPtr( FIT_TO_CASCADES ) );
     g_VarianceShadow.m_eSelectedCascadesFit = FIT_TO_SCENE;
-    
+
     g_HUD.AddComboBox( IDC_FIT_TO_NEARFAR, 0, iY +=26,  170, 23, VK_F9, false, &g_FitToNearFarCombo );
     g_FitToNearFarCombo->AddItem( L"AABB/Scene NearFar", ULongToPtr( FIT_NEARFAR_SCENE_AABB ) );
     g_FitToNearFarCombo->AddItem( L"0:1 NearFar", ULongToPtr( FIT_NEARFAR_ZERO_ONE ) );
@@ -289,23 +289,23 @@ void InitApp()
     g_VarianceShadow.m_eSelectedCascadeSelection = CASCADE_SELECTION_MAP;
 
     g_HUD.AddComboBox( IDC_CASCADELEVELS, 0, iY += 26, 170, 23, VK_F11, false, &g_CascadeLevelsCombo );
-    
+
     swprintf_s( dta, L"%d Level", 1 );
     g_CascadeLevelsCombo->AddItem (dta, ULongToPtr( L1COMBO+1 ) );
-    for( INT index=1; index < MAX_CASCADES; ++index ) 
+    for( INT index=1; index < MAX_CASCADES; ++index )
     {
         swprintf_s( dta, L"%d Levels", index + 1 );
         g_CascadeLevelsCombo->AddItem ( dta, ULongToPtr( L1COMBO+index ) );
     }
 
     g_CascadeLevelsCombo->SetSelectedByIndex( g_CascadeConfig.m_nCascadeLevels-1 );
-    
+
     INT sp = 12;
     iY+=20;
     WCHAR label[16];
     // Color the cascade labels similar to the visualization.
-    D3DCOLOR tcolors[] = 
-    { 
+    D3DCOLOR tcolors[] =
+    {
         0xFFFF0000,
         0xFF00FF00,
         0xFF0000FF,
@@ -313,29 +313,29 @@ void InitApp()
         0xFFFFFF00,
         0xFFFFFFFF,
         0xFF00AAFF,
-        0xFFAAFFAA 
-    };  
-    
-    for( INT index=0; index < MAX_CASCADES; ++index ) 
+        0xFFAAFFAA
+    };
+
+    for( INT index=0; index < MAX_CASCADES; ++index )
     {
         swprintf_s( label,L"L%d: %d", ( index + 1 ), g_VarianceShadow.m_iCascadePartitionsZeroToOne[index] );
         g_HUD.AddStatic( index+IDC_CASCADELEVEL1TEXT, label, 0, iY+sp, 30, 10);
         g_HUD.GetStatic( index+IDC_CASCADELEVEL1TEXT )->SetTextColor( tcolors[index] );
-        g_HUD.AddSlider( index+IDC_CASCADELEVEL1, 50, iY+=15, 100, 15,0, 100, 
+        g_HUD.AddSlider( index+IDC_CASCADELEVEL1, 50, iY+=15, 100, 15,0, 100,
             g_VarianceShadow.m_iCascadePartitionsZeroToOne[index] );
     }
 
-    for( INT index=0; index < g_CascadeConfig.m_nCascadeLevels; ++index ) 
+    for( INT index=0; index < g_CascadeConfig.m_nCascadeLevels; ++index )
     {
         g_HUD.GetStatic( IDC_CASCADELEVEL1TEXT + index )->SetVisible( true );
         g_HUD.GetSlider( IDC_CASCADELEVEL1 + index )->SetVisible( true );
     }
-    for( int index=g_CascadeConfig.m_nCascadeLevels; index < MAX_CASCADES; ++index ) 
+    for( int index=g_CascadeConfig.m_nCascadeLevels; index < MAX_CASCADES; ++index )
     {
         g_HUD.GetStatic( IDC_CASCADELEVEL1TEXT + index )->SetVisible( false );
         g_HUD.GetSlider( IDC_CASCADELEVEL1 + index )->SetVisible( false  );
     }
-    
+
     g_SampleUI.SetCallback( OnGUIEvent ); iY = 10;
 }
 
@@ -347,7 +347,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 {
     // For the first device created if its a REF device, optionally display a warning dialog box
     static BOOL s_bFirstTime = true;
-    
+
     if( s_bFirstTime )
     {
         s_bFirstTime = false;
@@ -367,7 +367,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, FLOAT fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_LightCamera.FrameMove( fElapsedTime );
     g_ViewerCamera.FrameMove( fElapsedTime );
 }
@@ -479,29 +479,29 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
         break;
         break;
         case IDC_FIT_TO_CASCADE:
-            g_VarianceShadow.m_eSelectedCascadesFit = 
+            g_VarianceShadow.m_eSelectedCascadesFit =
                 (FIT_PROJECTION_TO_CASCADES)PtrToUlong( g_FitToCascadesCombo->GetSelectedData() );
         break;
         case IDC_FIT_TO_NEARFAR:
-            g_VarianceShadow.m_eSelectedNearFarFit = 
+            g_VarianceShadow.m_eSelectedNearFarFit =
                 (FIT_TO_NEAR_FAR)PtrToUlong( g_FitToNearFarCombo->GetSelectedData() );
         break;
         case IDC_CASCADE_SELECT:
         {
             static int iSaveLastCascadeValue = 100;
-            if ( (CASCADE_SELECTION)PtrToUlong( g_CascadeSelectionCombo->GetSelectedData() ) == CASCADE_SELECTION_MAP ) 
+            if ( (CASCADE_SELECTION)PtrToUlong( g_CascadeSelectionCombo->GetSelectedData() ) == CASCADE_SELECTION_MAP )
             {
-                g_VarianceShadow.m_iCascadePartitionsZeroToOne[g_CascadeConfig.m_nCascadeLevels -1] = iSaveLastCascadeValue;               
+                g_VarianceShadow.m_iCascadePartitionsZeroToOne[g_CascadeConfig.m_nCascadeLevels -1] = iSaveLastCascadeValue;
             }
-            else 
+            else
             {
                 iSaveLastCascadeValue = g_VarianceShadow.m_iCascadePartitionsZeroToOne[g_CascadeConfig.m_nCascadeLevels -1];
-                g_VarianceShadow.m_iCascadePartitionsZeroToOne[g_CascadeConfig.m_nCascadeLevels -1] = 100;               
+                g_VarianceShadow.m_iCascadePartitionsZeroToOne[g_CascadeConfig.m_nCascadeLevels -1] = 100;
             }
             g_VarianceShadow.m_eSelectedCascadeSelection =
                 (CASCADE_SELECTION)PtrToUlong( g_CascadeSelectionCombo->GetSelectedData() );
 
-            g_HUD.GetSlider( IDC_CASCADELEVEL1 + g_CascadeConfig.m_nCascadeLevels - 1 )->SetValue( 
+            g_HUD.GetSlider( IDC_CASCADELEVEL1 + g_CascadeConfig.m_nCascadeLevels - 1 )->SetValue(
                 g_VarianceShadow.m_iCascadePartitionsZeroToOne[g_CascadeConfig.m_nCascadeLevels - 1] );
             WCHAR label[16];
             swprintf_s( label, L"L%d: %d", g_CascadeConfig.m_nCascadeLevels,
@@ -516,29 +516,29 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
         break;
 
         case IDC_TOGGLEVISUALIZECASCADES :
-            g_bVisualizeCascades = !g_bVisualizeCascades;  
+            g_bVisualizeCascades = !g_bVisualizeCascades;
         break;
-        
-        case IDC_SHADOW_BLUR_SIZE : 
+
+        case IDC_SHADOW_BLUR_SIZE :
         {
             INT PCFSize = g_HUD.GetSlider( IDC_SHADOW_BLUR_SIZE )->GetValue();
             PCFSize *= 2;
             PCFSize -=1;
             WCHAR desc[256];
-            swprintf_s( desc, L"Shadow Blur: %d ", PCFSize ); 
+            swprintf_s( desc, L"Shadow Blur: %d ", PCFSize );
             g_HUD.GetStatic( IDC_SHADOW_BLUR_SIZETEXT )->SetText( desc );
             g_VarianceShadow.m_iShadowBlurSize = PCFSize;
         }
         break;
 
-        case IDC_BLEND_BETWEEN_MAPS_CHECK : 
+        case IDC_BLEND_BETWEEN_MAPS_CHECK :
             if( g_HUD.GetCheckBox( IDC_BLEND_BETWEEN_MAPS_CHECK )->GetChecked() )
                 g_VarianceShadow.m_iBlurBetweenCascades = 1;
-            else 
+            else
                 g_VarianceShadow.m_iBlurBetweenCascades = 0;
         break;
 
-        case IDC_BLEND_MAPS_SLIDER : 
+        case IDC_BLEND_MAPS_SLIDER :
         {
             INT val = g_HUD.GetSlider( IDC_BLEND_MAPS_SLIDER )->GetValue();
             g_VarianceShadow.m_fBlurBetweenCascadesAmount = (float)val * 0.005f;
@@ -547,21 +547,21 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
             g_HUD.GetCheckBox( IDC_BLEND_BETWEEN_MAPS_CHECK )->SetText( dta );
         }
         break;
-        case IDC_BUFFER_SIZE : 
+        case IDC_BUFFER_SIZE :
         {
             INT value = 32 * g_HUD.GetSlider( IDC_BUFFER_SIZE )->GetValue();
             INT max = 8192 / g_CascadeConfig.m_nCascadeLevels;
-            if( value > max ) 
-            { 
+            if( value > max )
+            {
                 value = max;
                 g_HUD.GetSlider( IDC_BUFFER_SIZE )->SetValue( value / 32 );
             }
             WCHAR desc[256];
-            swprintf_s( desc, L"Texture Size: %d ", value ); 
+            swprintf_s( desc, L"Texture Size: %d ", value );
             g_HUD.GetStatic( IDC_BUFFER_SIZETEXT )->SetText( desc );
 
-            //Only tell the app to recreate buffers once the user is through moving the slider. 
-            if( nEvent == EVENT_SLIDER_VALUE_CHANGED_UP ) 
+            //Only tell the app to recreate buffers once the user is through moving the slider.
+            if( nEvent == EVENT_SLIDER_VALUE_CHANGED_UP )
             {
                 g_CascadeConfig.m_iBufferSize = value;
             }
@@ -571,18 +571,18 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
         {
             SHADOW_FILTER eFilterType = (SHADOW_FILTER)PtrToUlong( g_ShadowFilterSelectCombo->GetSelectedData() );
             g_VarianceShadow.m_eShadowFilter = eFilterType;
-            
+
         }
         break;
         case IDC_SELECTED_SCENE:
         {
             SCENE_SELECTION ss = (SCENE_SELECTION) PtrToUlong( g_SceneSelectCombo->GetSelectedData() );
-            if( ss == POWER_PLANT_SCENE ) 
+            if( ss == POWER_PLANT_SCENE )
             {
                 g_pSelectedMesh = &g_MeshPowerPlant;
-            } 
-            else if (ss == TEST_SCENE ) 
-            { 
+            }
+            else if (ss == TEST_SCENE )
+            {
                 g_pSelectedMesh = &g_MeshTestScene;
             }
             DestroyD3DComponents();
@@ -590,15 +590,15 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
             UpdateViewerCameraNearFar();
         }
         case IDC_SELECTED_CAMERA:
-        {    
-            g_VarianceShadow.m_eSelectedCamera = ( CAMERA_SELECTION ) 
+        {
+            g_VarianceShadow.m_eSelectedCamera = ( CAMERA_SELECTION )
                     ( g_CameraSelectCombo->GetSelectedIndex( ) );
 
-            if( g_VarianceShadow.m_eSelectedCamera < 1 ) 
+            if( g_VarianceShadow.m_eSelectedCamera < 1 )
             {
                 g_pActiveCamera = &g_ViewerCamera;
             }
-            else 
+            else
             {
                 g_pActiveCamera = &g_LightCamera;
             }
@@ -608,59 +608,59 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
         {
             INT ind = 1 + g_CascadeLevelsCombo->GetSelectedIndex( );
             g_CascadeConfig.m_nCascadeLevels = ind;
-            for( INT index=0; index < ind; ++index ) 
+            for( INT index=0; index < ind; ++index )
             {
                 g_HUD.GetStatic( IDC_CASCADELEVEL1TEXT + index )->SetVisible( true );
                 g_HUD.GetSlider( IDC_CASCADELEVEL1 + index )->SetVisible( true );
             }
-            for( int index=ind; index < MAX_CASCADES; ++index ) 
+            for( int index=ind; index < MAX_CASCADES; ++index )
             {
                 g_HUD.GetStatic( IDC_CASCADELEVEL1TEXT + index )->SetVisible( false );
                 g_HUD.GetSlider( IDC_CASCADELEVEL1 + index )->SetVisible( false  );
             }
             INT value = 32 * g_HUD.GetSlider( IDC_BUFFER_SIZE )->GetValue();
             INT max = 8192 / g_CascadeConfig.m_nCascadeLevels;
-            if( value > max ) 
+            if( value > max )
             {
                 WCHAR desc[256];
                 value = max;
 
-                swprintf_s( desc, L"Texture Size: %d ", value ); 
+                swprintf_s( desc, L"Texture Size: %d ", value );
                 g_HUD.GetStatic( IDC_BUFFER_SIZETEXT )->SetText( desc );
                 g_HUD.GetSlider( IDC_BUFFER_SIZE )->SetValue( value / 32);
                 g_CascadeConfig.m_iBufferSize = value;
             }
-            
+
             // update the selected camera based on these changes.
             INT selected = g_CameraSelectCombo->GetSelectedIndex();
             WCHAR dta[60];
             g_CameraSelectCombo->RemoveAllItems();
             swprintf_s( dta, L"Eye Camera", EYE_CAMERA + 1 );
-            g_CameraSelectCombo->AddItem(dta, ULongToPtr( EYE_CAMERA ) );     
+            g_CameraSelectCombo->AddItem(dta, ULongToPtr( EYE_CAMERA ) );
             swprintf_s( dta, L"Light Camera", LIGHT_CAMERA + 1 );
-            g_CameraSelectCombo->AddItem(dta, ULongToPtr( LIGHT_CAMERA) );     
-            for( int index=0; index < g_CascadeConfig.m_nCascadeLevels; ++index) 
+            g_CameraSelectCombo->AddItem(dta, ULongToPtr( LIGHT_CAMERA) );
+            for( int index=0; index < g_CascadeConfig.m_nCascadeLevels; ++index)
             {
                 swprintf_s( dta, L"Cascade Cam %d", index + 1 );
-                g_CameraSelectCombo->AddItem( dta, ULongToPtr( ORTHO_CAMERA1+index ) );     
+                g_CameraSelectCombo->AddItem( dta, ULongToPtr( ORTHO_CAMERA1+index ) );
             }
-            if( selected - 1 >= ind ) 
-            { 
+            if( selected - 1 >= ind )
+            {
                 selected = ind + 1;
             }
             g_CameraSelectCombo->SetSelectedByIndex ( selected );
 
-            g_VarianceShadow.m_eSelectedCamera = ( CAMERA_SELECTION ) 
+            g_VarianceShadow.m_eSelectedCamera = ( CAMERA_SELECTION )
                     ( g_CameraSelectCombo->GetSelectedIndex() );
 
-            if( g_VarianceShadow.m_eSelectedCamera < 1 ) 
+            if( g_VarianceShadow.m_eSelectedCamera < 1 )
             {
                 g_pActiveCamera = &g_ViewerCamera;
             }
-            else 
+            else
             {
                 g_pActiveCamera = &g_LightCamera;
-            }            
+            }
         }
         break;
         case IDC_DEPTHBUFFERFORMAT:
@@ -683,11 +683,11 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
                 CDXUTSlider* selecteSlider;
                 CDXUTStatic* selectedStatic;
                 WCHAR label[16];
-                for( int index=0; index < ind; ++index ) 
+                for( int index=0; index < ind; ++index )
                 {
                     selecteSlider = g_HUD.GetSlider( IDC_CASCADELEVEL1 + index );
                     INT sVal = selecteSlider->GetValue();
-                    if( move < sVal ) 
+                    if( move < sVal )
                     {
                         selecteSlider->SetValue( move );
                         selectedStatic = g_HUD.GetStatic( IDC_CASCADELEVEL1TEXT + index );
@@ -696,11 +696,11 @@ void CALLBACK OnGUIEvent( UINT nEvent, INT nControlID, CDXUTControl* pControl, v
                         g_VarianceShadow.m_iCascadePartitionsZeroToOne[index] = move;
                     }
                 }
-                for ( int index=ind; index < MAX_CASCADES; ++index ) 
+                for ( int index=ind; index < MAX_CASCADES; ++index )
                 {
                     selecteSlider = g_HUD.GetSlider( IDC_CASCADELEVEL1 + index );
                     INT sVal = selecteSlider->GetValue();
-                    if( move >= sVal ) 
+                    if( move >= sVal )
                     {
                         selecteSlider->SetValue( move );
                         selectedStatic = g_HUD.GetStatic( IDC_CASCADELEVEL1TEXT + index );
@@ -729,18 +729,18 @@ bool CALLBACK IsD3D11DeviceAcceptable( const CD3D11EnumAdapterInfo* AdapterInfo,
 
 
 //--------------------------------------------------------------------------------------
-// When the user changes scene, recreate these components as they are scene 
+// When the user changes scene, recreate these components as they are scene
 // dependent.
 //--------------------------------------------------------------------------------------
-HRESULT CreateD3DComponents( ID3D11Device* pd3dDevice ) 
+HRESULT CreateD3DComponents( ID3D11Device* pd3dDevice )
 {
     HRESULT hr;
-    
+
     ID3D11DeviceContext* pd3dImmediateContext = DXUTGetD3D11DeviceContext();
     V_RETURN( g_DialogResourceManager.OnD3D11CreateDevice( pd3dDevice, pd3dImmediateContext ) );
     V_RETURN( g_D3DSettingsDlg.OnD3D11CreateDevice( pd3dDevice ) );
     g_pTxtHelper = new CDXUTTextHelper( pd3dDevice, pd3dImmediateContext, &g_DialogResourceManager, 15 );
-    
+
     D3DXVECTOR3 vecEye( 100.0f, 5.0f, 5.0f );
     D3DXVECTOR3 vecAt( 0.0f,0.0f,0.0f );
     D3DXVECTOR3 vMin = D3DXVECTOR3( -1000.0f, -1000.0f, -1000.0f );
@@ -768,16 +768,16 @@ HRESULT CreateD3DComponents( ID3D11Device* pd3dDevice )
     g_LightCamera.SetProjParams( D3DX_PI / 4, 1.0f, 0.1f , 1000.0f);
     g_LightCamera.FrameMove( 0 );
 
-    g_VarianceShadow.Init( pd3dDevice, pd3dImmediateContext, 
+    g_VarianceShadow.Init( pd3dDevice, pd3dImmediateContext,
         g_pSelectedMesh, &g_ViewerCamera, &g_LightCamera, &g_CascadeConfig );
-    
+
     return S_OK;
 }
 
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11CreateDevice 
+// Release D3D11 resources created in OnD3D11CreateDevice
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
 {
@@ -787,7 +787,7 @@ void CALLBACK OnD3D11DestroyDevice( void* pUserContext )
     DestroyD3DComponents();
 }
 
-HRESULT DestroyD3DComponents() 
+HRESULT DestroyD3DComponents()
 {
     g_DialogResourceManager.OnD3D11DestroyDevice();
     g_D3DSettingsDlg.OnD3D11DestroyDevice();
@@ -818,7 +818,7 @@ HRESULT CALLBACK OnD3D11CreateDevice( ID3D11Device* pd3dDevice, const DXGI_SURFA
 //--------------------------------------------------------------------------------------
 // Calcaulte the camera based on size of the current scene
 //--------------------------------------------------------------------------------------
-void UpdateViewerCameraNearFar () 
+void UpdateViewerCameraNearFar ()
 {
     XMVECTOR vMeshExtents = g_VarianceShadow.GetSceneAABBMax() - g_VarianceShadow.GetSceneAABBMin();
     XMVECTOR vMeshLength = XMVector3Length( vMeshExtents );
@@ -841,7 +841,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
     g_fAspectRatio = pBackBufferSurfaceDesc->Width / ( FLOAT ) pBackBufferSurfaceDesc->Height;
 
     UpdateViewerCameraNearFar();
-        
+
     g_HUD.SetLocation( pBackBufferSurfaceDesc->Width - 170, 0 );
     g_HUD.SetSize( 170, 170 );
     g_SampleUI.SetLocation( pBackBufferSurfaceDesc->Width - 170, pBackBufferSurfaceDesc->Height - 300 );
@@ -852,7 +852,7 @@ HRESULT CALLBACK OnD3D11ResizedSwapChain( ID3D11Device* pd3dDevice, IDXGISwapCha
 
 
 //--------------------------------------------------------------------------------------
-// Release D3D11 resources created in OnD3D11ResizedSwapChain 
+// Release D3D11 resources created in OnD3D11ResizedSwapChain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D11ReleasingSwapChain( void* pUserContext )
 {
@@ -883,7 +883,7 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     g_VarianceShadow.InitFrame( pd3dDevice, g_pSelectedMesh );
 
     g_VarianceShadow.RenderShadowsForAllCascades( pd3dDevice, pd3dImmediateContext, g_pSelectedMesh );
-    
+
     D3D11_VIEWPORT vp;
     vp.Width = (FLOAT)DXUTGetDXGIBackBufferSurfaceDesc()->Width;
     vp.Height = (FLOAT)DXUTGetDXGIBackBufferSurfaceDesc()->Height;
@@ -892,10 +892,10 @@ void CALLBACK OnD3D11FrameRender( ID3D11Device* pd3dDevice, ID3D11DeviceContext*
     vp.TopLeftX = 0;
     vp.TopLeftY = 0;
 
-    g_VarianceShadow.RenderScene( 
+    g_VarianceShadow.RenderScene(
         pd3dImmediateContext, pRTV, pDSV, g_pSelectedMesh, g_pActiveCamera,  &vp, g_bVisualizeCascades );
-    
-    pd3dImmediateContext->RSSetViewports( 1, &vp);            
+
+    pd3dImmediateContext->RSSetViewports( 1, &vp);
     pd3dImmediateContext->OMSetRenderTargets( 1, &pRTV, pDSV );
 
     DXUT_BeginPerfEvent( DXUT_PERFEVENTCOLOR, L"HUD / Stats" );

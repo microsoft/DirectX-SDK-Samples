@@ -47,11 +47,11 @@ struct PREDEFINED_MATERIALS
 
 //--------------------------------------------------------------------------------------
 // Subsurface scattering parameters from:
-// "A Practical Model for Subsurface Light Transport", 
+// "A Practical Model for Subsurface Light Transport",
 // Henrik Wann Jensen, Steve R. Marschner, Marc Levoy, Pat Hanrahan.
 // SIGGRAPH 2001
 //--------------------------------------------------------------------------------------
-const PREDEFINED_MATERIALS g_aPredefinedMaterials[] = 
+const PREDEFINED_MATERIALS g_aPredefinedMaterials[] =
 {
     // name             scattering (R/G/B/A)            absorption (R/G/B/A)                    reflectance (R/G/B/A)           index of refraction
     TEXT("Default"),    {2.00f, 2.00f, 2.00f, 1.0f},    {0.0030f, 0.0030f, 0.0460f, 1.0f},      {1.00f, 1.00f, 1.00f, 1.0f},    1.3f,
@@ -143,12 +143,12 @@ HRESULT COptionsFile::SaveOptions( WCHAR* strFile )
     CoInitialize(NULL);
 
     // Create an empty XML document
-    V_RETURN( CoCreateInstance( CLSID_DOMDocument, NULL, 
-                                CLSCTX_INPROC_SERVER, IID_IXMLDOMDocument, 
+    V_RETURN( CoCreateInstance( CLSID_DOMDocument, NULL,
+                                CLSCTX_INPROC_SERVER, IID_IXMLDOMDocument,
                                 (void**)&pDoc ) );
 
     IXMLDOMNode* pRootNode = NULL;
-    IXMLDOMNode* pTopNode = NULL;    
+    IXMLDOMNode* pTopNode = NULL;
     pDoc->QueryInterface( IID_IXMLDOMNode, (VOID**)&pRootNode );
     CXMLHelper::CreateChildNode( pDoc, pRootNode, L"PRTOptions", NODE_ELEMENT, &pTopNode );
 
@@ -231,14 +231,14 @@ HRESULT COptionsFile::LoadOptions( WCHAR* strFile )
     IXMLDOMNode* pNode = NULL;
 
     CoInitialize(NULL);
-    V_RETURN( CoCreateInstance( CLSID_DOMDocument, NULL, CLSCTX_INPROC_SERVER, 
+    V_RETURN( CoCreateInstance( CLSID_DOMDocument, NULL, CLSCTX_INPROC_SERVER,
                                 IID_IXMLDOMDocument, (void**)&pDoc ) );
 
     VariantInit(&v);
     v.vt = VT_BSTR;
     V_BSTR(&v) = SysAllocString(strFile);
     hr = pDoc->load(v, &vb);
-    if( FAILED(hr) || hr == S_FALSE ) 
+    if( FAILED(hr) || hr == S_FALSE )
         return E_FAIL;
     VariantClear(&v);
 
@@ -304,7 +304,7 @@ HRESULT COptionsFile::LoadOptions( WCHAR* strFile )
 bool CPRTOptionsDlg::Show()
 {
     // Ask the user about param settings for the PRT Simulation
-    int nResult = (int) DialogBox( NULL, MAKEINTRESOURCE(IDD_SIMULATION_OPTIONS), 
+    int nResult = (int) DialogBox( NULL, MAKEINTRESOURCE(IDD_SIMULATION_OPTIONS),
                                    DXUTGetHWND(), StaticDlgProc );
 
     UnhookWindowsHookEx( m_hMsgProcHook );
@@ -337,9 +337,9 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
 
             UpdateControlsWithSettings( hDlg );
 
-            m_hToolTip = CreateWindowEx( 0, TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP, 
-                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-                                         hDlg, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL );                            
+            m_hToolTip = CreateWindowEx( 0, TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP,
+                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                         hDlg, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL );
             SendMessage( m_hToolTip, TTM_SETMAXTIPWIDTH, 0, 300 );
             SendMessage( m_hToolTip, TTM_SETDELAYTIME, (WPARAM)(DWORD) TTDT_AUTOPOP, 32000 );
             SendMessage( m_hToolTip, TTM_SETDELAYTIME, (WPARAM)(DWORD) TTDT_INITIAL, 0 );
@@ -349,7 +349,7 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
 
             return TRUE;
         }
-        
+
         case WM_NOTIFY:
         {
             NMHDR* pNMHDR = (LPNMHDR) lParam;
@@ -424,23 +424,23 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
                         {
                             // If this is the "Custom" material, don't change the numbers
                             if( nIndex == g_aPredefinedMaterialsSize-1 )
-                                break; 
+                                break;
 
                             PREDEFINED_MATERIALS* pMat = (PREDEFINED_MATERIALS*) lResult;
                             TCHAR sz[256];
                             ZeroMemory( sz, 256 );
 
                             m_bComboBoxSelChange = true;
-                            swprintf_s( sz, 256, TEXT("%0.4f"), pMat->Absorption.r ); SetDlgItemText( hDlg, IDC_ABSORPTION_R_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.4f"), pMat->Absorption.g ); SetDlgItemText( hDlg, IDC_ABSORPTION_G_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.4f"), pMat->Absorption.b ); SetDlgItemText( hDlg, IDC_ABSORPTION_B_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->Diffuse.r ); SetDlgItemText( hDlg, IDC_REFLECTANCE_R_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->Diffuse.g ); SetDlgItemText( hDlg, IDC_REFLECTANCE_G_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->Diffuse.b ); SetDlgItemText( hDlg, IDC_REFLECTANCE_B_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->ReducedScattering.r ); SetDlgItemText( hDlg, IDC_SCATTERING_R_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->ReducedScattering.g ); SetDlgItemText( hDlg, IDC_SCATTERING_G_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->ReducedScattering.b ); SetDlgItemText( hDlg, IDC_SCATTERING_B_EDIT, sz ); 
-                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->fRelativeIndexOfRefraction ); SetDlgItemText( hDlg, IDC_REFRACTION_EDIT, sz ); 
+                            swprintf_s( sz, 256, TEXT("%0.4f"), pMat->Absorption.r ); SetDlgItemText( hDlg, IDC_ABSORPTION_R_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.4f"), pMat->Absorption.g ); SetDlgItemText( hDlg, IDC_ABSORPTION_G_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.4f"), pMat->Absorption.b ); SetDlgItemText( hDlg, IDC_ABSORPTION_B_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->Diffuse.r ); SetDlgItemText( hDlg, IDC_REFLECTANCE_R_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->Diffuse.g ); SetDlgItemText( hDlg, IDC_REFLECTANCE_G_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->Diffuse.b ); SetDlgItemText( hDlg, IDC_REFLECTANCE_B_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->ReducedScattering.r ); SetDlgItemText( hDlg, IDC_SCATTERING_R_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->ReducedScattering.g ); SetDlgItemText( hDlg, IDC_SCATTERING_G_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->ReducedScattering.b ); SetDlgItemText( hDlg, IDC_SCATTERING_B_EDIT, sz );
+                            swprintf_s( sz, 256, TEXT("%0.2f"), pMat->fRelativeIndexOfRefraction ); SetDlgItemText( hDlg, IDC_REFRACTION_EDIT, sz );
                             m_bComboBoxSelChange = false;
                         }
                     }
@@ -468,9 +468,9 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
                 {
                     // Display the OpenFileName dialog
                     OPENFILENAME ofn = { sizeof(OPENFILENAME), hDlg, NULL,
-                                        L".X Files (.x)\0*.x\0All Files\0*.*\0\0", 
-                                        NULL, 0, 1, GetGlobalOptions().strInputMesh, MAX_PATH, NULL, 0, 
-                                        GetGlobalOptions().strInitialDir, L"Open Mesh File", 
+                                        L".X Files (.x)\0*.x\0All Files\0*.*\0\0",
+                                        NULL, 0, 1, GetGlobalOptions().strInputMesh, MAX_PATH, NULL, 0,
+                                        GetGlobalOptions().strInitialDir, L"Open Mesh File",
                                         OFN_FILEMUSTEXIST, 0, 1, NULL, 0, NULL, NULL };
                     if( TRUE == GetOpenFileName( &ofn ) )
                     {
@@ -525,10 +525,10 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
                     GetDlgItemText( hDlg, IDC_OUTPUT_EDIT, strResults, MAX_PATH );
 
                     OPENFILENAME ofn = { sizeof(OPENFILENAME), hDlg, NULL,
-                                        L"Uncompressed PRT buffer files (.prt)\0*.prt\0All Files\0*.*\0\0", 
-                                        NULL, 0, 1, strResults, MAX_PATH, NULL, 0, 
-                                        GetGlobalOptions().strInitialDir, L"Save Results File", 
-                                        OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN, 
+                                        L"Uncompressed PRT buffer files (.prt)\0*.prt\0All Files\0*.*\0\0",
+                                        NULL, 0, 1, strResults, MAX_PATH, NULL, 0,
+                                        GetGlobalOptions().strInitialDir, L"Save Results File",
+                                        OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN,
                                         0, 1, L".prt", 0, NULL, NULL };
                     bResult = GetSaveFileName( &ofn );
 
@@ -550,10 +550,10 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
                 {
                     // Display the OpenFileName dialog
                     OPENFILENAME ofn = { sizeof(OPENFILENAME), hDlg, NULL,
-                                        L"X Files (.x)\0*.x\0All Files\0*.*\0\0", 
-                                        NULL, 0, 1, GetGlobalOptions().strOutputMesh, MAX_PATH, NULL, 0, 
-                                        GetGlobalOptions().strInitialDir, L"Save Output Mesh", 
-                                        OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN, 
+                                        L"X Files (.x)\0*.x\0All Files\0*.*\0\0",
+                                        NULL, 0, 1, GetGlobalOptions().strOutputMesh, MAX_PATH, NULL, 0,
+                                        GetGlobalOptions().strInitialDir, L"Save Output Mesh",
+                                        OFN_OVERWRITEPROMPT | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_NOREADONLYRETURN,
                                         0, 1, L".x", 0, NULL, NULL };
                     if( TRUE == GetSaveFileName( &ofn ) )
                     {
@@ -665,7 +665,7 @@ INT_PTR CALLBACK CPRTOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LP
 
 //-----------------------------------------------------------------------------
 // Name: EnumChildProc
-// Desc: Helper function to add tooltips to all the children (buttons/etc) 
+// Desc: Helper function to add tooltips to all the children (buttons/etc)
 //       of the dialog box
 //-----------------------------------------------------------------------------
 BOOL CALLBACK CPRTOptionsDlg::EnumChildProc( HWND hwndChild, LPARAM lParam )
@@ -691,14 +691,14 @@ LRESULT CALLBACK CPRTOptionsDlg::GetMsgProc( int nCode, WPARAM wParam, LPARAM lP
 {
     MSG* pMSG = (MSG*) lParam;
     if( nCode < 0 || !(IsChild( g_pDlg->m_hDlg, pMSG->hwnd) ) )
-        return CallNextHookEx( g_pDlg->m_hMsgProcHook, nCode, wParam, lParam ); 
+        return CallNextHookEx( g_pDlg->m_hMsgProcHook, nCode, wParam, lParam );
 
     switch( pMSG->message )
     {
-        case WM_MOUSEMOVE: 
-        case WM_LBUTTONDOWN: 
+        case WM_MOUSEMOVE:
+        case WM_LBUTTONDOWN:
         case WM_LBUTTONUP:
-        case WM_RBUTTONDOWN: 
+        case WM_RBUTTONDOWN:
         case WM_RBUTTONUP:
         {
             if( g_pDlg->m_hToolTip )
@@ -719,25 +719,25 @@ LRESULT CALLBACK CPRTOptionsDlg::GetMsgProc( int nCode, WPARAM wParam, LPARAM lP
 
 
 //-----------------------------------------------------------------------------
-// Returns the tooltip text for the control 
+// Returns the tooltip text for the control
 //-----------------------------------------------------------------------------
 void CPRTOptionsDlg::GetToolTipText( int nDlgId, NMTTDISPINFO* pNMTDI )
 {
     TCHAR* str = NULL;
     switch( nDlgId )
     {
-        case IDC_INPUT_MESH_TEXT: 
+        case IDC_INPUT_MESH_TEXT:
         case IDC_MESH_NAME: str = TEXT("This is the file that is loaded as a ID3DXMesh* and passed into the ID3DXPRTEngine* so that it can compute and return spherical harmonic transfer coefficients for each vertex in the mesh. It returns these coefficients in a ID3DXBuffer*. This process takes some time and should be precomputed, however the results can be used in real time. For more detailed information, see \"Precomputed Radiance Transfer for Real-Time Rendering in Dynamic, Low-Frequency Lighting Environments\" by Peter-Pike Sloan, Jan Kautz, and John Snyder, SIGGRAPH 2002."); break;
 
-        case IDC_ORDER_TEXT: 
+        case IDC_ORDER_TEXT:
         case IDC_ORDER_SLIDER: str = TEXT("This controls the number of spherical harmonic basis functions used. The simulator generates order^2 coefficients per channel. Higher order allows for higher frequency lighting environments which allow for sharper shadows with the tradeoff of more coefficients per vertex that need to be processed by the vertex shader. For convex objects (no shadows), 3rd order has very little approximation error.  For more detailed information, see \"Spherical Harmonic Lighting: The Gritty Details\" by Robin Green, GDC 2003 and \"An Efficient Representation of Irradiance Environment Maps\" by Ravi Ramamoorthi, and Pat Hanrahan, SIGGRAPH 2001."); break;
 
-        case IDC_NUM_BOUNCES_TEXT: 
-        case IDC_NUM_BOUNCES_EDIT: 
+        case IDC_NUM_BOUNCES_TEXT:
+        case IDC_NUM_BOUNCES_EDIT:
         case IDC_NUM_BOUNCES_SPIN: str = TEXT("This controls the number of bounces simulated. If this is non-zero then inter-reflections are calculated. Inter-reflections are, for example, when a light shines on a red wall and bounces on a white wall. The white wall even though it contains no red in the material will reflect some red do to the bouncing of the light off the red wall."); break;
 
-        case IDC_NUM_RAYS_TEXT: 
-        case IDC_NUM_RAYS_EDIT: 
+        case IDC_NUM_RAYS_TEXT:
+        case IDC_NUM_RAYS_EDIT:
         case IDC_NUM_RAYS_SPIN: str = TEXT("This controls the number of rays to shoot at each sample. The more rays the more accurate the final result will be, but it will increase time it takes to precompute the transfer coefficients."); break;
 
         case IDC_SUBSURF_CHECK: str = TEXT("If checked then subsurface scattering will be done in the simulator. Subsurface scattering is when light penetrates a translucent surface and comes out the other side. For example, a jade sculpture or a flashlight shining through skin exhibits subsurface scattering. The simulator assumes the mesh is made of a homogenous material. If subsurface scattering is not used, then the length scale, the relative index of refraction, the reduced scattering coefficients, and the absorption coefficients are not used."); break;
@@ -748,34 +748,34 @@ void CPRTOptionsDlg::GetToolTipText( int nDlgId, NMTTDISPINFO* pNMTDI )
         case IDC_GREEN_TEXT: str = TEXT("The values below are the green coefficients"); break;
         case IDC_BLUE_TEXT: str = TEXT("The values below are the blue coefficients"); break;
 
-        case IDC_PREDEF_COMBO: 
+        case IDC_PREDEF_COMBO:
         case IDC_PREDEF_TEXT: str = TEXT("These are some example materials. Choosing one of these materials with change the all the material values below. The parameters for these materials are from \"A Practical Model for Subsurface Light Transport\" by Henrik Wann Jensen, Steve R. Marschner, Marc Levoy, Pat Hanrahan, SIGGRAPH 2001. The relative index of refraction is with respect the material immersed in air."); break;
 
-        case IDC_REFRACTION_TEXT: 
+        case IDC_REFRACTION_TEXT:
         case IDC_REFRACTION_EDIT: str = TEXT("Relative index of refraction is the ratio between two absolute indexes of refraction. An index of refraction is ratio of the sine of the angle of incidence to the sine of the angle of refraction."); break;
 
-        case IDC_LENGTH_SCALE_TEXT: 
+        case IDC_LENGTH_SCALE_TEXT:
         case IDC_LENGTH_SCALE_EDIT: str = TEXT("When subsurface scattering is used the object is mapped to a cube of length scale mm per side. For example, if length scale is 10, then the object is mapped to a 10mm x 10mm x 10mm cube.  The smaller the cube the more light penetrates the object."); break;
 
-        case IDC_SCATTERING_TEXT: 
-        case IDC_SCATTERING_G_EDIT: 
-        case IDC_SCATTERING_B_EDIT: 
+        case IDC_SCATTERING_TEXT:
+        case IDC_SCATTERING_G_EDIT:
+        case IDC_SCATTERING_B_EDIT:
         case IDC_SCATTERING_R_EDIT: str = TEXT("The reduced scattering coefficient is a parameter to the volume rendering equation used to model light propagation in a participating medium. For more detail, see \"A Practical Model for Subsurface Light Transport\" by Henrik Wann Jensen, Steve R. Marschner, Marc Levoy, Pat Hanrahan, SIGGRAPH 2001"); break;
 
-        case IDC_ABSORPTION_TEXT: 
-        case IDC_ABSORPTION_G_EDIT: 
-        case IDC_ABSORPTION_B_EDIT: 
+        case IDC_ABSORPTION_TEXT:
+        case IDC_ABSORPTION_G_EDIT:
+        case IDC_ABSORPTION_B_EDIT:
         case IDC_ABSORPTION_R_EDIT: str = TEXT("The absorption coefficient is a parameter to the volume rendering equation used to model light propagation in a participating medium. For more detail, see \"A Practical Model for Subsurface Light Transport\" by Henrik Wann Jensen, Steve R. Marschner, Marc Levoy, Pat Hanrahan, SIGGRAPH 2001"); break;
 
-        case IDC_REFLECTANCE_TEXT: 
-        case IDC_REFLECTANCE_R_EDIT: 
-        case IDC_REFLECTANCE_B_EDIT: 
+        case IDC_REFLECTANCE_TEXT:
+        case IDC_REFLECTANCE_R_EDIT:
+        case IDC_REFLECTANCE_B_EDIT:
         case IDC_REFLECTANCE_G_EDIT: str = TEXT("The diffuse reflectance coefficient is the fraction of diffuse light reflected back. This value is typically between 0 and 1."); break;
 
-        case IDC_OUTPUT_TEXT: 
+        case IDC_OUTPUT_TEXT:
         case IDC_OUTPUT_EDIT: str = TEXT("This sample will save a binary buffer of spherical harmonic transfer coefficients to a file which the sample can read in later.  This is the file name of the where the resulting binary buffer will be saved"); break;
 
-        case IDC_OUTPUT_MESH_TEXT: 
+        case IDC_OUTPUT_MESH_TEXT:
         case IDC_OUTPUT_MESH_EDIT: str = TEXT("If adaptive tessellation is on, then this sample will save the resulting tessellated mesh to this file."); break;
 
         case IDC_OUTPUT_BROWSE_BUTTON: str = TEXT("Select the output buffer file name"); break;
@@ -861,16 +861,16 @@ void CPRTOptionsDlg::UpdateControlsWithSettings( HWND hDlg )
 
     HWND hNumBouncesSpin = GetDlgItem( hDlg, IDC_NUM_BOUNCES_SPIN );
     SendMessage( hNumBouncesSpin, UDM_SETRANGE, 0, (LPARAM) MAKELONG( 10, 1 ) );
-    SendMessage( hNumBouncesSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwNumBounces, 0) );  
+    SendMessage( hNumBouncesSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwNumBounces, 0) );
 
     HWND hNumRaysSpin = GetDlgItem( hDlg, IDC_NUM_RAYS_SPIN );
     UDACCEL udAccel[3];
     udAccel[0].nSec = 0; udAccel[0].nInc = 1;
-    udAccel[1].nSec = 1; udAccel[1].nInc = 100;           
-    udAccel[2].nSec = 2; udAccel[2].nInc = 1000;           
-    SendMessage( hNumRaysSpin, UDM_SETACCEL, 3, (LPARAM) udAccel );           
+    udAccel[1].nSec = 1; udAccel[1].nInc = 100;
+    udAccel[2].nSec = 2; udAccel[2].nInc = 1000;
+    SendMessage( hNumRaysSpin, UDM_SETACCEL, 3, (LPARAM) udAccel );
     SendMessage( hNumRaysSpin, UDM_SETRANGE, 0, (LPARAM) MAKELONG( 30000, 8 ) );
-    SendMessage( hNumRaysSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwNumRays, 0) );  
+    SendMessage( hNumRaysSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwNumRays, 0) );
 
     CheckDlgButton( hDlg, IDC_SUBSURF_CHECK, GetGlobalOptions().bSubsurfaceScattering ? BST_CHECKED : BST_UNCHECKED );
     CheckDlgButton( hDlg, IDC_ADAPTIVE_CHECK, GetGlobalOptions().bAdaptive ? BST_CHECKED : BST_UNCHECKED );
@@ -882,24 +882,24 @@ void CPRTOptionsDlg::UpdateControlsWithSettings( HWND hDlg )
     DWORD i;
     for( i=0; i<(DWORD)g_aPredefinedMaterialsSize; i++ )
     {
-        int nIndex = (int) SendMessage( hPreDefCombo, CB_ADDSTRING, 0, (LPARAM) g_aPredefinedMaterials[i].strName );                
-        if( nIndex >= 0 ) 
+        int nIndex = (int) SendMessage( hPreDefCombo, CB_ADDSTRING, 0, (LPARAM) g_aPredefinedMaterials[i].strName );
+        if( nIndex >= 0 )
             SendMessage( hPreDefCombo, CB_SETITEMDATA, nIndex, (LPARAM) &g_aPredefinedMaterials[i] );
     }
     SendMessage( hPreDefCombo, CB_SETCURSEL, GetGlobalOptions().dwPredefinedMatIndex, 0 );
 
     TCHAR sz[256];
     m_bComboBoxSelChange = true;
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().fRelativeIndexOfRefraction ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFRACTION_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.4f"), GetGlobalOptions().Absorption.r ); sz[255] = 0; SetDlgItemText( hDlg, IDC_ABSORPTION_R_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.4f"), GetGlobalOptions().Absorption.g ); sz[255] = 0; SetDlgItemText( hDlg, IDC_ABSORPTION_G_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.4f"), GetGlobalOptions().Absorption.b ); sz[255] = 0; SetDlgItemText( hDlg, IDC_ABSORPTION_B_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().Diffuse.r ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFLECTANCE_R_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().Diffuse.g ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFLECTANCE_G_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().Diffuse.b ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFLECTANCE_B_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().ReducedScattering.r ); sz[255] = 0; SetDlgItemText( hDlg, IDC_SCATTERING_R_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().ReducedScattering.g ); sz[255] = 0; SetDlgItemText( hDlg, IDC_SCATTERING_G_EDIT, sz ); 
-    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().ReducedScattering.b ); sz[255] = 0; SetDlgItemText( hDlg, IDC_SCATTERING_B_EDIT, sz ); 
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().fRelativeIndexOfRefraction ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFRACTION_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.4f"), GetGlobalOptions().Absorption.r ); sz[255] = 0; SetDlgItemText( hDlg, IDC_ABSORPTION_R_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.4f"), GetGlobalOptions().Absorption.g ); sz[255] = 0; SetDlgItemText( hDlg, IDC_ABSORPTION_G_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.4f"), GetGlobalOptions().Absorption.b ); sz[255] = 0; SetDlgItemText( hDlg, IDC_ABSORPTION_B_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().Diffuse.r ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFLECTANCE_R_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().Diffuse.g ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFLECTANCE_G_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().Diffuse.b ); sz[255] = 0; SetDlgItemText( hDlg, IDC_REFLECTANCE_B_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().ReducedScattering.r ); sz[255] = 0; SetDlgItemText( hDlg, IDC_SCATTERING_R_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().ReducedScattering.g ); sz[255] = 0; SetDlgItemText( hDlg, IDC_SCATTERING_G_EDIT, sz );
+    swprintf_s( sz, 256, TEXT("%0.2f"), GetGlobalOptions().ReducedScattering.b ); sz[255] = 0; SetDlgItemText( hDlg, IDC_SCATTERING_B_EDIT, sz );
     m_bComboBoxSelChange = false;
 
     swprintf_s( sz, 256, TEXT("%0.1f"), GetGlobalOptions().fLengthScale ); sz[255] = 0; SetDlgItemText( hDlg, IDC_LENGTH_SCALE_EDIT, sz );
@@ -932,7 +932,7 @@ CPRTLoadDlg::~CPRTLoadDlg()
 bool CPRTLoadDlg::Show()
 {
     // Ask the user about param settings for the PRT Simulation
-    int nResult = (int) DialogBox( NULL, MAKEINTRESOURCE(IDD_LOAD_PRTBUFFER), 
+    int nResult = (int) DialogBox( NULL, MAKEINTRESOURCE(IDD_LOAD_PRTBUFFER),
                                    DXUTGetHWND(), StaticDlgProc );
 
     UnhookWindowsHookEx( m_hMsgProcHook );
@@ -976,9 +976,9 @@ INT_PTR CALLBACK CPRTLoadDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARA
 
             SetCurrentDirectory( GetGlobalOptions().strInitialDir );
 
-            m_hToolTip = CreateWindowEx( 0, TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP, 
-                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-                                         hDlg, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL );                            
+            m_hToolTip = CreateWindowEx( 0, TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP,
+                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                         hDlg, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL );
             SendMessage( m_hToolTip, TTM_SETMAXTIPWIDTH, 0, 300 );
             SendMessage( m_hToolTip, TTM_SETDELAYTIME, (WPARAM)(DWORD) TTDT_AUTOPOP, 32000 );
             SendMessage( m_hToolTip, TTM_SETDELAYTIME, (WPARAM)(DWORD) TTDT_INITIAL, 0 );
@@ -988,7 +988,7 @@ INT_PTR CALLBACK CPRTLoadDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARA
 
             return TRUE;
         }
-        
+
         case WM_NOTIFY:
         {
             NMHDR* pNMHDR = (LPNMHDR) lParam;
@@ -1018,9 +1018,9 @@ INT_PTR CALLBACK CPRTLoadDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARA
 
                     // Display the OpenFileName dialog
                     OPENFILENAME ofn = { sizeof(OPENFILENAME), hDlg, NULL,
-                                        L".X Files (.x)\0*.x\0All Files\0*.*\0\0", 
-                                        NULL, 0, 1, strMesh, MAX_PATH, NULL, 0, 
-                                        GetGlobalOptions().strInitialDir, L"Open Mesh File", 
+                                        L".X Files (.x)\0*.x\0All Files\0*.*\0\0",
+                                        NULL, 0, 1, strMesh, MAX_PATH, NULL, 0,
+                                        GetGlobalOptions().strInitialDir, L"Open Mesh File",
                                         OFN_FILEMUSTEXIST, 0, 1, NULL, 0, NULL, NULL };
                     if( TRUE == GetOpenFileName( &ofn ) )
                     {
@@ -1055,9 +1055,9 @@ INT_PTR CALLBACK CPRTLoadDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARA
                     // Display the OpenFileName dialog
                     BOOL bResult;
                     OPENFILENAME ofn = { sizeof(OPENFILENAME), hDlg, NULL,
-                                        L"Uncompressed PRT buffer files (.prt)\0*.prt\0All Files\0*.*\0\0", 
-                                        NULL, 0, 1, GetGlobalOptions().strResultsFile, MAX_PATH, NULL, 0, 
-                                        GetGlobalOptions().strInitialDir, L"Load Results File", 
+                                        L"Uncompressed PRT buffer files (.prt)\0*.prt\0All Files\0*.*\0\0",
+                                        NULL, 0, 1, GetGlobalOptions().strResultsFile, MAX_PATH, NULL, 0,
+                                        GetGlobalOptions().strInitialDir, L"Load Results File",
                                         OFN_FILEMUSTEXIST, 0, 1, L"", 0, NULL, NULL };
                     bResult = GetOpenFileName( &ofn );
                     if( bResult )
@@ -1153,7 +1153,7 @@ CPRTAdaptiveOptionsDlg::~CPRTAdaptiveOptionsDlg()
 bool CPRTAdaptiveOptionsDlg::Show( HWND hDlg )
 {
     // Ask the user about param settings for the PRT Simulation
-    int nResult = (int) DialogBox( NULL, MAKEINTRESOURCE(IDD_ADAPTIVE_OPTIONS), 
+    int nResult = (int) DialogBox( NULL, MAKEINTRESOURCE(IDD_ADAPTIVE_OPTIONS),
                                    hDlg, StaticDlgProc );
 
     UnhookWindowsHookEx( m_hMsgProcHook );
@@ -1193,26 +1193,26 @@ INT_PTR CALLBACK CPRTAdaptiveOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wP
             HWND hSpin;
             hSpin = GetDlgItem( hDlg, IDC_RMR_MAX_SUBD_SPIN );
             SendMessage( hSpin, UDM_SETRANGE, 0, (LPARAM) MAKELONG( 10, 1 ) );
-            SendMessage( hSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwRobustMeshRefineMaxSubdiv, 0) );  
+            SendMessage( hSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwRobustMeshRefineMaxSubdiv, 0) );
 
             hSpin = GetDlgItem( hDlg, IDC_DL_MAX_SUBD_SPIN );
             SendMessage( hSpin, UDM_SETRANGE, 0, (LPARAM) MAKELONG( 10, 1 ) );
-            SendMessage( hSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwAdaptiveDLMaxSubdiv, 0) );  
+            SendMessage( hSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwAdaptiveDLMaxSubdiv, 0) );
 
             hSpin = GetDlgItem( hDlg, IDC_AB_MAX_SUBD_SPIN );
             SendMessage( hSpin, UDM_SETRANGE, 0, (LPARAM) MAKELONG( 10, 1 ) );
-            SendMessage( hSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwAdaptiveBounceMaxSubdiv, 0) );  
+            SendMessage( hSpin, UDM_SETPOS, 0, (LPARAM) MAKELONG( GetGlobalOptions().dwAdaptiveBounceMaxSubdiv, 0) );
 
             WCHAR sz[256];
-            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fRobustMeshRefineMinEdgeLength ); sz[255] = 0; SetDlgItemText( hDlg, IDC_RMR_MIN_EDGE_EDIT, sz ); 
-            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveDLMinEdgeLength ); sz[255] = 0; SetDlgItemText( hDlg, IDC_DL_MIN_EDGE_EDIT, sz ); 
-            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveBounceMinEdgeLength ); sz[255] = 0; SetDlgItemText( hDlg, IDC_AB_MIN_EDGE_EDIT, sz ); 
-            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveDLThreshold ); sz[255] = 0; SetDlgItemText( hDlg, IDC_DL_SUBD_THRESHOLD_EDIT, sz ); 
-            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveBounceThreshold ); sz[255] = 0; SetDlgItemText( hDlg, IDC_AB_SUBD_THRESHOLD_EDIT, sz ); 
+            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fRobustMeshRefineMinEdgeLength ); sz[255] = 0; SetDlgItemText( hDlg, IDC_RMR_MIN_EDGE_EDIT, sz );
+            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveDLMinEdgeLength ); sz[255] = 0; SetDlgItemText( hDlg, IDC_DL_MIN_EDGE_EDIT, sz );
+            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveBounceMinEdgeLength ); sz[255] = 0; SetDlgItemText( hDlg, IDC_AB_MIN_EDGE_EDIT, sz );
+            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveDLThreshold ); sz[255] = 0; SetDlgItemText( hDlg, IDC_DL_SUBD_THRESHOLD_EDIT, sz );
+            swprintf_s( sz, 256, L"%0.6f", GetGlobalOptions().fAdaptiveBounceThreshold ); sz[255] = 0; SetDlgItemText( hDlg, IDC_AB_SUBD_THRESHOLD_EDIT, sz );
 
-            m_hToolTip = CreateWindowEx( 0, TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP, 
-                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 
-                                         hDlg, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL );                            
+            m_hToolTip = CreateWindowEx( 0, TOOLTIPS_CLASS, NULL, TTS_ALWAYSTIP,
+                                         CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT,
+                                         hDlg, NULL, (HINSTANCE)GetModuleHandle(NULL), NULL );
             SendMessage( m_hToolTip, TTM_SETMAXTIPWIDTH, 0, 300 );
             SendMessage( m_hToolTip, TTM_SETDELAYTIME, (WPARAM)(DWORD) TTDT_AUTOPOP, 32000 );
             SendMessage( m_hToolTip, TTM_SETDELAYTIME, (WPARAM)(DWORD) TTDT_INITIAL, 0 );
@@ -1222,7 +1222,7 @@ INT_PTR CALLBACK CPRTAdaptiveOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wP
 
             return TRUE;
         }
-        
+
         case WM_NOTIFY:
         {
             NMHDR* pNMHDR = (LPNMHDR) lParam;
@@ -1276,7 +1276,7 @@ INT_PTR CALLBACK CPRTAdaptiveOptionsDlg::DlgProc( HWND hDlg, UINT msg, WPARAM wP
                     GetDlgItemText( hDlg, IDC_AB_MIN_EDGE_EDIT, sz, 256 ); if( swscanf( sz, TEXT("%f"), &GetGlobalOptions().fAdaptiveBounceMinEdgeLength ) == 0 ) return false;
                     GetDlgItemText( hDlg, IDC_DL_SUBD_THRESHOLD_EDIT, sz, 256 ); if( swscanf( sz, TEXT("%f"), &GetGlobalOptions().fAdaptiveDLThreshold ) == 0 ) return false;
                     GetDlgItemText( hDlg, IDC_AB_SUBD_THRESHOLD_EDIT, sz, 256 ); if( swscanf( sz, TEXT("%f"), &GetGlobalOptions().fAdaptiveBounceThreshold ) == 0 ) return false;
-#endif                   
+#endif
                     EndDialog(hDlg, IDOK);
                     break;
                 }
@@ -1345,14 +1345,14 @@ BOOL CALLBACK CPRTAdaptiveOptionsDlg::EnumChildProc( HWND hwnd, LPARAM lParam )
 
 
 //--------------------------------------------------------------------------------------
-void CXMLHelper::CreateChildNode( IXMLDOMDocument* pDoc, IXMLDOMNode* pParentNode, 
+void CXMLHelper::CreateChildNode( IXMLDOMDocument* pDoc, IXMLDOMNode* pParentNode,
                                   WCHAR* strName, int nType, IXMLDOMNode** ppNewNode )
 {
     IXMLDOMNode* pNewNode;
     VARIANT vtype;
     vtype.vt = VT_I4;
     V_I4(&vtype) = (int)nType;
-    BSTR bstrName = SysAllocString(strName);    
+    BSTR bstrName = SysAllocString(strName);
     pDoc->createNode( vtype, bstrName, NULL, &pNewNode );
     SysFreeString( bstrName );
     pParentNode->appendChild( pNewNode, ppNewNode );
@@ -1365,7 +1365,7 @@ void CXMLHelper::CreateNewValue( IXMLDOMDocument* pDoc, IXMLDOMNode* pNode, WCHA
 {
     IXMLDOMNode* pNewNode = NULL;
     IXMLDOMNode* pNewTextNode = NULL;
-    CreateChildNode( pDoc, pNode, strName, NODE_ELEMENT, &pNewNode ); 
+    CreateChildNode( pDoc, pNode, strName, NODE_ELEMENT, &pNewNode );
     CreateChildNode( pDoc, pNewNode, strName, NODE_TEXT, &pNewTextNode );
     VARIANT var;
     var.vt = VT_BSTR;
@@ -1406,7 +1406,7 @@ void CXMLHelper::GetValue( IXMLDOMNode* &pNode, WCHAR* strName, WCHAR* strValue,
     if( wcscmp( nodeName, strName ) == 0 )
     {
         VARIANT v;
-        IXMLDOMNode* pChild = NULL;    
+        IXMLDOMNode* pChild = NULL;
         pNode->get_firstChild(&pChild);
         if( pChild )
         {
@@ -1419,7 +1419,7 @@ void CXMLHelper::GetValue( IXMLDOMNode* &pNode, WCHAR* strName, WCHAR* strValue,
     }
     SysFreeString(nodeName);
 
-    IXMLDOMNode* pNextNode = NULL;    
+    IXMLDOMNode* pNextNode = NULL;
     if( SUCCEEDED( pNode->get_nextSibling(&pNextNode) ) )
     {
         SAFE_RELEASE( pNode );
@@ -1450,7 +1450,7 @@ void CXMLHelper::GetValue( IXMLDOMNode* &pNode, WCHAR* strName, float* pfValue )
 #else
     if( swscanf( strValue, L"%f", pfValue ) == 0 )
         *pfValue = 0;
-#endif                   
+#endif
 }
 
 
@@ -1483,7 +1483,7 @@ void CXMLHelper::GetValue( IXMLDOMNode* &pNode, WCHAR* strName, DWORD* pdwValue 
 #else
     if( swscanf( strValue, L"%d", pdwValue ) == 0 )
         *pdwValue = 0;
-#endif                   
+#endif
 }
 
 

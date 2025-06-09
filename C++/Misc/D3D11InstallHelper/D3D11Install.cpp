@@ -232,7 +232,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
         {
             LocDialogBox( IDD_SPDLG, InfoDialogProc );
             return 0;
-        } 
+        }
         else
         {
             return 2;
@@ -267,10 +267,10 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
             prg.hEvent2 = CreateEvent( NULL, FALSE, FALSE, NULL );
             prg.hThread = (HANDLE)_beginthreadex( NULL, 0, ProgressThread, &prg, 0, NULL );
         }
-    
+
         // Perform update
         UINT updateResult;
-        
+
         DWORD dwFlags = 0;
 
         if ( settings.bQuiet || settings.bPassive || settings.bMinimal )
@@ -311,7 +311,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
             }
             return 2;
         }
-    
+
         switch( updateResult )
         {
         case D3D11IH_RESULT_SUCCESS:
@@ -324,7 +324,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 MessageBox( NULL, msg, g_appName, MB_OK | MB_ICONINFORMATION );
             }
             return 0;
-    
+
         case D3D11IH_RESULT_SUCCESS_REBOOT:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned D3D11IH_RESULT_SUCCESS_REBOOT\n" )
 
@@ -336,7 +336,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
             }
             // Return require reboot
             return 1;
-    
+
         case D3D11IH_RESULT_NOT_SUPPORTED:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned D3D11IH_RESULT_NOT_SUPPORTED\n" )
 
@@ -348,7 +348,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 MessageBox( NULL, msg, g_appName, MB_OK | MB_ICONINFORMATION );
             }
             return 0;
-    
+
         case D3D11IH_RESULT_UPDATE_NOT_FOUND:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned D3D11IH_RESULT_UPDATE_NOT_FOUND\n" )
 
@@ -357,7 +357,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 LocDialogBox( IDD_NOTFOUNDDLG, InfoDialogProc );
             }
             return 2;
-    
+
         case D3D11IH_RESULT_UPDATE_DOWNLOAD_FAILED:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned D3D11IH_RESULT_UPDATE_DOWNLOAD_FAILED\n" )
 
@@ -366,7 +366,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 LocDialogBox( IDD_DLFAILDLG, InfoDialogProc );
             }
             return 2;
-    
+
         case D3D11IH_RESULT_UPDATE_INSTALL_FAILED:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned D3D11IH_RESULT_UPDATE_INSTALL_FAILED\n" )
 
@@ -375,7 +375,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 LocDialogBox( IDD_INSTALLFAILDLG, InfoDialogProc );
             }
             return 2;
-    
+
         case D3D11IH_RESULT_WU_SERVICE_ERROR:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned D3D11IH_RESULT_WU_SERVICE_ERROR\n" )
 
@@ -392,7 +392,7 @@ int PASCAL WinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, 
                 return 2;
             }
             break;
-    
+
         default:
             DEBUG_MSG( L"D3D11Install: ERROR - DoUpdateForDirect3D11 returned unknown result\n" )
 
@@ -571,7 +571,7 @@ unsigned int __stdcall ProgressThread( void* pArg )
         HANDLE obj[2] = { prg->hEvent1, prg->hEvent2 };
 
         DWORD wait = WaitForMultipleObjects( 2, obj, FALSE, 100 );
-       
+
         if ( wait == WAIT_OBJECT_0 )
         {
             // Event 1 means we just began a new phase
@@ -585,7 +585,7 @@ unsigned int __stdcall ProgressThread( void* pArg )
                     WCHAR msg[ MSG_SIZE ];
                     LocLoadString( IDS_SEARCHING, msg, MSG_SIZE );
                     SetWindowText( prg->hStatus, msg );
-        
+
                     // Since we know this update code will only be run on Windows Vista
                     // we know that the OS has support for the MARQUEE Progress Bar style
                     SetWindowLong( prg->hProgress, GWL_STYLE, GetWindowLong( prg->hProgress, GWL_STYLE ) | PBS_MARQUEE );

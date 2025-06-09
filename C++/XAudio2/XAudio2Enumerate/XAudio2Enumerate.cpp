@@ -91,8 +91,8 @@ int main()
     // To see the trace output, you need to view ETW logs for this application:
     //    Go to Control Panel, Administrative Tools, Event Viewer.
     //    View->Show Analytic and Debug Logs.
-    //    Applications and Services Logs / Microsoft / Windows / XAudio2. 
-    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK 
+    //    Applications and Services Logs / Microsoft / Windows / XAudio2.
+    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK
     XAUDIO2_DEBUG_CONFIGURATION debug = {};
     debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
     debug.BreakMask = XAUDIO2_LOG_ERRORS;
@@ -195,7 +195,7 @@ HRESULT EnumerateAudio( _In_ IXAudio2* pXaudio2, _Inout_ std::vector<AudioDevice
     using Windows::Devices::Enumeration::DeviceClass;
     using Windows::Devices::Enumeration::DeviceInformation;
     using Windows::Devices::Enumeration::DeviceInformationCollection;
- 
+
     auto operation = DeviceInformation::FindAllAsync(DeviceClass::AudioRender);
 
     auto task = create_task( operation );
@@ -205,7 +205,7 @@ HRESULT EnumerateAudio( _In_ IXAudio2* pXaudio2, _Inout_ std::vector<AudioDevice
         for( unsigned i=0; i < devices->Size; ++i )
         {
             using Windows::Devices::Enumeration::DeviceInformation;
- 
+
             DeviceInformation^ d = devices->GetAt(i);
 
             AudioDevice device;
@@ -216,7 +216,7 @@ HRESULT EnumerateAudio( _In_ IXAudio2* pXaudio2, _Inout_ std::vector<AudioDevice
     });
 
     task.wait();
- 
+
     if ( list.empty() )
         return S_FALSE;
 
@@ -291,7 +291,7 @@ HRESULT EnumerateAudio( _In_ IXAudio2* pXaudio2, _Inout_ std::vector<AudioDevice
 
     return S_OK;
 
-#endif 
+#endif
 
 #elif defined(USING_XAUDIO2_REDIST)
 

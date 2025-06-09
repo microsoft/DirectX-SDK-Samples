@@ -7,7 +7,7 @@
 //       Diffuse lighting
 //       Specular lighting
 //       Environment mapping
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -22,7 +22,7 @@ int sas : SasGlobal
 //-----------------------------------------------------------------------------
 // Global variables
 //-----------------------------------------------------------------------------
-texture g_txEnvMap 
+texture g_txEnvMap
 <
 	string SasUiLabel = "Environment Map";
 	string SasUiControl = "FilePicker";
@@ -39,14 +39,14 @@ float4x4 g_mWorld : WORLD
 <
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.Skeleton.MeshToJointToWorld[0]";
->;        
+>;
 
 
 float4x4 g_mView : VIEW
 <
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.Camera.WorldToView";
->;   
+>;
 
 
 float4x4 g_mProj : PROJECTION
@@ -56,14 +56,14 @@ float4x4 g_mProj : PROJECTION
 >;
 
 float4 g_vLightColor
-<  
+<
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.PointLight[0].Color";
 > = {1.0f, 1.0f, 1.0f, 1.0f}; // Light value
 
 
 float3 g_vLight
-<  
+<
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.PointLight[0].Position";
 > = {0.0f, 3.0f, -100.0f};
@@ -81,9 +81,9 @@ float4 Specular
 float  Power
 <
     string SasUiLabel = "Specular Power";
-    string SasUiControl = "Slider"; 
-    float SasUiMin = 1.0f; 
-    float SasUiMax = 32.0f; 
+    string SasUiControl = "Slider";
+    float SasUiMin = 1.0f;
+    float SasUiMax = 32.0f;
     int SasUiSteps = 31;
 
 > = 8.0f;
@@ -91,9 +91,9 @@ float  Power
 float  Reflectivity
 <
     string SasUiLabel = "Material Reflectivity";
-    string SasUiControl = "Slider"; 
-    float SasUiMin = 0.0f; 
-    float SasUiMax = 1.0f; 
+    string SasUiControl = "Slider";
+    float SasUiMin = 0.0f;
+    float SasUiMax = 1.0f;
     int SasUiSteps = 100;
 > = 0.5f; // Reflectivity of the material
 
@@ -138,7 +138,7 @@ void VertScene( float4 vPos : POSITION,
     float4x4 g_mWorldView= mul(g_mWorld, g_mView);
     float4x4 g_mWorldViewProjection= mul(g_mWorldView, g_mProj);
  	float4 lightInView= mul( g_vLight, g_mView);
-  
+
     oPos = mul( vPos, g_mWorldViewProjection );
 //    oPos = mul( vPos, g_mWorldView );
 //    oPos = mul( oPos, g_mProj );
@@ -188,7 +188,7 @@ float4 PixScene( float4 MatDiffuse : COLOR0,
                              + texCUBE( g_samEnv, EnvTex ) * Reflectivity
                            ), 1.0f );
 
-                           
+
 }
 
 

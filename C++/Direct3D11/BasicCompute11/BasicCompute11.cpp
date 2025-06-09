@@ -28,10 +28,10 @@
 const UINT NUM_ELEMENTS = 1024;
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 HRESULT CreateComputeDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut, BOOL bForceRef );
-HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName, 
+HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName,
                              ID3D11Device* pDevice, ID3D11ComputeShader** ppShaderOut );
 HRESULT CreateStructuredBuffer( ID3D11Device* pDevice, UINT uElementSize, UINT uCount, VOID* pInitData, ID3D11Buffer** ppBufOut );
 HRESULT CreateRawBuffer( ID3D11Device* pDevice, UINT uSize, VOID* pInitData, ID3D11Buffer** ppBufOut );
@@ -40,12 +40,12 @@ HRESULT CreateBufferUAV( ID3D11Device* pDevice, ID3D11Buffer* pBuffer, ID3D11Uno
 ID3D11Buffer* CreateAndCopyToDebugBuf( ID3D11Device* pDevice, ID3D11DeviceContext* pd3dImmediateContext, ID3D11Buffer* pBuffer );
 void RunComputeShader( ID3D11DeviceContext* pd3dImmediateContext,
                        ID3D11ComputeShader* pComputeShader,
-                       UINT nNumViews, ID3D11ShaderResourceView** pShaderResourceViews, 
+                       UINT nNumViews, ID3D11ShaderResourceView** pShaderResourceViews,
                        ID3D11Buffer* pCBCS, void* pCSData, DWORD dwNumDataBytes,
                        ID3D11UnorderedAccessView* pUnorderedAccessView,
                        UINT X, UINT Y, UINT Z );
 HRESULT FindDXSDKShaderFileCch( __in_ecount(cchDest) WCHAR* strDestPath,
-                                int cchDest, 
+                                int cchDest,
                                 __in LPCWSTR strFilename );
 
 //--------------------------------------------------------------------------------------
@@ -82,7 +82,7 @@ int __cdecl main()
     // Enable run-time memory check for debug builds.
 #if defined(DEBUG) || defined(_DEBUG)
     _CrtSetDbgFlag( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );
-#endif    
+#endif
 
     printf( "Creating device..." );
     if ( FAILED( CreateComputeDevice( &g_pDevice, &g_pContext, FALSE ) ) )
@@ -94,7 +94,7 @@ int __cdecl main()
     printf( "done\n" );
 
     printf( "Creating buffers and filling them with initial data..." );
-    for ( int i = 0; i < NUM_ELEMENTS; ++i ) 
+    for ( int i = 0; i < NUM_ELEMENTS; ++i )
     {
         g_vBuf0[i].i = i;
         g_vBuf0[i].f = (float)i;
@@ -154,7 +154,7 @@ int __cdecl main()
     // Read back the result from GPU, verify its correctness against result computed by CPU
     {
         ID3D11Buffer* debugbuf = CreateAndCopyToDebugBuf( g_pDevice, g_pContext, g_pBufResult );
-        D3D11_MAPPED_SUBRESOURCE MappedResource; 
+        D3D11_MAPPED_SUBRESOURCE MappedResource;
         BufType *p;
         g_pContext->Map( debugbuf, 0, D3D11_MAP_READ, 0, &MappedResource );
 
@@ -185,7 +185,7 @@ int __cdecl main()
 
         SAFE_RELEASE( debugbuf );
     }
-    
+
     printf( "Cleaning up...\n" );
     SAFE_RELEASE( g_pBuf0SRV );
     SAFE_RELEASE( g_pBuf1SRV );
@@ -217,9 +217,9 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
 {
     typedef HRESULT (WINAPI * LPD3D11CREATEDEVICE)( IDXGIAdapter*, D3D_DRIVER_TYPE, HMODULE, UINT32, CONST D3D_FEATURE_LEVEL*, UINT, UINT32, ID3D11Device**, D3D_FEATURE_LEVEL*, ID3D11DeviceContext** );
     static LPD3D11CREATEDEVICE  s_DynamicD3D11CreateDevice = NULL;
-    
+
     if ( s_DynamicD3D11CreateDevice == NULL )
-    {            
+    {
         HMODULE hModD3D11 = LoadLibrary( L"d3d11.dll" );
 
         if ( hModD3D11 == NULL )
@@ -227,7 +227,7 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
             // Ensure this "D3D11 absent" message is shown only once. As sometimes, the app would like to try
             // to create device multiple times
             static bool bMessageAlreadyShwon = false;
-            
+
             if ( !bMessageAlreadyShwon )
             {
                 OSVERSIONINFOEX osv;
@@ -236,7 +236,7 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
                 GetVersionEx( (LPOSVERSIONINFO)&osv );
 
                 if ( ( osv.dwMajorVersion > 6 )
-                    || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 ) 
+                    || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion >= 1 )
                     || ( osv.dwMajorVersion == 6 && osv.dwMinorVersion == 0 && osv.dwBuildNumber > 6002 ) )
                 {
 
@@ -266,12 +266,12 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
                 }
 
                 bMessageAlreadyShwon = true;
-            }            
+            }
 
             return E_FAIL;
         }
 
-        s_DynamicD3D11CreateDevice = ( LPD3D11CREATEDEVICE )GetProcAddress( hModD3D11, "D3D11CreateDevice" );           
+        s_DynamicD3D11CreateDevice = ( LPD3D11CREATEDEVICE )GetProcAddress( hModD3D11, "D3D11CreateDevice" );
     }
 
     return s_DynamicD3D11CreateDevice( pAdapter, DriverType, Software, Flags, pFeatureLevels, FeatureLevels,
@@ -282,10 +282,10 @@ HRESULT WINAPI Dynamic_D3D11CreateDevice( IDXGIAdapter* pAdapter,
 // Create the D3D device and device context suitable for running Compute Shaders(CS)
 //--------------------------------------------------------------------------------------
 HRESULT CreateComputeDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** ppContextOut, BOOL bForceRef )
-{    
+{
     *ppDeviceOut = NULL;
     *ppContextOut = NULL;
-    
+
     HRESULT hr = S_OK;
 
     UINT uCreationFlags = D3D11_CREATE_DEVICE_SINGLETHREADED;
@@ -294,7 +294,7 @@ HRESULT CreateComputeDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** p
 #endif
     D3D_FEATURE_LEVEL flOut;
     static const D3D_FEATURE_LEVEL flvl[] = { D3D_FEATURE_LEVEL_11_0, D3D_FEATURE_LEVEL_10_1, D3D_FEATURE_LEVEL_10_0 };
-    
+
     BOOL bNeedRefDevice = FALSE;
     if ( !bForceRef )
     {
@@ -308,13 +308,13 @@ HRESULT CreateComputeDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** p
                                         ppDeviceOut,                 // Device out
                                         &flOut,                      // Actual feature level created
                                         ppContextOut );              // Context out
-        
+
         if ( SUCCEEDED( hr ) )
         {
             // A hardware accelerated device has been created, so check for Compute Shader support
 
             // If we have a device >= D3D_FEATURE_LEVEL_11_0 created, full CS5.0 support is guaranteed, no need for further checks
-            if ( flOut < D3D_FEATURE_LEVEL_11_0 )            
+            if ( flOut < D3D_FEATURE_LEVEL_11_0 )
             {
 #ifdef TEST_DOUBLE
                 bNeedRefDevice = TRUE;
@@ -346,14 +346,14 @@ HRESULT CreateComputeDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** p
 #endif
         }
     }
-    
+
     if ( bForceRef || FAILED(hr) || bNeedRefDevice )
     {
         // Either because of failure on creating a hardware device or hardware lacking CS capability, we create a ref device here
 
         SAFE_RELEASE( *ppDeviceOut );
         SAFE_RELEASE( *ppContextOut );
-        
+
         hr = Dynamic_D3D11CreateDevice( NULL,                        // Use default graphics card
                                         D3D_DRIVER_TYPE_REFERENCE,   // Try to create a hardware accelerated device
                                         NULL,                        // Do not use external software rasterizer module
@@ -377,7 +377,7 @@ HRESULT CreateComputeDevice( ID3D11Device** ppDeviceOut, ID3D11DeviceContext** p
 //--------------------------------------------------------------------------------------
 // Compile and create the CS
 //--------------------------------------------------------------------------------------
-HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName, 
+HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName,
                              ID3D11Device* pDevice, ID3D11ComputeShader** ppShaderOut )
 {
     HRESULT hr;
@@ -389,17 +389,17 @@ HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName,
     hr = FindDXSDKShaderFileCch( str, MAX_PATH, pSrcFile );
     if ( FAILED(hr) )
         return hr;
-    
+
     DWORD dwShaderFlags = D3DCOMPILE_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DCOMPILE_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DCOMPILE_DEBUG;
 #endif
 
-    const D3D_SHADER_MACRO defines[] = 
+    const D3D_SHADER_MACRO defines[] =
     {
 #ifdef USE_STRUCTURED_BUFFERS
         "USE_STRUCTURED_BUFFERS", "1",
@@ -416,7 +416,7 @@ HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName,
 
     ID3DBlob* pErrorBlob = NULL;
     ID3DBlob* pBlob = NULL;
-    hr = D3DX11CompileFromFile( str, defines, NULL, pFunctionName, pProfile, 
+    hr = D3DX11CompileFromFile( str, defines, NULL, pFunctionName, pProfile,
         dwShaderFlags, NULL, NULL, &pBlob, &pErrorBlob, NULL );
     if ( FAILED(hr) )
     {
@@ -424,10 +424,10 @@ HRESULT CreateComputeShader( LPCWSTR pSrcFile, LPCSTR pFunctionName,
             OutputDebugStringA( (char*)pErrorBlob->GetBufferPointer() );
 
         SAFE_RELEASE( pErrorBlob );
-        SAFE_RELEASE( pBlob );    
+        SAFE_RELEASE( pBlob );
 
         return hr;
-    }    
+    }
 
     hr = pDevice->CreateComputeShader( pBlob->GetBufferPointer(), pBlob->GetBufferSize(), NULL, ppShaderOut );
 
@@ -525,13 +525,13 @@ HRESULT CreateBufferSRV( ID3D11Device* pDevice, ID3D11Buffer* pBuffer, ID3D11Sha
 
 //--------------------------------------------------------------------------------------
 // Create Unordered Access View for Structured or Raw Buffers
-//-------------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------------
 HRESULT CreateBufferUAV( ID3D11Device* pDevice, ID3D11Buffer* pBuffer, ID3D11UnorderedAccessView** ppUAVOut )
 {
     D3D11_BUFFER_DESC descBuf;
     ZeroMemory( &descBuf, sizeof(descBuf) );
     pBuffer->GetDesc( &descBuf );
-        
+
     D3D11_UNORDERED_ACCESS_VIEW_DESC desc;
     ZeroMemory( &desc, sizeof(desc) );
     desc.ViewDimension = D3D11_UAV_DIMENSION_BUFFER;
@@ -543,26 +543,26 @@ HRESULT CreateBufferUAV( ID3D11Device* pDevice, ID3D11Buffer* pBuffer, ID3D11Uno
 
         desc.Format = DXGI_FORMAT_R32_TYPELESS; // Format must be DXGI_FORMAT_R32_TYPELESS, when creating Raw Unordered Access View
         desc.Buffer.Flags = D3D11_BUFFER_UAV_FLAG_RAW;
-        desc.Buffer.NumElements = descBuf.ByteWidth / 4; 
+        desc.Buffer.NumElements = descBuf.ByteWidth / 4;
     } else
     if ( descBuf.MiscFlags & D3D11_RESOURCE_MISC_BUFFER_STRUCTURED )
     {
         // This is a Structured Buffer
 
         desc.Format = DXGI_FORMAT_UNKNOWN;      // Format must be must be DXGI_FORMAT_UNKNOWN, when creating a View of a Structured Buffer
-        desc.Buffer.NumElements = descBuf.ByteWidth / descBuf.StructureByteStride; 
+        desc.Buffer.NumElements = descBuf.ByteWidth / descBuf.StructureByteStride;
     } else
     {
         return E_INVALIDARG;
     }
-    
+
     return pDevice->CreateUnorderedAccessView( pBuffer, &desc, ppUAVOut );
 }
 
 //--------------------------------------------------------------------------------------
 // Create a CPU accessible buffer and download the content of a GPU buffer into it
 // This function is very useful for debugging CS programs
-//-------------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------------
 ID3D11Buffer* CreateAndCopyToDebugBuf( ID3D11Device* pDevice, ID3D11DeviceContext* pd3dImmediateContext, ID3D11Buffer* pBuffer )
 {
     ID3D11Buffer* debugbuf = NULL;
@@ -588,10 +588,10 @@ ID3D11Buffer* CreateAndCopyToDebugBuf( ID3D11Device* pDevice, ID3D11DeviceContex
 
 //--------------------------------------------------------------------------------------
 // Run CS
-//-------------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------------
 void RunComputeShader( ID3D11DeviceContext* pd3dImmediateContext,
                       ID3D11ComputeShader* pComputeShader,
-                      UINT nNumViews, ID3D11ShaderResourceView** pShaderResourceViews, 
+                      UINT nNumViews, ID3D11ShaderResourceView** pShaderResourceViews,
                       ID3D11Buffer* pCBCS, void* pCSData, DWORD dwNumDataBytes,
                       ID3D11UnorderedAccessView* pUnorderedAccessView,
                       UINT X, UINT Y, UINT Z )
@@ -633,7 +633,7 @@ void RunComputeShader( ID3D11DeviceContext* pd3dImmediateContext,
 // in the sample's own dir
 //--------------------------------------------------------------------------------------
 HRESULT FindDXSDKShaderFileCch( __in_ecount(cchDest) WCHAR* strDestPath,
-                                int cchDest, 
+                                int cchDest,
                                 __in LPCWSTR strFilename )
 {
     if( NULL == strFilename || strFilename[0] == 0 || NULL == strDestPath || cchDest < 10 )
@@ -675,7 +675,7 @@ HRESULT FindDXSDKShaderFileCch( __in_ecount(cchDest) WCHAR* strDestPath,
 
     swprintf_s( strDestPath, cchDest, L"%s\\..\\..\\%s\\%s", strExePath, strExeName, strFilename );
     if( GetFileAttributes( strDestPath ) != 0xFFFFFFFF )
-        return true;    
+        return true;
 
     // On failure, return the file as the path but also return an error code
     wcscpy_s( strDestPath, cchDest, strFilename );

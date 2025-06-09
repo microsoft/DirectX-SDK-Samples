@@ -16,7 +16,7 @@
 #include "resource.h"
 #include "skybox.h"
 
-#define NUM_TONEMAP_TEXTURES  5       // Number of stages in the 3x3 down-scaling 
+#define NUM_TONEMAP_TEXTURES  5       // Number of stages in the 3x3 down-scaling
 // of average luminance textures
 #define NUM_BLOOM_TEXTURES    2
 #define RGB16_MAX             100
@@ -244,7 +244,7 @@ ID3D10EffectTechnique* g_pDrawTexture;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 //d3d9 callbacks
 extern bool CALLBACK IsD3D9DeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat,
@@ -313,7 +313,7 @@ VOID EncodeRGBE8( D3DXFLOAT16* pSrc, BYTE** ppDest );
 VOID EncodeRGB16( D3DXFLOAT16* pSrc, BYTE** ppDest );
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdLine, int nCmdShow )
@@ -324,12 +324,12 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 #endif
 
     // Set the callback functions. These functions allow DXUT to notify
-    // the application about device changes, user input, and windows messages.  The 
-    // callbacks are optional so you need only set callbacks for events you're interested 
-    // in. However, if you don't handle the device reset/lost callbacks then the sample 
-    // framework won't be able to reset your device since the application must first 
-    // release all device resources before resetting.  Likewise, if you don't handle the 
-    // device created/destroyed callbacks then DXUT won't be able to 
+    // the application about device changes, user input, and windows messages.  The
+    // callbacks are optional so you need only set callbacks for events you're interested
+    // in. However, if you don't handle the device reset/lost callbacks then the sample
+    // framework won't be able to reset your device since the application must first
+    // release all device resources before resetting.  Likewise, if you don't handle the
+    // device created/destroyed callbacks then DXUT won't be able to
     // recreate your device resources.
 
     // Disable gamma correction in DXUT
@@ -361,15 +361,15 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 
     InitApp();
 
-    // Initialize DXUT and create the desired Win32 window and Direct3D 
+    // Initialize DXUT and create the desired Win32 window and Direct3D
     // device for the application. Calling each of these functions is optional, but they
     // allow you to set several options which control the behavior of the framework.
     DXUTInit( true, true ); // Parse the command line, handle the default hotkeys, and show msgboxes
     DXUTCreateWindow( L"HDRFormats10" );
     DXUTCreateDevice( true, 640, 480 );
 
-    // Pass control to DXUT for handling the message pump and 
-    // dispatching render calls. DXUT will call your FrameMove 
+    // Pass control to DXUT for handling the message pump and
+    // dispatching render calls. DXUT will call your FrameMove
     // and FrameRender callback when there is idle time between handling window messages.
     DXUTMainLoop();
 
@@ -380,7 +380,7 @@ int WINAPI wWinMain( HINSTANCE hInstance, HINSTANCE hPrevInstance, LPWSTR lpCmdL
 }
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -458,7 +458,7 @@ void InitApp()
 
 //-----------------------------------------------------------------------------
 // Name: GetSampleOffsets_Bloom()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT GetSampleOffsets_Bloom_D3D10( DWORD dwD3DTexSize,
                                       float afTexCoordOffset[15],
@@ -503,11 +503,11 @@ bool CALLBACK IsD3D10DeviceAcceptable( UINT Adapter, UINT Output, D3D10_DRIVER_T
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// created, which will happen during application initialization and windowed/full screen 
-// toggles. This is the best location to create D3DPOOL_MANAGED resources since these 
-// resources need to be reloaded whenever the device is destroyed. Resources created  
-// here should be released in the OnD3D10DestroyDevice callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// created, which will happen during application initialization and windowed/full screen
+// toggles. This is the best location to create D3DPOOL_MANAGED resources since these
+// resources need to be reloaded whenever the device is destroyed. Resources created
+// here should be released in the OnD3D10DestroyDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc,
                                       void* pUserContext )
@@ -528,13 +528,13 @@ HRESULT CALLBACK OnD3D10CreateDevice( ID3D10Device* pd3dDevice, const DXGI_SURFA
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"HDRFormats10.fx" ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // why the .fx file failed to compile
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
 #endif
@@ -1306,10 +1306,10 @@ void CALLBACK OnD3D10ReleasingSwapChain( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
-// been destroyed, which generally happens as a result of application termination or 
-// windowed/full screen toggles. Resources created in the OnD3D10CreateDevice callback 
-// should be released here, which generally includes all D3DPOOL_MANAGED resources. 
+// This callback function will be called immediately after the Direct3D device has
+// been destroyed, which generally happens as a result of application termination or
+// windowed/full screen toggles. Resources created in the OnD3D10CreateDevice callback
+// should be released here, which generally includes all D3DPOOL_MANAGED resources.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 {
@@ -1338,7 +1338,7 @@ void CALLBACK OnD3D10DestroyDevice( void* pUserContext )
 
 //-----------------------------------------------------------------------------
 // Name: RetrieveD3D10TechHandles()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 HRESULT RetrieveD3D10TechHandles()
 {
@@ -1372,12 +1372,12 @@ HRESULT RetrieveD3D10TechHandles()
 }
 
 //--------------------------------------------------------------------------------------
-// This callback function is called immediately before a device is created to allow the 
-// application to modify the device settings. The supplied pDeviceSettings parameter 
-// contains the settings that the framework has selected for the new device, and the 
-// application can make any desired changes directly to this structure.  Note however that 
-// DXUT will not correct invalid device settings so care must be taken 
-// to return valid device settings, otherwise IDirect3D9::CreateDevice() will fail.  
+// This callback function is called immediately before a device is created to allow the
+// application to modify the device settings. The supplied pDeviceSettings parameter
+// contains the settings that the framework has selected for the new device, and the
+// application can make any desired changes directly to this structure.  Note however that
+// DXUT will not correct invalid device settings so care must be taken
+// to return valid device settings, otherwise IDirect3D9::CreateDevice() will fail.
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
@@ -1387,7 +1387,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         D3DCAPS9 Caps;
         pD3D->GetDeviceCaps( pDeviceSettings->d3d9.AdapterOrdinal, pDeviceSettings->d3d9.DeviceType, &Caps );
 
-        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW 
+        // If device doesn't support HW T&L or doesn't support 1.1 vertex shaders in HW
         // then switch to SWVP.
         if( ( Caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
             Caps.VertexShaderVersion < D3DVS_VERSION( 1, 1 ) )
@@ -1395,8 +1395,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
             pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
         }
 
-        // Debugging vertex shaders requires either REF or software vertex processing 
-        // and debugging pixel shaders requires REF.  
+        // Debugging vertex shaders requires either REF or software vertex processing
+        // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
         if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
         {
@@ -1440,21 +1440,21 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void    CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
     UNREFERENCED_PARAMETER( fTime );
 
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 }
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -1492,7 +1492,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 //--------------------------------------------------------------------------------------
 // As a convenience, DXUT inspects the incoming windows messages for
 // keystroke messages and decodes the message parameters to pass relevant keyboard
-// messages to the application.  The framework does not remove the underlying keystroke 
+// messages to the application.  The framework does not remove the underlying keystroke
 // messages, which are still passed to the application's MsgProc callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK KeyboardProc( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext )
@@ -1776,7 +1776,7 @@ HRESULT MeasureLuminance10()
 
     //-------------------------------------------------------------------------
     // Iterate through the remaining tone map textures
-    //------------------------------------------------------------------------- 
+    //-------------------------------------------------------------------------
     for( int i = NUM_TONEMAP_TEXTURES - 1; i > 0; i-- )
     {
         // Cycle the textures

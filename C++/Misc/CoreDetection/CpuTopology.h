@@ -1,6 +1,6 @@
 //-------------------------------------------------------------------------------------
 // CpuTopology.h
-// 
+//
 // CpuToplogy class declaration.
 //
 // Copyright (c) Microsoft Corporation.

@@ -6,7 +6,7 @@
 
 #include <Windows.h>
 #include <stdio.h>
-#pragma warning( disable : 4996 ) // disable deprecated warning 
+#pragma warning( disable : 4996 ) // disable deprecated warning
 #include <strsafe.h>
 #pragma warning( default : 4996 )
 #include <PIXPlugin.h>
@@ -35,7 +35,7 @@ enum MYCOUNTERID
 
 //==================================================================================================
 // pixCounterSet - Lists all counters exposed by this plugin.  It is used by PIXGetCounterInfo.  In
-//                 this example we provide a fixed set of counters, but a plugin could use a 
+//                 this example we provide a fixed set of counters, but a plugin could use a
 //                 variable set instead.
 //==================================================================================================
 PIXCOUNTERINFO pixCounterSet[] =
@@ -49,7 +49,7 @@ PIXCOUNTERINFO pixCounterSet[] =
 
 //==================================================================================================
 // pixCounterDesc - Description strings for all counters.  It is used by PIXGetCounterDesc.  This
-//                  example shows how to use constant strings embedded in the code.  Another 
+//                  example shows how to use constant strings embedded in the code.  Another
 //                  approach would be to read the description strings from resources.
 //==================================================================================================
 WCHAR*  pixCounterDesc[] =
@@ -62,7 +62,7 @@ WCHAR*  pixCounterDesc[] =
 
 
 //==================================================================================================
-// MousePosXYBegin - Called at the beginning of the experiment if the CTR_MOUSEPOSXY counter is 
+// MousePosXYBegin - Called at the beginning of the experiment if the CTR_MOUSEPOSXY counter is
 //                   active.
 //==================================================================================================
 BOOL MousePosXYBegin( const WCHAR* pApplication )

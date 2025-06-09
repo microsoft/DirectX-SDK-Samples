@@ -7,7 +7,7 @@
 //       Diffuse lighting
 //       Specular lighting
 //       Environment mapping
-// 
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -35,7 +35,7 @@ shared float4x4 g_mWorld
 <
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.Skeleton.MeshToJointToWorld[0]";
->;     
+>;
 
 shared float4x4 g_mView
 <
@@ -47,22 +47,22 @@ shared float4x4 g_mProj
 <
 	bool SasUiVisible = false;
 	string SasBindAddress= "Sas.Camera.Projection";
->; 
+>;
                                      // Projection matrix for object
-shared float4 g_vLightColor 
-<  
+shared float4 g_vLightColor
+<
 	string SasBindAddress= "Sas.SpotLight[0].Color";
 	bool SasUiVisible = false;
 > = {1.0f, 1.0f, 1.0f, 1.0f}; // Light value
 
-shared float3 g_vLight 
-<  
+shared float3 g_vLight
+<
 	string SasBindAddress= "Sas.SpotLight[0].Position";
 	bool SasUiVisible = false;
 >;                                 // Light position in view space
 
-shared float  g_fTime 
-<  
+shared float  g_fTime
+<
 	string SasBindAddress= "Sas.Time.Now";
 	bool SasUiVisible = false;
 >;                                  // Time value

@@ -18,7 +18,7 @@ public:
     CTessellator();
     ~CTessellator();
 
-    HRESULT SetBaseMesh( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext, 
+    HRESULT SetBaseMesh( ID3D11Device* pd3dDevice, ID3D11DeviceContext* pd3dImmediateContext,
                          INT nVertices,
                          ID3D11Buffer* pBaseVB );
 
@@ -31,7 +31,7 @@ public:
     };
     void SetPartitioningMode( PARTITIONING_MODE mode );
     void PerEdgeTessellation( D3DXMATRIX* matWVP,
-                              ID3D11Buffer** ppTessedVerticesBuf, ID3D11Buffer** ppTessedIndicesBuf, 
+                              ID3D11Buffer** ppTessedVerticesBuf, ID3D11Buffer** ppTessedIndicesBuf,
                               DWORD* num_tessed_vertices, DWORD* num_tessed_indices);
 
     HRESULT OnD3D11CreateDevice( ID3D11Device* pd3dDevice );
@@ -62,7 +62,7 @@ private:
     ID3D11UnorderedAccessView*  m_pScanBuf0UAV;
     ID3D11UnorderedAccessView*  m_pScanBuf1UAV;
 
-    ID3D11Buffer*               m_pScatterVertexBuf;    
+    ID3D11Buffer*               m_pScatterVertexBuf;
     ID3D11Buffer*               m_pScatterIndexBuf;
     ID3D11ShaderResourceView*   m_pScatterVertexBufSRV;
     ID3D11ShaderResourceView*   m_pScatterIndexBufSRV;
@@ -73,7 +73,7 @@ private:
 
     UINT                        m_nCachedTessedVertices;
     UINT                        m_nCachedTessedIndices;
-    
+
     ID3D11UnorderedAccessView*  m_pTessedVerticesBufUAV;
     ID3D11UnorderedAccessView*  m_pTessedIndicesBufUAV;
 
@@ -100,7 +100,7 @@ private:
 
     static CScanCS              s_ScanCS;
 
-    HRESULT CreateCSForPartitioningMode( PARTITIONING_MODE mode, 
+    HRESULT CreateCSForPartitioningMode( PARTITIONING_MODE mode,
         ID3D11ComputeShader** pNumVerticesIndicesCS, ID3D11ComputeShader** pTessVerticesCS, ID3D11ComputeShader** pTessIndicesCS );
 };
 

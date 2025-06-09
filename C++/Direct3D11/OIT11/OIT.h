@@ -7,7 +7,7 @@
 // 1. Determine the number of transparent fragments in each pixel by drawing
 //    each of the transparent primitives into an overdraw accumlation buffer
 //
-// 2. Create a prefix sum for each pixel location.  This holds the sum of all 
+// 2. Create a prefix sum for each pixel location.  This holds the sum of all
 //    the fragments in each of the preceding pixels.  The last pixel will hold
 //    a count of all fragments in the scene.
 //
@@ -37,7 +37,7 @@ public:
     void    OnD3D11DestroyDevice();
 
     void    Render( ID3D11DeviceContext* pD3DContext, ID3D11Device* pDevice, CScene* pScene, D3DXMATRIX* mWVP, ID3D11RenderTargetView* pRTV, ID3D11DepthStencilView* pDSV);
-    
+
 
 private:
     void    CreateFragmentCount( ID3D11DeviceContext* pD3DContext, CScene* pScene, D3DXMATRIX* mWorldViewProjection, ID3D11RenderTargetView* pRTV, ID3D11DepthStencilView* pDSV );
@@ -60,7 +60,7 @@ protected:
         UINT nFrameHeight;
         UINT nReserved0;
         UINT nReserved1;
-    };    
+    };
 
 
     UINT m_nFrameHeight;
@@ -72,7 +72,7 @@ protected:
     ID3D11ComputeShader*        m_pCreatePrefixSum_Pass1_CS;    //   two dimensional frame buffer to a 1D prefix sum
     ID3D11PixelShader*          m_pFillDeepBufferPS;            // Fills the deep frame buffer with depth and color values
     ID3D11ComputeShader*        m_pSortAndRenderCS;             // Sorts and renders the fragments to the final frame buffer
-    
+
     // States
     ID3D11DepthStencilState*    m_pDepthStencilState;
 
@@ -86,15 +86,15 @@ protected:
     ID3D11Buffer*               m_pDeepBufferColor;         // Buffer that holds the color of each fragment
 
     // Debug Buffers used to copy resources to main memory to view more easily
-    ID3D11Buffer*               m_pPrefixSumDebug;          
-    ID3D11Buffer*               m_pDeepBufferDebug;         
-    ID3D11Buffer*               m_pDeepBufferColorDebug;    
+    ID3D11Buffer*               m_pPrefixSumDebug;
+    ID3D11Buffer*               m_pDeepBufferDebug;
+    ID3D11Buffer*               m_pDeepBufferColorDebug;
 
     // Unordered Access views of the buffers
     ID3D11UnorderedAccessView*  m_pFragmentCountUAV;
-    ID3D11UnorderedAccessView*  m_pPrefixSumUAV;         
-    ID3D11UnorderedAccessView*  m_pDeepBufferUAV;        
-    ID3D11UnorderedAccessView*  m_pDeepBufferColorUAV;   
+    ID3D11UnorderedAccessView*  m_pPrefixSumUAV;
+    ID3D11UnorderedAccessView*  m_pDeepBufferUAV;
+    ID3D11UnorderedAccessView*  m_pDeepBufferColorUAV;
     ID3D11UnorderedAccessView*  m_pDeepBufferColorUAV_UINT; // Used to veiw the color buffer as a single UINT instead of 4 bytes
 
     // Shader Resource Views

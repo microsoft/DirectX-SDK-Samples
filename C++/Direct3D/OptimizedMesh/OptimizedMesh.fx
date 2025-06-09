@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: OptimizedMesh.fx
 //
-// The effect file for the OptimizedMesh sample.  
-// 
+// The effect file for the OptimizedMesh sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

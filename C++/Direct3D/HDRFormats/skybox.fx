@@ -1,8 +1,8 @@
 //-----------------------------------------------------------------------------
 // File: SkyBox.fx
 //
-// Desc: 
-// 
+// Desc:
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //-----------------------------------------------------------------------------
@@ -16,7 +16,7 @@ float4x4 g_mInvWorldViewProjection;
 texture g_EnvironmentTexture;
 
 sampler EnvironmentSampler = sampler_state
-{ 
+{
     Texture = (g_EnvironmentTexture);
     MipFilter = POINT;
     MinFilter = POINT;
@@ -41,10 +41,10 @@ struct SkyboxVS_Output
 SkyboxVS_Output SkyboxVS( SkyboxVS_Input Input )
 {
     SkyboxVS_Output Output;
-    
+
     Output.Pos = Input.Pos;
     Output.Tex = normalize( mul(Input.Pos, g_mInvWorldViewProjection) );
-    
+
     return Output;
 }
 

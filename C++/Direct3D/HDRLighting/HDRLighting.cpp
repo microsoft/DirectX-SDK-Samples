@@ -1,21 +1,21 @@
 //-----------------------------------------------------------------------------
 // File: HDRLighting.cpp
 //
-// Desc: This sample demonstrates some high dynamic range lighting effects 
+// Desc: This sample demonstrates some high dynamic range lighting effects
 //       using floating point textures.
 //
-// The algorithms described in this sample are based very closely on the 
-// lighting effects implemented in Masaki Kawase's Rthdribl sample and the tone 
-// mapping process described in the whitepaper "Tone Reproduction for Digital 
+// The algorithms described in this sample are based very closely on the
+// lighting effects implemented in Masaki Kawase's Rthdribl sample and the tone
+// mapping process described in the whitepaper "Tone Reproduction for Digital
 // Images"
 //
 // Real-Time High Dynamic Range Image-Based Lighting (Rthdribl)
 // Masaki Kawase
-// http://www.daionet.gr.jp/~masa/rthdribl/ 
+// http://www.daionet.gr.jp/~masa/rthdribl/
 //
 // "Photographic Tone Reproduction for Digital Images"
 // Erik Reinhard, Mike Stark, Peter Shirley and Jim Ferwerda
-// http://www.cs.utah.edu/~reinhard/cdrom/ 
+// http://www.cs.utah.edu/~reinhard/cdrom/
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -28,8 +28,8 @@
 #include <stdio.h>
 #include "resource.h"
 
-//#define DEBUG_VS   // Uncomment this line to debug vertex shaders 
-//#define DEBUG_PS   // Uncomment this line to debug pixel shaders 
+//#define DEBUG_VS   // Uncomment this line to debug vertex shaders
+//#define DEBUG_PS   // Uncomment this line to debug pixel shaders
 
 
 
@@ -41,8 +41,8 @@
 #define NUM_LIGHTS            2       // Number of lights in the scene
 
 #define EMISSIVE_COEFFICIENT  39.78f  // Emissive color multiplier for each lumen
-// of light intensity                                    
-#define NUM_TONEMAP_TEXTURES  4       // Number of stages in the 4x4 down-scaling 
+// of light intensity
+#define NUM_TONEMAP_TEXTURES  4       // Number of stages in the 4x4 down-scaling
 // of average luminance textures
 #define NUM_STAR_TEXTURES     12      // Number of textures used for the star
 // post-processing effect
@@ -115,7 +115,7 @@ PDIRECT3DTEXTURE9           g_pTexPainting = NULL; // Texture for the paintings 
 
 PDIRECT3DTEXTURE9 g_apTexBloom[NUM_BLOOM_TEXTURES] = {0};     // Blooming effect working textures
 PDIRECT3DTEXTURE9 g_apTexStar[NUM_STAR_TEXTURES] = {0};       // Star effect working textures
-PDIRECT3DTEXTURE9 g_apTexToneMap[NUM_TONEMAP_TEXTURES] = {0}; // Log average luminance samples 
+PDIRECT3DTEXTURE9 g_apTexToneMap[NUM_TONEMAP_TEXTURES] = {0}; // Log average luminance samples
 // from the HDR render target
 
 LPD3DXMESH                  g_pWorldMesh = NULL;       // Mesh to contain world objects
@@ -134,7 +134,7 @@ DWORD                       g_dwCropHeight;   // Height of the cropped scene tex
 
 float                       g_fKeyValue;              // Middle gray key value for tone mapping
 
-bool                        g_bToneMap;               // True when scene is to be tone mapped            
+bool                        g_bToneMap;               // True when scene is to be tone mapped
 bool                        g_bDetailedStats;         // True when state variables should be rendered
 bool                        g_bDrawHelp;              // True when help instructions are to be drawn
 bool                        g_bBlueShift;             // True when blue shift is to be factored in
@@ -166,7 +166,7 @@ bool                        g_bSupportsD24X8 = false;
 
 
 //--------------------------------------------------------------------------------------
-// Forward declarations 
+// Forward declarations
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat, D3DFORMAT BackBufferFormat, bool bWindowed,
                                   void* pUserContext );
@@ -249,7 +249,7 @@ static inline float GaussianDistribution( float x, float y, float rho );
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
+// Entry point to the program. Initializes everything and goes into a message processing
 // loop. Idle time is used to render the scene.
 //--------------------------------------------------------------------------------------
 INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
@@ -260,12 +260,12 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 #endif
 
     // Set the callback functions. These functions allow DXUT to notify
-    // the application about device changes, user input, and windows messages.  The 
-    // callbacks are optional so you need only set callbacks for events you're interested 
-    // in. However, if you don't handle the device reset/lost callbacks then the sample 
-    // framework won't be able to reset your device since the application must first 
-    // release all device resources before resetting.  Likewise, if you don't handle the 
-    // device created/destroyed callbacks then DXUT won't be able to 
+    // the application about device changes, user input, and windows messages.  The
+    // callbacks are optional so you need only set callbacks for events you're interested
+    // in. However, if you don't handle the device reset/lost callbacks then the sample
+    // framework won't be able to reset your device since the application must first
+    // release all device resources before resetting.  Likewise, if you don't handle the
+    // device created/destroyed callbacks then DXUT won't be able to
     // recreate your device resources.
     DXUTSetCallbackD3D9DeviceAcceptable( IsDeviceAcceptable );
     DXUTSetCallbackD3D9DeviceCreated( OnCreateDevice );
@@ -281,8 +281,8 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
     DXUTCreateWindow( L"HDRLighting" );
 
     // Although multisampling is supported for render target surfaces, those surfaces
-    // exist without a parent texture, and must therefore be copied to a texture 
-    // surface if they're to be used as a source texture. This sample relies upon 
+    // exist without a parent texture, and must therefore be copied to a texture
+    // surface if they're to be used as a source texture. This sample relies upon
     // several render targets being used as source textures, and therefore it makes
     // sense to disable multisampling altogether.
     CGrowableArray <D3DMULTISAMPLE_TYPE>* pMultiSampleTypeList =
@@ -296,15 +296,15 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
     InitApp();
 
-    // Initialize DXUT and create the desired Win32 window and Direct3D 
+    // Initialize DXUT and create the desired Win32 window and Direct3D
     // device for the application. Calling each of these functions is optional, but they
     // allow you to set several options which control the behavior of the framework.
     DXUTInit( true, true ); // Parse the command line and show msgboxes
     DXUTSetHotkeyHandling( true, true, true );  // handle the default hotkeys
     DXUTCreateDevice( true, 640, 480 );
 
-    // Pass control to DXUT for handling the message pump and 
-    // dispatching render calls. DXUT will call your FrameMove 
+    // Pass control to DXUT for handling the message pump and
+    // dispatching render calls. DXUT will call your FrameMove
     // and FrameRender callback when there is idle time between handling window messages.
     DXUTMainLoop();
 
@@ -316,7 +316,7 @@ INT WINAPI wWinMain( HINSTANCE, HINSTANCE, LPWSTR, int )
 
 
 //--------------------------------------------------------------------------------------
-// Initialize the app 
+// Initialize the app
 //--------------------------------------------------------------------------------------
 void InitApp()
 {
@@ -381,7 +381,7 @@ void InitApp()
       g_SampleUI.AddRadioButton( 12, 1, L"Radio1G1", 35, iY += 24, 125, 22 );
       g_SampleUI.AddRadioButton( 13, 1, L"Radio2G1", 35, iY += 24, 125, 22 );
       g_SampleUI.AddRadioButton( 14, 1, L"Radio3G1", 35, iY += 24, 125, 22 );
-      g_SampleUI.GetRadioButton( 14 )->SetChecked( true ); 
+      g_SampleUI.GetRadioButton( 14 )->SetChecked( true );
       g_SampleUI.AddButton( 17, L"Button1", 35, iY += 24, 125, 22 );
       g_SampleUI.AddButton( 18, L"Button2", 35, iY += 24, 125, 22 );
       g_SampleUI.AddRadioButton( 15, 2, L"Radio1G2", 35, iY += 24, 125, 22 );
@@ -484,7 +484,7 @@ HRESULT RefreshLights()
 
 
 //--------------------------------------------------------------------------------------
-// Called during device initialization, this code checks the device for some 
+// Called during device initialization, this code checks the device for some
 // minimum set of capabilities, and rejects those that don't pass by returning false.
 //--------------------------------------------------------------------------------------
 bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
@@ -537,12 +537,12 @@ bool CALLBACK IsDeviceAcceptable( D3DCAPS9* pCaps, D3DFORMAT AdapterFormat,
 
 
 //--------------------------------------------------------------------------------------
-// This callback function is called immediately before a device is created to allow the 
-// application to modify the device settings. The supplied pDeviceSettings parameter 
-// contains the settings that the framework has selected for the new device, and the 
-// application can make any desired changes directly to this structure.  Note however that 
-// DXUT will not correct invalid device settings so care must be taken 
-// to return valid device settings, otherwise IDirect3D9::CreateDevice() will fail.  
+// This callback function is called immediately before a device is created to allow the
+// application to modify the device settings. The supplied pDeviceSettings parameter
+// contains the settings that the framework has selected for the new device, and the
+// application can make any desired changes directly to this structure.  Note however that
+// DXUT will not correct invalid device settings so care must be taken
+// to return valid device settings, otherwise IDirect3D9::CreateDevice() will fail.
 //--------------------------------------------------------------------------------------
 bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* pUserContext )
 {
@@ -553,7 +553,7 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
     D3DCAPS9 caps;
     V( pD3D->GetDeviceCaps( pDeviceSettings->d3d9.AdapterOrdinal, pDeviceSettings->d3d9.DeviceType, &caps ) );
 
-    // If device doesn't support HW T&L or doesn't support 2.0 vertex shaders in HW 
+    // If device doesn't support HW T&L or doesn't support 2.0 vertex shaders in HW
     // then switch to SWVP.
     if( ( caps.DevCaps & D3DDEVCAPS_HWTRANSFORMANDLIGHT ) == 0 ||
         caps.VertexShaderVersion < D3DVS_VERSION( 2, 0 ) )
@@ -561,8 +561,8 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
         pDeviceSettings->d3d9.BehaviorFlags = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
     }
 
-    // Debugging vertex shaders requires either REF or software vertex processing 
-    // and debugging pixel shaders requires REF.  
+    // Debugging vertex shaders requires either REF or software vertex processing
+    // and debugging pixel shaders requires REF.
 #ifdef DEBUG_VS
     if( pDeviceSettings->d3d9.DeviceType != D3DDEVTYPE_REF )
     {
@@ -589,11 +589,11 @@ bool CALLBACK ModifyDeviceSettings( DXUTDeviceSettings* pDeviceSettings, void* p
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// created, which will happen during application initialization and windowed/full screen 
-// toggles. This is the best location to create D3DPOOL_MANAGED resources since these 
-// resources need to be reloaded whenever the device is destroyed. Resources created  
-// here should be released in the OnDestroyDevice callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// created, which will happen during application initialization and windowed/full screen
+// toggles. This is the best location to create D3DPOOL_MANAGED resources since these
+// resources need to be reloaded whenever the device is destroyed. Resources created
+// here should be released in the OnDestroyDevice callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_DESC* pBackBufferSurfaceDesc,
                                  void* pUserContext )
@@ -684,23 +684,23 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
                               OUT_DEFAULT_PRECIS, DEFAULT_QUALITY, DEFAULT_PITCH | FF_DONTCARE,
                               L"Arial", &g_pFont ) );
 
-    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the 
-    // shader debugger. Debugging vertex shaders requires either REF or software vertex 
-    // processing, and debugging pixel shaders requires REF.  The 
-    // D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug experience in the 
-    // shader debugger.  It enables source level debugging, prevents instruction 
-    // reordering, prevents dead code elimination, and forces the compiler to compile 
-    // against the next higher available software target, which ensures that the 
-    // unoptimized shaders do not exceed the shader model limitations.  Setting these 
-    // flags will cause slower rendering since the shaders will be unoptimized and 
-    // forced into software.  See the DirectX documentation for more information about 
+    // Define DEBUG_VS and/or DEBUG_PS to debug vertex and/or pixel shaders with the
+    // shader debugger. Debugging vertex shaders requires either REF or software vertex
+    // processing, and debugging pixel shaders requires REF.  The
+    // D3DXSHADER_FORCE_*_SOFTWARE_NOOPT flag improves the debug experience in the
+    // shader debugger.  It enables source level debugging, prevents instruction
+    // reordering, prevents dead code elimination, and forces the compiler to compile
+    // against the next higher available software target, which ensures that the
+    // unoptimized shaders do not exceed the shader model limitations.  Setting these
+    // flags will cause slower rendering since the shaders will be unoptimized and
+    // forced into software.  See the DirectX documentation for more information about
     // using the shader debugger.
     DWORD dwShaderFlags = D3DXFX_NOT_CLONEABLE;
 
 #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3DXSHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3DXSHADER_DEBUG;
     #endif
@@ -716,7 +716,7 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"HDRLighting.fx" ) );
 
-    // If this fails, there should be debug output as to 
+    // If this fails, there should be debug output as to
     // they the .fx file failed to compile
     V_RETURN( D3DXCreateEffectFromFile( pd3dDevice, str, NULL, NULL, dwShaderFlags,
                                         NULL, &g_pEffect, NULL ) );
@@ -741,8 +741,8 @@ HRESULT CALLBACK OnCreateDevice( IDirect3DDevice9* pd3dDevice, const D3DSURFACE_
 
 
 //--------------------------------------------------------------------------------------
-// This function loads the mesh and ensures the mesh has normals; it also optimizes the 
-// mesh for the graphics card's vertex cache, which improves performance by organizing 
+// This function loads the mesh and ensures the mesh has normals; it also optimizes the
+// mesh for the graphics card's vertex cache, which improves performance by organizing
 // the internal triangle list for less cache misses.
 //--------------------------------------------------------------------------------------
 HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** ppMesh )
@@ -752,7 +752,7 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
     HRESULT hr;
 
     // Load the mesh with D3DX and get back a ID3DXMesh*.  For this
-    // sample we'll ignore the X file's embedded materials since we know 
+    // sample we'll ignore the X file's embedded materials since we know
     // exactly the model we're loading.  See the mesh samples such as
     // "OptimizedMesh" for a more generic mesh loading example.
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, strFileName ) );
@@ -774,10 +774,10 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
         pMesh = pTempMesh;
     }
 
-    // Optimize the mesh for this graphics card's vertex cache 
-    // so when rendering the mesh's triangle list the vertices will 
-    // cache hit more often so it won't have to re-execute the vertex shader 
-    // on those vertices so it will improve perf.     
+    // Optimize the mesh for this graphics card's vertex cache
+    // so when rendering the mesh's triangle list the vertices will
+    // cache hit more often so it won't have to re-execute the vertex shader
+    // on those vertices so it will improve perf.
     rgdwAdjacency = new DWORD[pMesh->GetNumFaces() * 3];
     if( rgdwAdjacency == NULL )
         return E_OUTOFMEMORY;
@@ -792,11 +792,11 @@ HRESULT LoadMesh( IDirect3DDevice9* pd3dDevice, WCHAR* strFileName, ID3DXMesh** 
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has been 
-// reset, which will happen after a lost device scenario. This is the best location to 
-// create D3DPOOL_DEFAULT resources since these resources need to be reloaded whenever 
-// the device is lost. Resources created here should be released in the OnLostDevice 
-// callback. 
+// This callback function will be called immediately after the Direct3D device has been
+// reset, which will happen after a lost device scenario. This is the best location to
+// create D3DPOOL_DEFAULT resources since these resources need to be reloaded whenever
+// the device is lost. Resources created here should be released in the OnLostDevice
+// callback.
 //--------------------------------------------------------------------------------------
 HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
                                 const D3DSURFACE_DESC* pBackBufferSurfaceDesc, void* pUserContext )
@@ -877,8 +877,8 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
         return hr;
 
 
-    // Create the bright-pass filter texture. 
-    // Texture has a black border of single texel thickness to fake border 
+    // Create the bright-pass filter texture.
+    // Texture has a black border of single texel thickness to fake border
     // addressing using clamp addressing
     hr = g_pd3dDevice->CreateTexture( g_dwCropWidth / 4 + 2, g_dwCropHeight / 4 + 2,
                                       1, D3DUSAGE_RENDERTARGET,
@@ -890,7 +890,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 
 
     // Create a texture to be used as the source for the star effect
-    // Texture has a black border of single texel thickness to fake border 
+    // Texture has a black border of single texel thickness to fake border
     // addressing using clamp addressing
     hr = g_pd3dDevice->CreateTexture( g_dwCropWidth / 4 + 2, g_dwCropHeight / 4 + 2,
                                       1, D3DUSAGE_RENDERTARGET,
@@ -902,7 +902,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 
 
     // Create a texture to be used as the source for the bloom effect
-    // Texture has a black border of single texel thickness to fake border 
+    // Texture has a black border of single texel thickness to fake border
     // addressing using clamp addressing
     hr = g_pd3dDevice->CreateTexture( g_dwCropWidth / 8 + 2, g_dwCropHeight / 8 + 2,
                                       1, D3DUSAGE_RENDERTARGET,
@@ -943,7 +943,7 @@ HRESULT CALLBACK OnResetDevice( IDirect3DDevice9* pd3dDevice,
 
 
     // Create the temporary blooming effect textures
-    // Texture has a black border of single texel thickness to fake border 
+    // Texture has a black border of single texel thickness to fake border
     // addressing using clamp addressing
     for( i = 1; i < NUM_BLOOM_TEXTURES; i++ )
     {
@@ -1082,7 +1082,7 @@ HRESULT BuildWorldMesh()
     const FLOAT fDepth = 20.0f;
     const FLOAT fHeight = 3.0f;
 
-    // Create the room  
+    // Create the room
     LPD3DXMESH pWorldMeshTemp = NULL;
     hr = D3DXCreateMeshFVF( 48, 96, 0, WorldVertex::FVF, g_pd3dDevice, &pWorldMeshTemp );
     if( FAILED( hr ) )
@@ -1215,7 +1215,7 @@ LCleanReturn:
 
 //-----------------------------------------------------------------------------
 // Name: BuildColumn()
-// Desc: Helper function for BuildWorldMesh to add column quads to the scene 
+// Desc: Helper function for BuildWorldMesh to add column quads to the scene
 //-----------------------------------------------------------------------------
 HRESULT BuildColumn( WorldVertex*& pV, float x, float y, float z, float width )
 {
@@ -1265,17 +1265,17 @@ void SetTextureCoords( WorldVertex* pVertex, float u, float v )
 
 //--------------------------------------------------------------------------------------
 // This callback function will be called once at the beginning of every frame. This is the
-// best location for your application to handle updates to the scene, but is not 
-// intended to contain actual rendering calls, which should instead be placed in the 
-// OnFrameRender callback.  
+// best location for your application to handle updates to the scene, but is not
+// intended to contain actual rendering calls, which should instead be placed in the
+// OnFrameRender callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext )
 {
-    // Update the camera's position based on user input 
+    // Update the camera's position based on user input
     g_Camera.FrameMove( fElapsedTime );
 
     // Set the flag to refresh the user's simulated adaption level.
-    // Frame move is not called when the scene is paused or single-stepped. 
+    // Frame move is not called when the scene is paused or single-stepped.
     // If the scene is paused, the user's adaptation level needs to remain
     // unchanged.
     g_bAdaptationInvalid = true;
@@ -1298,9 +1298,9 @@ void CALLBACK OnFrameMove( double fTime, float fElapsedTime, void* pUserContext 
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called at the end of every frame to perform all the 
-// rendering calls for the scene, and it will also be called if the window needs to be 
-// repainted. After this function has returned, DXUT will call 
+// This callback function will be called at the end of every frame to perform all the
+// rendering calls for the scene, and it will also be called if the window needs to be
+// repainted. After this function has returned, DXUT will call
 // IDirect3DDevice9::Present to display the contents of the next buffer in the swap chain
 //--------------------------------------------------------------------------------------
 void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float fElapsedTime, void* pUserContext )
@@ -1317,7 +1317,7 @@ void CALLBACK OnFrameRender( IDirect3DDevice9* pd3dDevice, double fTime, float f
 
     PDIRECT3DSURFACE9 pSurfLDR; // Low dynamic range surface for final output
     PDIRECT3DSURFACE9 pSurfDS;  // Low dynamic range depth stencil surface
-    PDIRECT3DSURFACE9 pSurfHDR; // High dynamic range surface to store 
+    PDIRECT3DSURFACE9 pSurfHDR; // High dynamic range surface to store
     // intermediate floating point color values
 
     // Store the old render target
@@ -1616,7 +1616,7 @@ HRESULT MeasureLuminance()
 
 
     // After this pass, the g_apTexToneMap[NUM_TONEMAP_TEXTURES-1] texture will contain
-    // a scaled, grayscale copy of the HDR scene. Individual texels contain the log 
+    // a scaled, grayscale copy of the HDR scene. Individual texels contain the log
     // of average luminance values for points sampled on the HDR texture.
     g_pEffect->SetTechnique( "SampleAvgLum" );
     g_pEffect->SetValue( "g_avSampleOffsets", avSampleOffsets, sizeof( avSampleOffsets ) );
@@ -1654,7 +1654,7 @@ HRESULT MeasureLuminance()
 
 
         // Each of these passes continue to scale down the log of average
-        // luminance texture created above, storing intermediate results in 
+        // luminance texture created above, storing intermediate results in
         // g_apTexToneMap[1] through g_apTexToneMap[NUM_TONEMAP_TEXTURES-1].
         g_pEffect->SetTechnique( "ResampleAvgLum" );
         g_pEffect->SetValue( "g_avSampleOffsets", avSampleOffsets, sizeof( avSampleOffsets ) );
@@ -1748,9 +1748,9 @@ HRESULT CalculateAdaptation()
     PDIRECT3DSURFACE9 pSurfAdaptedLum = NULL;
     V( g_pTexAdaptedLuminanceCur->GetSurfaceLevel( 0, &pSurfAdaptedLum ) );
 
-    // This simulates the light adaptation that occurs when moving from a 
+    // This simulates the light adaptation that occurs when moving from a
     // dark area to a bright area, or vice versa. The g_pTexAdaptedLuminance
-    // texture stores a single texel cooresponding to the user's adapted 
+    // texture stores a single texel cooresponding to the user's adapted
     // level.
     g_pEffect->SetTechnique( "CalculateAdaptedLum" );
     g_pEffect->SetFloat( "g_fElapsedTime", DXUTGetElapsedTime() );
@@ -2309,7 +2309,7 @@ HRESULT GetTextureCoords( PDIRECT3DTEXTURE9 pTexSrc, RECT* pRectSrc,
     if( pTexSrc == NULL || pTexDest == NULL || pCoords == NULL )
         return E_INVALIDARG;
 
-    // Start with a default mapping of the complete source surface to complete 
+    // Start with a default mapping of the complete source surface to complete
     // destination surface
     pCoords->fLeftU = 0.0f;
     pCoords->fTopV = 0.0f;
@@ -2324,7 +2324,7 @@ HRESULT GetTextureCoords( PDIRECT3DTEXTURE9 pTexSrc, RECT* pRectSrc,
         if( FAILED( hr ) )
             return hr;
 
-        // These delta values are the distance between source texel centers in 
+        // These delta values are the distance between source texel centers in
         // texture address space
         tU = 1.0f / desc.Width;
         tV = 1.0f / desc.Height;
@@ -2343,7 +2343,7 @@ HRESULT GetTextureCoords( PDIRECT3DTEXTURE9 pTexSrc, RECT* pRectSrc,
         if( FAILED( hr ) )
             return hr;
 
-        // These delta values are the distance between source texel centers in 
+        // These delta values are the distance between source texel centers in
         // texture address space
         tU = 1.0f / desc.Width;
         tV = 1.0f / desc.Height;
@@ -2362,7 +2362,7 @@ HRESULT GetTextureCoords( PDIRECT3DTEXTURE9 pTexSrc, RECT* pRectSrc,
 
 //-----------------------------------------------------------------------------
 // Name: Scene_To_SceneScaled()
-// Desc: Scale down g_pTexScene by 1/4 x 1/4 and place the result in 
+// Desc: Scale down g_pTexScene by 1/4 x 1/4 and place the result in
 //       g_pTexSceneScaled
 //-----------------------------------------------------------------------------
 HRESULT Scene_To_SceneScaled()
@@ -2380,8 +2380,8 @@ HRESULT Scene_To_SceneScaled()
     const D3DSURFACE_DESC* pBackBufferDesc = DXUTGetD3D9BackBufferSurfaceDesc();
 
     // Create a 1/4 x 1/4 scale copy of the HDR texture. Since bloom textures
-    // are 1/8 x 1/8 scale, border texels of the HDR texture will be discarded 
-    // to keep the dimensions evenly divisible by 8; this allows for precise 
+    // are 1/8 x 1/8 scale, border texels of the HDR texture will be discarded
+    // to keep the dimensions evenly divisible by 8; this allows for precise
     // control over sampling inside pixel shaders.
     g_pEffect->SetTechnique( "DownScale4x4" );
 
@@ -2468,7 +2468,7 @@ HRESULT SceneScaled_To_BrightPass()
     GetTextureRect( g_pTexBrightPass, &rectDest );
     InflateRect( &rectDest, -1, -1 );
 
-    // Get the correct texture coordinates to apply to the rendered quad in order 
+    // Get the correct texture coordinates to apply to the rendered quad in order
     // to sample from the source rectangle and render into the destination rectangle
     CoordRect coords;
     GetTextureCoords( g_pTexSceneScaled, &rectSrc, g_pTexBrightPass, &rectDest, &coords );
@@ -2540,7 +2540,7 @@ HRESULT BrightPass_To_StarSource()
     GetTextureRect( g_pTexStarSource, &rectDest );
     InflateRect( &rectDest, -1, -1 );
 
-    // Get the correct texture coordinates to apply to the rendered quad in order 
+    // Get the correct texture coordinates to apply to the rendered quad in order
     // to sample from the source rectangle and render into the destination rectangle
     CoordRect coords;
     GetTextureCoords( g_pTexBrightPass, NULL, g_pTexStarSource, &rectDest, &coords );
@@ -2598,7 +2598,7 @@ LCleanReturn:
 
 //-----------------------------------------------------------------------------
 // Name: StarSource_To_BloomSource
-// Desc: Scale down g_pTexStarSource by 1/2 x 1/2 and place the result in 
+// Desc: Scale down g_pTexStarSource by 1/2 x 1/2 and place the result in
 //       g_pTexBloomSource
 //-----------------------------------------------------------------------------
 HRESULT StarSource_To_BloomSource()
@@ -2626,7 +2626,7 @@ HRESULT StarSource_To_BloomSource()
     GetTextureRect( g_pTexBloomSource, &rectDest );
     InflateRect( &rectDest, -1, -1 );
 
-    // Get the correct texture coordinates to apply to the rendered quad in order 
+    // Get the correct texture coordinates to apply to the rendered quad in order
     // to sample from the source rectangle and render into the destination rectangle
     CoordRect coords;
     GetTextureCoords( g_pTexStarSource, &rectSrc, g_pTexBloomSource, &rectDest, &coords );
@@ -2889,7 +2889,7 @@ HRESULT GetSampleOffsets_Star( DWORD dwD3DTexSize,
 
 //-----------------------------------------------------------------------------
 // Name: GaussianDistribution
-// Desc: Helper function for GetSampleOffsets function to compute the 
+// Desc: Helper function for GetSampleOffsets function to compute the
 //       2 parameter Gaussian distrubution using the given standard deviation
 //       rho
 //-----------------------------------------------------------------------------
@@ -2903,14 +2903,14 @@ float GaussianDistribution( float x, float y, float rho )
 
 
 //--------------------------------------------------------------------------------------
-// Render the help and statistics text. This function uses the ID3DXFont interface for 
+// Render the help and statistics text. This function uses the ID3DXFont interface for
 // efficient text rendering.
 //--------------------------------------------------------------------------------------
 void RenderText()
 {
     // The helper object simply helps keep track of text position, and color
     // and then it calls pFont->DrawText( g_pSprite, strMsg, -1, &rc, DT_NOCLIP, g_clr );
-    // If NULL is passed in as the sprite object, then it will work however the 
+    // If NULL is passed in as the sprite object, then it will work however the
     // pFont->DrawText() will not be batched together.  Batching calls will improves performance.
     CDXUTTextHelper txtHelper( g_pFont, g_pTextSprite, 15 );
 
@@ -2957,8 +2957,8 @@ void RenderText()
 
 
 //--------------------------------------------------------------------------------------
-// Before handling window messages, DXUT passes incoming windows 
-// messages to the application through this callback function. If the application sets 
+// Before handling window messages, DXUT passes incoming windows
+// messages to the application through this callback function. If the application sets
 // *pbNoFurtherProcessing to TRUE, then DXUT will not process this message.
 //--------------------------------------------------------------------------------------
 LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bool* pbNoFurtherProcessing,
@@ -2994,7 +2994,7 @@ LRESULT CALLBACK MsgProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, bo
 //--------------------------------------------------------------------------------------
 // As a convenience, DXUT inspects the incoming windows messages for
 // keystroke messages and decodes the message parameters to pass relevant keyboard
-// messages to the application.  The framework does not remove the underlying keystroke 
+// messages to the application.  The framework does not remove the underlying keystroke
 // messages, which are still passed to the application's MsgProc callback.
 //--------------------------------------------------------------------------------------
 void CALLBACK KeyboardProc( UINT nChar, bool bKeyDown, bool bAltDown, void* pUserContext )
@@ -3081,10 +3081,10 @@ void CALLBACK OnGUIEvent( UINT nEvent, int nControlID, CDXUTControl* pControl, v
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
+// This callback function will be called immediately after the Direct3D device has
 // entered a lost state and before IDirect3DDevice9::Reset is called. Resources created
-// in the OnResetDevice callback should be released here, which generally includes all 
-// D3DPOOL_DEFAULT resources. See the "Lost Devices" section of the documentation for 
+// in the OnResetDevice callback should be released here, which generally includes all
+// D3DPOOL_DEFAULT resources. See the "Lost Devices" section of the documentation for
 // information about lost devices.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnLostDevice( void* pUserContext )
@@ -3136,10 +3136,10 @@ void CALLBACK OnLostDevice( void* pUserContext )
 
 
 //--------------------------------------------------------------------------------------
-// This callback function will be called immediately after the Direct3D device has 
-// been destroyed, which generally happens as a result of application termination or 
-// windowed/full screen toggles. Resources created in the OnCreateDevice callback 
-// should be released here, which generally includes all D3DPOOL_MANAGED resources. 
+// This callback function will be called immediately after the Direct3D device has
+// been destroyed, which generally happens as a result of application termination or
+// windowed/full screen toggles. Resources created in the OnCreateDevice callback
+// should be released here, which generally includes all D3DPOOL_MANAGED resources.
 //--------------------------------------------------------------------------------------
 void CALLBACK OnDestroyDevice( void* pUserContext )
 {

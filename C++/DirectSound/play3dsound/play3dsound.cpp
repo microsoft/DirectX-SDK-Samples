@@ -62,13 +62,13 @@ INT                     g_nGridW, g_nGridH;             // and dimensions
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
-INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine, 
+INT APIENTRY wWinMain( HINSTANCE hInst, HINSTANCE hPrevInst, LPWSTR pCmdLine,
                       INT nCmdShow )
 {
-    // Init the common control dll 
+    // Init the common control dll
     InitCommonControls();
 
     // Display the main dialog box.
@@ -88,7 +88,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 {
     HRESULT hr;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_INITDIALOG:
             OnInitDialog( hDlg );
@@ -110,7 +110,7 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
                     {
                         DXTRACE_ERR_MSGBOX( TEXT("OnPlaySound"), hr );
                         MessageBox( hDlg, L"Error playing DirectSound buffer."
-                                    L"Sample will now exit.", L"DirectSound Sample", 
+                                    L"Sample will now exit.", L"DirectSound Sample",
                                     MB_OK | MB_ICONERROR );
                         EndDialog( hDlg, IDABORT );
                     }
@@ -130,11 +130,11 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 
                 case IDC_DEFER:
                     g_bDeferSettings = !g_bDeferSettings;
-                    OnSliderChanged( hDlg );                    
+                    OnSliderChanged( hDlg );
                     break;
 
                 case IDC_APPLY:
-                    // Call the IDirectSound3DListener::CommitDeferredSettings 
+                    // Call the IDirectSound3DListener::CommitDeferredSettings
                     // method to execute all of the deferred commands at once.
                     // This is many times more efficent than recomputing everything
                     // for every call.
@@ -158,14 +158,14 @@ INT_PTR CALLBACK MainDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam 
 
         case WM_DESTROY:
             // Cleanup everything
-            KillTimer( hDlg, 1 );    
+            KillTimer( hDlg, 1 );
             SAFE_RELEASE( g_pDSListener );
             SAFE_RELEASE( g_pDS3DBuffer );
 
             SAFE_DELETE( g_pSound );
             SAFE_DELETE( g_pSoundManager );
-            break; 
-            
+            break;
+
         default:
             return FALSE; // Didn't handle message
     }
@@ -193,8 +193,8 @@ VOID OnInitDialog( HWND hDlg )
     HICON hIcon = LoadIcon( hInst, MAKEINTRESOURCE( IDR_MAINFRAME ) );
     g_hGrid = LoadBitmap( hInst, MAKEINTRESOURCE( IDB_GRID_BITMAP ) );
 
-    // Create a static IDirectSound in the CSound class.  
-    // Set coop level to DSSCL_PRIORITY, and set primary buffer 
+    // Create a static IDirectSound in the CSound class.
+    // Set coop level to DSSCL_PRIORITY, and set primary buffer
     // format to stereo, 22kHz and 16-bit output.
     g_pSoundManager = new CSoundManager();
     if( NULL == g_pSoundManager )
@@ -205,16 +205,16 @@ VOID OnInitDialog( HWND hDlg )
     }
 
     hr = g_pSoundManager->Initialize( hDlg, DSSCL_PRIORITY );
-       
+
     hr |= g_pSoundManager->SetPrimaryBufferFormat( 2, 22050, 16 );
-    
+
     // Get the 3D listener, so we can control its params
     hr |= g_pSoundManager->Get3DListenerInterface( &g_pDSListener );
 
     if( FAILED(hr) )
     {
         DXTRACE_ERR_MSGBOX( TEXT("Get3DListenerInterface"), hr );
-        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.", 
+        MessageBox( hDlg, L"Error initializing DirectSound.  Sample will now exit.",
                           L"DirectSound Sample", MB_OK | MB_ICONERROR );
         EndDialog( hDlg, IDABORT );
         return;
@@ -307,11 +307,11 @@ VOID SetSlidersPos( HWND hDlg, FLOAT fDopplerValue, FLOAT fRolloffValue,
 // Name: OnOpenSoundFile()
 // Desc: Called when the user requests to open a sound file
 //-----------------------------------------------------------------------------
-VOID OnOpenSoundFile( HWND hDlg ) 
+VOID OnOpenSoundFile( HWND hDlg )
 {
     GUID    guid3DAlgorithm = GUID_NULL;
     int     nResult;
-    HRESULT hr; 
+    HRESULT hr;
 
     static TCHAR strFileName[MAX_PATH] = TEXT("");
     static TCHAR strPath[MAX_PATH] = TEXT("");
@@ -365,7 +365,7 @@ VOID OnOpenSoundFile( HWND hDlg )
     if( hFile != NULL )
     {
         // If you try to open a 100MB wav file, you could run out of system memory with this
-        // sample cause it puts all of it into a large buffer.  If you need to do this, then 
+        // sample cause it puts all of it into a large buffer.  If you need to do this, then
         // see the "StreamData" sample to stream the data from the file into a sound buffer.
         DWORD dwFileSizeHigh = 0;
         DWORD dwFileSize = GetFileSize( hFile, &dwFileSizeHigh );
@@ -405,7 +405,7 @@ VOID OnOpenSoundFile( HWND hDlg )
 
     // Get the software DirectSound3D emulation algorithm to use
     // Ask the user for this sample, so display the algorithm dialog box.
-    nResult = (int)DialogBox( NULL, MAKEINTRESOURCE(IDD_3D_ALGORITHM), 
+    nResult = (int)DialogBox( NULL, MAKEINTRESOURCE(IDD_3D_ALGORITHM),
                               NULL, AlgorithmDlgProc );
     switch( nResult )
     {
@@ -414,11 +414,11 @@ VOID OnOpenSoundFile( HWND hDlg )
         SetDlgItemText( hDlg, IDC_FILENAME, TEXT("") );
         return;
 
-    case 0: // User selected DS3DALG_NO_VIRTUALIZATION  
+    case 0: // User selected DS3DALG_NO_VIRTUALIZATION
         guid3DAlgorithm = DS3DALG_NO_VIRTUALIZATION;
         break;
 
-    case 1: // User selected DS3DALG_HRTF_FULL  
+    case 1: // User selected DS3DALG_HRTF_FULL
         guid3DAlgorithm = DS3DALG_HRTF_FULL;
         break;
 
@@ -428,7 +428,7 @@ VOID OnOpenSoundFile( HWND hDlg )
     }
 
     // Load the wave file into a DirectSound buffer
-    hr = g_pSoundManager->Create( &g_pSound, strFileName, DSBCAPS_CTRL3D, guid3DAlgorithm );  
+    hr = g_pSoundManager->Create( &g_pSound, strFileName, DSBCAPS_CTRL3D, guid3DAlgorithm );
     if( FAILED( hr ) || hr == DS_NO_VIRTUALIZATION )
     {
         DXTRACE_ERR( TEXT("Create"), hr );
@@ -436,13 +436,13 @@ VOID OnOpenSoundFile( HWND hDlg )
         {
             MessageBox( hDlg, L"The 3D virtualization algorithm requested is not supported under this "
                         L"operating system.  It is available only on Windows 2000, Windows ME, and Windows 98 with WDM "
-                        L"drivers and beyond.  Creating buffer with no virtualization.", 
+                        L"drivers and beyond.  Creating buffer with no virtualization.",
                         L"DirectSound Sample", MB_OK );
         }
 
         // Unknown error, but not a critical failure, so just update the status
         SetDlgItemText( hDlg, IDC_FILENAME, TEXT("Could not create sound buffer.") );
-        return; 
+        return;
     }
 
     // Get the 3D buffer from the secondary buffer
@@ -502,19 +502,19 @@ INT_PTR CALLBACK AlgorithmDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lP
     // Default is DS3DALG_NO_VIRTUALIZATION for fastest performance
     static int nDefaultRadio = IDC_NO_VIRT_RADIO;
 
-    switch( msg ) 
+    switch( msg )
     {
         case WM_INITDIALOG:
             // Default is DS3DALG_NO_VIRTUALIZATION for fastest performance
             CheckRadioButton( hDlg, IDC_NO_VIRT_RADIO, IDC_LIGHT_VIRT_RADIO, nDefaultRadio );
-            return TRUE; // Message handled 
+            return TRUE; // Message handled
 
         case WM_COMMAND:
             switch( LOWORD(wParam) )
             {
                 case IDCANCEL:
                     EndDialog( hDlg, -1 );
-                    return TRUE; // Message handled 
+                    return TRUE; // Message handled
 
                 case IDOK:
                     if( IsDlgButtonChecked( hDlg, IDC_NO_VIRT_RADIO )    == BST_CHECKED )
@@ -524,23 +524,23 @@ INT_PTR CALLBACK AlgorithmDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lP
                     }
 
                     if( IsDlgButtonChecked( hDlg, IDC_HIGH_VIRT_RADIO )  == BST_CHECKED )
-                    {               
+                    {
                         nDefaultRadio = IDC_HIGH_VIRT_RADIO;
                         EndDialog( hDlg, 1 );
                     }
 
                     if( IsDlgButtonChecked( hDlg, IDC_LIGHT_VIRT_RADIO ) == BST_CHECKED )
-                    {               
+                    {
                         nDefaultRadio = IDC_LIGHT_VIRT_RADIO;
                         EndDialog( hDlg, 2 );
                     }
-                        
-                    return TRUE; // Message handled 
+
+                    return TRUE; // Message handled
             }
             break;
     }
 
-    return FALSE; // Message not handled 
+    return FALSE; // Message not handled
 }
 
 
@@ -550,7 +550,7 @@ INT_PTR CALLBACK AlgorithmDlgProc( HWND hDlg, UINT msg, WPARAM wParam, LPARAM lP
 // Name: OnPlaySound()
 // Desc: User hit the "Play" button
 //-----------------------------------------------------------------------------
-HRESULT OnPlaySound( HWND hDlg ) 
+HRESULT OnPlaySound( HWND hDlg )
 {
     HRESULT hr;
 
@@ -572,7 +572,7 @@ HRESULT OnPlaySound( HWND hDlg )
 
 
 //-----------------------------------------------------------------------------
-// Name: OnSliderChanged()  
+// Name: OnSliderChanged()
 // Desc: Called when the dialog's slider bars are changed by the user, or need
 //       updating
 //-----------------------------------------------------------------------------
@@ -581,7 +581,7 @@ VOID OnSliderChanged( HWND hDlg )
     TCHAR strBuffer[10];
     FLOAT fDopplerFactor;
     FLOAT fRolloffFactor;
-    FLOAT fMinDistance; 
+    FLOAT fMinDistance;
     FLOAT fMaxDistance;
 
     // Get handles to dialog items
@@ -625,12 +625,12 @@ VOID OnSliderChanged( HWND hDlg )
 VOID Set3DParameters( FLOAT fDopplerFactor, FLOAT fRolloffFactor,
                       FLOAT fMinDistance,   FLOAT fMaxDistance )
 {
-    // Every change to 3-D sound buffer and listener settings causes 
-    // DirectSound to remix, at the expense of CPU cycles. 
-    // To minimize the performance impact of changing 3-D settings, 
-    // use the DS3D_DEFERRED flag in the dwApply parameter of any of 
-    // the IDirectSound3DListener or IDirectSound3DBuffer methods that 
-    // change 3-D settings. Then call the IDirectSound3DListener::CommitDeferredSettings 
+    // Every change to 3-D sound buffer and listener settings causes
+    // DirectSound to remix, at the expense of CPU cycles.
+    // To minimize the performance impact of changing 3-D settings,
+    // use the DS3D_DEFERRED flag in the dwApply parameter of any of
+    // the IDirectSound3DListener or IDirectSound3DBuffer methods that
+    // change 3-D settings. Then call the IDirectSound3DListener::CommitDeferredSettings
     // method to execute all of the deferred commands at once.
     DWORD dwApplyFlag = ( g_bDeferSettings ) ? DS3D_DEFERRED : DS3D_IMMEDIATE;
 
@@ -652,7 +652,7 @@ VOID Set3DParameters( FLOAT fDopplerFactor, FLOAT fRolloffFactor,
 
 //-----------------------------------------------------------------------------
 // Name: EnablePlayUI()
-// Desc: Enables or disables the Play UI controls 
+// Desc: Enables or disables the Play UI controls
 //-----------------------------------------------------------------------------
 VOID EnablePlayUI( HWND hDlg, BOOL bEnable )
 {
@@ -675,9 +675,9 @@ VOID EnablePlayUI( HWND hDlg, BOOL bEnable )
 
 //-----------------------------------------------------------------------------
 // Name: OnMovementTimer()
-// Desc: Periodically updates the position of the object 
+// Desc: Periodically updates the position of the object
 //-----------------------------------------------------------------------------
-VOID OnMovementTimer( HWND hDlg ) 
+VOID OnMovementTimer( HWND hDlg )
 {
     FLOAT fXScale;
     FLOAT fYScale;
@@ -731,7 +731,7 @@ VOID UpdateGrid( HWND hDlg, FLOAT x, FLOAT y )
     HWND hWndGrid = GetDlgItem( hDlg, IDC_RENDER_WINDOW );
     HDC  hDC      = GetDC( hWndGrid );
     HDC  hDCbmp   = CreateCompatibleDC( hDC );
-    
+
     // Select the grid bitmap into the off-screen DC
     SelectObject( hDCbmp, g_hGrid );
 
@@ -739,7 +739,7 @@ VOID UpdateGrid( HWND hDlg, FLOAT x, FLOAT y )
     IntersectClipRect( hDC, 0, 0, g_nGridW, g_nGridH );
 
     // Restore the area of the grid previously drawn upon
-    BitBlt( hDC, s_lX-1, s_lY-1, 3, 3, hDCbmp, s_lX-1, s_lY-1, SRCCOPY ); 
+    BitBlt( hDC, s_lX-1, s_lY-1, 3, 3, hDCbmp, s_lX-1, s_lY-1, SRCCOPY );
 
     // Convert the world space x,y coordinates to pixel coordinates
     RECT rc;
@@ -767,12 +767,12 @@ VOID UpdateGrid( HWND hDlg, FLOAT x, FLOAT y )
 //-----------------------------------------------------------------------------
 VOID SetObjectProperties( D3DVECTOR* pvPosition, D3DVECTOR* pvVelocity )
 {
-    // Every change to 3-D sound buffer and listener settings causes 
-    // DirectSound to remix, at the expense of CPU cycles. 
-    // To minimize the performance impact of changing 3-D settings, 
-    // use the DS3D_DEFERRED flag in the dwApply parameter of any of 
-    // the IDirectSound3DListener or IDirectSound3DBuffer methods that 
-    // change 3-D settings. Then call the IDirectSound3DListener::CommitDeferredSettings 
+    // Every change to 3-D sound buffer and listener settings causes
+    // DirectSound to remix, at the expense of CPU cycles.
+    // To minimize the performance impact of changing 3-D settings,
+    // use the DS3D_DEFERRED flag in the dwApply parameter of any of
+    // the IDirectSound3DListener or IDirectSound3DBuffer methods that
+    // change 3-D settings. Then call the IDirectSound3DListener::CommitDeferredSettings
     // method to execute all of the deferred commands at once.
     memcpy( &g_dsBufferParams.vPosition, pvPosition, sizeof(D3DVECTOR) );
     memcpy( &g_dsBufferParams.vVelocity, pvVelocity, sizeof(D3DVECTOR) );

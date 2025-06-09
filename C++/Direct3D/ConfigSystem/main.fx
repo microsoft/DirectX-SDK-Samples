@@ -1,8 +1,8 @@
 //--------------------------------------------------------------------------------------
 // File: ConfigSystem.fx
 //
-// The effect file for the ConfigSystem sample.  
-// 
+// The effect file for the ConfigSystem sample.
+//
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
 //--------------------------------------------------------------------------------------

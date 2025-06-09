@@ -1,11 +1,11 @@
 //--------------------------------------------------------------------------------------
 // dds.h
 //
-// This header defines constants and structures that are useful when parsing 
+// This header defines constants and structures that are useful when parsing
 // DDS files.  DDS files were originally designed to use several structures
 // and constants that are native to DirectDraw and are defined in ddraw.h,
-// such as DDSURFACEDESC2 and DDSCAPS2.  This file defines similar 
-// (compatible) constants and structures so that one can use DDS files 
+// such as DDSURFACEDESC2 and DDSCAPS2.  This file defines similar
+// (compatible) constants and structures so that one can use DDS files
 // without needing to include ddraw.h.
 //--------------------------------------------------------------------------------------
 
@@ -71,7 +71,7 @@ const DDS_PIXELFORMAT DDSPF_R5G6B5 =
 const DDS_PIXELFORMAT DDSPF_DX10 =
     { sizeof(DDS_PIXELFORMAT), DDS_FOURCC, MAKEFOURCC('D','X','1','0'), 0, 0, 0, 0, 0 };
 
-#define DDS_HEADER_FLAGS_TEXTURE        0x00001007  // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT 
+#define DDS_HEADER_FLAGS_TEXTURE        0x00001007  // DDSD_CAPS | DDSD_HEIGHT | DDSD_WIDTH | DDSD_PIXELFORMAT
 #define DDS_HEADER_FLAGS_MIPMAP         0x00020000  // DDSD_MIPMAPCOUNT
 #define DDS_HEADER_FLAGS_VOLUME         0x00800000  // DDSD_DEPTH
 #define DDS_HEADER_FLAGS_PITCH          0x00000008  // DDSD_PITCH

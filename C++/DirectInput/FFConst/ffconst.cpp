@@ -1,7 +1,7 @@
 //-----------------------------------------------------------------------------
 // File: FFConst.cpp
 //
-// Desc: Demonstrates an application which sets a force feedback constant force 
+// Desc: Demonstrates an application which sets a force feedback constant force
 //       determined by the user.
 //
 // Copyright (c) Microsoft Corporation.
@@ -32,7 +32,7 @@
 
 
 //-----------------------------------------------------------------------------
-// Function prototypes 
+// Function prototypes
 //-----------------------------------------------------------------------------
 INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam);
 BOOL CALLBACK EnumFFDevicesCallback(const DIDEVICEINSTANCE* pInst, VOID* pContext) noexcept;
@@ -72,7 +72,7 @@ DWORD                   g_dwLastEffectSet; // Time of the previous force feedbac
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 INT WINAPI WinMain(_In_ HINSTANCE hInst, _In_opt_ HINSTANCE, _In_ LPSTR, _In_ INT)
@@ -155,7 +155,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
             break;
 
         default:
-            return FALSE; // Message not handled 
+            return FALSE; // Message not handled
         }
         break;
 
@@ -166,10 +166,10 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
         break;
 
     default:
-        return FALSE; // Message not handled 
+        return FALSE; // Message not handled
     }
 
-    return TRUE; // Message handled 
+    return TRUE; // Message handled
 }
 
 
@@ -239,7 +239,7 @@ HRESULT InitDirectInput(HWND hDlg) noexcept
     if (FAILED(hr = g_pDevice->SetProperty(DIPROP_AUTOCENTER, &dipdw.diph)))
         return hr;
 
-    // Enumerate and count the axes of the joystick 
+    // Enumerate and count the axes of the joystick
     if (FAILED(hr = g_pDevice->EnumObjects(EnumAxesCallback,
         (VOID*)&g_dwNumForceFeedbackAxis, DIDFT_AXIS)))
         return hr;
@@ -325,7 +325,7 @@ BOOL CALLBACK EnumFFDevicesCallback(const DIDEVICEINSTANCE* pInst,
     if (FAILED(hr))
         return DIENUM_CONTINUE;
 
-    // We successfully created an IDirectInputDevice8.  So stop looking 
+    // We successfully created an IDirectInputDevice8.  So stop looking
     // for another one.
     g_pDevice = pDevice;
 
@@ -341,7 +341,7 @@ BOOL CALLBACK EnumFFDevicesCallback(const DIDEVICEINSTANCE* pInst,
 //-----------------------------------------------------------------------------
 VOID FreeDirectInput() noexcept
 {
-    // Unacquire the device one last time just in case 
+    // Unacquire the device one last time just in case
     // the app tried to exit while the device is still acquired.
     if (g_pDevice)
         g_pDevice->Unacquire();
@@ -491,7 +491,7 @@ VOID OnLeftButtonUp(HWND hDlg, INT x, INT y, UINT keyFlags) noexcept
 
 //-----------------------------------------------------------------------------
 // Name: CoordToForce()
-// Desc: Convert a coordinate 0 <= nCoord <= FEEDBACK_WINDOW_WIDTH 
+// Desc: Convert a coordinate 0 <= nCoord <= FEEDBACK_WINDOW_WIDTH
 //       to a force value in the range -DI_FFNOMINALMAX to +DI_FFNOMINALMAX.
 //-----------------------------------------------------------------------------
 INT CoordToForce(INT nCoord) noexcept
@@ -526,14 +526,14 @@ HRESULT SetDeviceForcesXY() noexcept
 
     if (g_dwNumForceFeedbackAxis == 1)
     {
-        // If only one force feedback axis, then apply only one direction and 
+        // If only one force feedback axis, then apply only one direction and
         // keep the direction at zero
         cf.lMagnitude = g_nXForce;
         rglDirection[0] = 0;
     }
     else
     {
-        // If two force feedback axis, then apply magnitude from both directions 
+        // If two force feedback axis, then apply magnitude from both directions
         rglDirection[0] = g_nXForce;
         rglDirection[1] = g_nYForce;
         cf.lMagnitude = static_cast<DWORD>(sqrtf(float(g_nXForce) * float(g_nXForce) +

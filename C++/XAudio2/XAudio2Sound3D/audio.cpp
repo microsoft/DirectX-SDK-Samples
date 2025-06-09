@@ -114,8 +114,8 @@ HRESULT InitAudio()
     // To see the trace output, you need to view ETW logs for this application:
     //    Go to Control Panel, Administrative Tools, Event Viewer.
     //    View->Show Analytic and Debug Logs.
-    //    Applications and Services Logs / Microsoft / Windows / XAudio2. 
-    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK 
+    //    Applications and Services Logs / Microsoft / Windows / XAudio2.
+    //    Right click on Microsoft Windows XAudio2 debug logging, Properties, then Enable Logging, and hit OK
     XAUDIO2_DEBUG_CONFIGURATION debug = {};
     debug.TraceMask = XAUDIO2_LOG_ERRORS | XAUDIO2_LOG_WARNINGS;
     debug.BreakMask = XAUDIO2_LOG_ERRORS;
@@ -254,9 +254,9 @@ HRESULT InitAudio()
     X3DAudioInitialize( dwChannelMask, SPEEDOFSOUND, g_audioState.x3DInstance );
 
     g_audioState.vListenerPos.x =
-    g_audioState.vListenerPos.y = 
+    g_audioState.vListenerPos.y =
     g_audioState.vListenerPos.z =
-    g_audioState.vEmitterPos.x = 
+    g_audioState.vEmitterPos.x =
     g_audioState.vEmitterPos.y = 0.f;
 
     g_audioState.vEmitterPos.z = float( ZMAX );
@@ -274,11 +274,11 @@ HRESULT InitAudio()
     g_audioState.listener.Position.z = g_audioState.vListenerPos.z;
 
     g_audioState.listener.OrientFront.x =
-    g_audioState.listener.OrientFront.y = 
-    g_audioState.listener.OrientTop.x = 
+    g_audioState.listener.OrientFront.y =
+    g_audioState.listener.OrientTop.x =
     g_audioState.listener.OrientTop.z = 0.f;
 
-    g_audioState.listener.OrientFront.z = 
+    g_audioState.listener.OrientFront.z =
     g_audioState.listener.OrientTop.y = 1.f;
 
     g_audioState.listener.pCone = (X3DAUDIO_CONE*)&Listener_DirectionalCone;
@@ -305,11 +305,11 @@ HRESULT InitAudio()
     g_audioState.emitter.Position.z = g_audioState.vEmitterPos.z;
 
     g_audioState.emitter.OrientFront.x =
-    g_audioState.emitter.OrientFront.y = 
-    g_audioState.emitter.OrientTop.x = 
+    g_audioState.emitter.OrientFront.y =
+    g_audioState.emitter.OrientTop.x =
     g_audioState.emitter.OrientTop.z = 0.f;
 
-    g_audioState.emitter.OrientFront.z = 
+    g_audioState.emitter.OrientFront.z =
     g_audioState.emitter.OrientTop.y = 1.f;
 
     g_audioState.emitter.ChannelCount = INPUTCHANNELS;

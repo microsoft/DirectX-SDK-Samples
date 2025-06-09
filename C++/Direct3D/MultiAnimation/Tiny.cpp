@@ -846,7 +846,7 @@ void CTiny::AnimateIdle( double dTimeDelta )
 
 //-----------------------------------------------------------------------------
 // Name: CTiny::AnimateMoving()
-// Desc: Here we try to figure out if we're moving and can keep moving, 
+// Desc: Here we try to figure out if we're moving and can keep moving,
 //       or if we're waiting / blocked and must keep waiting / blocked,
 //       or if we have reached our destination.
 //-----------------------------------------------------------------------------

@@ -124,17 +124,17 @@ float4 PixScene( float2 Tex : TEXCOORD0,
 
         // transform to texel space
         float2 texelpos = SMAP_SIZE * ShadowTexC;
-        
-        // Determine the lerp amounts           
+
+        // Determine the lerp amounts
         float2 lerps = frac( texelpos );
 
         //read in bilerp stamp, doing the shadow checks
         float sourcevals[4];
-        sourcevals[0] = (tex2D( g_samShadow, ShadowTexC ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        sourcevals[1] = (tex2D( g_samShadow, ShadowTexC + float2(1.0/SMAP_SIZE, 0) ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        sourcevals[2] = (tex2D( g_samShadow, ShadowTexC + float2(0, 1.0/SMAP_SIZE) ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        sourcevals[3] = (tex2D( g_samShadow, ShadowTexC + float2(1.0/SMAP_SIZE, 1.0/SMAP_SIZE) ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;  
-        
+        sourcevals[0] = (tex2D( g_samShadow, ShadowTexC ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;
+        sourcevals[1] = (tex2D( g_samShadow, ShadowTexC + float2(1.0/SMAP_SIZE, 0) ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;
+        sourcevals[2] = (tex2D( g_samShadow, ShadowTexC + float2(0, 1.0/SMAP_SIZE) ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;
+        sourcevals[3] = (tex2D( g_samShadow, ShadowTexC + float2(1.0/SMAP_SIZE, 1.0/SMAP_SIZE) ) + SHADOW_EPSILON < vPosLight.z / vPosLight.w)? 0.0f: 1.0f;
+
         // lerp between the shadow values to calculate our light amount
         float LightAmount = lerp( lerp( sourcevals[0], sourcevals[1], lerps.x ),
                                   lerp( sourcevals[2], sourcevals[3], lerps.x ),

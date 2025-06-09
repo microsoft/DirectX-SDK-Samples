@@ -9,20 +9,20 @@
 #ifndef GRID_CREATION11_H
 #define GRID_CREATION11_H
 
-struct SIMPLEVERTEX 
+struct SIMPLEVERTEX
 {
 		FLOAT x, y, z;
 		FLOAT u, v;
 };
 
-struct EXTENDEDVERTEX 
+struct EXTENDEDVERTEX
 {
 		FLOAT x, y, z;
 		FLOAT nx, ny, nz;
 		FLOAT u, v;
 };
 
-struct TANGENTSPACEVERTEX 
+struct TANGENTSPACEVERTEX
 {
 		FLOAT x, y, z;
 		FLOAT u, v;
@@ -31,29 +31,29 @@ struct TANGENTSPACEVERTEX
 		FLOAT tx, ty, tz;
 };
 
-void FillGrid_NonIndexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                         float fGridSizeX, float fGridSizeZ, 
+void FillGrid_NonIndexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                         float fGridSizeX, float fGridSizeZ,
                          DWORD uDummyStartVertices, DWORD uDummyEndVertices,
                          ID3D11Buffer** lplpVB);
 
-void FillGrid_Indexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                      float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Indexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                      float fGridSizeX, float fGridSizeZ,
                       ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB);
 
-void FillGrid_WithNormals_Indexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                                  float fGridSizeX, float fGridSizeZ, 
+void FillGrid_WithNormals_Indexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                                  float fGridSizeX, float fGridSizeZ,
                                   ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB);
 
-void FillGrid_Quads_Indexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                            float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Quads_Indexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                            float fGridSizeX, float fGridSizeZ,
                             ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB);
 
-void FillGrid_Quads_NonIndexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                               float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Quads_NonIndexed(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                               float fGridSizeX, float fGridSizeZ,
                                ID3D11Buffer** lplpVB);
 
-void FillGrid_Indexed_WithTangentSpace(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength, 
-                                       float fGridSizeX, float fGridSizeZ, 
+void FillGrid_Indexed_WithTangentSpace(ID3D11Device* pd3dDevice, DWORD dwWidth, DWORD dwLength,
+                                       float fGridSizeX, float fGridSizeZ,
                                        ID3D11Buffer** lplpVB, ID3D11Buffer** lplpIB);
 
 #endif

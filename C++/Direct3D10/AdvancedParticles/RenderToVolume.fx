@@ -108,7 +108,7 @@ RasterizerState CullBack
 GSSceneIn VSScene(VSSceneIn input)
 {
     GSSceneIn output = (GSSceneIn)0;
-    
+
     output.Pos = mul( float4(input.Pos,1), g_mWorldViewProj );
     output.wPos = mul( float4(input.Pos,1), g_mWorld );
 	output.InstanceID = input.InstanceID;
@@ -122,12 +122,12 @@ GSSceneIn VSScene(VSSceneIn input)
 GSSceneIn VSAnim( VSAnimIn input )
 {
     GSSceneIn output = (GSSceneIn)0;
-    
+
     SkinnedInfo vSkinned = SkinVert( input );
     output.Pos = mul( vSkinned.Pos, g_mViewProj );
     output.wPos = vSkinned.Pos;
     output.InstanceID = input.InstanceID;
-    
+
     return output;
 }
 
@@ -174,7 +174,7 @@ void GSScene( triangle GSSceneIn input[3], inout TriangleStream<GSSceneOut> TriS
 // Pixel shader for drawing the scene
 //
 float4 PSScene( PSSceneIn input ) : SV_Target
-{   
+{
 	if( input.PlaneDist.x < 0 ) { discard; }
 	if( input.PlaneDist.y < 0 ) { discard; }
 	return input.PlaneEq;
@@ -186,9 +186,9 @@ float4 PSScene( PSSceneIn input ) : SV_Target
 GSVelocityIn VSVelocity( VSSceneIn input )
 {
     GSVelocityIn output = (GSVelocityIn)0;
-    
+
     output.Pos = mul( float4(input.Pos,1), g_mWorldViewProj );
-    
+
     // calculate world-space velocity
     float4 wPos = mul( float4(input.Pos,1), g_mWorld );
     float4 wPosPrev = mul( float4(input.Pos,1), g_mWorldPrev );
@@ -214,12 +214,12 @@ GSVelocityIn VSVelocity( VSSceneIn input )
 GSVelocityIn VSAnimVelocity( VSAnimIn input )
 {
     GSVelocityIn output = (GSVelocityIn)0;
-    
+
 	SkinnedInfo vSkinned = SkinVert( input );
 	SkinnedInfo vSkinnedPrev = SkinVertPrev( input );
 	
     output.Pos = mul( vSkinned.Pos, g_mViewProj );
-    
+
     // calculate world-space velocity
     float4 wPos = vSkinned.Pos;
     float4 wPosPrev = vSkinnedPrev.Pos;
@@ -264,7 +264,7 @@ void GSVelocity( triangle GSVelocityIn input[3], inout TriangleStream<GSVelocity
 // Pixel shader for drawing the velocity
 //
 float4 PSVelocity(PSVelocityIn input) : SV_Target
-{   
+{
 	if( input.PlaneDist.x < 0 ) { discard; }
 	if( input.PlaneDist.y < 0 ) { discard; }
 	return float4(input.Velocity,1);
@@ -280,11 +280,11 @@ technique10 RenderScene
         SetVertexShader( CompileShader( vs_4_0, VSScene() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScene() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullBack );
-    }  
+    }
 }
 
 
@@ -298,11 +298,11 @@ technique10 RenderAnimScene
         SetVertexShader( CompileShader( vs_4_0, VSAnim() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSScene() ) );
         SetPixelShader( CompileShader( ps_4_0, PSScene() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullNone );
-    }  
+    }
 }
 
 
@@ -316,11 +316,11 @@ technique10 RenderVelocity
         SetVertexShader( CompileShader( vs_4_0, VSVelocity() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSVelocity() ) );
         SetPixelShader( CompileShader( ps_4_0, PSVelocity() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullNone );
-    }  
+    }
 }
 
 
@@ -334,9 +334,9 @@ technique10 RenderAnimVelocity
         SetVertexShader( CompileShader( vs_4_0, VSAnimVelocity() ) );
         SetGeometryShader( CompileShader( gs_4_0, GSVelocity() ) );
         SetPixelShader( CompileShader( ps_4_0, PSVelocity() ) );
-        
+
         SetBlendState( NoBlending, float4( 0.0f, 0.0f, 0.0f, 0.0f ), 0xFFFFFFFF );
         SetDepthStencilState( DisableDepth, 0 );
         SetRasterizerState( CullNone );
-    }  
+    }
 }

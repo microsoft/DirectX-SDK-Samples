@@ -66,7 +66,7 @@ VOID AddExpandedString(HWND hwndList, WCHAR* szKey, WCHAR* szName, WCHAR* szValu
 
 //-----------------------------------------------------------------------------
 // Name: WinMain()
-// Desc: Entry point for the application.  Since we use a simple dialog for 
+// Desc: Entry point for the application.  Since we use a simple dialog for
 //       user interaction we don't need to pump messages.
 //-----------------------------------------------------------------------------
 int WINAPI WinMain(_In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPSTR lpCmdLine, _In_ int nCmdShow)
@@ -158,7 +158,7 @@ INT_PTR CALLBACK MainDlgProc(HWND hDlg, UINT msg, WPARAM wParam, LPARAM lParam)
 
 //-----------------------------------------------------------------------------
 // Name: SetupListBox()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID SetupListBox(HWND hDlg)
 {
@@ -188,7 +188,7 @@ VOID SetupListBox(HWND hDlg)
     ListView_InsertColumn(hwndList, iSubItem, &col);
     iSubItem++;
 
-    // Add a bogus column so SetColumnWidth doesn't do strange 
+    // Add a bogus column so SetColumnWidth doesn't do strange
     // things with the last real column
     col.fmt = LVCFMT_RIGHT;
     col.pszText = L"";
@@ -202,7 +202,7 @@ VOID SetupListBox(HWND hDlg)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBox()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBox(HWND hDlg)
 {
@@ -245,7 +245,7 @@ VOID FillListBox(HWND hDlg)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithSysInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithSysInfo(HWND hwndList)
 {
@@ -337,7 +337,7 @@ VOID FillListBoxWithSysInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithLogicalDiskInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithLogicalDiskInfo(HWND hwndList)
 {
@@ -404,7 +404,7 @@ VOID FillListBoxWithLogicalDiskInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithSystemDevices()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithSystemDevices(HWND hwndList)
 {
@@ -466,7 +466,7 @@ VOID FillListBoxWithSystemDevices(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithDirectXFilesInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithDirectXFilesInfo(HWND hwndList)
 {
@@ -528,7 +528,7 @@ VOID FillListBoxWithDirectXFilesInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithDisplayInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithDisplayInfo(HWND hwndList)
 {
@@ -631,7 +631,7 @@ VOID FillListBoxWithDisplayInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithDXVAInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithDXVAInfo(WCHAR* szParentName, HWND hwndList, std::vector <DxDiag_DXVA_DeinterlaceCaps*>& vDXVACaps)
 {
@@ -663,7 +663,7 @@ VOID FillListBoxWithDXVAInfo(WCHAR* szParentName, HWND hwndList, std::vector <Dx
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithSoundInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithSoundInfo(HWND hwndList)
 {
@@ -789,7 +789,7 @@ VOID FillListBoxWithSoundInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithMusicInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithMusicInfo(HWND hwndList)
 {
@@ -854,7 +854,7 @@ VOID FillListBoxWithMusicInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithInputInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithInputInfo(HWND hwndList)
 {
@@ -917,7 +917,7 @@ VOID FillListBoxWithInputInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithInputRelatedInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithInputRelatedInfo(HWND hwndList, std::vector <InputRelatedDeviceInfo*>& vDeviceList)
 {
@@ -990,7 +990,7 @@ VOID FillListBoxWithInputRelatedInfo(HWND hwndList, std::vector <InputRelatedDev
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithNetworkInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithNetworkInfo(HWND hwndList)
 {
@@ -1136,7 +1136,7 @@ VOID FillListBoxWithNetworkInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: FillListBoxWithDirectShowInfo()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID FillListBoxWithDirectShowInfo(HWND hwndList)
 {
@@ -1179,7 +1179,7 @@ VOID FillListBoxWithDirectShowInfo(HWND hwndList)
 
 //-----------------------------------------------------------------------------
 // Name: AddString()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID AddString(HWND hwndList, WCHAR* szKey, WCHAR* szName, WCHAR* szValue)
 {
@@ -1212,7 +1212,7 @@ VOID AddString(HWND hwndList, WCHAR* szKey, WCHAR* szName, WCHAR* szValue)
 
 //-----------------------------------------------------------------------------
 // Name: AddExpandedString()
-// Desc: 
+// Desc:
 //-----------------------------------------------------------------------------
 VOID AddExpandedString(HWND hwndList, WCHAR* szKey, WCHAR* szName, WCHAR* szValue)
 {

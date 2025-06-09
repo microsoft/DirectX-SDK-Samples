@@ -1,7 +1,7 @@
 //--------------------------------------------------------------------------------------
 // File: Sprite.cpp
 //
-// Sprite class definition. This class provides functionality to render sprites, at a given position and scale. 
+// Sprite class definition. This class provides functionality to render sprites, at a given position and scale.
 //
 // Copyright (c) Microsoft Corporation.
 // Licensed under the MIT License (MIT).
@@ -83,7 +83,7 @@ HRESULT Sprite::OnCreateDevice( ID3D10Device* pd3dDevice )
     assert( NULL != pd3dDevice );
 
     // Check to see if we have a DX10.1 device
-    if( NULL == DXUTGetD3D10Device1() ) 
+    if( NULL == DXUTGetD3D10Device1() )
     {
         pszTarget = "fx_4_0";
         pShaderMacros = NULL;
@@ -101,15 +101,15 @@ HRESULT Sprite::OnCreateDevice( ID3D10Device* pd3dDevice )
     DWORD dwShaderFlags = D3D10_SHADER_ENABLE_STRICTNESS;
     #if defined( DEBUG ) || defined( _DEBUG )
     // Set the D3D10_SHADER_DEBUG flag to embed debug information in the shaders.
-    // Setting this flag improves the shader debugging experience, but still allows 
-    // the shaders to be optimized and to run exactly the way they will run in 
+    // Setting this flag improves the shader debugging experience, but still allows
+    // the shaders to be optimized and to run exactly the way they will run in
     // the release configuration of this program.
     dwShaderFlags |= D3D10_SHADER_DEBUG;
     #endif
 
     WCHAR str[MAX_PATH];
     V_RETURN( DXUTFindDXSDKMediaFileCch( str, MAX_PATH, L"Sprite.fx" ) );
-    hr = D3DX10CreateEffectFromFile( str, pShaderMacros, NULL, pszTarget, dwShaderFlags, 0, 
+    hr = D3DX10CreateEffectFromFile( str, pShaderMacros, NULL, pszTarget, dwShaderFlags, 0,
                                      pd3dDevice, NULL, NULL, &m_pEffect, NULL, NULL );
     assert( D3D_OK == hr );
 
@@ -151,7 +151,7 @@ HRESULT Sprite::OnCreateDevice( ID3D10Device* pd3dDevice )
     // Create the input layout
     D3D10_PASS_DESC PassDesc;
     m_pSpriteTechnique->GetPassByIndex( 0 )->GetDesc( &PassDesc );
-    hr = pd3dDevice->CreateInputLayout( layout, numElements, PassDesc.pIAInputSignature, 
+    hr = pd3dDevice->CreateInputLayout( layout, numElements, PassDesc.pIAInputSignature,
 	    PassDesc.IAInputSignatureSize, &m_pVertexLayout );
     assert( D3D_OK == hr );
 
@@ -200,7 +200,7 @@ HRESULT Sprite::OnCreateDevice( ID3D10Device* pd3dDevice )
 
     // Create the input layout
     m_pBorderTechnique->GetPassByIndex( 0 )->GetDesc( &PassDesc );
-    hr = pd3dDevice->CreateInputLayout( BorderLayout, numElements, PassDesc.pIAInputSignature, 
+    hr = pd3dDevice->CreateInputLayout( BorderLayout, numElements, PassDesc.pIAInputSignature,
 	    PassDesc.IAInputSignatureSize, &m_pBorderVertexLayout );
     assert( D3D_OK == hr );
 
@@ -243,7 +243,7 @@ void Sprite::OnResizedSwapChain( const DXGI_SURFACE_DESC* pBackBufferSurfaceDesc
 
     assert( NULL != pBackBufferSurfaceDesc );
 
-    hr = m_pViewportWidthVar->SetFloat( (float)pBackBufferSurfaceDesc->Width ); 
+    hr = m_pViewportWidthVar->SetFloat( (float)pBackBufferSurfaceDesc->Width );
     assert( D3D_OK == hr );
     hr = m_pViewportHeightVar->SetFloat( (float)pBackBufferSurfaceDesc->Height );
     assert( D3D_OK == hr );
@@ -292,11 +292,11 @@ HRESULT Sprite::RenderSprite( ID3D10ShaderResourceView* pTextureView, int nStart
     // Set position and dimensions
     hr = m_pStartPosXVar->SetFloat( (float)nStartPosX );
     assert( D3D_OK == hr );
-    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY ); 
+    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY );
     assert( D3D_OK == hr );
-    hr = m_pWidthVar->SetFloat( (float)nWidth ); 
+    hr = m_pWidthVar->SetFloat( (float)nWidth );
     assert( D3D_OK == hr );
-    hr = m_pHeightVar->SetFloat( (float)nHeight ); 
+    hr = m_pHeightVar->SetFloat( (float)nHeight );
     assert( D3D_OK == hr );
 
     // Set the texture
@@ -340,7 +340,7 @@ HRESULT Sprite::RenderSprite( ID3D10ShaderResourceView* pTextureView, int nStart
 }
 
 HRESULT Sprite::RenderSpriteMS( ID3D10ShaderResourceView* pTextureView, int nStartPosX,
-        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight, 
+        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight,
         bool bAlpha, bool bBordered, int nSampleIndex )
 {
     HRESULT hr;
@@ -348,23 +348,23 @@ HRESULT Sprite::RenderSpriteMS( ID3D10ShaderResourceView* pTextureView, int nSta
     assert( NULL != pTextureView );
 
     // Set the texture dimensions for MS textures
-    hr = m_pTextureWidthVar->SetFloat( (float)nTextureWidth ); 
+    hr = m_pTextureWidthVar->SetFloat( (float)nTextureWidth );
     assert( D3D_OK == hr );
-    hr = m_pTextureHeightVar->SetFloat( (float)nTextureHeight ); 
+    hr = m_pTextureHeightVar->SetFloat( (float)nTextureHeight );
     assert( D3D_OK == hr );
 
     // Set the sample index
-    hr = m_pSampleIndexVar->SetInt( nSampleIndex ); 
+    hr = m_pSampleIndexVar->SetInt( nSampleIndex );
     assert( D3D_OK == hr );
 
     // Set position and dimensions
     hr = m_pStartPosXVar->SetFloat( (float)nStartPosX );
     assert( D3D_OK == hr );
-    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY ); 
+    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY );
     assert( D3D_OK == hr );
-    hr = m_pWidthVar->SetFloat( (float)nWidth ); 
+    hr = m_pWidthVar->SetFloat( (float)nWidth );
     assert( D3D_OK == hr );
-    hr = m_pHeightVar->SetFloat( (float)nHeight ); 
+    hr = m_pHeightVar->SetFloat( (float)nHeight );
     assert( D3D_OK == hr );
 
     // Set the texture
@@ -394,7 +394,7 @@ HRESULT Sprite::RenderSpriteMS( ID3D10ShaderResourceView* pTextureView, int nSta
 }
 
 HRESULT Sprite::RenderSpriteAsDepth( ID3D10ShaderResourceView* pTextureView, int nStartPosX,
-        int nStartPosY, int nWidth, int nHeight, bool bBordered, float fDepthRangeMin, 
+        int nStartPosY, int nWidth, int nHeight, bool bBordered, float fDepthRangeMin,
         float fDepthRangeMax )
 {
     HRESULT hr;
@@ -404,17 +404,17 @@ HRESULT Sprite::RenderSpriteAsDepth( ID3D10ShaderResourceView* pTextureView, int
     // Set position and dimensions
     hr = m_pStartPosXVar->SetFloat( (float)nStartPosX );
     assert( D3D_OK == hr );
-    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY ); 
+    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY );
     assert( D3D_OK == hr );
-    hr = m_pWidthVar->SetFloat( (float)nWidth ); 
+    hr = m_pWidthVar->SetFloat( (float)nWidth );
     assert( D3D_OK == hr );
-    hr = m_pHeightVar->SetFloat( (float)nHeight ); 
+    hr = m_pHeightVar->SetFloat( (float)nHeight );
     assert( D3D_OK == hr );
 
     // Set the depth scale
-    hr = m_pDepthRangeMinVar->SetFloat( fDepthRangeMin ); 
+    hr = m_pDepthRangeMinVar->SetFloat( fDepthRangeMin );
     assert( D3D_OK == hr );
-    hr = m_pDepthRangeMaxVar->SetFloat( fDepthRangeMax ); 
+    hr = m_pDepthRangeMaxVar->SetFloat( fDepthRangeMax );
     assert( D3D_OK == hr );
 
     // Set the texture
@@ -444,7 +444,7 @@ HRESULT Sprite::RenderSpriteAsDepth( ID3D10ShaderResourceView* pTextureView, int
 }
 
 HRESULT Sprite::RenderSpriteAsDepthMS( ID3D10ShaderResourceView1* pTextureView, int nStartPosX,
-        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight, 
+        int nStartPosY, int nWidth, int nHeight, int nTextureWidth, int nTextureHeight,
         bool bBordered, float fDepthRangeMin, float fDepthRangeMax, int nSampleIndex )
 {
     HRESULT hr;
@@ -452,29 +452,29 @@ HRESULT Sprite::RenderSpriteAsDepthMS( ID3D10ShaderResourceView1* pTextureView, 
     assert( NULL != pTextureView );
 
     // Set the texture dimensions for MS textures
-    hr = m_pTextureWidthVar->SetFloat( (float)nTextureWidth ); 
+    hr = m_pTextureWidthVar->SetFloat( (float)nTextureWidth );
     assert( D3D_OK == hr );
-    hr = m_pTextureHeightVar->SetFloat( (float)nTextureHeight ); 
+    hr = m_pTextureHeightVar->SetFloat( (float)nTextureHeight );
     assert( D3D_OK == hr );
 
     // Set the sample index
-    hr = m_pSampleIndexVar->SetInt( nSampleIndex ); 
+    hr = m_pSampleIndexVar->SetInt( nSampleIndex );
     assert( D3D_OK == hr );
 
     // Set the depth scale
-    hr = m_pDepthRangeMinVar->SetFloat( fDepthRangeMin ); 
+    hr = m_pDepthRangeMinVar->SetFloat( fDepthRangeMin );
     assert( D3D_OK == hr );
-    hr = m_pDepthRangeMaxVar->SetFloat( fDepthRangeMax ); 
+    hr = m_pDepthRangeMaxVar->SetFloat( fDepthRangeMax );
     assert( D3D_OK == hr );
 
     // Set position and dimensions
     hr = m_pStartPosXVar->SetFloat( (float)nStartPosX );
     assert( D3D_OK == hr );
-    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY ); 
+    hr = m_pStartPosYVar->SetFloat( (float)nStartPosY );
     assert( D3D_OK == hr );
-    hr = m_pWidthVar->SetFloat( (float)nWidth ); 
+    hr = m_pWidthVar->SetFloat( (float)nWidth );
     assert( D3D_OK == hr );
-    hr = m_pHeightVar->SetFloat( (float)nHeight ); 
+    hr = m_pHeightVar->SetFloat( (float)nHeight );
     assert( D3D_OK == hr );
 
     // Set the texture

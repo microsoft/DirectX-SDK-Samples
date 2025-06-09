@@ -56,21 +56,21 @@ HRESULT CreateComputeShaderCached( LPCWSTR pSrcFile, LPCSTR pFunctionName, LPCST
 //--------------------------------------------------------------------------------------
 void RunComputeShader( ID3D11DeviceContext* pd3dImmediateContext,
                        ID3D11ComputeShader* pComputeShader,
-                       ID3D11ShaderResourceView** pShaderResourceViews, 
+                       ID3D11ShaderResourceView** pShaderResourceViews,
 					   UINT uNumSRVs,
-                       ID3D11Buffer* pCBCS, 
+                       ID3D11Buffer* pCBCS,
                        ID3D11UnorderedAccessView* pUnorderedAccessView,
                        UINT X, UINT Y, UINT Z );
 
 
 //--------------------------------------------------------------------------------------
 // Loads a texture from file
-//-------------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------------
 HRESULT LoadTextureFromFile( ID3D11Device* pd3dDevice, LPCTSTR lpFileName, DXGI_FORMAT fmtLoadAs, ID3D11Texture2D** ppTextureOut );
 
 //--------------------------------------------------------------------------------------
 // Create a CPU accessible buffer and download the content of a GPU buffer into it
-//-------------------------------------------------------------------------------------- 
+//--------------------------------------------------------------------------------------
 ID3D11Buffer* CreateAndCopyToCPUBuf( ID3D11Device* pDevice, ID3D11DeviceContext* pd3dImmediateContext, ID3D11Buffer* pBuffer );
 
 //--------------------------------------------------------------------------------------
@@ -83,7 +83,7 @@ ID3D11Buffer* CreateAndCopyToCPUBuf( ID3D11Device* pDevice, ID3D11DeviceContext*
 // in the sample's own dir
 //--------------------------------------------------------------------------------------
 HRESULT FindDXSDKShaderFileCch( __out_ecount(cchDest) WCHAR* strDestPath,
-                                __in int cchDest, 
+                                __in int cchDest,
                                 __in LPCWSTR strFilename );
 
 BOOL FileExists( const WCHAR* pszFilename );
