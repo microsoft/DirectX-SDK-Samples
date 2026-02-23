@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <FullSolutionList Include="$(MSBuildThisProjectDirectory)**\*2019.sln" />
+    <FullSolutionList Include="$(MSBuildThisProjectDirectory)**\*2022.sln" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(Platform)'=='Win32'">

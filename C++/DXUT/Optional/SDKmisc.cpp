@@ -315,37 +315,37 @@ bool DXUTFindMediaSearchTypicalDirs( WCHAR* strSearchPath, int cchSearch, LPCWST
     //      %EXE_DIR%\..\..\%EXE_NAME%
     //      DXSDK media path
 
-    // Search in .\
+    // Search in ".\"
     wcscpy_s( strSearchPath, cchSearch, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\
+    // Search in "..\"
     swprintf_s( strSearchPath, cchSearch, L"..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\..\
+    // Search in "..\..\"
     swprintf_s( strSearchPath, cchSearch, L"..\\..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in ..\..\
+    // Search in "..\..\"
     swprintf_s( strSearchPath, cchSearch, L"..\\..\\%s", strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\
+    // Search in the "%EXE_DIR%\"
     swprintf_s( strSearchPath, cchSearch, L"%s\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\..\
+    // Search in the "%EXE_DIR%\..\"
     swprintf_s( strSearchPath, cchSearch, L"%s\\..\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
 
-    // Search in the %EXE_DIR%\..\..\
+    // Search in the "%EXE_DIR%\..\..\"
     swprintf_s( strSearchPath, cchSearch, L"%s\\..\\..\\%s", strExePath, strLeaf );
     if( GetFileAttributes( strSearchPath ) != 0xFFFFFFFF )
         return true;
