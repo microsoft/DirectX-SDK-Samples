@@ -4,6 +4,9 @@ Release available for download on [GitHub](https://github.com/microsoft/DirectX-
 
 ## Release History
 
+### February 2026
+* Convert VS 2019 projects to VS 2022
+
 ### November 2024
 * Converted all samples to use VS 2019 instead of VS 2008 or VS 2010
 * C++11 modernization for some Direct3D 11 samples using GitHub releases of DXUT

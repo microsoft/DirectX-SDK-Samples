@@ -2,7 +2,7 @@
 
 # DirectX SDK Legacy Samples
 
-This repository contains an archive of DirectX samples that shipped in the legacy DirectX SDK. They have been updated to build with Visual Studio 2019 or later, require only the current Windows SDK, and make use the [Microsoft.DXSDK.D3DX](https://www.nuget.org/packages/Microsoft.DXSDK.D3DX) NuGet package.
+This repository contains an archive of DirectX samples that shipped in the legacy DirectX SDK. They have been updated to build with Visual Studio 2022 or later, require only the current Windows SDK, and make use the [Microsoft.DXSDK.D3DX](https://www.nuget.org/packages/Microsoft.DXSDK.D3DX) NuGet package.
 
 *THIS REPOSITORY IS ONLY FOR EDUCATIONAL AND HISTORICAL REFERENCE. Use of the legacy DirectX SDK, D3DX9, D3DX10, D3DX11, DXUT, and/or FX11 is not recommended for new projects.*
 
