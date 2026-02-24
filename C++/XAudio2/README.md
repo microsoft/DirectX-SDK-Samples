@@ -2,6 +2,8 @@
 
 The BasicSound, BasicStream, CustomAPO, and Sound3D samples were shipped in the DirectX SDK (June 2010). This package inclues the latest versions of each, plus additional XAudio2 samples.
 
+> For the latest version of **xwbtool** see the [DirectX Tool Kit](https://github.com/microsoft/DirectXTK) GitHub project.
+
 |Sample|Note|
 |--|--|
 |XAudio2BasicSound|This sample demonstrates the XAudio2 API by showing you how to initialize the XAudio2 engine, create a mastering voice, and play sample files..|
