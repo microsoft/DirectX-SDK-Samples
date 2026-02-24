@@ -1,9 +1,9 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnumDevices", "EnumDevices_2019.vcxproj", "{B439B442-0490-4058-BB6E-39FC1FA3869D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "EnumDevices", "EnumDevices_2022.vcxproj", "{B439B442-0490-4058-BB6E-39FC1FA3869D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,3 +29,4 @@ Global
 		SolutionGuid = {0116A1AD-509C-48D4-8EEC-F24EAB3EAA46}
 	EndGlobalSection
 EndGlobal
+

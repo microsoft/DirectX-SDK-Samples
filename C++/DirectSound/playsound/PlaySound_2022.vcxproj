@@ -19,34 +19,34 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectName>FullDuplexFilter</ProjectName>
-    <ProjectGuid>{E9B05DCC-D29C-4723-93E8-82F396A586B3}</ProjectGuid>
-    <RootNamespace>FullDuplexFilter</RootNamespace>
+    <ProjectName>PlaySound</ProjectName>
+    <ProjectGuid>{EC34B703-D090-45E7-9F43-693CCECA96DE}</ProjectGuid>
+    <RootNamespace>PlaySound</RootNamespace>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <UseOfMfc>false</UseOfMfc>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -99,7 +99,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Release/fullduplexfilter.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release/playsound.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -131,7 +131,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>X64</TargetEnvironment>
-      <TypeLibraryName>.\Release/fullduplexfilter.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Release/playsound.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
@@ -164,7 +164,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>Win32</TargetEnvironment>
-      <TypeLibraryName>.\Debug/fullduplexfilter.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug/playsound.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -196,7 +196,7 @@
       <MkTypLibCompatible>true</MkTypLibCompatible>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <TargetEnvironment>X64</TargetEnvironment>
-      <TypeLibraryName>.\Debug/fullduplexfilter.tlb</TypeLibraryName>
+      <TypeLibraryName>.\Debug/playsound.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -233,22 +233,27 @@
     </ClCompile>
     <ClCompile Include="..\..\DXUT\Core\DXUTenum.cpp" />
     <ClCompile Include="..\..\DXUT\Core\DXUTmisc.cpp" />
-    <ClCompile Include="fullduplexfilter.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\SDKsound.cpp" />
+    <ClCompile Include="..\..\DXUT\Optional\SDKwavefile.cpp" />
+    <ClCompile Include="playsound.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\..\DXUT\Optional\directx.ico" />
+    <Image Include="direcx.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Manifest Include="fullduplexfilter.manifest" />
+    <Manifest Include="playsound.manifest" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="fullduplexfilter.rc" />
+    <ResourceCompile Include="playsound.rc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\DXUT\Core\dxerr.h" />
     <ClInclude Include="..\..\DXUT\Core\DXUT.h" />
     <ClInclude Include="..\..\DXUT\Core\DXUTenum.h" />
     <ClInclude Include="..\..\DXUT\Core\DXUTmisc.h" />
+    <ClInclude Include="..\..\DXUT\Optional\SDKsound.h" />
+    <ClInclude Include="..\..\DXUT\Optional\SDKwavefile.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
