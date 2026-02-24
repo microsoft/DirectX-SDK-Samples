@@ -38,37 +38,37 @@
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
@@ -93,38 +93,38 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <GenerateManifest>true</GenerateManifest>
-    <OutDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>DXUTOpt</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <GenerateManifest>true</GenerateManifest>
-    <OutDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>DXUTOpt</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <GenerateManifest>true</GenerateManifest>
-    <OutDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>DXUTOpt</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <GenerateManifest>true</GenerateManifest>
-    <OutDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>DXUTOpt</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|Win32'">
     <GenerateManifest>true</GenerateManifest>
-    <OutDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>DXUTOpt</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Profile|x64'">
     <GenerateManifest>true</GenerateManifest>
-    <OutDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</OutDir>
-    <IntDir>Bin\DirectXTK_2019\$(Platform)\$(Configuration)\</IntDir>
+    <OutDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>Bin\DirectXTK_2022\$(Platform)\$(Configuration)\</IntDir>
     <TargetName>DXUTOpt</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
